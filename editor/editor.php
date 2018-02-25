@@ -471,6 +471,7 @@ class Editor
 		$this->page->set('pagetype', 1, false);
 		$this->page->set('slug', $name);
 		if($this->page->save()) {
+			$this->imanager->sectionCache->expire();
 			$this->msgs[] = array(
 				'type' => 'success',
 				'value' => $this->i18n['successful_saved_page']
@@ -586,6 +587,7 @@ class Editor
 			$page->position = ((int) $pos + 1);
 			$page->save();
 		}
+		$this->imanager->sectionCache->expire();
 		return true;
 	}
 }
