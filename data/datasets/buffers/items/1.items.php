@@ -8,7 +8,7 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1519559037,
+     'updated' => 1519669910,
      'content' => 'An API overview of IManager, how to use it and some basic examples.
 
 Use IManager\'s API in any other PHP scripts it\'s easy! The first thing you should do is just including IManager\'s ./imanager.php file from any other PHP script. IManager comes with an index.php file in the root directory by default. This file is not needed to run IManager and you can safely delete it, but look at this file anyway, it represent an example of how to include IManager in your script.
