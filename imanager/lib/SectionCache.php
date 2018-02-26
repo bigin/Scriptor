@@ -94,7 +94,7 @@ class SectionCache {
 	protected static function _removeAll() {
 		$path = self::path();
 		try {
-			$num = CacheFile::removeAll($path, true);
+			$num = ImCacheFile::removeAll($path, true);
 		} catch(Exception $e) {
 			$num = 0;
 		}
@@ -276,5 +276,37 @@ class ImCacheFile
 		$note = "The modification time of this file represents the time of the last usable cache file. " .
 			"Cache files older than this file are considered expired. " . date('m.d.Y H:i:s');
 		@file_put_contents($this->globalExpireFile, $note, LOCK_EX);
+	}
+
+	/**
+	 * Remove all cache files in the given path, recursively
+	 *
+	 * @param string $path Full path to the directory you want to clear out
+	 * @param bool $rmdir Set to true if you want to also remove the directory
+	 * @return int Number of files/dirs removed
+	 *
+	 */
+	static public function removeAll($path, $rmdir = false) {
+
+		$dir = new \DirectoryIterator($path);
+		$numRemoved = 0;
+
+		foreach($dir as $file) {
+
+			if($file->isDot()) continue;
+
+			$pathname = $file->getPathname();
+
+			if($file->isDir()) {
+				$numRemoved += self::removeAll($pathname, true);
+
+			} else if($file->isFile() && (self::isCacheFile($pathname) || ($file->getFilename() == self::globalExpireFilename))) {
+				if(unlink($pathname)) $numRemoved++;
+			}
+		}
+
+		if($rmdir && rmdir($path)) $numRemoved++;
+
+		return $numRemoved;
 	}
 }

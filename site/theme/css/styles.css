@@ -126,8 +126,14 @@ header .brand-wrapper .brand a:hover {
 	display: none;
 }
 
-#sidebar-wrapper .sidebar-navi li.current > ul, #sidebar-wrapper .sidebar-navi li.active > ul {
+#sidebar-wrapper .sidebar-navi li.current > ul,
+#sidebar-wrapper .sidebar-navi li.active > ul {
 	display: block;
+}
+
+#sidebar-wrapper .sidebar-navi li.current ul a,
+#sidebar-wrapper .sidebar-navi li.active ul a {
+	padding-left: 20px;
 }
 
 #sidebar-wrapper .sidebar-navi li a:hover {

@@ -212,7 +212,7 @@ class ItemMapper extends Mapper
 		$offset = ($offset) ? $offset :
 			(($this->imanager->input->pageNumber) ? (($this->imanager->input->pageNumber -1) * $length) : 0);
 
-		$localItems = !empty($items) ? $items : $this->items;
+		$localItems = (!empty($items) ? $items : $this->items);
 
 		if(empty($localItems)) return false;
 
@@ -314,11 +314,10 @@ class ItemMapper extends Mapper
 		$b = $b->{$this->filterby};
 		if(is_numeric($a)) {
 			if($a == $b) {return 0;}
-			else {
-				if($b > $a) {return -1;}
-				else {return 1;}
-			}
-		} else {return strcasecmp($a, $b);}
+			else if($b > $a) {return -1;}
+			else {return 1;}
+		}
+		return strcasecmp($a, $b);
 	}
 
 	/**

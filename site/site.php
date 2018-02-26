@@ -157,26 +157,30 @@ class Site
 		$navi = '';
 		$topl = $this->pages->getItems('parent=0');
 		// Todo: check if topl exists if 0 pages created
-		$filtered = $this->pages->sort('position', 'asc', 0, 0, $topl);
-		$topl = $this->pages->getItems('active=1', 0, $filtered);
+		$topl = $this->pages->getItems('active=1', 0, $topl);
+		$topl = $this->pages->sort('position', 'asc', 0, 0, $topl);
 		if(!$topl) return $navi;
 		foreach($topl as $item) {
-			$navi .= $this->getChildren($item, $this->siteUrl);
+			$all_pages = $this->pages->getItems("active=1");
+			$all_pages = $this->pages->sort('position', 'asc', 0, 0, $all_pages);
+			$navi .= $this->getChildren($item, $all_pages, $this->siteUrl);
 		}
 		return $navi;
 	}
 
-	protected function getChildren($item, $url, $children = '')
+	protected function getChildren($item, & $items, $url, $children = '')
 	{
-		$items = $this->pages->getItems("parent=$item->id");
-		if($items) {
-			$prefix = '<li'.$this->getClass($item).'><a href="'.
-				$url.(($item->id != 1 && !$item->parent) ? $item->slug.'/' : '').'">'.$item->name.'</a>';
-			foreach($items as $curitem) {
-				$children .= $this->getChildren($curitem,
-					$url.(($item->id != 1 && !$item->parent) ? $item->slug.'/' : '').$curitem->slug.'/', $children);
+		$childs = $this->pages->getItems("parent=$item->id", 0, $items);
+
+		if($childs) {
+			$prefix = '<li' . $this->getClass($item) . '><a href="' .
+				$url . (($item->id != 1 && !$item->parent) ? $item->slug . '/' : '') . '">' . $item->name . '</a>';
+			$buff = '';
+			foreach($childs as $curitem) {
+				$buff .= $this->getChildren($curitem, $items,
+					$url . (($item->id != 1 && !$item->parent) ? $item->slug . '/' : '') . $curitem->slug . '/', $children);
 			}
-			$children = $prefix.'<ul>'.$children.'</ul></li>';
+			$children = $prefix . '<ul>' . $buff . '</ul></li>';
 		} else {
 			$children = '<li'.$this->getClass($item).'><a href="'.
 				$url.(($item->id != 1 && !$item->parent) ? $item->slug.'/' : '').'">'.$item->name.'</a></li>';
