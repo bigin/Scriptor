@@ -1,6 +1,6 @@
 # Scriptor
 
-_Scriptor is a simple flat-file CMS based on IManager. Specially developed to create web based user manuals, instructions or API references and other written web-based manuscripts_
+_Scriptor is a simple flat-file CMS based on IManager. Specially developed to create web based user manuals, instructions or API references and other written web-based manuscripts, supports Markdown and Syntax highlighting._
 
 
 ### Install Requirements
@@ -27,7 +27,7 @@ https://yourwebsite.com/scriptor/editor/
 when used in the subdirectory.
 
 
-### Admin login data
+### Admin login  
 user: `admin`   
 password: `gT5nLazzyBob`
 
