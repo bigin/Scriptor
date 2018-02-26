@@ -6,22 +6,24 @@ Options -Indexes
 Options +SymLinksIfOwnerMatch
 # Options +SymLinksifOwnerMatch
 
-#RewriteBase /gitlab-projects/markdown-to-html/
+#RewriteBase /
 
 # Allow harmless files
-RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png)$ [NC]
+RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png)$
 # Allow file upoad handler
-#RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$ [NC]
+RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$
 # Block access to any htaccess files
 RewriteCond %{REQUEST_URI} (^|/)\.htaccess$ [NC,OR]
 # Block access to protected data directories
 RewriteCond %{REQUEST_URI} (^|/)data/(datasets|cache|logs|backups|settings)($|/.*$) [OR]
 # Block access to imanager directory
-RewriteCond %{REQUEST_URI} (^|/)imanager($|/.*$) [OR]
+RewriteCond %{REQUEST_URI} (^|/)imanager($|/.*$)
+# If any conditions above match, issue a 403 forbidden
+RewriteRule ^.*$ - [F,L]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^editor/(.*)$ editor/index.php?id=$1 [L,QSA]
+RewriteRule ^editor/(.*)$ editor/index.php?id=$2 [L,QSA]
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
