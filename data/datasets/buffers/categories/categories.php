@@ -17,13 +17,4 @@
      'created' => 1519050567,
      'updated' => 1519050567,
   )),
-  3 => 
-  Imanager\Category::__set_state(array(
-     'id' => 3,
-     'position' => 3,
-     'name' => 'Elements',
-     'slug' => 'elements',
-     'created' => 1519470997,
-     'updated' => 1519470997,
-  )),
 ); ?>
