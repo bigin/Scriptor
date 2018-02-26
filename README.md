@@ -28,6 +28,6 @@ when used in the subdirectory.
 
 
 ### Admin login data
-user: `admin`
+user: `admin`   
 password: `gT5nLazzyBob`
 
