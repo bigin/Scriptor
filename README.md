@@ -15,7 +15,7 @@ _Scriptor is a simple flat-file CMS based on IManager. Specially developed to cr
 > NOTE: If you want want to use Scriptor in a subdirectory, you might have to adjust the .htaccess file in root folder.
 
 ### Admin
-Once installed, To access the administrator area of your Scriptor site go to your websites homepage, then simply add the text "editor/" to the URL in your browsers, for example: 
+Once installed, to access the administrator area of your Scriptor site go to your websites homepage, then simply add the text "editor/" to the URL in your browsers, for example: 
 ```
 https://yourwebsite.com/editor/
 ```
