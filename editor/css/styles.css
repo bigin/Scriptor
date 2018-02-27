@@ -283,6 +283,7 @@ a.btn {
 	overflow: hidden;
 	outline: none;
 	border-radius: 3px;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1.6rem;
 	line-height: 1.7;
 	letter-spacing: .2px;
