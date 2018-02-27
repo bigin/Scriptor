@@ -123,18 +123,25 @@ class Editor
 		}
 		else if($this->segments->get(1) == 'delete' && $this->input->get->page) {
 			$page = $this->pages->getItem((int)$this->input->get->page);
-			if($this->pages->remove($page)) {
+			if($page && $page->id != 1 && $this->pages->remove($page)) {
 				$this->msgs[] = array(
 					'type' => 'success',
 					'value' => $this->i18n['page_successful_removed']
 				);
 				\Imanager\Util::redirect("../");
 				exit;
+			} else if($page && $page->id == 1) {
+				$this->msgs[] = array(
+					'type' => 'error',
+					'value' => $this->i18n['error_deleting_first_page']
+				);
+				\Imanager\Util::redirect("../");
 			} else {
 				$this->msgs[] = array(
 					'type' => 'error',
 					'value' => $this->i18n['error_deleting_page']
 				);
+				\Imanager\Util::redirect("../");
 			}
 		}
 		else if($this->segments->get(0) == 'logout') {

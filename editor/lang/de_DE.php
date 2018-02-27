@@ -43,5 +43,6 @@ $i18n = array(
 	'error_page_title_exists' => 'Seite konnte nicht gespeichert werden, da bereits eine Seite mit demselben Titel existiert.',
 	'error_page_content' => 'Feld Inhalt darf nicht leer sein.',
 	'successful_saved_page' => 'Die Seite wurde erfolgreich gespeichert.',
-	'parent_select_option' => 'Auswählen'
+	'parent_select_option' => 'Auswählen',
+	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.'
 );
