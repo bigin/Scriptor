@@ -1,6 +1,6 @@
 # Scriptor
 
-_Scriptor is a simple flat-file CMS based on IManager. Specially developed to create web-based manuals, instructions or API references and other web-based manuscripts, supports Markdown and Syntax highlighting._
+_Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other web-based manuscripts, supports Markdown and Syntax highlighting._
 
 
 ### Install Requirements
@@ -10,7 +10,7 @@ _Scriptor is a simple flat-file CMS based on IManager. Specially developed to cr
 ### Installing from zip
 1. Click `Clone or download`
 2. Unpack the archive and rename the `Scriptor-master` folder as you like.
-3. Upload upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
+3. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
 
 > NOTE: If you want to use Scriptor in a subdirectory, you might have to adjust the .htaccess file.
 
