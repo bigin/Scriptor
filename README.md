@@ -20,7 +20,7 @@ Once installed, to access the administrator area of your Scriptor site go to you
 https://yourwebsite.com/editor/
 ```
 
-Or when used in the subdirectory: 
+If you are using Scriptor in a subdirectory: 
 ```
 https://yourwebsite.com/scriptor/editor/
 ```
