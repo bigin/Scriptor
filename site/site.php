@@ -109,7 +109,6 @@ class Site
 		$this->segments = $this->input->urlSegments;
 		$this->pages = $this->imanager->getCategory('name=Pages');
 		$this->users = $this->imanager->getCategory('name=Users');
-		$this->elements = $this->imanager->getCategory('name=Elements');
 		$this->firstSegment = $this->segments->get(0);
 		$this->lastSegment = $this->segments->getLast();
 		if(!isset($_SESSION['msgs'])) {
