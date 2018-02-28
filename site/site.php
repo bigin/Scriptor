@@ -44,12 +44,12 @@ class Site
 	/**
 	 * @var object $pages - An object of category Pages
 	 */
-	protected $pages;
+	public $pages;
 
 	/**
 	 * @var object $users - An object of category Users
 	 */
-	protected $users;
+	public $users;
 
 	/**
 	 * @var array $msgs - An array of local error messages
@@ -64,12 +64,12 @@ class Site
 	/**
 	 * @var object $page - The current page object instance
 	 */
-	protected $page;
+	public $page;
 
 	/**
 	 * @var object $user - The current user object instance
 	 */
-	protected $user;
+	public $user;
 
 	/**
 	 * @var string $breadcrumbs - Breadcrumbs markup
