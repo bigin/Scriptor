@@ -4,7 +4,9 @@ _Scriptor is a simple flat-file CMS based on IManager. Specially developed for p
 
 ![](https://lh3.googleusercontent.com/irFwC4wxmMUwpiE65pRmDHIi-b2uTT0kYMBV_GZRCKTj7XTMli6CSUs8RSoPgIdc7b4nhfuRTAWzm260OyJFlL6dORaX8qawjZnZ9lcZDOmby9daX7SxXDFLEqQBZrt6pghxBwSxHGLqPfZorw8JVGspEyhXo6Iiq3Fzl_KLwY9blNoOFKVgm_yX6cbV0Gn8BrzYdwjvCbG4FJbKxV4fd5CTlEqrb-SMoG0bvQklELNZdT_IZI9DStsYS_Rxx8-670QJRXRm9J0JLYAma0oApRSl2555snv_gkZoS2brpbvGzUsAYKMXb6L623ySWUc7MtC3SzB93h92Ma5VdgzFfeQ-S1AWQCXbxmH6EPiokitSjhtMuHrfOX_1tOIalBUpL_THAIKmbfVCYD7ae3gsv-yhLveK6uFwgRIURlL8olRVmUmswbZjCOGdkeShVVp1tSiDAVGstdRoVsMCFvBnZV9_MP898pRzTOn1oncBYnJwlHDt-bPLxOC6tkLE48eZgdf0SxZkRt7bH5QgQ7_Dwrc8sJ1oOxP7kAZ3KG6sjIRuEFuEGGFLcZuvWSZ6Y1PacVEOsv3lq36CNv-BunCsi4egylZ6_nSKOg7xxE7RbZQCbIf32_oXEub1xD_1kx9OOI4VgyoDb5wYG070Ha2m6lyJQT8A2B5B=w888-h317-no)
 
+---
 Demo: https://demos.ehret-studio.com/scriptor/
+---
 
 ### Install Requirements
 - PHP 7 (Recommend PHP 7.1). However, it will also work with PHP 5.6, but it has not been tested yet.
