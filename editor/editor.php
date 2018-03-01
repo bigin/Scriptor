@@ -122,27 +122,9 @@ class Editor
 			exit();
 		}
 		else if($this->segments->get(1) == 'delete' && $this->input->get->page) {
-			$page = $this->pages->getItem((int)$this->input->get->page);
-			if($page && $page->id != 1 && $this->pages->remove($page)) {
-				$this->msgs[] = array(
-					'type' => 'success',
-					'value' => $this->i18n['page_successful_removed']
-				);
-				\Imanager\Util::redirect("../");
-				exit;
-			} else if($page && $page->id == 1) {
-				$this->msgs[] = array(
-					'type' => 'error',
-					'value' => $this->i18n['error_deleting_first_page']
-				);
-				\Imanager\Util::redirect("../");
-			} else {
-				$this->msgs[] = array(
-					'type' => 'error',
-					'value' => $this->i18n['error_deleting_page']
-				);
-				\Imanager\Util::redirect("../");
-			}
+			$status = $this->removePage();
+			\Imanager\Util::redirect('../');
+			exit();
 		}
 		else if($this->segments->get(0) == 'logout') {
 			unset($_SESSION['loggedin']);
@@ -397,7 +379,7 @@ class Editor
 					<td>'.(($page->parent) ? $page->parent : '').'</td>
 					<td><a href="edit/?page='.$page->id.'">'.
 						((mb_strlen($page->name) > 80) ? mb_substr($page->name, 0,80).'...' : $page->name).
-						'</td></a><td><a class="remove" rel="'.sprintf($this->i18n['pre_delete_msg'], $page->id).
+						'</td></a><td><a class="remove" rel="'.$this->i18n['pre_delete_msg'].
 						'" href="delete/?page='.$page->id.'"><i class="far fa-trash-alt"></i></a></td>
 				</tr>
 			';
@@ -596,5 +578,38 @@ class Editor
 		}
 		$this->imanager->sectionCache->expire();
 		return true;
+	}
+
+	protected function removePage()
+	{
+		$page = $this->pages->getItem((int)$this->input->get->page);
+		$child = ($page) ? $this->pages->getItem("parent=$page->id") : null;
+		// Child pages are available, deletion is not possible
+		if($child) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_remove_parent_page']
+			);
+			return false;
+		} else if($page && $page->id != 1 && $this->pages->remove($page)) {
+			$this->msgs[] = array(
+				'type' => 'success',
+				'value' => $this->i18n['page_successful_removed']
+			);
+			$this->imanager->sectionCache->expire();
+			return true;
+		} else if($page && $page->id == 1) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_deleting_first_page']
+			);
+			return false;
+		} else {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_deleting_page']
+			);
+			return false;
+		}
 	}
 }

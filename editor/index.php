@@ -29,7 +29,7 @@
 	</div>
 	<footer role="contentinfo">
 		<div>
-			Copyright &copy; <time datetime="2018">2018</time>
+			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. 1.0 |
 			Created with <a href="https://gitlab.com/bigin1/imanager">IManager</a>
 		</div>

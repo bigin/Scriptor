@@ -2,9 +2,10 @@
 
 $config = array(
 	/**
-	 * Your admin language
+	 * Your admin language: de_DE, en_US
+	 * See languages available under: editor/lang/
 	 */
-	'editor_lang' => 'de_DE',
+	'editor_lang' => 'en_US',
 
 	/**
 	 * Enter your sitename
