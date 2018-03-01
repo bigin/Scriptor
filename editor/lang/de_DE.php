@@ -1,6 +1,6 @@
 <?php
 $i18n = array(
-	'pre_delete_msg' => 'Sind Sie sicher, dass Sie die Seite mit der ID %d löschen wollen?',
+	'pre_delete_msg' => 'Sind Sie sicher, dass Sie diese Seite löschen wollen?',
 	'dashboard_menu' => 'Dashboard',
 	'pages_menu' => 'Seiten',
 	'settings_menu' => 'Einstellungen',
@@ -20,7 +20,7 @@ $i18n = array(
 	'pages_header' => 'Seiten',
 	'successful_login' => 'Sie wurden erfolgreich eingeloggt.',
 	'profil_incomplete' => 'Bitte füllen Sie alle Pflichtfelder aus.',
-	'short_password' => 'Ihr Kennwort ist zu kurz, bitte geben Sie ein neues Kennwort mit einer Länge von mindestens 6 Zeichen ein',
+	'short_password' => 'Ihr Kennwort ist zu kurz, bitte geben Sie ein neues Kennwort mit einer Länge von mindestens 6 Zeichen ein.',
 	'error_password_comparison' => 'Ihr Kennwort und Kennwort-Wiederholung stimmen nicht überein.',
 	'profil_successful_saved' => 'Ihre Profildaten wurden erfolgreich gespeichert.',
 	'create_button' => 'Erstellen',
@@ -44,5 +44,6 @@ $i18n = array(
 	'error_page_content' => 'Feld Inhalt darf nicht leer sein.',
 	'successful_saved_page' => 'Die Seite wurde erfolgreich gespeichert.',
 	'parent_select_option' => 'Auswählen',
-	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.'
+	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',
+	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.'
 );
