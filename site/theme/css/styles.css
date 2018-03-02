@@ -193,8 +193,17 @@ a.btn {
 	word-wrap: break-word;
 }
 
+#disqus_thread {
+	margin: 0;
+	width: 100%;
+	max-width: 740px;
+}
+
 @media (max-width: 1100px) {
 	#content {
+		max-width: 650px;
+	}
+	#disqus_thread {
 		max-width: 650px;
 	}
 }
@@ -208,11 +217,22 @@ a.btn {
 	#content {
 		max-width: 100%;
 	}
+	#disqus_thread {
+		max-width: 100%;
+	}
 }
 
 #content blockquote, #content dl, #content ol, #content p, #content table, #content ul {
 	margin-top: 0;
 	margin-bottom: .85em;
+}
+
+#content blockquote {
+	margin: 0;
+	padding: 0 15px;
+	color: #818181;
+	background-color: #fafafa;
+	border-left: 4px solid #dbdbdb;
 }
 
 #content p {
