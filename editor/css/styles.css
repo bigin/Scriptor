@@ -399,6 +399,14 @@ label.required:after {
 	margin-bottom: .85em;
 }
 
+#page-text blockquote {
+	margin: 0;
+	padding: 0 15px;
+	color: #818181;
+	background-color: #fafafa;
+	border-left: 4px solid #dbdbdb;
+}
+
 #page-text p {
 	orphans: 3;
 	widows: 3;
