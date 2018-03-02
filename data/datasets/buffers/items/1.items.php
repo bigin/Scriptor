@@ -3,30 +3,47 @@
   Imanager\Item::__set_state(array(
      'categoryid' => 1,
      'id' => 1,
-     'name' => 'Das ist die erste Seite',
+     'name' => 'What is Scriptor?',
      'label' => NULL,
-     'position' => 1,
+     'position' => 3,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1519729099,
-     'content' => 'An API overview of IManager, how to use it and some basic examples.
+     'updated' => 1520010860,
+     'content' => '_Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown and Syntax Highlighting._
 
-Use IManager\'s API in any other PHP scripts it\'s easy! The first thing you should do is just including IManager\'s ./imanager.php file from any other PHP script. IManager comes with an index.php file in the root directory by default. This file is not needed to run IManager and you can safely delete it, but look at this file anyway, it represent an example of how to include IManager in your script.
+The Scriptor provides everything you need to get started with online publishing, but none of the features and complexity that are unnecessary.
 
+#### Open Source
+Scriptor is released under the MIT license, you can adapt it to suit your needs.
+
+#### What kind of publications can you create with Scriptor?
+In short, all types of publications that contains static text, for instance:
+- Manuals  
+- Tech How-To Guides & Tutorials  
+- API references  
+- Simple static websites  
+- Blogs  
+- And much more  
+
+> Note: Scriptor is not suitable for complex dynamically generated data structures or large scale websites with large volume of data.
+
+#### Flat File
+Installation and deployment is much easier, without the need to setup a database. No configuration required: Unzip, upload and create your contents in seconds.
+
+#### Markdown only  
+Scriptor\'s entire article editor pretty much built around Markdown! Scriptor supports Markdown syntax only, because that\'s a cool thing, makes writing easier and thus avoid unnecessary content bloat.
+
+And by the way, Syntax Highlighting is also supported:
 ```php
 include(\'/your-imanager-location/imanager.php\');
 ```
-Once you have included IManager like in the example above, the API is now available to you in the $imanager global variable, or via the imanager() function. For instance, here\'s how you would access the systemDateFormat config variable:
+#### Design
+If you are HTML guru or even be good on it - feel free to create your own design or to customize an existing template `site/theme/template.php`. Scriptor does not use its own template engine but uses plain HTML/PHP, which makes working with it very easy.
 
-```php
-echo $imanager->config->systemDateFormat;
-```
-or
-```php
-echo imanager(\'config\')->systemDateFormat;
-```',
+#### Extendable
+Since the Scriptor is based on [IManager](https://gitlab.com/bigin1/imanager) framework, it allows you to add extra functionality.',
      'pagetype' => 1,
-     'slug' => 'das-ist-die-erste-seite',
+     'slug' => 'what-is-scriptor-',
      'parent' => 0,
   )),
 ); ?>
