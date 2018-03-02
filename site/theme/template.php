@@ -38,7 +38,7 @@
 		<div class="clip">
 			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. 1.0 |
-			Created with <a href="https://gitlab.com/bigin1/imanager">IManager</a>
+			Powered by <a href="https://gitlab.com/bigin1/imanager">IManager</a>
 		</div>
 	</footer>
 </main>
