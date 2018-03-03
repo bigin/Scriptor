@@ -7,6 +7,7 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $page->siteUrl; ?>editor/css/hljs.css">
 	<link rel="stylesheet" href="<?php echo $page->themeUrl; ?>css/styles.css">
 	<link rel="icon" href="<?php echo $page->siteUrl; ?>editor/favicon.ico" type="image/x-icon" />
