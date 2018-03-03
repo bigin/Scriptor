@@ -526,6 +526,9 @@ hr {
 	width: 80%;
 	max-width: 780px;
 }
+#screen-content h1,#screen-content h2,#screen-content h3,#screen-content h4 {
+	margin-bottom: .4em;
+}
 
 /* The Close Button */
 .close {
