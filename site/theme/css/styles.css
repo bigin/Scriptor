@@ -240,6 +240,15 @@ a.btn {
 	widows: 3;
 }
 
+#content img {
+	max-width: 100%;
+	border: 1px solid rgba(0,0,0,.07);
+}
+
+#content h1,#content h2,#content h3,#content h4 {
+	margin-bottom: .4em;
+}
+
 hr {
 	height: 4px;
 	padding: 0;
