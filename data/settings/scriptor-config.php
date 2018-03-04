@@ -24,4 +24,5 @@ $config = array(
 	 * etc
 	 */
 	'section_cache_time' => 262974383
+
 );

@@ -429,9 +429,7 @@ class Editor
 			);
 		}
 		$this->page->set('name', $name);
-		// filter_var($this->input->post->content, FILTER_SANITIZE_STRING)
-		// $content = htmlentities(str_replace('"', '\"', $this->input->post->content));
-		$content = $this->imanager->sanitizer->textarea(str_replace('"', '&quot;', $this->input->post->content));
+		$content = htmlentities($this->input->post->content);
 		if(!$content) {
 			$this->msgs[] = array(
 				'type' => 'error',

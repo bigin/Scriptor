@@ -28,7 +28,7 @@
 								This site uses JavaScript to parse the content client-side to generate dynamic HTML.</p>
 						</div>
 					</noscript>
-					<input id="markdown" type="hidden" value="<?php echo $page->content; ?>">
+					<textarea id="markdown" style="display: none"><?php echo $page->content; ?></textarea>
 				</div>
 				<?php include('sidebar.php'); ?>
 			</div>
@@ -45,6 +45,6 @@
 <script src="<?php echo $page->siteUrl; ?>editor/scripts/jquery.min.js"></script>
 <script src="<?php echo $page->siteUrl; ?>editor/scripts/remarkable/remarkable.min.js"></script>
 <script src="<?php echo $page->siteUrl; ?>editor/scripts/highlight/highlight.pack.js"></script>
-<script src="<?php echo $page->themeUrl; ?>scripts/main.js"></script>
+<script src="<?php echo $page->themeUrl; ?>scripts/main.js?v=1"></script>
 </body>
 </html>
