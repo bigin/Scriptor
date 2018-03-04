@@ -8,7 +8,7 @@
      'position' => 3,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1520186866,
+     'updated' => 1520187878,
      'content' => '#### What is Scriptor?
 Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown.
 
