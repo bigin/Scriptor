@@ -25,7 +25,7 @@ var md = new Remarkable('full', {
 		return ''; // use external default escaping
 	}
 });
-
+//.replace(/″/g, '"')
 var text = md.render($("#markdown").val());
 if(text.length > 0) {
 	$("#content").html(text);
