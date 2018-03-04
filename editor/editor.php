@@ -413,7 +413,7 @@ class Editor
 		if($this->input->get->page) { $this->page = $this->pages->getItem((int)$this->input->get->page); }
 		if(!$this->page) { $this->page = new \Imanager\Item($this->pages->id); }
 
-		$name = $this->imanager->sanitizer->text($this->input->post->name);
+		$name = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->name));
 		if(!$name) {
 			$this->msgs[] = array(
 				'type' => 'error',
@@ -557,7 +557,7 @@ class Editor
 				}
 			}
 		}
-		$this->user->set('name', $this->input->post->username);
+		$this->user->set('name', str_replace('"', '', $this->input->post->username));
 		$this->user->set('email', $this->imanager->sanitizer->email($this->input->post->email));
 
 		if($this->msgs) { return false; }
