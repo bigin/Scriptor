@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="<?php echo $page->siteUrl; ?>editor/css/hljs.css">
+	<link rel="stylesheet" href="<?php echo $page->siteUrl; ?>editor/css/prism.css">
 	<link rel="stylesheet" href="<?php echo $page->themeUrl; ?>css/styles.css">
 	<link rel="icon" href="<?php echo $page->siteUrl; ?>editor/favicon.ico" type="image/x-icon" />
 </head>
@@ -18,7 +18,7 @@
 		<div class="page">
 			<div class="page-inner clear">
 				<div id="page-header">
-					<h1><a href="<?php echo $page->siteUrl; ?>" class="page-hyperlink"><?php echo $page->title; ?></a></h1>
+					<h1><?php echo $page->title; ?></h1>
 				</div>
 				<?php echo $page->messages; ?>
 				<div id="content" role="article">
@@ -37,14 +37,14 @@
 	<footer role="contentinfo">
 		<div class="clip">
 			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
-			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. 1.0 |
+			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. <?php $page->config['version']; ?> |
 			Powered by <a href="https://gitlab.com/bigin1/imanager">IManager</a>
 		</div>
 	</footer>
 </main>
 <script src="<?php echo $page->siteUrl; ?>editor/scripts/jquery.min.js"></script>
 <script src="<?php echo $page->siteUrl; ?>editor/scripts/remarkable/remarkable.min.js"></script>
-<script src="<?php echo $page->siteUrl; ?>editor/scripts/highlight/highlight.pack.js"></script>
+<script src="<?php echo $page->siteUrl; ?>editor/scripts/prism.js"></script>
 <script src="<?php echo $page->themeUrl; ?>scripts/main.js?v=1"></script>
 </body>
 </html>

@@ -8,6 +8,11 @@ class Editor
 	protected $imanager;
 
 	/**
+	 * @var array $config - Scriptor config
+	 */
+	public $config;
+
+	/**
 	 * @var sting $pageTitle - Meta page title
 	 */
 	public $pageTitle;
@@ -78,7 +83,8 @@ class Editor
 	 * @param $config
 	 */
 	public function __construct($config) {
-		require("lang/$config[editor_lang].php");
+		$this->config = $config;
+		require("lang/{$this->config['editor_lang']}.php");
 		$this->i18n = $i18n;
 	}
 
