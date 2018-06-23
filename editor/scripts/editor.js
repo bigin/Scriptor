@@ -14,21 +14,12 @@ var md = new Remarkable('full', {
 	// Highlighter function. Should return escaped HTML,
 	// or '' if input not changed
 	highlight: function (str, lang) {
-		if (lang && Prism.languages[lang]) {
+		if(lang && Prism.languages[lang]) {
 			try {
 				return Prism.highlight(str, Prism.languages[lang], lang);
 			} catch (__) {}
 		}
 		return '';
-		/*if (lang && hljs.getLanguage(lang)) {
-			try {
-				return hljs.highlight(lang, str).value;
-			} catch (__) {}
-		}
-		try {
-			return hljs.highlightAuto(str).value;
-		} catch (__) {}
-		return ''; // use external default escaping*/
 	}
 });
 
