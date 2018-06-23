@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/hljs.css">
+	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/prism.css">
 	<link href="<?php echo $editor->pageUrl; ?>css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/jquery-ui.css">
@@ -30,7 +30,7 @@
 	<footer role="contentinfo">
 		<div>
 			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
-			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. 1.0 |
+			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. <?php $editor->config['version']; ?> |
 			Powered by <a href="https://gitlab.com/bigin1/imanager">IManager</a>
 		</div>
 	</footer>
@@ -38,7 +38,7 @@
 <script src="<?php echo $editor->pageUrl; ?>scripts/jquery.min.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/jquery-ui.min.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/remarkable/remarkable.min.js"></script>
-<script src="<?php echo $editor->pageUrl; ?>scripts/highlight/highlight.pack.js"></script>
+<script src="<?php echo $editor->pageUrl; ?>scripts/prism.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/editor.js"></script>
 </body>
 </html>

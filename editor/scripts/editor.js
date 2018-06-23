@@ -14,7 +14,13 @@ var md = new Remarkable('full', {
 	// Highlighter function. Should return escaped HTML,
 	// or '' if input not changed
 	highlight: function (str, lang) {
-		if (lang && hljs.getLanguage(lang)) {
+		if (lang && Prism.languages[lang]) {
+			try {
+				return Prism.highlight(str, Prism.languages[lang], lang);
+			} catch (__) {}
+		}
+		return '';
+		/*if (lang && hljs.getLanguage(lang)) {
 			try {
 				return hljs.highlight(lang, str).value;
 			} catch (__) {}
@@ -22,9 +28,10 @@ var md = new Remarkable('full', {
 		try {
 			return hljs.highlightAuto(str).value;
 		} catch (__) {}
-		return ''; // use external default escaping
+		return ''; // use external default escaping*/
 	}
 });
+
 function auto_grow(element) {
 	var scrollLeft = window.pageXOffset ||
 		(document.documentElement || document.body.parentNode || document.body).scrollLeft;
@@ -73,6 +80,7 @@ $("#render").click(function (e) {
 	var text = md.render($("#markdown").val());
 	if(text.length > 0) {
 		$("#page-text").html(text);
+
 	}
 	$("#screen").show();
 	return false;

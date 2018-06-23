@@ -1,4 +1,4 @@
-// https://highlightjs.org/
+// https://github.com/jonschlinkert/remarkable
 var md = new Remarkable('full', {
 	html:         false,        // Enable HTML tags in source
 	xhtmlOut:     false,        // Use '/' to close single tags (<br />)
@@ -13,19 +13,16 @@ var md = new Remarkable('full', {
 	quotes: '“”‘’',
 	// Highlighter function. Should return escaped HTML,
 	// or '' if input not changed
+	// We use Prism - https://prismjs.com/
 	highlight: function (str, lang) {
-		if (lang && hljs.getLanguage(lang)) {
+		if (lang && Prism.languages[lang]) {
 			try {
-				return hljs.highlight(lang, str).value;
+				return Prism.highlight(str, Prism.languages[lang], lang);
 			} catch (__) {}
 		}
-		try {
-			return hljs.highlightAuto(str).value;
-		} catch (__) {}
-		return ''; // use external default escaping
+		return '';
 	}
 });
-//.replace(/″/g, '"')
 var text = md.render($("#markdown").val());
 if(text.length > 0) {
 	$("#content").html(text);
