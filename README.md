@@ -4,7 +4,6 @@ _Scriptor is a simple flat-file CMS based on IManager. Specially developed for p
 
 ![](https://demos.ehret-studio.com/scriptor/data/uploads/intro-scriptor800.jpg?v=4)
 
----
 
 ### Demo & more info
 https://demos.ehret-studio.com/scriptor/
