@@ -8,9 +8,11 @@
      'position' => 3,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1520187878,
-     'content' => '#### What is Scriptor?
-Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown.
+     'updated' => 1529840748,
+     'content' => '![](data/uploads/scriptor.jpg)    
+
+#### What is Scriptor?
+Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown and Syntax Highlighting.
 
 The Scriptor&nbsp;provides everything&nbsp;you need to get&nbsp;started with online publishing, but none of the features and complexity that are unnecessary.
 
@@ -33,19 +35,24 @@ Installation and deployment is much easier, without the need to setup a database
 
 #### Markdown only  
 Scriptor\'s entire article editor pretty much built around Markdown! Scriptor supports Markdown&nbsp;syntax only, because that\'s a cool thing, makes writing easier and thus avoid unnecessary content bloat. By the way, Scriptor also supports syntax highlighting:
-
 ```php
 include \'ConfigHandler.php\';
 ```
+Scriptor uses [Prism](https://prismjs.com/) as syntax highlighter. The following languages are supported by default (you might want to customize your [Prism highlighter](https://prismjs.com/download.html#themes=prism&amp;languages=markup+css+clike+javascript)):
+* Markup   
+* CSS   
+* C-like   
+* JavaScript   
+* PHP   
 
-#### Design
-If you are HTML guru or even be good on it - feel free to create your own design or to&nbsp;customize&nbsp;an&nbsp;existing template `site/theme/template.php`. Scriptor does not use its own template engine but uses plain HTML/PHP, which makes working with it very easy.
+#### Theming
+If you are familiar with HTML - feel free to create your own design or to&nbsp;customize&nbsp;an&nbsp;existing template `site/theme/template.php`. Scriptor does not use its own template engine but uses plain HTML/PHP, which makes working with it very easy.
 
 #### Extendable
 Since the Scriptor is based on [IManager](https://gitlab.com/bigin1/imanager) framework, it allows you to add any extra functionality.
 
 #### Language
-Scriptor supports different languages for the admin panel. You can install or create alternate language packs for the admin of Scriptor. The English and German language files&nbsp;can be found in `editor/lang/` folder. You can change your language preference for the admin section within your&nbsp;`data/settings/scriptor-config.php` file.',
+Scriptor supports different languages for the admin panel. You can install or create alternate language packs. The English and German language packs&nbsp;can be found in `editor/lang/` folder. You can change your language preference for the admin section within your&nbsp;`data/settings/scriptor-config.php` file.',
      'pagetype' => 1,
      'slug' => 'scriptors-demo-page',
      'parent' => 0,
