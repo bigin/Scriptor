@@ -7,12 +7,20 @@
 		</div>
 		<?php if(isset($_SESSION['loggedin'])) { ?>
 		<ul class="summary">
-			<li class="chapter<?php echo (($imanager->input->urlSegments->get(0) == 'pages') ? ' active' : ''); ?>" data-level="1.1" data-path="./">
-				<a href="<?php echo $editor->pageUrl; ?>pages/"><?php echo $editor->i18n['pages_menu']; ?></a>
-			</li>
-			<li class="chapter<?php echo (($imanager->input->urlSegments->get(0) == 'settings') ? ' active' : ''); ?>" data-level="1.1" data-path="./">
-				<a href="<?php echo $editor->pageUrl; ?>settings/"><?php echo $editor->i18n['settings_menu']; ?></a>
-			</li>
+			<?php if($editor->config['modules'] && !empty($editor->config['modules'])) {
+				foreach($editor->config['modules'] as $slug => $module) {
+					if($module['active']) {
+						?>
+						<li class="chapter<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' active' : ''); ?>"
+							data-level="1.1" data-path="./">
+							<a href="<?php echo $editor->pageUrl.$slug; ?>/"><?php
+								echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu']; ?></a>
+						</li>
+						<?php
+					}
+				}
+			?>
+			<?php } ?>
 		</ul>
 		<?php } ?>
 	</nav>

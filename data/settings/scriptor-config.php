@@ -14,7 +14,7 @@ $config = array(
 
 	/**
 	 * Without the file extension.
-	 * By default .php
+	 * Extension by default is .php
 	 */
 	'404page' => '404',
 
@@ -23,6 +23,32 @@ $config = array(
 	 * month: 262974383
 	 * etc
 	 */
-	'section_cache_time' => 262974383
+	'section_cache_time' => 262974383,
+
+	/**
+	 * Installed Scriptor modules
+	 * Please add your custom modules to '/root/modules/ModuleName/ModuleName.php'
+	 */
+	'modules' => array(
+		// Slug
+		'pages' => array(
+			'menu' => 'pages_menu', // i18n variable name or string
+			'active' => true,
+			'class' => null, // Build-in module
+			'description' => "Scriptor's build-in module to display and edit pages"
+		),
+		// Slug
+		'settings' => array(
+			'menu' => 'settings_menu', // i18n variable name or string
+			'active' => true,
+			'class' => null, // Build-in module
+			'description' => 'A build-in module for showing settings menu'
+		)
+	),
+
+	/**
+	 * Do not change this value
+	 */
+	'version' => '1.1'
 
 );

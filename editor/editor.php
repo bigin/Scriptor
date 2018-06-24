@@ -228,6 +228,19 @@ class Editor
 			$this->pageContent = $this->renderProfilEditor($_SESSION['userid']);
 			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a></li><li><a href="./">'.
 				$this->i18n['profil_menu'].'</a></li>';
+		// It's a custom module?
+		} elseif($this->segments->get(0) && array_key_exists($this->segments->get(0), $this->config['modules'])) {
+			$module = $this->config['modules'][$this->segments->get(0)];
+			// Module disabled
+			if(!$module['active']) { return; }
+			// Module file exists?
+			if(!file_exists(dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php')) {
+				return;
+			}
+			// include module
+			include dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php';
+			$module = new $module['class']();
+			$module->execute();
 		}
 	}
 
