@@ -231,16 +231,15 @@ class Editor
 		// It's a custom module?
 		} elseif($this->segments->get(0) && array_key_exists($this->segments->get(0), $this->config['modules'])) {
 			$module = $this->config['modules'][$this->segments->get(0)];
-			// Module disabled
+			// Is module disabled?
 			if(!$module['active']) { return; }
 			// Module file exists?
-			if(!file_exists(dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php')) {
-				return;
+			if(file_exists(dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php')) {
+				// include module
+				include dirname(__DIR__) . '/modules/' . $module['class'] . '/' . $module['class'] . '.php';
+				$module = new $module['class']();
+				$module->execute();
 			}
-			// include module
-			include dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php';
-			$module = new $module['class']();
-			$module->execute();
 		}
 	}
 
