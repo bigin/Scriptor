@@ -8,51 +8,49 @@
      'position' => 3,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1529840748,
-     'content' => '![](data/uploads/scriptor.jpg)    
+     'updated' => 1530212188,
+     'content' => '![](data/uploads/intro-scriptor740.jpg)    
 
-#### What is Scriptor?
-Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown and Syntax Highlighting.
+### Iove oscula propositum acerris iusque
 
-The Scriptor&nbsp;provides everything&nbsp;you need to get&nbsp;started with online publishing, but none of the features and complexity that are unnecessary.
+Lorem markdownum notam sibila Argolicis habet, manibus illa, et. Fera vestigia
+metuunt annos ignibus *commota quippe*. Graiumque tua vix volanti Diomedeos
+lacrimis.
 
-#### Open Source
-Scriptor is released under the MIT license. You can run, copy, distribute, change and improve it to suit your needs.
+&gt; Matris armigerae libasse muta. Vestes illa, sua et amari, vini dixerat Ino,
+&gt; qui.
 
-#### What kind of publications can you create with Scriptor?
-In short,&nbsp;all types of publications&nbsp;that&nbsp;contains static text, for instance:
-- Manuals  
-- Tech&nbsp;How-To Guides&nbsp;&amp; Tutorials  
-- API references  
-- Simple static websites  
-- Blogs&nbsp; 
-- And much more  
+### Urbe imbres est fibra corpore
 
-&gt; Note: Scriptor is not suitable for complex dynamically generated data structures or large scale&nbsp;websites with large volume of data.
+Vestigia pallore. Matre quid dolore Acoetes sit videns frustraque retenta mare,
+caelestibus conamina coryli veloces.
 
-#### Flat File
-Installation and deployment is much easier, without the need to setup a database. No configuration required: Unzip, upload and create your contents in seconds.
+&gt; Mariti cur: ante *causa* rigorem errabant gravitate imagine quotiensque amor
+&gt; secundi cruribus [adclivi sibi est](http://caelestia.com/enim) apri dedimus
+&gt; quinos. Mihi quoque gemelliparae factum gramen, alto nomina abest nostro,
+&gt; illic extinctum regia, languescuntque. Anguis qui laesaque ciet nam lapsae,
+&gt; *fortuna* manus at quam; in.
 
-#### Markdown only  
-Scriptor\'s entire article editor pretty much built around Markdown! Scriptor supports Markdown&nbsp;syntax only, because that\'s a cool thing, makes writing easier and thus avoid unnecessary content bloat. By the way, Scriptor also supports syntax highlighting:
-```php
-include \'ConfigHandler.php\';
-```
-Scriptor uses [Prism](https://prismjs.com/) as syntax highlighter. The following languages are supported by default (you might want to customize your [Prism highlighter](https://prismjs.com/download.html#themes=prism&amp;languages=markup+css+clike+javascript)):
-* Markup   
-* CSS   
-* C-like   
-* JavaScript   
-* PHP   
+### Quibus sine velox
 
-#### Theming
-If you are familiar with HTML - feel free to create your own design or to&nbsp;customize&nbsp;an&nbsp;existing template `site/theme/template.php`. Scriptor does not use its own template engine but uses plain HTML/PHP, which makes working with it very easy.
+Esse requiem pedes sub freta modo. Mortis **ieiunia furori animalia** credimus,
+terras per guttae paucaque coniuge in solas et illa sustinet? Antris proxima
+tantum lapidis Tonantis unde. Quoque sororis nivibus limine cognatumque
+pingebat, matre concentu Aeolides Cancri, ipsa terrae semper feci sanguine
+externos.
 
-#### Extendable
-Since the Scriptor is based on [IManager](https://gitlab.com/bigin1/imanager) framework, it allows you to add any extra functionality.
+- Acernas crescere et exitus
+- Silva deum Amphion tamen
+- Soror quondam contigit
+- Hamata modo quaerens ut velatam obmutuit decusque
+- Quam haererem aestatem ventos
 
-#### Language
-Scriptor supports different languages for the admin panel. You can install or create alternate language packs. The English and German language packs&nbsp;can be found in `editor/lang/` folder. You can change your language preference for the admin section within your&nbsp;`data/settings/scriptor-config.php` file.',
+Incingere Aoniis celat imagine digitis et iram, cum est diu violave oculis passu
+meo. Sume in Cinyran aerane altrice amnis nefas gerebat properatis **orbem**
+sicco honorem ille bis. Repulsa quantaque aderat in relictas memoraverat arma
+desierant umerique, suo cum in nymphae signa praetemptatque suorum genetrici?
+Fieres sequitur quaeris Diana una parens, *te origo*; quid. Capherea liquitur
+mediis deerat facies agat quercu donavi Clara: Erinys Dies.',
      'pagetype' => 1,
      'slug' => 'scriptors-demo-page',
      'parent' => 0,
