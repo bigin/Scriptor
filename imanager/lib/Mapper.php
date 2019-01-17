@@ -1,3 +1,3 @@
 <?php namespace Imanager;
 
-class Mapper extends Object{}
+class Mapper extends ImObject{}

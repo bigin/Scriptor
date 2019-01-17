@@ -1,6 +1,6 @@
 <?php namespace Imanager;
 
-class Object
+class ImObject
 {
 	protected $imanager = null;
 
