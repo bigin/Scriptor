@@ -1,6 +1,6 @@
 <?php namespace Imanager;
 
-class Category extends Object
+class Category extends ImObject
 {
 	/**
 	 * @var integer - Category id

@@ -1,6 +1,6 @@
 <?php namespace Imanager;
 
-class Field extends Object
+class Field extends ImObject
 {
 	/**
 	 * @var int|null - The category ID of this field
