@@ -13,8 +13,8 @@
      'role' => 'siteadmin',
      'password' => 
     Imanager\PasswordFieldValue::__set_state(array(
-       'password' => 'd2872bdeedde6ebc25c99e0658344524863ec47f',
-       'salt' => 'R$PJ+nS7Zu',
+       'password' => '$2y$10$Ns2HeYMVhVCJTS0mZcofse1YjnJkNfFeiqONEWUuO1macLD6b8njW',
+       'salt' => '',
     )),
   )),
 ); ?>

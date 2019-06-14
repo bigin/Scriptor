@@ -5,10 +5,10 @@
      'id' => 1,
      'name' => 'Scriptor\'s Demo Page',
      'label' => NULL,
-     'position' => 3,
+     'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1530212188,
+     'updated' => 1560489399,
      'content' => '![](data/uploads/intro-scriptor740.jpg)    
 
 ### Iove oscula propositum acerris iusque
