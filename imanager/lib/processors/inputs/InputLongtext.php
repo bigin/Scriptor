@@ -1,45 +1,57 @@
 <?php namespace Imanager;
 
-class InputLongtext implements InputInterface
+class InputLongtext extends InputText implements InputInterface
 {
-	public $value;
+	/**
+	 * @var int
+	 * MEDIUMTEXT 16,777,215 bytes ~16MB
+	 */
+	protected $maxLen = 16777215;
 
-	protected $field;
+	/**
+	 * InputLongtext constructor.
+	 *
+	 * @param Field $field
+	 */
+	public function __construct(Field $field) {
+		parent::__construct($field);
+	}
 
-	public $errorCode = null;
+	/**
+	 * This method checks the field inputs and sets the field contents.
+	 * If an error occurs, the method returns an error code.
+	 *
+	 * @param $value
+	 * @param bool $sanitize
+	 *
+	 * @return int|stdClass
+	 */
+	public function prepareInput($value, $sanitize = false) {
+		return parent::prepareInput($value, $sanitize);
+	}
 
-	public function __construct(Field $field)
+	/**
+	 * The method that is called when initiating item content
+	 * and is relevant for setting the field content.
+	 * However, since we do not require any special formatting
+	 * of the output, we can accept the value 1 to 1 here.
+	 *
+	 * @return stdClass
+	 */
+	public function prepareOutput() { return $this->value; }
+
+	/**
+	 * This is the method used for sanitizing.
+	 * ItemManager' Sanitizer method "textarea" will be used for this.
+	 *
+	 * @param $value
+	 *
+	 * @return mixed
+	 */
+	protected function sanitize($value)
 	{
-		$this->field = $field;
-		$this->value = '';
+		return imanager('sanitizer')->textarea(
+			$value, array('maxLength' => $this->maxLen)
+		);
 	}
-
-	public function prepareInput($value, $sanitize = false)
-	{
-		$this->value = ($sanitize) ? $this->sanitize($value) : $value;
-
-		// check input required
-		if($this->field->required && empty($this->value)) {
-			$this->errorCode = self::EMPTY_REQUIRED;
-			return false;
-		}
-		// check min value length
-		if(!empty($this->field->minimum) && mb_strlen($this->value, 'UTF-8') < (int) $this->field->minimum) {
-			$this->errorCode = self::ERR_MIN_LENGTH;
-			return false;
-		}
-		// check input max value
-		if(!empty($this->field->maximum) && mb_strlen($this->value, 'UTF-8') > (int) $this->field->maximum) {
-			$this->errorCode = self::ERR_MAX_LENGTH;
-			return false;
-		}
-
-		return true;
-	}
-
-	public function prepareOutput($sanitize = false){
-		return ($sanitize) ? $this->sanitize($this->value) : $this->value;
-	}
-
-	protected function sanitize($value){ return imanager('sanitizer')->textarea($value); }
 }
