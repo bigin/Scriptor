@@ -1,57 +1,7 @@
 <?php
 
-class Editor
+class Editor extends Module
 {
-	/**
-	 * @var object $imanager - Instance of IManager
-	 */
-	protected $imanager;
-
-	/**
-	 * @var array $config - Scriptor config
-	 */
-	public $config;
-
-	/**
-	 * @var sting $pageTitle - Meta page title
-	 */
-	public $pageTitle;
-
-	/**
-	 * @var string $pageUrl - Current page URL
-	 */
-	public $pageUrl;
-
-	/**
-	 * @var string $pageContent - Current page content
-	 */
-	public $pageContent;
-
-	/**
-	 * @var object $input - Input object instance
-	 */
-	protected $input;
-
-	/**
-	 * @var object $segments - Segments object instance
-	 */
-	protected $segments;
-
-	/**
-	 * @var array $pages - An array of Page objects
-	 */
-	protected $pages;
-
-	/**
-	 * @var array $users - An array of Users objects
-	 */
-	protected $users;
-
-	/**
-	 * @var array $msgs - An array of local error messages
-	 */
-	protected $msgs;
-
 	/**
 	 * @var string $messages - rendered messages (markup)
 	 */
@@ -83,8 +33,8 @@ class Editor
 	 * @param $config
 	 */
 	public function __construct($config) {
-		$this->config = $config;
-		require("lang/{$this->config['editor_lang']}.php");
+		parent::__construct($config);
+		require "lang/{$this->config['editor_lang']}.php";
 		$this->i18n = $i18n;
 	}
 
@@ -95,17 +45,7 @@ class Editor
 	 */
 	public function init()
 	{
-		$this->imanager = imanager();
-		$this->pageUrl = $this->imanager->config->getUrl();
-		$this->input = $this->imanager->input;
-		$this->segments = $this->input->urlSegments;
-		$this->pages = $this->imanager->getCategory('name=Pages');
-		$this->users = $this->imanager->getCategory('name=Users');
-		if(!isset($_SESSION['msgs'])) {
-			$_SESSION['msgs'] = array();
-		}
-		$this->msgs = & $_SESSION['msgs'];
-
+		parent::init();
 		$this->execute();
 		$this->renderMessages();
 	}
@@ -237,7 +177,8 @@ class Editor
 			if(file_exists(dirname(__DIR__).'/modules/'.$module['class'].'/'.$module['class'].'.php')) {
 				// include module
 				include dirname(__DIR__) . '/modules/' . $module['class'] . '/' . $module['class'] . '.php';
-				$module = new $module['class']();
+				$module = new $module['class']($this->config);
+				$module->inject($this);
 				$module->execute();
 			}
 		}
