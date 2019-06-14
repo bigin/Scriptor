@@ -49,6 +49,6 @@ $config = array(
 	/**
 	 * Do not change this value
 	 */
-	'version' => '1.1'
+	'version' => '1.2'
 
 );

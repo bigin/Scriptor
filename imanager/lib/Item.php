@@ -48,6 +48,11 @@ class Item extends FieldMapper
 	public $updated = null;
 
 	/**
+	 * @var null
+	 */
+	public $errorCode = null;
+
+	/**
 	 * Item constructor.
 	 *
 	 * @param $category_id
@@ -152,19 +157,19 @@ class Item extends FieldMapper
 		$this->init($this->categoryid);
 		$attributeKey = strtolower(trim($name));
 		$isAttribute = !in_array($attributeKey, $this->getAttributes()) ? false : true;
-		if(!$isAttribute && !isset($this->fields[$name])) { return false;}
+		if(!$isAttribute && !isset($this->fields[$name])) { Util::logException(new \ErrorException('Illegal item field name')); }
 		if($isAttribute) {
 			if(in_array($attributeKey, array('categoryid', 'id', 'position', 'created', 'updated'))) {
 				$this->$attributeKey = (int) $value;
-				if($this->$attributeKey) return true;
+				if($this->$attributeKey) return $this;
 			} elseif($attributeKey == 'name' || $attributeKey == 'label') {
 				$this->$attributeKey = $this->imanager->sanitizer->text($value,
 					array('maxLength' => $this->imanager->config->maxItemNameLength)
 				);
-				if($this->$attributeKey) return true;
+				if($this->$attributeKey) return $this;
 			} elseif($attributeKey == 'active') {
 				$this->$attributeKey = (boolean) $value;
-				if($this->$attributeKey) return true;
+				if($this->$attributeKey) return $this;
 			}
 			return false;
 		}
@@ -173,13 +178,19 @@ class Item extends FieldMapper
 		$Input = new $inputClassName($field);
 		$Input->itemid = $this->id;
 		if(!$sanitize) {
-			if(true !== $Input->prepareInput($value)) { return $Input->errorCode; }
+			if(true !== $Input->prepareInput($value)) {
+				$this->errorCode = $Input->errorCode;
+				return false;
+			}
 			$this->{$name} = $Input->prepareOutput();
 		} else {
-			if(true !== $Input->prepareInput($value, true)) { return $Input->errorCode; }
+			if(true !== $Input->prepareInput($value, true)) {
+				$this->errorCode = $Input->errorCode;
+				return false;
+			}
 			$this->{$name} = $Input->prepareOutput(true);
 		}
-		return true;
+		return $this;
 	}
 
 	/**
