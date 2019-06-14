@@ -58,12 +58,19 @@ class Module
 	protected $msgs;
 
 	/**
+	 * @var array $i18n - An array of language sets
+	 */
+	public $i18n;
+
+	/**
 	 * Module constructor
 	 *
 	 * @param $config
 	 */
 	public function __construct($config) {
 		$this->config = $config;
+		require "lang/{$this->config['editor_lang']}.php";
+		$this->i18n = $i18n;
 	}
 
 	public function init() {

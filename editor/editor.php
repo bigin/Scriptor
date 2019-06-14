@@ -23,22 +23,6 @@ class Editor extends Module
 	public $breadcrumbs;
 
 	/**
-	 * @var array $i18n - An array of language sets
-	 */
-	public $i18n;
-
-	/**
-	 * Editor constructor.
-	 *
-	 * @param $config
-	 */
-	public function __construct($config) {
-		parent::__construct($config);
-		require "lang/{$this->config['editor_lang']}.php";
-		$this->i18n = $i18n;
-	}
-
-	/**
 	 * Init editor class
 	 * Prepares some variables for local use and executes actions
 	 *
