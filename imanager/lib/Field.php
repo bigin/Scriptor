@@ -197,6 +197,8 @@ class Field extends ImObject
 		} else {
 			$this->{$key} = ($sanitize) ? (int) $val : $val;
 		}
+
+		return $this;
 	}
 
 	/**

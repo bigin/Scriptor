@@ -152,6 +152,8 @@ class Category extends ImObject
 	}
 
 	/**
+	 * Deletes an item or field belonging to this category.
+	 *
 	 * @param $obj
 	 * @param bool $complete
 	 *
@@ -203,7 +205,9 @@ class Category extends ImObject
 		$key = strtolower($key);
 
 		// Allowed attributes
-		if(!in_array($key, $this->getAttributes())) { return false; }
+		if(!in_array($key, $this->getAttributes())) {
+			Util::logException(new \ErrorException('Illegal category attribute'));
+		}
 
 		$sanitized = null;
 		if($key == 'slug') {
@@ -214,8 +218,10 @@ class Category extends ImObject
 			$sanitized = ($sanitize) ? $sanitizer->text($val) : $val;
 		}
 
-		if(!$sanitized) { return false; }
+		if(!$sanitized) { Util::logException(new \ErrorException('Illegal category attribute format')); }
 		$this->{$key} = $sanitized;
+
+		return $this;
 	}
 
 	/**
@@ -226,7 +232,7 @@ class Category extends ImObject
 	private function checkRequired()
 	{
 		if(!$this->name) {
-			Util::logException(new \ErrorException('A Category name attribute value is expected'));
+			Util::logException(new \ErrorException('A category name attribute value is expected'));
 		}
 		return true;
 	}
