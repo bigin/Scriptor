@@ -1,9 +1,8 @@
+![](https://demos.ehret-studio.com/scriptor/data/uploads/dashboard-screen.png)
+
 # Scriptor
 
-_Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions or API references and other online publications, supports Markdown and Syntax highlighting._
-
-![](https://demos.ehret-studio.com/scriptor/data/uploads/intro-scriptor800.jpg?v=4.4)
-
+_Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions and other online publications, supports Markdown and Syntax highlighting._
 
 ### Demo & more info
 https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
