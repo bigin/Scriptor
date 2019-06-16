@@ -29,8 +29,10 @@
 	</div>
 	<footer role="contentinfo">
 		<div>
+			<a href="https://github.com/bigin/Scriptor/releases">Scriptor <?php echo
+				$editor->config['version']; ?></a> |
 			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
-			<a href="https://ehret-studio.com">Ehret Studio</a> | Scriptor v. <?php $editor->config['version']; ?> |
+			<a href="https://ehret-studio.com">Ehret Studio</a> |
 			Powered by <a href="https://gitlab.com/bigin1/imanager">IManager</a>
 		</div>
 	</footer>
