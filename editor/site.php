@@ -1,5 +1,5 @@
 <?php
-class Site
+class Site extends Module
 {
 	/**
 	 * @var object $imanager - Instance of IManager
@@ -93,6 +93,7 @@ class Site
 	 */
 	public function __construct($config) {
 		$this->config = $config;
+		$this->config['version'] = parent::VERSION;
 	}
 
 	/**
