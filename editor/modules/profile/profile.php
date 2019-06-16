@@ -61,11 +61,10 @@ class Profile extends Module
 				);
 			}
 			if(!$this->msgs) {
-				if(true !== $this->user->set('password', array(
-							'password' => $this->input->post->password,
-							'confirm_password' => $this->input->post->password_confirm)
-					)
-				) {
+				if(!$this->user->set('password', [
+					'password' => $this->input->post->password,
+					'confirm_password' => $this->input->post->password_confirm]
+				)) {
 					$this->msgs[] = array(
 						'type' => 'error',
 						'value' => $this->i18n['error_password_comparison']
