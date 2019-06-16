@@ -1,6 +1,6 @@
 <?php defined('IS_IM') or die('You cannot access this page directly');
 
-$config = array(
+$config = [
 	/**
 	 * Your admin language: de_DE, en_US
 	 * See languages available under: editor/lang/
@@ -26,29 +26,64 @@ $config = array(
 	'section_cache_time' => 262974383,
 
 	/**
-	 * Installed Scriptor modules
-	 * Please add your custom modules to '/root/modules/ModuleName/ModuleName.php'
+	 * Installed Scriptor admin modules
+	 *
+	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'
+	 *
+	 * The structure is as follows:
+	 *
+	 * 'pages' => [                // URL Segment that resolves to the module
+	 *     'menu' => 'pages_menu', // i18n variable name or string
+	 *     'active' => true,       // Enables or disables module
+	 *     'path' => 'pages/pages',// Path and file name without extension like '.php'
+	 *     'class' => 'Pages',     // The class to be called
+	 *     'display_type' => [     // Module display options
+	 *         'sidebar'           // Show in 'sidebar' and/or 'profile' menu
+	 *     ],
+	 *     'description' => ""     // Module description
+	 * ]
 	 */
-	'modules' => array(
-		// Slug
-		'pages' => array(
-			'menu' => 'pages_menu', // i18n variable name or string
+	'modules' => [
+		'pages' => [
+			'menu' => 'pages_menu',
 			'active' => true,
-			'class' => null, // Build-in module
+			'path' => 'pages/pages',
+			'class' => 'Pages',
+			'display_type' => [
+				'sidebar'
+			],
 			'description' => "Scriptor's build-in module to display and edit pages"
-		),
-		// Slug
-		'settings' => array(
-			'menu' => 'settings_menu', // i18n variable name or string
+		],
+		'settings' => [
+			'menu' => 'settings_menu',
 			'active' => true,
-			'class' => null, // Build-in module
+			'class' => null, // Build in module
+			'display_type' => [
+				'sidebar'
+			],
 			'description' => 'A build-in module for showing settings menu'
-		)
-	),
-
-	/**
-	 * Do not change this value
-	 */
-	'version' => '1.2'
-
-);
+		],
+		'profile' => [
+			'menu' => 'profile_menu',
+			'active' => true,
+			'path' => 'profile/profile',
+			'class' => 'Profile',
+			'display_type' => [
+				'profile'
+			],
+			'icon' => 'fas fa-user-circle',
+			'description' => 'A Profile edit module for showing in the header menu'
+		],
+		'logout' => [
+			'menu' => 'logout_menu',
+			'active' => true,
+			'path' => '',
+			'class' => null, // Build in module
+			'display_type' => [
+				'profile'
+			],
+			'icon' => 'fas fa-sign-out-alt',
+			'description' => 'A build-in module for showing in the header menu'
+		]
+	]
+];

@@ -7,9 +7,9 @@
 		</div>
 		<?php if(isset($_SESSION['loggedin'])) { ?>
 		<ul class="summary">
-			<?php if($editor->config['modules'] && !empty($editor->config['modules'])) {
+			<?php if($editor->config['modules']) {
 				foreach($editor->config['modules'] as $slug => $module) {
-					if($module['active']) {
+					if($module['active'] && in_array('sidebar', $module['display_type'])) {
 						?>
 						<li class="chapter<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' active' : ''); ?>"
 							data-level="1.1" data-path="./">

@@ -16,8 +16,8 @@ RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$
 RewriteCond %{REQUEST_URI} (^|/)\.htaccess$ [NC,OR]
 # Block access to protected data directories
 RewriteCond %{REQUEST_URI} (^|/)data/(datasets|cache|logs|backups|settings)($|/.*$) [OR]
-# Block access to imanager directory
-RewriteCond %{REQUEST_URI} (^|/)(imanager|modules)($|/.*$)
+# Block access to imanager & editor/modules directory
+RewriteCond %{REQUEST_URI} (^|/)(imanager|editor/modules)($|/.*$)
 # If any conditions above match, issue a 403 forbidden
 RewriteRule ^.*$ - [F,L]
 

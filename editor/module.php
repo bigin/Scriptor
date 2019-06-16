@@ -7,6 +7,7 @@
  */
 class Module
 {
+	const VERSION = '1.3.0';
 	/**
 	 * @var object $imanager - Instance of IManager
 	 */
@@ -48,9 +49,19 @@ class Module
 	protected $pages;
 
 	/**
+	 * @var object $page - The current page object instance
+	 */
+	protected $page;
+
+	/**
 	 * @var array $users - An array of Users objects
 	 */
 	protected $users;
+
+	/**
+	 * @var object $user - A current user object instance
+	 */
+	protected $user;
 
 	/**
 	 * @var array $msgs - An array of local error messages
@@ -63,17 +74,36 @@ class Module
 	public $i18n;
 
 	/**
+	 * @var string $messages - rendered messages (markup)
+	 */
+	public $messages;
+
+	/**
+	 * @var string $breadcrumbs - Breadcrumbs markup
+	 */
+	public $breadcrumbs;
+
+	/**
 	 * Module constructor
 	 *
 	 * @param $config
 	 */
-	public function __construct($config) {
+	public function __construct($config)
+	{
 		$this->config = $config;
+		$this->config['version'] = self::VERSION;
 		require "lang/{$this->config['editor_lang']}.php";
 		$this->i18n = $i18n;
 	}
 
-	public function init() {
+	/**
+	 * Init module class
+	 *
+	 * Prepares some variables for local use and executes actions.
+	 *
+	 */
+	public function init()
+	{
 		$this->imanager = imanager();
 		$this->pageUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
@@ -84,7 +114,40 @@ class Module
 			$_SESSION['msgs'] = [];
 		}
 		$this->msgs = & $_SESSION['msgs'];
+
+		$this->execute();
+		$this->renderMessages();
 	}
 
-	public function inject($editor) { $this->editor = $editor; }
+	/**
+	 * Editor mapper
+	 *
+	 * @param $editor
+	 */
+	protected function map($editor)
+	{
+		$this->editor = & $editor;
+		foreach($this->editor as $key => $value) {
+			$this->$key = & $this->editor->$key;
+		}
+	}
+
+	protected function execute(){}
+
+	protected function renderMessages()
+	{
+		if(!empty($this->msgs)) {
+			$this->messages .= '<div class="message">';
+			foreach($this->msgs as $msg) {
+				if($msg['type'] == 'error') {
+					$this->messages .= '<p class="error">'.$msg['value'].'</p>';
+				} elseif($msg['type'] == 'success') {
+					$this->messages .= '<p class="success">'.$msg['value'].'</p>';
+				}
+			}
+			$this->messages .= '</div>';
+			unset($_SESSION['msgs']);
+			$_SESSION['msgs'] = null;
+		}
+	}
 }
