@@ -98,5 +98,5 @@ $i18n = [
 			<mark>data/settings/</mark> directory.</p>
 			
 			<p><br><i>Enjoy your Scriptor!</i></p>
-			'
+	'
 ];
