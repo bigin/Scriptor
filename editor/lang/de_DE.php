@@ -98,5 +98,5 @@ $i18n = [
 			befindet sich im <mark>data/settings/</mark> Verzeichnis.</p>
 			
 			<p><br><i>Viel Spaß mit Scriptor!</i></p>
-			'
+	'
 ];
