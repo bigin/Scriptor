@@ -221,7 +221,7 @@ class Site extends Module
 	protected function throw404()
 	{
 		header("HTTP/1.0 404 Not Found");
-		include(__DIR__.'/theme/'.$this->config['404page'].'.php');
-		die();
+		include 'site/theme/'.$this->config['404page'].'.php';
+		die;
 	}
 }

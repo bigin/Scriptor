@@ -8,12 +8,12 @@
      'position' => 1,
      'active' => false,
      'created' => 1519050932,
-     'updated' => 1519671026,
+     'updated' => 1560758294,
      'email' => 'gmail@chuck.norris.com',
      'role' => 'siteadmin',
      'password' => 
     Imanager\PasswordFieldValue::__set_state(array(
-       'password' => '$2y$10$Ns2HeYMVhVCJTS0mZcofse1YjnJkNfFeiqONEWUuO1macLD6b8njW',
+       'password' => '$2y$10$CNYrjas4GcYaKHHdPvKl1uOHw5R8jYGpyiI7to7LwCPGVCN/k6Q4y',
        'salt' => '',
     )),
   )),

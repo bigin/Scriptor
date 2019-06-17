@@ -1,16 +1,15 @@
 <?php
 
+/**
+ * Class Pages
+ *
+ *
+ * NOTE:
+ * You can use $editor - Inherited from Module
+ *
+ */
 class Pages extends Module
 {
-	/**
-	 * $editor - Inherited from Module
-	 */
-
-	/*public function __construct($config) {
-		parent::__construct($config);
-		parent::init();
-	}*/
-
 	public function execute()
 	{
 		if($this->input->get->page) {

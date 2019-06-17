@@ -97,6 +97,10 @@ $i18n = [
 			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>scriptor-config.php</mark> Datei vor, diese 
 			befindet sich im <mark>data/settings/</mark> Verzeichnis.</p>
 			
-			<p><br><i>Viel Spaß mit Scriptor!</i></p>
+			<hr>
+			<p><a href="https://ehret-studio.com/articles/scriptor-a-simple-flat-file-cms/"
+			>Official Website &rsaquo;</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a 
+			href="https://github.com/bigin/Scriptor"><i class="fab fa-github"></i> 
+			Clone Repo &rsaquo;</a></p>
 	'
 ];

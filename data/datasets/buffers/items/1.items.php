@@ -8,8 +8,9 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1560489399,
-     'content' => '![](data/uploads/intro-scriptor740.jpg)    
+     'updated' => 1560711954,
+     'errorCode' => NULL,
+     'content' => '![](data/uploads/dashboard-screen740.png)    
 
 ### Iove oscula propositum acerris iusque
 
