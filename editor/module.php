@@ -104,6 +104,14 @@ class Module
 	 */
 	public function init()
 	{
+		if($this->config['dif_lang_packs']) {
+			foreach($this->config['dif_lang_packs'] as $pack) {
+				if(file_exists("../data/lang/$pack{$this->config['editor_lang']}.php")) {
+					$customI18n = include "../data/lang/$pack{$this->config['editor_lang']}.php";
+					$this->i18n = array_merge($this->i18n, $customI18n);
+				}
+			}
+		}
 		$this->imanager = imanager();
 		$this->pageUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
