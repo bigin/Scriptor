@@ -8,6 +8,25 @@ $config = [
 	'editor_lang' => 'en_US',
 
 	/**
+	 * Additional language packs, example:
+	 *
+	 * 'dif_lang_packs' => [
+	 *     'your-languge-pack/',
+	 *     'another-languge-pack/'
+	 * ]
+	 *
+	 * ... this means that the language packages in the
+	 *
+	 * "data/lang/your-languge-pack/en_US.php"
+	 *
+	 * and "data/lang/another-languge-pack/en_US.php"
+	 *
+	 * directories are taken into use.
+	 *
+	 */
+	'dif_lang_packs' => [],
+
+	/**
 	 * Enter your sitename
 	 */
 	'site_name' => 'Scriptor',
@@ -29,7 +48,7 @@ $config = [
 	 * Relative path to the admin folder
 	 *
 	 * Please note, if you change the folder name, you have to change the paths
-	 * in the .htaccess file, in the root directory, accordingly.
+	 * in the .htaccess file, in the root directory accordingly.
 	 */
 	'admin_path' => 'editor/',
 
