@@ -15,5 +15,13 @@
   ],
   "require": {
     "php": ">=7.1.0"
-  }
+  },
+  "minimum-stability": "master",
+  "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../*"
+    }
+  ]
 }
