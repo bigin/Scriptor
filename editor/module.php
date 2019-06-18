@@ -142,6 +142,8 @@ class Module
 
 	protected function execute(){}
 
+	protected function checkAction(){}
+
 	protected function renderMessages()
 	{
 		if(!empty($this->msgs)) {
