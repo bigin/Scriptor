@@ -127,14 +127,19 @@ class Site extends Module
 			// Home
 			$this->page = $this->pages->getItem(1);
 			if(!$this->page || !$this->page->active) { return $this->throw404(); }
+			$this->checkAction();
 			$this->title = $this->page->name;
-			$this->content = $this->page->content;
+			foreach($this->page as $key => $param) {
+				$this->$key = $param;
+			}
 		} else {
 			// Other pages
 			$this->page = $this->pages->getItem('slug='.$this->imanager->sanitizer->pageName($this->lastSegment));
 			if(!$this->page || !$this->page->active) { return $this->throw404(); }
 			$this->title = $this->page->name;
-			$this->content = $this->page->content;
+			foreach($this->page as $key => $param) {
+				$this->$key = $param;
+			}
 		}
 	}
 
