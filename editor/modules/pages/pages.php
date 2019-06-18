@@ -326,7 +326,8 @@ class Pages extends Module
 		if(!empty($this->msgs)) { return false; }
 
 		$this->page->set('pagetype', 1, false);
-		$this->page->set('slug', $name);
+		$slug = preg_replace("/(-)\\1+/", "$1", $this->imanager->sanitizer->pageName($name));
+		$this->page->set('slug', $slug);
 		if($this->page->save()) {
 			$this->imanager->sectionCache->expire();
 			$this->msgs[] = array(
