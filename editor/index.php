@@ -7,12 +7,14 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="<?php echo $editor->pageUrl; ?>favicon.ico?v=1" type="image/x-icon" />
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/prism.css">
 	<link href="<?php echo $editor->pageUrl; ?>css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/jquery-ui.css">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/styles.css">
-	<link rel="icon" href="<?php echo $editor->pageUrl; ?>favicon.ico?v=1" type="image/x-icon" />
+	<?php echo $editor->getHeaderResources('css'); ?>
+	<?php echo $editor->getHeaderResources('js'); ?>
 </head>
 <body>
 <div id="delay"><div id="clamp"><span id="loader"></span></div></div>

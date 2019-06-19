@@ -144,6 +144,27 @@ class Module
 
 	protected function checkAction(){}
 
+	protected function addHeaderResource($context, $url)
+	{
+		if($context == 'js') $this->headerResources[$context][] =
+			'<script src="'.$this->imanager->sanitizer->url($url).'"></script>'."\r\n";
+		elseif($context == 'css') $this->headerResources[$context][] =
+			'<link rel="stylesheet" href="'.$this->imanager->sanitizer->url($url).'">'."\r\n";
+	}
+
+	public function getHeaderResources($context)
+	{
+		$result = null;
+
+		if(isset($this->headerResources[$context]) && is_array($this->headerResources[$context])) {
+			foreach($this->headerResources[$context] as $resource) {
+				$result .= $resource;
+			}
+		}
+
+		return $result;
+	}
+
 	protected function renderMessages()
 	{
 		if(!empty($this->msgs)) {
