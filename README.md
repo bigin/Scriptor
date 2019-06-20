@@ -2,16 +2,23 @@
 
 # Scriptor
 
-_Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based manuals, instructions and other online publications, supports Markdown and Syntax highlighting._
+_Scriptor is a simple flat-file CMS, specially developed for publishing web-based manuals, instructions and other online 
+publications, supports Markdown and Syntax highlighting._   
 
-### Demo & more info
-https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
-https://demos.ehret-studio.com/scriptor/   
-https://im.ehret-studio.com/tuts/   
+## Features   
+Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
+You will have it installed in 2 minutes - ready to use.   
+
+Flexible and extensible architecture: You have a variety of options and a powerful [IM](https://gitlab.com/bigin1/imanager) 
+framework for module development.
+
+You have total freedom: Themes and Modules can contain plain HTML/PHP source code, Scriptor does not impose any 
+restrictions on the user's approach.
+
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- PHP 7 or newer (7+ preferable). However, it will also work with PHP 5.6, but it has not been tested yet.   
+- PHP 7 or newer (7+ preferable).   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
@@ -39,3 +46,6 @@ User: `admin`
 Password: `gT5nLazzyBob`
 
 
+### More info
+Official website: https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
+Demo: https://demos.ehret-studio.com/scriptor/   

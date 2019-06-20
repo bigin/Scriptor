@@ -1,9 +1,36 @@
-<?php
+<?php namespace Imanager;
+
 class InputDatepicker implements InputInterface
 {
-	protected $values;
+	/**
+	 * @var stdClass - The vield value object
+	 */
+	protected $value;
+
+	/**
+	 * @var Field object
+	 */
 	protected $field;
-	protected $error = array();
+
+	/**
+	 * @var int
+	 */
+	protected $maxLen = 255;
+
+	/**
+	 * @var int - default value, if it wasn't defined in field settings menu
+	 */
+	protected $minLen = 0;
+
+	/**
+	 * @var bool - default value if it wasn't defined in field settings menu
+	 */
+	protected $required = false;
+
+	/**
+	 * @var null int
+	 */
+	public $errorCode = null;
 
 	public function __construct(Field $field)
 	{

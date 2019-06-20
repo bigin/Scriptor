@@ -83,49 +83,60 @@ class Category extends ImObject
 		if($name == 'items' && $this->id) {
 			$this->init();
 			$mapper = $this->imanager->itemMapper;
-			$mapper->init($this->id);
+			$mapper->init($this->id, false);
 			return $mapper->items;
 		} else if($name == 'fields' && $this->id) {
 			$this->init();
-			$this->imanager->fieldMapper->init($this->id);
+			$this->imanager->fieldMapper->init($this->id, false);
 			return $this->imanager->fieldMapper->fields;
 		}
 		return null;
 	}
 
 	/**
-	 * Get the Item matching the given selector string without exclusions. Returns an Item, or a NULL if not found.
+	 * Get the Item matching the given selector string without exclusions.
+	 * Returns an Item, or a NULL if not found.
 	 *
-	 * * This method is a part of category wrapper methods for handling child objects *
+	 * Since ItemManager v 3.1.1 it supports a force
+	 * parameter to force initialization.
+	 *
+	 * ~ This method is a part of category wrapper methods for handling
+	 *   child objects ~
 	 *
 	 * @param $selector
 	 * @param array $items
+	 * @param bool $force
 	 *
 	 * @return mixed
 	 */
-	public function getItem($selector, array $items = array())
+	public function getItem($selector, array $items = array(), $force = false)
 	{
 		$this->init();
-		$this->imanager->itemMapper->init($this->id);
+		$this->imanager->itemMapper->init($this->id, $force);
 		return $this->imanager->itemMapper->getItem($selector, $items);
 	}
 
 	/**
-	 * Get all Items matching the given selector string without exclusions. Returns one or several Items,
-	 * or a NULL if not found.
+	 * Get all Items matching the given selector string without exclusions.
+	 * Returns one or several Items, or a NULL if not found.
 	 *
-	 * * This method is a part of category wrapper methods for handling child objects *
+	 * Since ItemManager v 3.1.1 it supports a force
+	 * parameter to force initialization.
+	 *
+	 * ~ This method is a part of category wrapper methods for handling
+	 *   child objects ~
 	 *
 	 * @param $selector
 	 * @param int $length
 	 * @param array $items
+	 * @param bool $force
 	 *
 	 * @return mixed
 	 */
-	public function getItems($selector = '', $length = 0, array $items = array())
+	public function getItems($selector = '', $length = 0, array $items = array(), $force = false)
 	{
 		$this->init();
-		$this->imanager->itemMapper->init($this->id);
+		$this->imanager->itemMapper->init($this->id, $force);
 		return $this->imanager->itemMapper->getItems($selector, $length, $items);
 	}
 
@@ -141,13 +152,14 @@ class Category extends ImObject
 	 * @param int|null $offset - The first row to return
 	 * @param length $length   - Specifies the maximum number of rows to return
 	 * @param array $items     - Elements to search through or empty if the buffered Items shall be used instead
+	 * @param bool $force
 	 *
 	 * @return boolean|array   - An array of Item objects
 	 */
-	public function sort($filterby = 'position', $order = 'asc',  $offset = 0, $length = 0, array $items = array())
+	public function sort($filterby = 'position', $order = 'asc',  $offset = 0, $length = 0, array $items = array(), $force = false)
 	{
 		$this->init();
-		$this->imanager->itemMapper->init($this->id);
+		$this->imanager->itemMapper->init($this->id, $force);
 		return $this->imanager->itemMapper->sort($filterby, $order, $offset, $length, $items);
 	}
 
@@ -173,20 +185,22 @@ class Category extends ImObject
 	}
 
 	/**
-	 * Get a Field matching the given selector string without exclusions. Returns one Field object,
-	 * or a NULL if not found.
+	 * Get a Field matching the given selector string without exclusions.
+	 * Returns one Field object, or a NULL if not found.
 	 *
-	 * * This method is a part of category wrapper methods for handling child objects *
+	 * ~ This method is a part of category wrapper methods for handling
+	 *   child objects ~
 	 *
 	 * @param $selector
 	 * @param array $fields
+	 * @param bool $force
 	 *
 	 * @return mixed
 	 */
-	public function getField($selector, array $fields = array())
+	public function getField($selector, array $fields = array(), $force = false)
 	{
 		$this->init();
-		$this->imanager->fieldMapper->init($this->id);
+		$this->imanager->fieldMapper->init($this->id, $force);
 		return $this->imanager->fieldMapper->getField($selector, $fields);
 	}
 

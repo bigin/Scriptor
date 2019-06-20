@@ -28,6 +28,9 @@ class InputText implements InputInterface
 	 */
 	protected $required = false;
 
+
+	protected $default = null;
+
 	/**
 	 * @var null int
 	 */
@@ -56,6 +59,9 @@ class InputText implements InputInterface
 		if($this->field->maximum) {
 			$this->maxLen = $this->field->maximum;
 		}
+		if(isset($this->field->default)) {
+			$this->default = $this->field->default;
+		}
 	}
 
 	/**
@@ -71,8 +77,8 @@ class InputText implements InputInterface
 	{
 		// Set empty value, the input isn't required
 		if(empty($value) && !$this->required) {
-			$this->value = null;
-			return $this->value;
+			$this->value = !isset($value) ? $this->default : $value;
+			return true;
 		}
 
 		// Check input required

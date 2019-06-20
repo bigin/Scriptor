@@ -29,13 +29,14 @@ class InputSlug extends InputText implements InputInterface
 	{
 		// Set empty value, the input isn't required
 		if(empty($value) && !$this->required) {
-			$this->value = null;
-			return $this->value;
+			$this->value = !isset($value) ? $this->default : $value;
+			return true;
 		}
 
 		// Check input required
 		if(($this->required) && empty($value)) {
-			return self::EMPTY_REQUIRED;
+			$this->errorCode = self::EMPTY_REQUIRED;
+			return false;
 		}
 
 		// This field must always be sanitized
