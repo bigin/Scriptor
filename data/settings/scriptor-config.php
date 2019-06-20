@@ -47,8 +47,9 @@ $config = [
 	/**
 	 * Relative path to the admin folder
 	 *
-	 * Please note, if you change the folder name, you have to change the paths
-	 * in the .htaccess file, in the root directory accordingly.
+	 * Please note, if you change the folder name, you
+	 * also need to adjust parts of your .htaccess file.
+	 *
 	 */
 	'admin_path' => 'editor/',
 

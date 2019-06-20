@@ -52,10 +52,7 @@ class Pages extends Module
 	protected function checkAction()
 	{
 		if($this->input->post->action == 'save-page') {
-			if($this->savePage()) {
-				\Imanager\Util::redirect("./?page={$this->page->id}");
-				exit;
-			}
+			$this->savePage();
 		}
 		elseif($this->input->post->action == 'renumber-pages') {
 			$status = $this->renumberPages();
@@ -170,7 +167,7 @@ class Pages extends Module
 	protected function renderPageList()
 	{
 		$output = '';
-		$rows = '<tr><td colspan="4">'.$this->i18n['no_page'].'</td></tr>';
+		$rows = '<tr><td colspan="5">'.$this->i18n['no_page'].'</td></tr>';
 		if($this->pages->items){
 			$rows = $this->renderRows();
 		}
@@ -210,8 +207,8 @@ class Pages extends Module
 	protected function renderRows()
 	{
 		$rows = '';
-		$sorted = $this->pages->sort('position', 'asc',  0, 100, $this->pages->items);
-		//$sorted = $this->pages->sort('parent', 'asc',  0, 0, $sorted);
+		$sorted = $this->pages->sort('position', 'asc',  0, 0, $this->pages->items);
+		//$sorted = $this->pages->sort('parent', 'asc',  0, 100, $sorted);
 		foreach($sorted as $page) {
 			$rows .= '
 				<tr class="sortable">
@@ -233,11 +230,13 @@ class Pages extends Module
 		if(!$this->input->post->position || !is_array($this->input->post->position)) {
 			return false;
 		}
+		$pages = $this->pages->items;
+
 		foreach($this->input->post->position as $pos => $pageid) {
-			$page = $this->pages->getItem((int)$pageid);
+			$page = $this->pages->getItem((int)$pageid, $pages);
 			$page->position = ((int) $pos + 1);
-			$page->save();
 		}
+		$page->save();
 		$this->imanager->sectionCache->expire();
 		return true;
 	}
@@ -328,13 +327,15 @@ class Pages extends Module
 		$this->page->set('pagetype', 1, false);
 		$slug = preg_replace("/(-)\\1+/", "$1", $this->imanager->sanitizer->pageName($name));
 		$this->page->set('slug', $slug);
+
 		if($this->page->save()) {
 			$this->imanager->sectionCache->expire();
 			$this->msgs[] = array(
 				'type' => 'success',
 				'value' => $this->i18n['successful_saved_page']
 			);
-			return true;
+
+			\Imanager\Util::redirect("./?page={$this->page->id}");
 		}
 		return false;
 	}

@@ -19,23 +19,42 @@ class CategoryMapper extends Mapper
 	public $path = null;
 
 	/**
-	 * Initializes all the categories and made them available in ImCategory::$categories buffer
+	 * @var bool - An initialize flag for intern use
 	 */
-	public function init()
+	private static $initialized = false;
+
+	/**
+	 * Initializes all the categories and made
+	 * them available in CategoryMapper::$categories
+	 * buffer.
+	 *
+	 * This method uses control structure
+	 * to avoid unnecessary reinitialization.
+	 *
+	 * Since ItemManager v 3.1.1 it supports a force
+	 * parameter to force initialization.
+	 *
+	 * @return bool
+	 */
+	public function init($force = false)
 	{
+		if(self::$initialized && !$force) return true;
+
 		parent::___init();
 		$this->path = IM_BUFFERPATH.'/categories/categories.php';
 		if(!file_exists(dirname($this->path))) {
 			Util::install($this->path);
 		}
 		if(file_exists($this->path)) {
-			$this->categories = include($this->path);
+			(!Util::isOpCacheEnabled()) or Util::clearOpCache($this->path);
+			$this->categories = include $this->path;
 			if(is_array($this->categories)) {
 				$this->total = count($this->categories);
 			} else {
 				$this->categories = array();
 				$this->total = 0;
 			}
+			self::$initialized = true;
 			return true;
 		}
 		unset($this->categories);

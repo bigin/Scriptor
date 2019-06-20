@@ -192,6 +192,39 @@ class Util
 	}
 
 	/**
+	 * Use isOpCacheEnabled() method to determine if OPcache is enabled.
+	 *
+	 * The method uses php function "opcache_get_status" to get specific
+	 * information about current cache usage.
+	 *
+	 * @return bool
+	 *
+	 */
+	public static function isOpCacheEnabled()
+	{
+		if(function_exists('opcache_invalidate')
+			&& (@opcache_get_status(false)['opcache_enabled'] == 1)) { return true; }
+		return false;
+	}
+
+	/**
+	 * Invalidates a cached script.
+	 *
+	 * If Opcache is enabled, it should not be used for the include,
+	 * because ItemManager must always utilize uncached data.
+	 *
+	 * @param $path
+	 */
+	public static function clearOpCache($path)
+	{
+		if(function_exists('opcache_invalidate') && strlen(ini_get('opcache.restrict_api')) < 1) {
+			opcache_invalidate($path, true);
+		} elseif (function_exists('apc_compile_file')) {
+			apc_compile_file($path);
+		}
+	}
+
+	/**
 	 * ItemManager internal error handler
 	 *
 	 * To trigger the ERROR/WARNING/NOTICE messages, use trigger_error() function:

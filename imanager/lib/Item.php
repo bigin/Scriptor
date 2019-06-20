@@ -68,6 +68,7 @@ class Item extends FieldMapper
 		settype($this->created, 'integer');
 		settype($this->updated, 'integer');
 
+		unset($this->errorCode);
 		unset($this->fields);
 		unset($this->total);
 		unset($this->path);
@@ -83,7 +84,7 @@ class Item extends FieldMapper
 	 *
 	 * @param $name
 	 */
-	public function init($categoryid) { if(!isset($this->imanager)) { parent::init($categoryid);} }
+	public function init($categoryid, $force = false) { if(!isset($this->imanager)) { parent::init($categoryid, false);} }
 
 	/**
 	 * Restricted parent init.
@@ -94,7 +95,7 @@ class Item extends FieldMapper
 	public function __get($name)
 	{
 		if($name == 'fields') {
-			$this->init($this->categoryid);
+			$this->init($this->categoryid, false);
 			return $this->{$name};
 		}
 	}

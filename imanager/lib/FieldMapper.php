@@ -18,15 +18,34 @@ class FieldMapper extends Mapper
 	public $path = null;
 
 	/**
-	 * Init fields of a category
-	 *
-	 * @since 3.0
-	 * @param $category_id
-	 *
-	 * @return array
+	 * @var bool - An initialize flag for intern use
 	 */
-	public function init($category_id)
+	private static $initialized = false;
+
+	/**
+	 * @var null|int - Current initialized category id
+	 */
+	private static $category_id = null;
+
+	/**
+	 * Initializes fields of a category.
+	 *
+	 * This method uses control structure to avoid unnecessary
+	 * reinitialization.
+	 *
+	 * Since ItemManager v 3.1.1 it supports a force parameter
+	 * to force initialization.
+	 *
+	 * @param int $category_id
+	 * @param bool $force
+	 *
+	 * @return bool
+	 */
+	public function init($category_id, $force = false)
 	{
+		if(self::$initialized && !$force && self::$category_id === $category_id) return true;
+		self::$category_id = $category_id;
+
 		parent::___init();
 		$this->path = IM_BUFFERPATH.'fields/'.(int) $category_id.'.fields.php';
 
@@ -34,13 +53,15 @@ class FieldMapper extends Mapper
 			Util::install($this->path);
 		}
 		if(file_exists($this->path)) {
-			$this->fields = include($this->path);
+			(!Util::isOpCacheEnabled()) or Util::clearOpCache($this->path);
+			$this->fields = include $this->path;
 			if(is_array($this->fields)) {
 				$this->total = count($this->fields);
 			} else {
 				$this->fields = array();
 				$this->total = 0;
 			}
+			self::$initialized = true;
 			return true;
 		}
 		unset($this->fields);

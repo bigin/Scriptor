@@ -28,12 +28,34 @@ class ItemMapper extends Mapper
 	public $items = array();
 
 	/**
-	 * Regular init method for item objects of a category
+	 * @var bool - An initialize flag for intern use
+	 */
+	private static $initialized = false;
+
+	/**
+	 * @var null|int - Current initialized category id
+	 */
+	private static $category_id = null;
+
+	/**
+	 * Regular init method for the item objects of a given category id.
+	 *
+	 * This method uses control structure to avoid unnecessary
+	 * reinitialization.
+	 *
+	 * Since ItemManager v 3.1.1 it supports a force parameter to force
+	 * initialization.
+	 *
+	 * @param $category_id
+	 * @param bool $force
 	 *
 	 * @return bool
 	 */
-	public function init($category_id)
+	public function init($category_id, $force = false)
 	{
+		if(self::$initialized && !$force && self::$category_id === $category_id) return true;
+		self::$category_id = $category_id;
+
 		parent::___init();
 		$this->path = IM_BUFFERPATH.'items/'.(int) $category_id.'.items.php';
 
@@ -41,13 +63,15 @@ class ItemMapper extends Mapper
 			Util::install($this->path);
 		}
 		if(file_exists($this->path)) {
-			$this->items = include($this->path);
+			(!Util::isOpCacheEnabled()) or Util::clearOpCache($this->path);
+			$this->items = include $this->path;
 			if(is_array($this->items)) {
 				$this->total = count($this->items);
 			} else {
 				$this->items = array();
 				$this->total = 0;
 			}
+			self::$initialized = true;
 			return true;
 		}
 		unset($this->items);
