@@ -62,6 +62,15 @@ $config = [
 	'protectCSRF' => true,
 
 	/**
+	 * Maximum number of CSRF tokens allowed per user.
+	 * Corresponds to the number of tabs opened at the same time.
+	 * It is useful if you want to work with the application in multiple browser tabs.
+	 *
+	 * @var int
+	 */
+	'maxNumTokens' => 5,
+
+	/**
 	 * Installed Scriptor admin modules
 	 *
 	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'
