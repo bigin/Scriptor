@@ -12,12 +12,9 @@ class Pages extends Module
 {
 	public function execute()
 	{
-		if($this->input->get->page) {
-			$this->page = $this->pages->getItem((int)$this->input->get->page);
-		}
+		$this->checkAction();
+
 		if($this->segments->get(0) == 'pages' && !$this->segments->get(1)) {
-			// Pages list view
-			$this->checkAction();
 			$this->pageTitle = 'Page list - Scriptor';
 			$this->pageContent = $this->renderPageList();
 			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
@@ -26,23 +23,11 @@ class Pages extends Module
 		// Page editor
 		elseif($this->segments->get(0) == 'pages' && $this->segments->get(1) == 'edit') {
 			$this->pageTitle = 'Page editor - Scriptor';
-			$this->checkAction();
 			$this->pageContent = $this->renderPageEditor();
 			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a></li><li><a href="../">'.
 				$this->i18n['pages_menu'].'</a></li><li>'. (($this->page) ?
 					'<span>'.$this->i18n['pages_edit_menu'].'</span>' : '<span>'.
 					$this->i18n['pages_create_menu']).'</span></li>';
-		}
-		// Pages list remove page
-		elseif($this->segments->get(0) == 'pages' && $this->segments->get(1) == 'delete') {
-			$this->checkAction();
-		}
-		// Settings
-		elseif($this->segments->get(0) == 'settings' && !$this->segments->get(1)) {
-			$this->checkAction();
-			$this->pageContent = $this->renderSettingsEditor();
-			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
-				$this->i18n['settings_menu'].'</span></li>';
 		}
 	}
 
@@ -51,16 +36,23 @@ class Pages extends Module
 	 */
 	protected function checkAction()
 	{
+		if($this->input->get->page) {
+			$this->page = $this->pages->getItem((int)$this->input->get->page);
+		}
+
+		// Save page data
 		if($this->input->post->action == 'save-page') {
 			$this->savePage();
 		}
+		// Renumber pages
 		elseif($this->input->post->action == 'renumber-pages') {
 			$status = $this->renumberPages();
 			header('Content-type: application/json; charset=utf-8');
 			echo json_encode(array('status' => $status));
 			exit;
 		}
-		else if($this->segments->get(1) == 'delete' && $this->input->get->page) {
+		// Delete page
+		elseif($this->segments->get(1) == 'delete' && $this->input->get->page) {
 			$status = $this->removePage();
 			\Imanager\Util::redirect('../');
 			exit;
@@ -118,6 +110,7 @@ class Pages extends Module
 					<?php echo $this->i18n['create_button']; ?></button>
 				<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
 					<?php echo $this->i18n['view_button']; ?></button>
+				<?php echo $this->csrf->renderInputs(); ?>
 			</form>
 			<?php
 		} else {
@@ -157,6 +150,7 @@ class Pages extends Module
 					<?php echo $this->i18n['save_button']; ?></button>
 				<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
 					<?php echo $this->i18n['view_button']; ?></button>
+				<?php echo $this->csrf->renderInputs(); ?>
 			</form>
 			<?php
 		}
@@ -208,6 +202,7 @@ class Pages extends Module
 	{
 		$rows = '';
 		$sorted = $this->pages->sort('position', 'asc',  0, 0, $this->pages->items);
+		$token = $this->csrf->renderUrl('&');
 		//$sorted = $this->pages->sort('parent', 'asc',  0, 100, $sorted);
 		foreach($sorted as $page) {
 			$rows .= '
@@ -218,7 +213,7 @@ class Pages extends Module
 					<td><a href="edit/?page='.$page->id.'">'.
 				((mb_strlen($page->name) > 80) ? mb_substr($page->name, 0,80).'...' : $page->name).
 				'</td></a><td><a class="remove" rel="'.$this->i18n['pre_delete_msg'].
-				'" href="delete/?page='.$page->id.'"><i class="far fa-trash-alt"></i></a></td>
+				'" href="delete/?page='.$page->id.$token.'"><i class="far fa-trash-alt"></i></a></td>
 				</tr>
 			';
 		}
@@ -252,26 +247,38 @@ class Pages extends Module
 				'value' => $this->i18n['error_remove_parent_page']
 			);
 			return false;
-		} else if($page && $page->id != 1 && $this->pages->remove($page)) {
+		}
+		elseif($page && $page->id == 1) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_deleting_first_page']
+			);
+			return false;
+		}
+		elseif($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
+			$this->input->get->tokenName,
+			$this->input->get->tokenValue, true)) {
+				$this->msgs[] = array(
+					'type' => 'error',
+					'value' => $this->i18n['error_csrf_token_mismatch']
+				);
+			return false;
+		}
+		elseif($page && $page->id != 1 && $this->pages->remove($page)) {
 			$this->msgs[] = array(
 				'type' => 'success',
 				'value' => $this->i18n['page_successful_removed']
 			);
 			$this->imanager->sectionCache->expire();
 			return true;
-		} else if($page && $page->id == 1) {
-			$this->msgs[] = array(
-				'type' => 'error',
-				'value' => $this->i18n['error_deleting_first_page']
-			);
-			return false;
-		} else {
-			$this->msgs[] = array(
-				'type' => 'error',
-				'value' => $this->i18n['error_deleting_page']
-			);
-			return false;
 		}
+
+		$this->msgs[] = array(
+			'type' => 'error',
+			'value' => $this->i18n['error_deleting_page']
+		);
+		return false;
+
 	}
 
 	protected function savePage()
@@ -327,6 +334,16 @@ class Pages extends Module
 		$this->page->set('pagetype', 1, false);
 		$slug = preg_replace("/(-)\\1+/", "$1", $this->imanager->sanitizer->pageName($name));
 		$this->page->set('slug', $slug);
+
+		if($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
+			$this->input->post->tokenName,
+			$this->input->post->tokenValue, true)) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_csrf_token_mismatch']
+			);
+			return false;
+		}
 
 		if($this->page->save()) {
 			$this->imanager->sectionCache->expire();

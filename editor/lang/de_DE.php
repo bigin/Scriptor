@@ -21,6 +21,7 @@ $i18n = [
 	'login_header' => 'Login',
 	'pages_header' => 'Seiten',
 	'successful_login' => 'Sie wurden erfolgreich eingeloggt.',
+	'successful_logout' => 'Sie wurden erfolgreich ausgeloggt.',
 	'profile_incomplete' => 'Bitte füllen Sie alle Pflichtfelder aus.',
 	'short_password' => 'Ihr Kennwort ist zu kurz, bitte geben Sie ein neues Kennwort mit einer Länge von mindestens 6 Zeichen ein.',
 	'error_password_comparison' => 'Ihr Kennwort und Kennwort-Wiederholung stimmen nicht überein.',
@@ -48,6 +49,7 @@ $i18n = [
 	'parent_select_option' => 'Auswählen',
 	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',
 	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.',
+	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'dashboard_content' => '
 			<img src="images/dashboard-screen.png">
 			<h1>Willkommen bei Scriptor</h1>

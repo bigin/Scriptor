@@ -13,7 +13,7 @@ Flexible and extensible architecture: You have a variety of options and a powerf
 framework for module development.
 
 You have total freedom: Themes and Modules can contain plain HTML/PHP source code, Scriptor does not impose any 
-restrictions on the user's approach.
+restrictions on the user's development approach.
 
 
 ### Install Requirements

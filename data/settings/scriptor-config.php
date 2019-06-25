@@ -54,6 +54,14 @@ $config = [
 	'admin_path' => 'editor/',
 
 	/**
+	 * Enables CSRF (cross site request forgery) protection on all Scriptor forms,
+	 * recommended for improved security.
+	 *
+	 * @var bool
+	 */
+	'protectCSRF' => true,
+
+	/**
 	 * Installed Scriptor admin modules
 	 *
 	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'

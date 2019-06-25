@@ -7,7 +7,7 @@
  */
 class Module
 {
-	const VERSION = '1.3.1';
+	const VERSION = '1.3.2';
 	/**
 	 * @var object $imanager - Instance of IManager
 	 */
@@ -36,7 +36,7 @@ class Module
 	/**
 	 * @var object $input - Input object instance
 	 */
-	protected $input;
+	public $input;
 
 	/**
 	 * @var object $segments - Segments object instance
@@ -63,6 +63,8 @@ class Module
 	 */
 	protected $user;
 
+	public $csrf;
+
 	/**
 	 * @var array $msgs - An array of local error messages
 	 */
@@ -84,6 +86,11 @@ class Module
 	public $breadcrumbs;
 
 	/**
+	 * @var array - Header Resources
+	 */
+	protected $headerResources = [];
+
+	/**
 	 * Module constructor
 	 *
 	 * @param $config
@@ -92,6 +99,7 @@ class Module
 	{
 		$this->config = $config;
 		$this->config['version'] = self::VERSION;
+		$this->csrf = new CSRF($this->config);
 		require "lang/{$this->config['editor_lang']}.php";
 		$this->i18n = $i18n;
 	}

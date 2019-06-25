@@ -66,9 +66,9 @@ class Manager
 		$classPath = IM_SOURCEPATH . $classPattern . '.php';
 		$fieldsPath = IM_SOURCEPATH . 'processors/fields/' . $classPattern. '.php';
 		$inputsPath = IM_SOURCEPATH . 'processors/inputs/' . $classPattern . '.php';
-		if(file_exists($classPath)) include($classPath);
-		elseif(file_exists($fieldsPath)) include($fieldsPath);
-		elseif(file_exists($inputsPath)) include($inputsPath);
+		if(file_exists($classPath)) include $classPath;
+		elseif(file_exists($fieldsPath)) include $fieldsPath;
+		elseif(file_exists($inputsPath)) include $inputsPath;
 	}
 
 	/**
