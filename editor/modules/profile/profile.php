@@ -6,20 +6,16 @@ class Profile extends Module
 	 * $editor - Inherited from Module
 	 */
 
-	/*public function __construct($config) {
-		parent::__construct($config);
-		parent::init();
-	}*/
-
+	/**
+	 * Default execute module method
+	 */
 	public function execute()
 	{
-		if($this->segments->get(0) == 'profile' && !$this->segments->get(1)) {
-			\Imanager\Util::redirect('./edit/?profile='.(int)$_SESSION['userid']);
-		}
-		else if($this->segments->get(0) == 'profile' && $this->segments->get(1) == 'edit') {
-			// Profile
+		$this->checkAction();
+
+		// Profile editor section
+		if($this->segments->get(0) == 'profile' && $this->segments->get(1) == 'edit') {
 			$this->pageTitle = 'Profile editor - Scriptor';
-			$this->checkAction();
 			$this->pageContent = $this->renderProfileEditor($_SESSION['userid']);
 			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
 				$this->i18n['profile_menu'].'</span></li>';
@@ -31,19 +27,19 @@ class Profile extends Module
 	 */
 	protected function checkAction()
 	{
-		if($this->input->post->action == 'save-profile') {
+		// Just redirect to profile view
+		if($this->segments->get(0) == 'profile' && !$this->segments->get(1)) {
+			\Imanager\Util::redirect('./edit/?profile='.(int)$_SESSION['userid']);
+		}
+		// Check and save user profile
+		elseif($this->input->post->action == 'save-profile') {
 			if($this->checkProfileData($_SESSION['userid'])) {
-				if($this->user->save()) {
-					$this->msgs[] = array(
-						'type' => 'success',
-						'value' => $this->i18n['profile_successful_saved']
-					);
-				}
+				$this->saveProfileData();
 			}
 		}
 	}
 
-	protected function checkProfileData($userid)
+	private function checkProfileData($userid)
 	{
 		$this->user = $this->users->getItem((int)$userid);
 
@@ -75,12 +71,34 @@ class Profile extends Module
 		$this->user->set('name', str_replace('"', '', $this->input->post->username));
 		$this->user->set('email', $this->imanager->sanitizer->email($this->input->post->email));
 
+		if($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
+			$this->input->post->tokenName,
+			$this->input->post->tokenValue, true)) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_csrf_token_mismatch']
+			);
+		}
+
 		if($this->msgs) { return false; }
 
 		return true;
 	}
 
-	protected function renderProfileEditor($userid)
+	private function saveProfileData()
+	{
+		if($this->user->save()) {
+			$this->msgs[] = array(
+				'type' => 'success',
+				'value' => $this->i18n['profile_successful_saved']
+			);
+			\Imanager\Util::redirect('./');
+		}
+
+		return false;
+	}
+
+	private function renderProfileEditor($userid)
 	{
 		$user = $this->user;
 		if(!$user) { $user = $this->users->getItem((int)$userid); }
@@ -108,6 +126,7 @@ class Profile extends Module
 			<input type="hidden" name="action" value="save-profile">
 			<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
 				<?php echo $this->i18n['save_button']; ?></button>
+			<?php echo $this->csrf->renderInputs(); ?>
 		</form>
 		<?php return ob_get_clean();
 	}

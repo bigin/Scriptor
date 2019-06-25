@@ -14,6 +14,8 @@
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/jquery-ui.css">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/styles.css">
 	<?php echo $editor->getHeaderResources('css'); ?>
+	<script src="<?php echo $editor->pageUrl; ?>scripts/jquery.min.js"></script>
+	<script src="<?php echo $editor->pageUrl; ?>scripts/jquery-ui.min.js"></script>
 	<?php echo $editor->getHeaderResources('js'); ?>
 </head>
 <body>
@@ -39,8 +41,6 @@
 		</div>
 	</footer>
 </main>
-<script src="<?php echo $editor->pageUrl; ?>scripts/jquery.min.js"></script>
-<script src="<?php echo $editor->pageUrl; ?>scripts/jquery-ui.min.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/remarkable/remarkable.min.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/prism.js"></script>
 <script src="<?php echo $editor->pageUrl; ?>scripts/editor.js"></script>

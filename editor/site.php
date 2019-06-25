@@ -24,7 +24,7 @@ class Site extends Module
 	/**
 	 * @var object $input - Input object instance
 	 */
-	protected $input;
+	public $input;
 
 	/**
 	 * @var object $segments - Segments object instance

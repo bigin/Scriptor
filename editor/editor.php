@@ -1,31 +1,32 @@
 <?php
 
+/**
+ * Class Editor
+ */
 class Editor extends Module
 {
 	protected function execute()
 	{
+		$this->checkAction();
+
+		// Show login form
 		if(!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
-			$this->loginAction();
 			$this->pageTitle = 'Login - Scriptor';
 			$this->pageContent = $this->renderLoginForm();
-			return;
 		}
-		if(!$this->segments->get(0)) {
-			// Redirect to the pages
+		// Dashboard
+		elseif(!$this->segments->get(0)) {
 			$this->pageTitle = 'Dashboard - Scriptor';
 			$this->pageContent = $this->renderDashboard();
 			$this->breadcrumbs = '<li><span>'.$this->i18n['dashboard_menu'].'</span></li>';
 		}
+		// Settings section
 		elseif($this->segments->get(0) == 'settings' && !$this->segments->get(1)) {
-			$this->checkAction();
 			$this->pageContent = $this->renderSettingsEditor();
 			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
 				$this->i18n['settings_menu'].'</span></li>';
 		}
-		elseif($this->segments->get(0) == 'logout') {
-			// Logout
-			$this->checkAction();
-		}
+		// Execute Module
 		elseif($this->segments->get(0) && array_key_exists($this->segments->get(0), $this->config['modules'])) {
 			$module = $this->config['modules'][$this->segments->get(0)];
 			// Is module disabled?
@@ -46,23 +47,37 @@ class Editor extends Module
 	 */
 	protected function checkAction()
 	{
-		if($this->segments->get(0) == 'logout') {
-			unset($_SESSION['loggedin']);
-			unset($_SESSION['userid']);
-			\Imanager\Util::redirect($this->pageUrl);
-			exit;
+		// Check log in data
+		if(!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
+			$this->loginAction();
+		}
+		// Check log out data
+		elseif($this->segments->get(0) == 'logout') {
+			$this->logoutAction();
 		}
 	}
 
 	/**
-	 * Login action
-	 * The method checks if the data were correct and then performs a login
+	 * Login process
+	 * This method checks whether the user input is correct and
+	 * performs the login process.
+	 *
+	 * @since 3.1.2 - CSRF check
 	 *
 	 * @return bool
 	 */
 	protected function loginAction()
 	{
 		if($this->input->post->action == 'login') {
+			if($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
+					$this->input->post->tokenName,
+					$this->input->post->tokenValue, true)) {
+				$this->msgs[] = array(
+					'type' => 'error',
+					'value' => $this->i18n['error_csrf_token_mismatch']
+				);
+				return false;
+			}
 			$name = $this->imanager->sanitizer->text($this->input->post->username);
 			$user = $this->users->getItem("name=$name");
 			if(!$user || !$user->password->compare($this->input->post->password)) {
@@ -76,6 +91,8 @@ class Editor extends Module
 			$_SESSION['loggedin'] = true;
 			$_SESSION['userid'] = $user->id;
 
+			$this->csrf->resetAll();
+
 			$this->msgs[] = array(
 				'type' => 'success',
 				'value' => $this->i18n['successful_login']
@@ -84,6 +101,32 @@ class Editor extends Module
 			exit;
 		}
 		return false;
+	}
+
+	/**
+	 * Log out procedure
+	 * This method checks whether the token is valid and
+	 * performs the log out process.
+	 */
+	protected function logoutAction()
+	{
+		if($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
+			$this->input->get->tokenName,
+			$this->input->get->tokenValue, true)) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_csrf_token_mismatch']
+			);
+		} else {
+			unset($_SESSION['loggedin']);
+			unset($_SESSION['userid']);
+			$this->msgs[] = array(
+				'type' => 'success',
+				'value' => $this->i18n['successful_logout']
+			);
+		}
+		\Imanager\Util::redirect($this->pageUrl);
+		exit;
 	}
 
 	/**
@@ -108,6 +151,7 @@ class Editor extends Module
 			<input type="hidden" name="action" value="login">
 			<button class="icons" type="submit" name="submit"><i class="fas fa-sign-in-alt"></i>
 			<?php echo $this->i18n['login_button']; ?></button>
+			<?php echo $this->csrf->renderInputs(); ?>
 		</form>
 		<?php return ob_get_clean();
 	}

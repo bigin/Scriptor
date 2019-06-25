@@ -71,7 +71,6 @@ $("#render").click(function (e) {
 	var text = md.render($("#markdown").val());
 	if(text.length > 0) {
 		$("#page-text").html(text);
-
 	}
 	$("#screen").show();
 	return false;
