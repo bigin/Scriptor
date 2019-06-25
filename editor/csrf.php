@@ -41,8 +41,13 @@ class CSRF
 		}
 		if(!$tokenName) {
 			$this->name = 'TOKEN' . mt_rand() . "X" . time();
-			// Delete all older tokens
-			if(isset($_SESSION['token'])) unset($_SESSION['token']);
+			// Allow last "maxNumTokens"
+			$max = (!isset($this->config['maxNumTokens']) ||
+				$this->config['maxNumTokens'] < 0 ||
+				$this->config['maxNumTokens'] > 50) ? 1 : (int) $this->config['maxNumTokens'];
+			if(isset($_SESSION['token']) && count($_SESSION['token']) >= $max) {
+				$_SESSION['token'] = array_slice($_SESSION['token'], -($max - 1), $max);
+			}
 			$_SESSION['token'][$this->name] = '';
 		}
 		return $this->name;
