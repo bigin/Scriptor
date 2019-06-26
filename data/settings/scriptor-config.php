@@ -77,15 +77,15 @@ $config = [
 	 *
 	 * The structure is as follows:
 	 *
-	 * 'pages' => [                // URL Segment that resolves to the module
-	 *     'menu' => 'pages_menu', // i18n variable name or string
-	 *     'active' => true,       // Enables or disables module
-	 *     'path' => 'pages/pages',// Path and file name without extension like '.php'
-	 *     'class' => 'Pages',     // The class to be called
-	 *     'display_type' => [     // Module display options
-	 *         'sidebar'           // Show in 'sidebar' and/or 'profile' menu
+	 * 'pages' => [                // URL Segment that resolves to the module (array)
+	 *     'menu' => 'pages_menu', // i18n variable name or string (string)
+	 *     'active' => true,       // Enables or disables module (bool)
+	 *     'path' => 'pages/pages',// Path and file name without extension like '.php' (string)
+	 *     'class' => 'Pages',     // The class to be called (string)
+	 *     'display_type' => [     // Module display options (array)
+	 *         'sidebar'           // Show in 'sidebar' and/or 'profile' menu (string)
 	 *     ],
-	 *     'description' => ""     // Module description
+	 *     'description' => ''     // Module description (string)
 	 * ]
 	 */
 	'modules' => [
