@@ -84,7 +84,7 @@ class Item extends FieldMapper
 	 *
 	 * @param $name
 	 */
-	public function init($categoryid, $force = false) { if(!isset($this->imanager)) { parent::init($categoryid, false);} }
+	public function init($categoryid, $force = false) { if(!isset($this->imanager)) { parent::init($categoryid, $force);} }
 
 	/**
 	 * Restricted parent init.
@@ -266,6 +266,8 @@ class Item extends FieldMapper
 		$export = var_export($im->items, true);
 		file_put_contents($im->path, '<?php return ' . $export . '; ?>');
 		@chmod($im->path, $config->chmodFile);
+
+		$this->init($this->categoryid, true);
 
 		return true;
 	}
