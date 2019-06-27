@@ -7,7 +7,7 @@
  */
 class Module
 {
-	const VERSION = '1.3.2';
+	const VERSION = '1.3.3';
 	/**
 	 * @var object $imanager - Instance of IManager
 	 */

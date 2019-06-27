@@ -95,7 +95,7 @@ class Item extends FieldMapper
 	public function __get($name)
 	{
 		if($name == 'fields') {
-			$this->init($this->categoryid, false);
+			$this->init($this->categoryid, true);
 			return $this->{$name};
 		}
 	}
@@ -266,8 +266,6 @@ class Item extends FieldMapper
 		$export = var_export($im->items, true);
 		file_put_contents($im->path, '<?php return ' . $export . '; ?>');
 		@chmod($im->path, $config->chmodFile);
-
-		$this->init($this->categoryid, true);
 
 		return true;
 	}

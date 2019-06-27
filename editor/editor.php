@@ -9,22 +9,40 @@ class Editor extends Module
 	{
 		$this->checkAction();
 
-		// Show login form
+		// Show login form (build in)
 		if(!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
 			$this->pageTitle = 'Login - Scriptor';
 			$this->pageContent = $this->renderLoginForm();
 		}
-		// Dashboard
+		// Dashboard (build in)
 		elseif(!$this->segments->get(0)) {
 			$this->pageTitle = 'Dashboard - Scriptor';
 			$this->pageContent = $this->renderDashboard();
 			$this->breadcrumbs = '<li><span>'.$this->i18n['dashboard_menu'].'</span></li>';
 		}
-		// Settings section
+		// Settings section (build in)
 		elseif($this->segments->get(0) == 'settings' && !$this->segments->get(1)) {
 			$this->pageContent = $this->renderSettingsEditor();
 			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
 				$this->i18n['settings_menu'].'</span></li>';
+		}
+		// Pages section (build in)
+		elseif($this->segments->get(0) == 'pages') {
+			$module = $this->config['modules'][$this->segments->get(0)];
+			if(!$module['active']) { return; }
+			include __DIR__ . '/modules/pages/pages.php';
+			$module = new $module['class']($this->config);
+			$module->map($this);
+			$module->execute();
+		}
+		// Profile section (build in)
+		elseif($this->segments->get(0) == 'profile') {
+			$module = $this->config['modules'][$this->segments->get(0)];
+			if(!$module['active']) { return; }
+			include __DIR__ . '/modules/profile/profile.php';
+			$module = new $module['class']($this->config);
+			$module->map($this);
+			$module->execute();
 		}
 		// Execute Module
 		elseif($this->segments->get(0) && array_key_exists($this->segments->get(0), $this->config['modules'])) {
@@ -32,9 +50,9 @@ class Editor extends Module
 			// Is module disabled?
 			if(!$module['active']) { return; }
 			// Module file exists?
-			if(file_exists(__DIR__ . '/modules/' . $module['path'] . '.php')) {
+			if(file_exists($module['path'] . '.php')) {
 				// include module
-				include __DIR__ . '/modules/' . $module['path'] . '.php';
+				include $module['path'] . '.php';
 				$module = new $module['class']($this->config);
 				$module->map($this);
 				$module->execute();

@@ -2,13 +2,13 @@
 if(!isset($_SESSION)){ session_start(); }
 
 // Define constants
-include_once(__DIR__.'/_def.php');
+include_once __DIR__.'/_def.php';
 // Util
-include_once(IM_SOURCEPATH.'_Util.php');
+include_once IM_SOURCEPATH.'_Util.php';
 // Manager
-include_once(IM_SOURCEPATH.'Manager.php');
+include_once IM_SOURCEPATH.'Manager.php';
 // ItemManager
-include_once(IM_SOURCEPATH.'ItemManager.php');
+include_once IM_SOURCEPATH.'ItemManager.php';
 
 /**
  * ItemManager's core function, we use it to create a static ItemManager instance
