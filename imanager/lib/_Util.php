@@ -28,6 +28,12 @@ class Util
 		if(file_exists(IM_ROOTPATH.'imanager/lang/'.$language)) { include(IM_ROOTPATH.'imanager/lang/'.$language); }
 	}
 
+	/**
+	 * Stores the passed string "$data" in the log file "$file".
+	 *
+	 * @param $data
+	 * @param string $file
+	 */
 	public static function dataLog($data, $file = '')
 	{
 		$filename = empty($file) ? IM_LOGPATH.'imlog_'.date('Ym').'.txt' : IM_LOGPATH.$file.'.txt';
@@ -276,7 +282,7 @@ class Util
 		// -- FATAL ERROR
 		// throw an Error Exception, to be handled by whatever Exception handling logic is available in this context
 		if(in_array($number, array(E_USER_ERROR, E_RECOVERABLE_ERROR)) && $error_is_enabled) {
-			self::dataLog("FATAL ERROR: $string in $file on line $line");
+			self::dataLog("Type: FATAL ERROR; $string in $file on line $line");
 			throw new \ErrorException($string, 0, $number, $file, $line);
 		}
 
@@ -284,13 +290,13 @@ class Util
 		// Log the error if it's enabled, otherwise just ignore it
 		else if($error_is_enabled) {
 			error_log($string, 0 );
-			self::dataLog("ERROR/WARNING/NOTICE: $string in $file on line $line");
+			self::dataLog("Type: WARNING/NOTICE; $string in $file on line $line");
 			return false;
 		}
 
 		// -- DISABLED ERRORS/WARNINGS, just write internal log
 		else {
-			self::dataLog("WARNINGS: $string in $file on line $line");
+			self::dataLog("Type: WARNINGS; $string in $file on line $line");
 		}
 	}
 

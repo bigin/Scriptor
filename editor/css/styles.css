@@ -442,6 +442,10 @@ label.required:after {
 	widows: 3;
 }
 
+#page-text img {
+	max-width: 100%;
+}
+
 .page-wrapper code, .page-wrapper pre, #page-text code, #page-text pre {
 	font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
 	direction: ltr;

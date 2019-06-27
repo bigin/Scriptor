@@ -77,22 +77,22 @@ $config = [
 	 *
 	 * The structure is as follows:
 	 *
-	 * 'pages' => [                // URL Segment that resolves to the module (array)
-	 *     'menu' => 'pages_menu', // i18n variable name or string (string)
-	 *     'active' => true,       // Enables or disables module (bool)
-	 *     'path' => 'pages/pages',// Path and file name without extension like '.php' (string)
-	 *     'class' => 'Pages',     // The class to be called (string)
-	 *     'display_type' => [     // Module display options (array)
-	 *         'sidebar'           // Show in 'sidebar' and/or 'profile' menu (string)
+	 * 'pages' => [                                       // URL Segment that resolves to the module (array)
+	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
+	 *     'active' => true,                              // Enables or disables module (bool)
+	 *     'path' => IM_DATAPATH.'modules/your-dir/file', // Path and file name without extension like '.php' (string)
+	 *     'class' => 'Pages',                            // The class to be called (string)
+	 *     'display_type' => [                            // Module display options (array)
+	 *         'sidebar'                                  // Show in 'sidebar' and/or 'profile' menu (string)
 	 *     ],
-	 *     'description' => ''     // Module description (string)
+	 *     'description' => ''                            // Module description (string)
 	 * ]
 	 */
 	'modules' => [
 		'pages' => [
 			'menu' => 'pages_menu',
 			'active' => true,
-			'path' => 'pages/pages',
+			'path' =>  null, // Build in module
 			'class' => 'Pages',
 			'display_type' => [
 				'sidebar'
@@ -111,7 +111,7 @@ $config = [
 		'profile' => [
 			'menu' => 'profile_menu',
 			'active' => true,
-			'path' => 'profile/profile',
+			'path' => null, // Build in module
 			'class' => 'Profile',
 			'display_type' => [
 				'profile'

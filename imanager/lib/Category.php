@@ -83,11 +83,11 @@ class Category extends ImObject
 		if($name == 'items' && $this->id) {
 			$this->init();
 			$mapper = $this->imanager->itemMapper;
-			$mapper->init($this->id, false);
+			$mapper->init($this->id, true);
 			return $mapper->items;
 		} else if($name == 'fields' && $this->id) {
 			$this->init();
-			$this->imanager->fieldMapper->init($this->id, false);
+			$this->imanager->fieldMapper->init($this->id, true);
 			return $this->imanager->fieldMapper->fields;
 		}
 		return null;
