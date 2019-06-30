@@ -4,7 +4,7 @@ class Site extends Module
 	/**
 	 * @var object $imanager - Instance of IManager
 	 */
-	protected $imanager;
+	public $imanager;
 
 	/**
 	 * @var array $config - Scriptor config
