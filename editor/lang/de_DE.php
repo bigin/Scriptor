@@ -50,6 +50,7 @@ $i18n = [
 	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',
 	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.',
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
+	'contact_developer' => 'Entwickler kontaktieren',
 	'dashboard_content' => '
 			<img src="images/dashboard-screen.png">
 			<h1>Willkommen bei Scriptor</h1>
