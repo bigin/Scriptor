@@ -134,13 +134,33 @@ class Site extends Module
 			}
 		} else {
 			// Other pages
-			$this->page = $this->pages->getItem('slug='.$this->imanager->sanitizer->pageName($this->lastSegment));
-			if(!$this->page || !$this->page->active) { return $this->throw404(); }
+			$this->page = $this->pages->getItem('slug=' . $this->imanager->sanitizer->pageName($this->lastSegment));
+			if(!$this->page || !$this->page->active) {
+				return $this->throw404();
+			}
+			$curentUrl = $this->segments->getUrl();
+			$pageUrl = self::getPageUrl($this->page, $this->pages);
+			if(strpos($curentUrl, $pageUrl) === false) {
+				return $this->throw404();
+			}
 			$this->title = $this->page->name;
 			foreach($this->page as $key => $param) {
 				$this->$key = $param;
 			}
 		}
+	}
+
+	public static function getPageUrl($item, $pages)
+	{
+		$return = '';
+		if($item->parent) {
+			$parent = $pages->items[$item->parent];
+			if($parent) {
+				$return .= self::getPageUrl($parent, $pages);
+			}
+		}
+		$return .= $item->slug.'/';
+		return  $return;
 	}
 
 	public function render($element)
