@@ -50,6 +50,7 @@ $i18n = [
 	'error_deleting_first_page' => 'Error when deleting primary page. The page with ID 1, cannot be deleted.',
 	'error_remove_parent_page' => 'Error deleting the page, you cannot delete a page that contains children pages.',
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
+	'contact_developer' => 'Contact developer',
 	'dashboard_content' => '
 			<img src="images/dashboard-screen.png">
 			<h1>Welcome to Scriptor</h1>
