@@ -52,10 +52,19 @@ class FileuploadFieldValue
 	 * @param int $width
 	 * @param int $height
 	 * @param string $type
+	 * @param array $options - GD options:
+	 *      'resizeUp'				=> false,
+	 *      'jpegQuality'			=> 100,
+	 *      'pngQuality'			=> 1,
+	 *      'correctPermissions'	=> false,
+	 *      'preserveAlpha'			=> true,
+	 *      'alphaMaskColor'		=> array (255, 255, 255),
+	 *      'preserveTransparency'	=> true,
+	 *      'transparencyMaskColor'	=> array (0, 0, 0)
 	 *
 	 * @return FileuploadFieldValue
 	 */
-	public function resize($width = 0, $height = 0, $quality = null, $type = 'resize')
+	public function resize($width = 0, $height = 0, $quality = null, $type = 'resize', $options = [])
 	{
 		$relpath = $this->path.$this->name;
 		$dir = basename($this->path);
@@ -63,7 +72,7 @@ class FileuploadFieldValue
 		if(!file_exists(IM_UPLOADPATH.$dir.'/thumbnail/'.$width.'x'.$height.'_'.$this->name)) {
 			$path_parts = pathinfo(IM_UPLOADPATH.$dir.'/'.$this->name);
 			if($quality && (@$path_parts['extension'] == 'png' ||
-				@$path_parts['extension'] == 'jpeg' || @$path_parts['extension'] == 'jpg')) {
+					@$path_parts['extension'] == 'jpeg' || @$path_parts['extension'] == 'jpg')) {
 				if($path_parts['extension'] != 'png') {
 					$option = array('jpegQuality' => (int) $quality);
 				} else {
@@ -72,6 +81,9 @@ class FileuploadFieldValue
 				$thumb = \PhpThumbFactory::create(IM_UPLOADPATH.$dir.'/'.$this->name, $option);
 			} else {
 				$thumb = \PhpThumbFactory::create(IM_UPLOADPATH.$dir.'/'.$this->name);
+			}
+			if($options) {
+				$thumb->setOptions($options);
 			}
 			$thumb->{$type}($width, $height);
 			$thumb->save(IM_UPLOADPATH.$dir.'/thumbnail/'.$width.'x'.$height.'_'.$this->name, @$path_parts['extension']);
