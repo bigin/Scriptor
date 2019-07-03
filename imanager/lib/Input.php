@@ -79,6 +79,23 @@ class UrlSegments
 	public function getLast() {
 		return isset($this->segment{($this->total - 1)}) ? $this->segment{($this->total - 1)} : null;
 	}
+
+	public function getUrl($options = [])
+	{
+		$defaults = [
+			'useTrailingSlash' => true
+		];
+		$options = array_merge($defaults, $options);
+		if($this->total <= 1) {
+			if($this->total == 0) { return '';}
+			return $this->segment{($this->total - 1)}.(($options['useTrailingSlash']) ? '/' : '');
+		}
+		$buf = '';
+		foreach($this->segment as $key => $value) {
+			$buf .= $this->segment{($key)}.'/';
+		}
+		return (($options['useTrailingSlash']) ? $buf : substr($buf, 0, -1));
+	}
 }
 
 class Post
