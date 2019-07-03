@@ -29,17 +29,17 @@ class Site extends Module
 	/**
 	 * @var object $segments - Segments object instance
 	 */
-	protected $segments;
+	public $segments;
 
 	/**
 	 * @var string $firstSegment - Buffered first url segment
 	 */
-	protected $firstSegment;
+	public $firstSegment;
 
 	/**
 	 * @var string $lastSegment - Buffered last url segment
 	 */
-	protected $lastSegment;
+	public $lastSegment;
 
 	/**
 	 * @var object $pages - An object of category Pages
