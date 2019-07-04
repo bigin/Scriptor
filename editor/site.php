@@ -203,12 +203,12 @@ class Site extends Module
 			$buff = '';
 			foreach($childs as $curitem) {
 				$buff .= $this->getChildren($curitem, $items,
-					$url . (($item->id != 1 && !$item->parent) ? $item->slug . '/' : '') . $curitem->slug . '/', $children);
+					$url . ((!$item->parent) ? $item->slug . '/' : '') . $curitem->slug . '/', $children);
 			}
 			$children = $prefix . '<ul>' . $buff . '</ul></li>';
 		} else {
 			$children = '<li'.$this->getClass($item).'><a href="'.
-				$url.(($item->id != 1 && !$item->parent) ? $item->slug.'/' : '').'">'.$item->name.'</a></li>';
+				$url.((!$item->parent) ? $item->slug.'/' : '').'">'.$item->name.'</a></li>';
 		}
 		return  $children;
 	}
