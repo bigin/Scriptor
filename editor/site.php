@@ -167,7 +167,7 @@ class Site extends Module
 	{
 		if($element == 'navigation') {
 			$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
-			if(!$navi = $this->imanager->sectionCache->get($name, $this->config['section_cache_time'])) {
+			if(!$navi = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
 				$navi = $this->buildNavi();
 				if($navi) {
 					$this->imanager->sectionCache->save($navi);

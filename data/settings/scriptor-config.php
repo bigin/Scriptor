@@ -42,14 +42,13 @@ $config = [
 	 * month: 262974383
 	 * etc
 	 */
-	'section_cache_time' => 262974383,
+	'markup_cache_time' => 262974383,
 
 	/**
 	 * Relative path to the admin folder
 	 *
-	 * Please note, if you change the folder name, you
-	 * also need to adjust parts of your .htaccess file.
-	 *
+	 * Please note, if you change the folder name, you have to change the paths
+	 * in the .htaccess file, in the root directory accordingly.
 	 */
 	'admin_path' => 'editor/',
 
