@@ -104,6 +104,8 @@ class TemplateParser
 		$adjacents = !empty($params['adjacents']) ? $params['adjacents'] : 3;
 		$lastpage = !empty($params['lastpage']) ? $params['lastpage'] : ceil($params['count'] / $limit);
 
+		$slash =  !empty($params['trailingSlash']) ? '/' : '';
+
 		$next = ($page+1);
 		$prev = ($page-1);
 
@@ -114,7 +116,7 @@ class TemplateParser
 
 		$output = '';
 		// $pageurl . '1'
-		if($page > 1) { $output .= $this->render($tpls['prev'], array('href' => $pageurl . $prev), true); }
+		if($page > 1) { $output .= $this->render($tpls['prev'], array('href' => $pageurl . $prev . $slash), true); }
 		else { $output .= $this->render($tpls['prev_inactive'], array(), true); }
 
 		// not enough pages to bother breaking it up
@@ -127,7 +129,7 @@ class TemplateParser
 				} else {
 					// $pageurl . '1'
 					$output .= $this->render($tpls['central'], array(
-						'href' => ($counter > 1) ? $pageurl . $counter : $pageurl . '1', 'counter' => $counter), true
+						'href' => ($counter > 1) ? $pageurl . $counter . $slash : $pageurl . '1' . $slash, 'counter' => $counter), true
 					);
 				}
 			}
@@ -144,26 +146,26 @@ class TemplateParser
 						$output .= $this->render($tpls['central_inactive'], array('counter' => $counter), true);
 					} else
 					{
-						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter,
+						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter . $slash,
 							'counter' => $counter), true);
 					}
 				}
 				// ...
 				$output .= $this->render($tpls['ellipsis']);
 				// sec last
-				$output .= $this->render($tpls['secondlast'], array('href' => $pageurl . ($lastpage - 1),
+				$output .= $this->render($tpls['secondlast'], array('href' => $pageurl . ($lastpage - 1) . $slash,
 					'counter' => ($lastpage - 1)), true);
 				// last
-				$output .= $this->render($tpls['last'], array('href' => $pageurl . $lastpage,
+				$output .= $this->render($tpls['last'], array('href' => $pageurl . $lastpage . $slash,
 					'counter' => $lastpage), true);
 			}
 			// middle pos; hide some front and some back
 			elseif(($lastpage - ($adjacents * 2) > $page) && ($page > ($adjacents * 2)))
 			{
 				// first
-				$output .= $this->render($tpls['first'], array('href' => $pageurl . '1'), true);
+				$output .= $this->render($tpls['first'], array('href' => $pageurl . '1' . $slash), true);
 				// second
-				$output .= $this->render($tpls['second'], array('href' => $pageurl . '2', 'counter' => '2'), true);
+				$output .= $this->render($tpls['second'], array('href' => $pageurl . '2' . $slash, 'counter' => '2'), true);
 				// ...
 				$output .= $this->render($tpls['ellipsis']);
 
@@ -174,26 +176,26 @@ class TemplateParser
 						$output .= $this->render($tpls['central_inactive'], array('counter' => $counter), true);
 					} else
 					{
-						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter,
+						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter . $slash,
 							'counter' => $counter), true);
 					}
 				}
 				// ...
 				$output .= $this->render($tpls['ellipsis']);
 				// sec last
-				$output .= $this->render($tpls['secondlast'], array('href' => $pageurl . ($lastpage - 1),
+				$output .= $this->render($tpls['secondlast'], array('href' => $pageurl . ($lastpage - 1) . $slash,
 					'counter' => ($lastpage - 1)), true);
 				// last
-				$output .= $this->render($tpls['last'], array('href' => $pageurl . $lastpage,
+				$output .= $this->render($tpls['last'], array('href' => $pageurl . $lastpage . $slash,
 					'counter' => $lastpage), true);
 			}
 			//close to end; only hide early pages
 			else
 			{
 				// first ($pageurl . '1')
-				$output .= $this->render($tpls['first'], array('href' => $pageurl . '1'), true);
+				$output .= $this->render($tpls['first'], array('href' => $pageurl . '1' . $slash), true);
 				// second
-				$output .= $this->render($tpls['second'], array('href' => $pageurl . '2', 'counter' => '2'), true);
+				$output .= $this->render($tpls['second'], array('href' => $pageurl . '2' . $slash, 'counter' => '2'), true);
 				// ...
 				$output .= $this->render($tpls['ellipsis']);
 
@@ -204,7 +206,7 @@ class TemplateParser
 						$output .= $this->render($tpls['central_inactive'], array('counter' => $counter), true);
 					} else
 					{
-						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter,
+						$output .= $this->render($tpls['central'], array('href' => $pageurl . $counter . $slash,
 							'counter' => $counter), true);
 					}
 				}
@@ -212,7 +214,7 @@ class TemplateParser
 		}
 		//next link
 		if($page < $counter - 1)
-			$output .= $this->render($tpls['next'], array('href' => $pageurl . $next), true);
+			$output .= $this->render($tpls['next'], array('href' => $pageurl . $next . $slash), true);
 		else
 			$output .= $this->render($tpls['next_inactive'], array(), true);
 
