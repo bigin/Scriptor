@@ -155,7 +155,7 @@ class Item extends FieldMapper
 	 */
 	public function set($name, $value, $sanitize = true)
 	{
-		$this->init($this->categoryid);
+		$this->init($this->categoryid, true);
 		$attributeKey = strtolower(trim($name));
 		$isAttribute = !in_array($attributeKey, $this->getAttributes()) ? false : true;
 		if(!$isAttribute && !isset($this->fields[$name])) { Util::logException(new \ErrorException('Illegal item field name')); }
