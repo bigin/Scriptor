@@ -418,6 +418,15 @@ label.required:after {
 	color: #da0000;
 }
 
+.info-text {
+	padding: 5px 15px;
+	margin: 5px 0 3px;
+	font-size: small;
+	font-style: italic;
+	color: #adaca8;
+	background-color: rgba(150, 150, 150, 0.06);
+}
+
 #page-text {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 1.7rem;

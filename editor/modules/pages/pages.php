@@ -10,6 +10,11 @@
  */
 class Pages extends Module
 {
+	private static $reservedSlugs = [
+		'index',
+		'editor'
+	];
+
 	public function execute()
 	{
 		$this->checkAction();
@@ -91,6 +96,11 @@ class Pages extends Module
 					<input name="name" id="pagename" type="text" value="">
 				</div>
 				<div class="form-control">
+					<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
+					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
+					<input name="slug" id="slug" type="text" value="<?php echo $this->page->slug; ?>">
+				</div>
+				<div class="form-control">
 					<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
 					<textarea id="markdown" name="content" onkeyup="auto_grow(this)"></textarea>
 				</div>
@@ -129,6 +139,11 @@ class Pages extends Module
 				<div class="form-control">
 					<label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
 					<input name="name" id="pagename" type="text" value="<?php echo $page->name; ?>">
+				</div>
+				<div class="form-control">
+					<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
+					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
+					<input name="slug" id="slug" type="text" value="<?php echo $this->page->slug; ?>">
 				</div>
 				<div class="form-control">
 					<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
@@ -304,6 +319,34 @@ class Pages extends Module
 			);
 		}
 		$this->page->set('name', $name);
+
+		$url = trim($name, '-');
+		if($this->input->post->slug) {
+			$slug = preg_replace("/(-)\\1+/", "$1",
+				$this->imanager->sanitizer->pageName($this->input->post->slug));
+		} else {
+			$slug = preg_replace("/(-)\\1+/", "$1",
+				$this->imanager->sanitizer->pageName($url));
+		}
+		// Its one of the reserved names?
+		if(in_array($slug, self::$reservedSlugs)) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_slug_reserved']
+			);
+			return false;
+		}
+		// Invalid News name
+		if(!$slug) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_page_name']
+			);
+			return false;
+		}
+
+		$this->page->set('slug', $slug);
+
 		$content = htmlentities($this->input->post->content);
 		if(!$content) {
 			$this->msgs[] = array(
@@ -332,8 +375,6 @@ class Pages extends Module
 		if(!empty($this->msgs)) { return false; }
 
 		$this->page->set('pagetype', 1, false);
-		$slug = preg_replace("/(-)\\1+/", "$1", $this->imanager->sanitizer->pageName($name));
-		$this->page->set('slug', $slug);
 
 		if($this->config['protectCSRF'] && !$this->csrf->isTokenValid(
 			$this->input->post->tokenName,

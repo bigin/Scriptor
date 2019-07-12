@@ -118,6 +118,7 @@ header .brand-wrapper .brand a:hover {
 	padding: 10px;
 	display: inline-block;
 	width: 100%;
+	line-height: 150%;
 	color: #008cff;
 	text-decoration: none;
 }
