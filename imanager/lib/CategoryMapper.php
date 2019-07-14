@@ -92,11 +92,13 @@ class CategoryMapper extends Mapper
 	 * or by category name ImCategory::getCategory('name=My category name')
 	 *
 	 * @param string/integer $selector
-	 * @param array $categories
+	 * @param array|input $categories
 	 * @return boolean|object of the type Category
 	 */
-	public function getCategory($selector, array $categories=array())
+	public function getCategory($selector, $categories = array())
 	{
+		if(is_null($categories)) return null;
+
 		if(!$categories)  $categories = $this->categories;
 		// No items selected
 		if(empty($categories)) return null;
@@ -140,12 +142,13 @@ class CategoryMapper extends Mapper
 	 *
 	 * @param string $selector
 	 * @param integer $key
-	 * @param array $categories -
+	 * @param array|null $categories -
 	 *
 	 * @return boolean|array    - Array of categories
 	 */
-	public function getCategories($selector = '', $length = 0, array $categories = array())
+	public function getCategories($selector = '', $length = 0, $categories = array())
 	{
+		if(is_null($categories)) return null;
 		$offset = 0;
 		//settype($offset, 'integer');
 		settype($length, 'integer');

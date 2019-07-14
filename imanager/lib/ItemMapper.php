@@ -145,15 +145,16 @@ class ItemMapper extends Mapper
 	 * Get the Item matching the given selector string without exclusions. Returns an Item, or a NULL if not found.
 	 *
 	 * @param $selector - Selector
-	 * @param array $items
+	 * @param array|null $items
 	 *
 	 * @return bool|mixed
 	 */
-	public function getItem($selector, array $items=array())
+	public function getItem($selector, $items = array())
 	{
-		if($items) $this->items = $items;
+		if(is_null($items)) return null;
 		// No items selected
-		if(empty($this->items)) return null;
+		if(!empty($items)) $this->items = $items;
+		if(!$this->items) return;
 		// A nummeric value, id was entered?
 		if(is_numeric($selector)) return !empty($this->items[$selector]) ? $this->items[$selector] : null;
 		// Separate selector
@@ -188,15 +189,15 @@ class ItemMapper extends Mapper
 	 *
 	 * @return array|bool
 	 */
-	public function getItems($selector = '', $length = 0, array $items = array())
+	public function getItems($selector = '', $length = 0, $items = array())
 	{
 		$offset = 0;
 		settype($length, 'integer');
 		// reset offset
 		$offset = ($offset > 0) ? $offset-1 : $offset;
-		if(!$items) $items = $this->items;
+		if(empty($items) && is_array($items)) $items = $this->items;
 		// nothing to select
-		if(empty($items)) return null;
+		if(!$items) return null;
 
 		if(!empty($selector)) $arr = $this->applySearchPattern($items, $selector);
 		else $arr = $items;
