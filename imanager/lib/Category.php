@@ -104,12 +104,12 @@ class Category extends ImObject
 	 *   child objects ~
 	 *
 	 * @param $selector
-	 * @param array $items
+	 * @param array|null $items
 	 * @param bool $force
 	 *
 	 * @return mixed
 	 */
-	public function getItem($selector, array $items = array(), $force = false)
+	public function getItem($selector, $items = array(), $force = false)
 	{
 		$this->init();
 		$this->imanager->itemMapper->init($this->id, $force);
@@ -128,12 +128,12 @@ class Category extends ImObject
 	 *
 	 * @param $selector
 	 * @param int $length
-	 * @param array $items
+	 * @param array|null $items
 	 * @param bool $force
 	 *
 	 * @return mixed
 	 */
-	public function getItems($selector = '', $length = 0, array $items = array(), $force = false)
+	public function getItems($selector = '', $length = 0, $items = array(), $force = false)
 	{
 		$this->init();
 		$this->imanager->itemMapper->init($this->id, $force);

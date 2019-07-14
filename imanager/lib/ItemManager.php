@@ -41,11 +41,11 @@ class ItemManager extends Manager
 	 * @param $selector
 	 * @param int $offset
 	 * @param int $length
-	 * @param array $categories
+	 * @param array|null $categories
 	 *
 	 * @return mixed|array - An array of Category objects
 	 */
-	public function getCategories($selector = '', $length = 0, array $categories = array()) {
+	public function getCategories($selector = '', $length = 0, $categories = array()) {
 		if(empty($this->categoryMapper->categories) && !$categories) {
 			$this->categoryMapper->init();
 		}
@@ -54,11 +54,11 @@ class ItemManager extends Manager
 
 	/**
 	 * @param $selector
-	 * @param array $categories
+	 * @param array|null $categories
 	 *
 	 * @return mixed|Category - Catagory object
 	 */
-	public function getCategory($selector, array $categories = array()) {
+	public function getCategory($selector, $categories = array()) {
 		if(empty($this->categoryMapper->categories) && !$categories) {
 			$this->categoryMapper->init();
 		}
