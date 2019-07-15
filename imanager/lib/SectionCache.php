@@ -225,7 +225,7 @@ class ImCacheFile
 			return false;
 		}
 		// note file_get_contents returns boolean false if file can't be opened (i.e. if it's locked from a write)
-		return @file_get_contents($filename);
+		return (file_exists($filename)) ? file_get_contents($filename) : false;
 	}
 
 
