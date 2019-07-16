@@ -98,7 +98,7 @@ class Pages extends Module
 				<div class="form-control">
 					<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
 					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
-					<input name="slug" id="slug" type="text" value="<?php echo $this->page->slug; ?>">
+					<input name="slug" id="slug" type="text" value="">
 				</div>
 				<div class="form-control">
 					<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
