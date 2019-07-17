@@ -48,4 +48,5 @@ Password: `gT5nLazzyBob`
 
 ### More info
 Official website: https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
-Demo: https://demos.ehret-studio.com/scriptor/   
+Demo (default template): https://demos.ehret-studio.com/scriptor/   
+Demo ([UIkit 3](https://getuikit.com) template): https://im.ehret-studio.com/tuts/   
