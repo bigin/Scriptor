@@ -41,7 +41,7 @@ class CategoryMapper extends Mapper
 		if(self::$initialized && !$force) return true;
 
 		parent::___init();
-		$this->path = IM_BUFFERPATH.'/categories/categories.php';
+		$this->path = IM_BUFFERPATH.'categories/categories.php';
 		if(!file_exists(dirname($this->path))) {
 			Util::install($this->path);
 		}
