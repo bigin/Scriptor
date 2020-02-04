@@ -13,6 +13,17 @@ class InputArray implements InputInterface
 	protected $field;
 
 	/**
+	 * @var int
+	 * TEXT 65,535 bytes ~64kb
+	 */
+	protected $maxLen = 65535;
+
+	/**
+	 * @var int - default value, if it wasn't defined in field settings menu
+	 */
+	protected $minLen = 0;
+
+	/**
 	 * @var bool - default value if it wasn't defined in field settings menu
 	 */
 	protected $required = false;
