@@ -321,7 +321,7 @@ class Category extends ImObject
 		if(true !== $this->checkDuplicates()) { return false; }
 
 		$this->declutter();
-
+		if(is_array($cm->categories)) foreach($cm->categories as $category) { $category->declutter(); }
 		$cm->categories[$this->id] = $this;
 		// Create a backup if necessary
 		if($cm->imanager->config->backupCategories) {

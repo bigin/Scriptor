@@ -154,15 +154,16 @@ class Util
 	 * @param $path
 	 * @param $file
 	 * @param $suffix
+	 * @param $stamp - timestamp (optionally)
 	 *
 	 * @return bool
 	 */
-	public static function createBackup($path, $file, $suffix)
+	public static function createBackup($path, $file, $suffix, $stamp = null)
 	{
 		if(!file_exists($path.$file.$suffix)) return false;
-		$stamp = time();
-		if(!copy($path.$file.$suffix, IM_BACKUPPATH.'backup_'.$stamp.'_'.$file)) return false;
-		chmod(IM_BACKUPPATH.'backup_'.$stamp.'_'.$file, imanager('config')->chmodFile);
+		$s = (!$stamp) ? time() : $stamp;
+		if(!copy($path.$file.$suffix, IM_BACKUPPATH.'backup_'.$s.'_'.$file)) return false;
+		chmod(IM_BACKUPPATH.'backup_'.$s.'_'.$file, imanager('config')->chmodFile);
 		self::deleteOutdatedBackups();
 		return true;
 	}

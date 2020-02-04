@@ -15,7 +15,7 @@ class Sanitizer {
 	 * May be passed to pageName for the $beautify param, see pageName for details.
 	 *
 	 */
-	//const translate = 2;
+	const translate = 2;
 
 	/**
 	 * Caches the status of multibyte support.

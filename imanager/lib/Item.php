@@ -230,8 +230,8 @@ class Item extends FieldMapper
 	public function save()
 	{
 		$this->init($this->categoryid);
-		$sanitizer = $this->imanager->sanitizer;
-		$config = $this->imanager->config;
+		$sanitizer = imanager('sanitizer');
+		$config = imanager('config');
 		$now = time();
 
 		$this->id = (!$this->id) ? $this->getNextId() : (int) $this->id;
@@ -250,12 +250,12 @@ class Item extends FieldMapper
 			if(!isset($this->{$field->name}) || !isset($this->{$field->name})) { $this->{$field->name} = $field->default; }
 		}
 
-		$im = $this->imanager->itemMapper;
+		$im = imanager()->itemMapper;
 		$im->init($this->categoryid);
 
 		// Clean-up item object by removing redundant item object attributes
 		$this->declutter();
-
+		if(is_array($im->items)) foreach($im->items as $item) { $item->declutter(); }
 		$im->items[$this->id] = $this;
 
 		// Create a backup if necessary
