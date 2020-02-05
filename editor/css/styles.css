@@ -213,7 +213,7 @@ hr {
 
 .summary-wrapper ul li a, .summary-wrapper ul li span {
 	display: block;
-	padding: 10px 15px;
+	padding: 10px 20px;
 	border-bottom: none;
 	color: inherit;
 	background: 0 0;
@@ -244,7 +244,7 @@ hr {
 	font-weight: 600;
 	text-transform: uppercase;
 	font-family: 'Montserrat';
-	line-height: 30px;
+	line-height: 0;
 	text-decoration: none;
 	color: #555;
 }

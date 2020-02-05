@@ -56,13 +56,11 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'contact_developer' => 'Entwickler kontaktieren',
 	'dashboard_content' => '
-			<img src="images/dashboard-screen.png">
+			<img src="images/scriptor-dashboard.png">
 			<h1>Willkommen bei Scriptor</h1>
 			<hr>
 			<h3>Was ist Scriptor?</h3>
-			<p>Scriptor ist ein einfaches Flat-File-CMS auf Basis von IManager, es wurde entwickelt, um 
-			webbasierte Manuals, Anleitungen und anderen Online-Publikationen erstellen zu können. Scriptor unterstützt 
-			Markdown und Syntaxhervorhebung.</p>
+			<p>Scriptor ist ein einfaches Flat-File-CMS auf Basis von ItemManager, es unterstützt Markdown und Syntaxhervorhebung.</p>
 			
 			<h3>Installationsanforderungen</h3>
 			<ul>
