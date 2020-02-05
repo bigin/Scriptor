@@ -2,8 +2,7 @@
 
 # Scriptor
 
-_Scriptor is a simple flat-file CMS, specially developed for publishing web-based manuals, instructions and other online 
-publications, supports Markdown and Syntax highlighting._   
+_Scriptor is a simple flat-file CMS, supports Markdown and Syntax highlighting._   
 
 ## Features   
 Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
