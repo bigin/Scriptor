@@ -56,12 +56,11 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'contact_developer' => 'Contact developer',
 	'dashboard_content' => '
-			<img src="images/dashboard-screen.png">
+			<img src="images/scriptor-dashboard.png">
 			<h1>Welcome to Scriptor</h1>
 			<hr>
 			<h3>What is Scriptor?</h3>
-			<p>Scriptor is a simple flat-file CMS based on IManager. Specially developed for publishing web-based 
-			manuals, instructions and other online publications, supports Markdown and Syntax highlighting.</p>
+			<p>Scriptor is a simple flat-file CMS based on ItemManager, supports Markdown and Syntax highlighting.</p>
 			
 			<h3>Install Requirements</h3>
 			<ul>

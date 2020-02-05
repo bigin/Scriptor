@@ -1,4 +1,4 @@
-![](https://demos.ehret-studio.com/scriptor/data/uploads/dashboard-screen.png)
+![](https://demos.ehret-studio.com/scriptor/data/uploads/scriptor-dashboard.png)
 
 # Scriptor
 
