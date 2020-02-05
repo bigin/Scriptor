@@ -111,8 +111,7 @@ hr {
 }
 
 .breadcrumbs li:after {
-	content: '\f105';
-	font-family: 'FontAwesome';
+	content: '\203A';
 }
 
 .breadcrumbs li a, .breadcrumbs li span {
@@ -145,8 +144,7 @@ hr {
 	text-decoration: none;
 }
 .guillotine li a:after {
-	content: '\f039';
-	font-family: 'FontAwesome';
+	content: '\2261';
 }
 
 .profile {
