@@ -91,4 +91,27 @@
      'created' => 1518943944,
      'updated' => 1518943944,
   )),
+  'template' => 
+  Imanager\Field::__set_state(array(
+     'categoryid' => 1,
+     'id' => 5,
+     'name' => 'template',
+     'label' => 'Page template',
+     'type' => 'text',
+     'position' => 5,
+     'default' => NULL,
+     'options' => 
+    array (
+    ),
+     'info' => NULL,
+     'required' => false,
+     'minimum' => 0,
+     'maximum' => 0,
+     'cssclass' => NULL,
+     'configs' => 
+    Imanager\FieldConfigs::__set_state(array(
+    )),
+     'created' => 1581357741,
+     'updated' => 1581357741,
+  )),
 ); ?>

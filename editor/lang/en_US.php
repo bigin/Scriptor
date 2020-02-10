@@ -9,9 +9,14 @@ $i18n = [
 	'page_successful_removed' => 'The page was successfully deleted.',
 	'error_deleting_page' => 'Error deleting the page.',
 	'no_page' => 'No page found.',
-	'settings_page_text' => 'The settings can be found under <mark>data/settings/scriptor-config.php</mark>',
+	'settings_page_text' => 'The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br>
+	NOTE: If you prefer to have a permanent configuration, create a <mark>custom.scriptor-config.php</mark> 
+	file in the same directory.',
 	'profile_menu' => 'Profile',
-	'error_login' => 'The username or password you entered is incorrect.',
+	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
+	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 
+	or try again in [[count]] minutes.",
+	'error_cookie' => 'The use of session cookie is mandatory.',
 	'username_label' => 'Username',
 	'password_label' => 'Password',
 	'new_password_label' => 'New Password',
@@ -41,6 +46,8 @@ $i18n = [
 	'name_label' => 'Name',
 	'name_field_infotext' => 'Any combination of letters (a-z), numbers (0-9), dashes or underscores (no spaces).',
 	'parent_label' => 'Parent Page',
+	'template_label' => 'Page template',
+	'template_field_infotext' => 'Any combination of letters, dashes or underscores (no spaces).',
 	'published_label' => 'Published',
 	'page_edit_header' => 'Edit page',
 	'page_create_header' => 'New page',

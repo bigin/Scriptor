@@ -14,7 +14,7 @@ if(isset($_SESSION['loggedin'])) { ?>
 			if($module['active'] && in_array('profile', $module['display_type'])) { ?>
 				<li<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' class="active" ' : '');
 				?>><a href="<?php echo $editor->pageUrl.$slug.'/'.(($module['menu'] == 'logout_menu') ?
-					$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i> <?php
+					'logout/'.$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i> <?php
 						echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu'];
 						?></a></li>
 		<?php	}

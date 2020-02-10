@@ -1,4 +1,4 @@
-![](https://demos.ehret-studio.com/scriptor/data/uploads/scriptor-dashboard.png)
+![](https://demos.ehret-studio.com/scriptor/data/uploads/scriptor-dashboard-github.png)
 
 # Scriptor
 
@@ -8,7 +8,7 @@ _Scriptor is a simple flat-file CMS, supports Markdown and Syntax highlighting._
 Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
 You will have it installed in 2 minutes - ready to use.   
 
-Flexible and extensible architecture: You have a variety of options and a powerful [IM](https://gitlab.com/bigin1/imanager) 
+Flexible and extensible architecture: You have a variety of options and a powerful [IM](https://github.com/bigin/ItemManager-3) 
 framework for module development.
 
 You have total freedom: Themes and Modules can contain plain HTML/PHP source code, Scriptor does not impose any 
@@ -28,6 +28,7 @@ restrictions on the user's development approach.
 3. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
     
 > NOTE: If you want to use Scriptor in a subdirectory, you might have to adjust the .htaccess file.
+> If you rename the `editor` directory, you have to adjust the config.php as well.
     
 ### Admin
 Once installed, to access the administrator area of your Scriptor site go to your websites homepage, then simply add the text `editor/` to the URL in your browsers, for example: 
@@ -37,7 +38,7 @@ https://yourwebsite.com/editor/
 
 If you are using Scriptor in a subdirectory: 
 ```
-https://yourwebsite.com/scriptor/editor/
+https://yourwebsite.com/subdirectory/editor/
 ```
 
 ### Admin login  

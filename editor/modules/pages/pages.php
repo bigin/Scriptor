@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Pages
+ * Pages class
  *
  *
  * NOTE:
@@ -112,6 +112,11 @@ class Pages extends Module
 					</select>
 				</div>
 				<div class="form-control">
+					<label for="template"><?php echo $this->i18n['template_label']; ?></label>
+					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['template_field_infotext'] ?></p>
+					<input name="template" id="template" type="text" value="">
+				</div>
+				<div class="form-control">
 					<label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
 						(($page && $page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
 				</div>
@@ -155,6 +160,12 @@ class Pages extends Module
 						<option><?php echo $this->i18n['parent_select_option']; ?></option>
 						<?php echo $parent_options; ?>
 					</select>
+				</div>
+				<div class="form-control">
+					<label for="template"><?php echo $this->i18n['template_label']; ?></label>
+					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
+						echo $this->i18n['template_field_infotext'] ?></p>
+					<input name="template" id="template" type="text" value="<?php echo $this->page->template; ?>">
 				</div>
 				<div class="form-control">
 					<label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
@@ -355,6 +366,9 @@ class Pages extends Module
 			);
 		}
 		$this->page->set('content', $content);
+
+		$template = $this->imanager->sanitizer->templateName($this->input->post->template);
+		$this->page->set('template', $template);
 
 		$parentid = (int) $this->input->post->parent;
 		if($this->page->id && $parentid == $this->page->id) {
