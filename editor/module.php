@@ -86,6 +86,11 @@ class Module
 	public $breadcrumbs;
 
 	/**
+	 * @var bool $auth - Module authorization needed?
+	 */
+	protected $auth = true;
+
+	/**
 	 * @var array - Header Resources
 	 */
 	protected $headerResources = [];
@@ -148,6 +153,23 @@ class Module
 		}
 	}
 
+	/**
+	 * Loads and returns editor module
+	 * 
+	 * If a module exists an instance of this module 
+	 * will be returned, if not then null. 
+	 *  
+	 */
+	protected function loadModule($moduleName)
+	{
+		$module = isset($this->config['modules'][$moduleName]) ? $this->config['modules'][$moduleName] : null;
+		// Is module disabled module file exists?
+		if(!$module || !$module['active'] || file_exists($module['path'] . '.php')) { return null; }
+		// include module
+		include_once $module['path'] . '.php';
+		return new $module['class']($this->config);
+	}
+
 	protected function execute(){}
 
 	protected function checkAction(){}
@@ -163,7 +185,6 @@ class Module
 	public function getHeaderResources($context)
 	{
 		$result = null;
-
 		if(isset($this->headerResources[$context]) && is_array($this->headerResources[$context])) {
 			foreach($this->headerResources[$context] as $resource) {
 				$result .= $resource;

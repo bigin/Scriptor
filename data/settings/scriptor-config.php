@@ -70,6 +70,18 @@ $config = [
 	'maxNumTokens' => 5,
 
 	/**
+	 * Number of failed login attempts before lockout.
+	 * 
+	 * @var int
+	 */
+	'maxFailedAccessAttempts' => 5,
+
+	/**
+	 * Access lockout duration in minutes
+	 */
+	'accessLockoutDuration' => 5,
+
+	/**
 	 * Installed Scriptor admin modules
 	 *
 	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'
@@ -79,6 +91,7 @@ $config = [
 	 * 'pages' => [                                       // URL Segment that resolves to the module (array)
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
 	 *     'active' => true,                              // Enables or disables module (bool)
+	 *     'auth' => true,                                // Enables or disables module authorization
 	 *     'path' => IM_DATAPATH.'modules/your-dir/file', // Path and file name without extension like '.php' (string)
 	 *     'class' => 'Pages',                            // The class to be called (string)
 	 *     'display_type' => [                            // Module display options (array)
@@ -91,26 +104,19 @@ $config = [
 		'pages' => [
 			'menu' => 'pages_menu',
 			'active' => true,
-			'path' =>  null, // Build in module
+			'auth' => true,
+			'path' =>  'modules/pages/pages',
 			'class' => 'Pages',
 			'display_type' => [
 				'sidebar'
 			],
 			'description' => "Scriptor's build-in module to display and edit pages"
 		],
-		'settings' => [
-			'menu' => 'settings_menu',
-			'active' => true,
-			'class' => null, // Build in module
-			'display_type' => [
-				'sidebar'
-			],
-			'description' => 'A build-in module for showing settings menu'
-		],
 		'profile' => [
 			'menu' => 'profile_menu',
 			'active' => true,
-			'path' => null, // Build in module
+			'auth' => true,
+			'path' => 'modules/profile/profile',
 			'class' => 'Profile',
 			'display_type' => [
 				'profile'
@@ -118,16 +124,39 @@ $config = [
 			'icon' => 'fas fa-user-circle',
 			'description' => 'A Profile edit module for showing in the header menu'
 		],
-		'logout' => [
+		'auth' => [
 			'menu' => 'logout_menu',
 			'active' => true,
-			'path' => '',
-			'class' => null, // Build in module
+			'auth' => false, // Authorization will performed by module  itself
+			'path' => 'modules/auth/auth',
+			'class' => 'Auth',
 			'display_type' => [
 				'profile'
 			],
 			'icon' => 'fas fa-sign-out-alt',
-			'description' => 'A build-in module for showing in the header menu'
-		]
+			'description' => 'Login, logout actions module'
+		],
+		'dashboard' => [
+			'menu' => '',
+			'active' => true,
+			'auth' => true,
+			'path' => 'modules/dashboard/dashboard',
+			'class' => 'Dashboard',
+			'display_type' => [
+			],
+			'icon' => '',
+			'description' => "A default Scriptor's dashboard module"
+		],
+		'settings' => [
+			'menu' => 'settings_menu',
+			'active' => true,
+			'auth' => true,
+			'path' => 'modules/settings/settings',
+			'class' => 'Settings',
+			'display_type' => [
+				'sidebar'
+			],
+			'description' => 'A default module for showing settings menu'
+		],
 	]
 ];

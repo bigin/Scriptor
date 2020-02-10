@@ -9,9 +9,14 @@ $i18n = [
 	'page_successful_removed' => 'Die Seite wurde erfolgreich gelöscht.',
 	'error_deleting_page' => 'Fehler beim Löschen der Seite.',
 	'no_page' => 'Es wurde keine Seite gefunden.',
-	'settings_page_text' => 'Die Einstellungen finden Sie unter <mark>data/settings/scriptor-config.php</mark>',
+	'settings_page_text' => 'Die Einstellungen finden Sie unter <mark>data/settings/scriptor-config.php</mark>.<br>
+	Hinweis: Wenn Sie eine beständige Konfiguration wünschen verwenden erstellen Sie eine
+	<mark>custom.scriptor-config.php</mark> Datei im selben Verzeichnis.',
 	'profile_menu' => 'Profil',
-	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt.',
+	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche',
+	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
+	versuchen Sie es erneut oder versuchen Sie es in [[count]] Minuten wieder.',
+	'error_cookie' => 'Die Verwendung von Session-Cookie ist zwingend erforderlich.',
 	'username_label' => 'Benutzername',
 	'password_label' => 'Kennwort',
 	'new_password_label' => 'Neues Kennwort',
@@ -41,6 +46,8 @@ $i18n = [
 	'name_label' => 'Name',
 	'name_field_infotext' => 'Jede Kombination von Buchstaben (a-z), Zahlen (0-9), Bindestrichen oder Unterstrichen (keine Leerzeichen).',
 	'parent_label' => 'Übergeordnete Seite',
+	'template_label' => 'Template',
+	'template_field_infotext' => 'Jede Kombination von Buchstaben, Bindestrichen oder Unterstrichen (keine Leerzeichen).',
 	'published_label' => 'Veröffentlicht',
 	'page_edit_header' => 'Seite bearbeiten',
 	'page_create_header' => 'Neue Seite',

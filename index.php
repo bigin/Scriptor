@@ -4,6 +4,9 @@
  */
 include __DIR__.'/imanager.php';
 include __DIR__.'/data/settings/scriptor-config.php';
+if(file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) { 
+    include __DIR__.'/data/settings/custom.scriptor-config.php';
+}
 include __DIR__."/$config[admin_path]module.php";
 include __DIR__."/$config[admin_path]site.php";
 include __DIR__."/$config[admin_path]csrf.php";
