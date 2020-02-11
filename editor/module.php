@@ -182,6 +182,11 @@ class Module
 			'<link rel="stylesheet" href="'.$this->imanager->sanitizer->url($url).'">'."\r\n";
 	}
 
+	/**
+	 * Delivers header resources (used in theme header).
+	 * 
+	 * @return null|string
+	 */
 	public function getHeaderResources($context)
 	{
 		$result = null;
@@ -194,6 +199,9 @@ class Module
 		return $result;
 	}
 
+	/**
+	 * 
+	 */
 	protected function renderMessages()
 	{
 		if(!empty($this->msgs)) {
