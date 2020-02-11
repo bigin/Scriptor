@@ -175,7 +175,7 @@ class Auth extends Module
 	/**
 	 * Renders the login form for the admin section
 	 *
-	 * @return false|string
+	 * @return string
 	 */
 	protected function renderLoginForm()
 	{
