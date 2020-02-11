@@ -13,6 +13,20 @@
         "role": "Developer"
     }
     ],
+    "minimum-stability": "dev",
+    "config": {
+        "apcu-autoloader": true,
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.2.0"
+        }
+    },
+    "autoload": {
+        "classmap": [
+            "site",
+            "editor"
+        ]
+    },
     "require": {
         "php": ">=7.2.0",
         "ext-gd": "*"
