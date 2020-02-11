@@ -1,0 +1,20 @@
+{
+    "name": "bigin/scriptor",
+    "type": "library",
+    "description": "Scriptor CMS/CMF",
+    "keywords": [ "scriptor", "cms", "cmf", "flat file", "content management system" ],
+    "license": "MIT",
+    "homepage": "https://scriptor-cms.info",
+    "authors": [
+    {
+        "name": "bigin",
+        "email": "juri.ehret@gmail.com",
+        "homepage": "https://ehret-studio.com",
+        "role": "Developer"
+    }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "ext-gd": "*"
+    }
+}
