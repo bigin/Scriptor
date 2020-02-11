@@ -144,7 +144,8 @@ hr {
 	text-decoration: none;
 }
 .guillotine li a:after {
-	content: '\2261';
+	content: '\f039';
+    font-family: 'FontAwesome';
 }
 
 .profile {
