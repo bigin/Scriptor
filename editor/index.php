@@ -10,7 +10,6 @@
 	<link rel="icon" href="<?php echo $editor->pageUrl; ?>favicon.ico?v=1" type="image/x-icon" />
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/prism.css">
 	<link href="<?php echo $editor->pageUrl; ?>css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css?family=Montserrat:500,600" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/jquery-ui.css">
 	<link rel="stylesheet" href="<?php echo $editor->pageUrl; ?>css/styles.css">
 	<?php echo $editor->getHeaderResources('css'); ?>
