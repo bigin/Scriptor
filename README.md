@@ -2,22 +2,23 @@
 
 # Scriptor
 
-_Scriptor is a simple flat-file CMS, supports Markdown and Syntax highlighting._   
+_Scriptor is a simple flat-file CMS, based on [ItemManager 3](https://github.com/bigin/ItemManager-3) - 
+decoupled and reusable PHP library for web applications._   
 
 ## Features   
 Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
 You will have it installed in 2 minutes - ready to use.   
 
-Flexible and extensible architecture: You have a variety of options and a powerful [IM](https://github.com/bigin/ItemManager-3) 
+Flexible features extensible architecture: You have a variety of options and a powerful [ItemManager](https://github.com/bigin/ItemManager-3) 
 framework for module development.
 
-You have total freedom: Themes and Modules can contain plain HTML/PHP source code, Scriptor does not impose any 
-restrictions on the user's development approach.
+You have total freedom: Themes and Modules can contain plain HTML/PHP source code. Scriptor does not restrict the user's development approach 
+by a mandatory template engine.
 
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- PHP 7 or newer (7+ preferable).   
+- PHP 7 or newer (7.3+ preferable).   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
@@ -41,7 +42,8 @@ If you are using Scriptor in a subdirectory:
 https://yourwebsite.com/subdirectory/editor/
 ```
 
-### Admin login  
+### Admin initial login  
+> – Change password at first login!   
 User: `admin`   
 Password: `gT5nLazzyBob`
 
@@ -50,3 +52,6 @@ Password: `gT5nLazzyBob`
 Official website: https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
 Demo (default template): https://demos.ehret-studio.com/scriptor/   
 Demo ([UIkit 3](https://getuikit.com) template): https://im.ehret-studio.com/tuts/   
+
+### License
+The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
