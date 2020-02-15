@@ -8,9 +8,8 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1560711954,
-     'errorCode' => NULL,
-     'content' => '![](data/uploads/dashboard-screen740.png)    
+     'updated' => 1581794288,
+     'content' => '![]([[UPLOADS_URL]]dashboard-screen740.png)    
 
 ### Iove oscula propositum acerris iusque
 
@@ -20,6 +19,14 @@ lacrimis.
 
 &gt; Matris armigerae libasse muta. Vestes illa, sua et amari, vini dixerat Ino,
 &gt; qui.
+
+### Highlighted code blocks
+
+```php
+echo $page-&gt;parsedown-&gt;text(
+    $page-&gt;content
+);
+```
 
 ### Urbe imbres est fibra corpore
 
@@ -55,5 +62,6 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.',
      'pagetype' => 1,
      'slug' => 'scriptors-demo-page',
      'parent' => 0,
+     'template' => 'home',
   )),
 ); ?>

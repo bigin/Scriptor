@@ -1,5 +1,9 @@
 <?php
 
+use Imanager\Item;
+use Imanager\TemplateParser;
+use Imanager\Util;
+
 /**
  * Pages class
  *
@@ -56,10 +60,17 @@ class Pages extends Module
 			echo json_encode(array('status' => $status));
 			exit;
 		}
+		// Render page content view modal
+		elseif($this->input->post->action == 'render-markdown') {
+			$content = $this->renderContent();
+			header('Content-type: application/json; charset=utf-8');
+			echo json_encode(array('status' => 1, 'text' => $content));
+			exit;
+		}
 		// Delete page
 		elseif($this->segments->get(1) == 'delete' && $this->input->get->page) {
 			$status = $this->removePage();
-			\Imanager\Util::redirect('../');
+			Util::redirect('../');
 			exit;
 		}
 	}
@@ -246,6 +257,23 @@ class Pages extends Module
 		return $rows;
 	}
 
+	protected function renderContent() 
+	{
+		$parsedown = $this->loadModule('parsedown');
+
+		$templateParser = new TemplateParser();
+
+		$content = $templateParser->render($this->input->post->content, [
+			'BASE_URL' => dirname($this->siteUrl).'/',
+			'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/'
+		]);
+		if(true === $this->config['allowHtmlOutput']) {
+			$content = htmlspecialchars_decode($content);
+			//$parsedown->setSafeMode(true);
+		}
+		return $parsedown->text($content);
+	}
+
 	protected function renumberPages()
 	{
 		if(!$this->input->post->position || !is_array($this->input->post->position)) {
@@ -312,7 +340,7 @@ class Pages extends Module
 		$this->page = null;
 
 		if($this->input->get->page) { $this->page = $this->pages->getItem((int)$this->input->get->page); }
-		if(!$this->page) { $this->page = new \Imanager\Item($this->pages->id); }
+		if(!$this->page) { $this->page = new Item($this->pages->id); }
 
 		$name = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->name));
 		if(!$name) {
@@ -407,7 +435,7 @@ class Pages extends Module
 				'value' => $this->i18n['successful_saved_page']
 			);
 
-			\Imanager\Util::redirect("./?page={$this->page->id}");
+			Util::redirect("./?page={$this->page->id}");
 		}
 		return false;
 	}

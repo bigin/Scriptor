@@ -2,7 +2,7 @@
 
 # Scriptor
 
-_Scriptor is a simple flat-file CMS, based on [ItemManager 3](https://github.com/bigin/ItemManager-3) - 
+_Scriptor is a simple flat-file CMS, based on [ItemManager](https://github.com/bigin/ItemManager-3) - 
 decoupled and reusable PHP library for web applications._   
 
 ## Features   
@@ -43,9 +43,9 @@ https://yourwebsite.com/subdirectory/editor/
 ```
 
 ### Admin initial login  
-> – Change password at first login!   
-User: `admin`   
-Password: `gT5nLazzyBob`
+`Change password at first login!`  
+> User: `admin`   
+> Password: `gT5nLazzyBob`
 
 
 ### More info

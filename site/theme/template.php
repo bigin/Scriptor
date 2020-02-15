@@ -22,10 +22,7 @@
 				</div>
 				<?php echo $page->messages; ?>
 				<div id="content" role="article">
-					<?php 
-					$page->parsedown->setSafeMode(true);
-					echo $page->parsedown->text(htmlspecialchars_decode($page->content)); 
-					?>
+					<?php echo $page->render('content'); ?>
 				</div>
 				<?php include('sidebar.php'); ?>
 			</div>

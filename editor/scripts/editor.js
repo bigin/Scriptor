@@ -68,10 +68,19 @@ function fixWidthHelper(e, ui) {
 }
 $("#render").click(function (e) {
 	e.preventDefault();
+	var form = $("#page-form");
+	var formData = new FormData(document.querySelector("#page-form"));
+	formData.append("action", "render-markdown");
 	var text = md.render($("#markdown").val());
-	if(text.length > 0) {
-		$("#page-text").html(text);
-	}
+	formData.append("content", text);
+	sendData(form.attr("action"), formData, function(result) {
+		if(result && result.status == 1) {
+			$("#page-text").html(result.text);
+		}
+		/* if(text.length > 0) {
+			$("#page-text").html(text);
+		} */
+	});
 	$("#screen").show();
 	return false;
 });
