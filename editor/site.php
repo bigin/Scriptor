@@ -87,6 +87,11 @@ class Site extends Module
 	public $content;
 
 	/**
+	 * @var object - ParseDown instance
+	 */
+	public $parsedown;
+
+	/**
 	 * Editor constructor.
 	 *
 	 * @param $config
@@ -112,6 +117,7 @@ class Site extends Module
 		$this->users = $this->imanager->getCategory('name=Users');
 		$this->firstSegment = $this->segments->get(0);
 		$this->lastSegment = $this->segments->getLast();
+		$this->parsedown = $this->loadModule('parsedown');
 		if(!isset($_SESSION['msgs'])) {
 			$_SESSION['msgs'] = array();
 		}
