@@ -22,13 +22,10 @@
 				</div>
 				<?php echo $page->messages; ?>
 				<div id="content" role="article">
-					<noscript>
-						<div class="message">
-							<p class="error">We're sorry but our site <strong>requires</strong> JavaScript.
-								This site uses JavaScript to parse the content client-side to generate dynamic HTML.</p>
-						</div>
-					</noscript>
-					<textarea id="markdown" style="display: none"><?php echo $page->content; ?></textarea>
+					<?php 
+					$page->parsedown->setSafeMode(true);
+					echo $page->parsedown->text(htmlspecialchars_decode($page->content)); 
+					?>
 				</div>
 				<?php include('sidebar.php'); ?>
 			</div>
@@ -43,8 +40,6 @@
 	</footer>
 </main>
 <script src="<?php echo $page->siteUrl.$page->config['admin_path']; ?>scripts/jquery.min.js"></script>
-<script src="<?php echo $page->siteUrl.$page->config['admin_path']; ?>scripts/remarkable/remarkable.min.js"></script>
 <script src="<?php echo $page->siteUrl.$page->config['admin_path']; ?>scripts/prism.js"></script>
-<script src="<?php echo $page->themeUrl; ?>scripts/main.js?v=1"></script>
 </body>
 </html>

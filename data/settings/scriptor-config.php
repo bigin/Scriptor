@@ -158,5 +158,15 @@ $config = [
 			],
 			'description' => 'A default module for showing settings menu'
 		],
+		'parsedown' => [
+			'menu' => '',
+			'active' => true,
+			'auth' => false,
+			'path' => 'modules/parsedown/Parsedown',
+			'class' => 'Parsedown',
+			'display_type' => [
+			],
+			'description' => 'A default module for parsing markdown'
+		],
 	]
 ];
