@@ -164,7 +164,7 @@ class Module
 	{
 		$module = isset($this->config['modules'][$moduleName]) ? $this->config['modules'][$moduleName] : null;
 		// Is module disabled module file exists?
-		if(!$module || !$module['active'] || file_exists($module['path'] . '.php')) { return null; }
+		if(!$module || !$module['active'] || !file_exists(__DIR__ ."/$module[path].php")) { return null; }
 		// include module
 		include_once $module['path'] . '.php';
 		return new $module['class']($this->config);

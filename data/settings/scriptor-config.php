@@ -82,6 +82,11 @@ $config = [
 	'accessLockoutDuration' => 5,
 
 	/**
+	 * Enable HTML tags in page content output
+	 */
+	'allowHtmlOutput' => false,
+
+	/**
 	 * Installed Scriptor admin modules
 	 *
 	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'

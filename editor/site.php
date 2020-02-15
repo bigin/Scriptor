@@ -1,4 +1,7 @@
 <?php
+
+use Imanager\TemplateParser;
+
 class Site extends Module
 {
 	/**
@@ -92,12 +95,18 @@ class Site extends Module
 	public $parsedown;
 
 	/**
+	 * @var object - ItemManager's TemplateParser instance
+	 */
+	public $templateParser;
+
+	/**
 	 * Editor constructor.
 	 *
 	 * @param $config
 	 */
 	public function __construct($config) {
 		$this->config = $config;
+		$this->templateParser = new TemplateParser();
 		$this->config['version'] = parent::VERSION;
 	}
 
@@ -180,6 +189,16 @@ class Site extends Module
 				}
 			}
 			return $navi;
+		}
+		elseif($element == 'content') {
+			$content = $this->templateParser->render($this->content, [
+				'BASE_URL' => $this->siteUrl,
+				'UPLOADS_URL' => $this->siteUrl.'data/uploads/'
+			]);
+			if(true !== $this->config['allowHtmlOutput']) {
+				$this->parsedown->setSafeMode(true);
+			}
+			return $this->parsedown->text(htmlspecialchars_decode($content)); 
 		}
 	}
 
