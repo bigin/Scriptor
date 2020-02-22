@@ -1,10 +1,17 @@
 <?php
 
+namespace Scriptor;
+
 class Profile extends Module
 {
-	/**
-	 * $editor - Inherited from Module
-	 */
+	private $user;
+
+	 public function init()
+	 {
+		parent::init();
+		$this->users = $this->imanager->getCategory('name=Users');
+		$this->csrf = Scriptor::getCSRF();
+	 }
 
 	/**
 	 * Default execute module method
@@ -25,7 +32,7 @@ class Profile extends Module
 	/**
 	 * Checks user actions
 	 */
-	protected function checkAction()
+	public function checkAction()
 	{
 		// Just redirect to profile view
 		if($this->segments->get(0) == 'profile' && !$this->segments->get(1)) {

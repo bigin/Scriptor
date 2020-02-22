@@ -2,7 +2,7 @@
 <aside id="sidebar-wrapper" class="clearfix" role="complementary">
 	<nav role="navigation">
 		<ul class="sidebar-navi">
-			<?php echo $page->render('navigation'); ?>
+			<?php echo $site->render('navigation'); ?>
 		</ul>
 	</nav>
 </aside>

@@ -1,5 +1,7 @@
 <?php
 
+namespace Scriptor;
+
 use Imanager\TemplateParser;
 
 class Site extends Module
@@ -15,7 +17,7 @@ class Site extends Module
 	public $config;
 
 	/**
-	 * @var sting $pageTitle - Meta page title
+	 * @var string $pageTitle - Meta page title
 	 */
 	public $pageTitle;
 
@@ -55,11 +57,6 @@ class Site extends Module
 	public $users;
 
 	/**
-	 * @var array $msgs - An array of local error messages
-	 */
-	protected $msgs;
-
-	/**
 	 * @var string $messages - rendered messages (markup)
 	 */
 	public $messages;
@@ -89,6 +86,8 @@ class Site extends Module
 	 */
 	public $content;
 
+	public $version;
+
 	/**
 	 * @var object - ParseDown instance
 	 */
@@ -100,25 +99,23 @@ class Site extends Module
 	public $templateParser;
 
 	/**
-	 * Editor constructor.
+	 * Site constructor.
 	 *
 	 * @param $config
 	 */
-	public function __construct($config) {
-		$this->config = $config;
+	public function __construct() {
+		$this->config = Scriptor::getProperty('config');
 		$this->templateParser = new TemplateParser();
-		$this->config['version'] = parent::VERSION;
 	}
 
 	/**
-	 * Init editor class
+	 * Init Site class
 	 * Prepares some variables for local use and executes actions
 	 *
 	 */
 	public function init()
 	{
-		$this->imanager = imanager();
-		$this->siteUrl = $this->imanager->config->getUrl();
+		parent::init();
 		$this->themeUrl = $this->siteUrl.'site/theme/';
 		$this->input = $this->imanager->input;
 		$this->segments = $this->input->urlSegments;
@@ -127,16 +124,10 @@ class Site extends Module
 		$this->firstSegment = $this->segments->get(0);
 		$this->lastSegment = $this->segments->getLast();
 		$this->parsedown = $this->loadModule('parsedown');
-		if(!isset($_SESSION['msgs'])) {
-			$_SESSION['msgs'] = array();
-		}
-		$this->msgs = & $_SESSION['msgs'];
-
-		$this->execute();
-		//$this->renderMessages();
+		$this->version = Scriptor::VERSION;
 	}
 
-	protected function execute()
+	public function execute()
 	{
 		if(!$this->lastSegment) {
 			// Home

@@ -1,5 +1,7 @@
 <?php
 
+namespace Scriptor;
+
 use Imanager\TemplateParser;
 use Imanager\Util;
 
@@ -9,11 +11,12 @@ class Auth extends Module
 
 	private $templateParser;
 
-	public function __construct($config)
-	{
-		parent::__construct($config);
+	public function init() {
+		parent::init();
+		$this->users = $this->imanager->getCategory('name=Users');
 		$this->userIP = $this->getIP();
 		$this->templateParser = new TemplateParser();
+		$this->csrf = Scriptor::getCSRF();
 	}
 
     /**
@@ -33,7 +36,7 @@ class Auth extends Module
     /**
 	 * Checks user actions
 	 */
-	protected function checkAction()
+	public function checkAction()
 	{
 		// Check log-in form user input
 		if(!isset($_SESSION['loggedin']) || true !== $_SESSION['loggedin']) {
@@ -116,7 +119,7 @@ class Auth extends Module
 				'type' => 'success',
 				'value' => $this->i18n['successful_login']
 			);
-			Util::redirect($this->pageUrl);
+			Util::redirect($this->siteUrl);
 			exit;
 		}
 		return false;
@@ -168,7 +171,7 @@ class Auth extends Module
 				'value' => $this->i18n['successful_logout']
 			);
 		}
-		Util::redirect($this->pageUrl);
+		Util::redirect($this->siteUrl);
 		exit;
 	}
 

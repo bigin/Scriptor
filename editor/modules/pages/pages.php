@@ -1,5 +1,7 @@
 <?php
 
+namespace Scriptor;
+
 use Imanager\Item;
 use Imanager\TemplateParser;
 use Imanager\Util;
@@ -18,6 +20,13 @@ class Pages extends Module
 		'index',
 		'editor'
 	];
+
+	public function init()
+	{
+		parent::init();
+		$this->csrf = Scriptor::getCSRF();
+		$this->pages = $this->imanager->getCategory('name=Pages');
+	}
 
 	public function execute()
 	{
@@ -43,7 +52,7 @@ class Pages extends Module
 	/**
 	 * Checks user actions
 	 */
-	protected function checkAction()
+	public function checkAction()
 	{
 		if($this->input->get->page) {
 			$this->page = $this->pages->getItem((int)$this->input->get->page);

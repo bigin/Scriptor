@@ -1,39 +1,33 @@
 <?php defined('IS_IM') or die('You cannot access this page directly');
-
+/**
+ * Static site configuration file.
+ * NOTE: The variables in this file are overwritten during 
+ * the update. Instead, use custom.scriptor-config.php for 
+ * your specific configuration options.
+ * 
+ * @var array
+ */
 $config = [
 	/**
-	 * Your admin language: de_DE, en_US
+	 * Current language: de_DE, en_US
 	 * See languages available under: editor/lang/
+	 * 
+	 * @var string
 	 */
-	'editor_lang' => 'en_US',
-
-	/**
-	 * Additional language packs, example:
-	 *
-	 * 'dif_lang_packs' => [
-	 *     'your-languge-pack/',
-	 *     'another-languge-pack/'
-	 * ]
-	 *
-	 * ... this means that the language packages in the
-	 *
-	 * "data/lang/your-languge-pack/en_US.php"
-	 *
-	 * and "data/lang/another-languge-pack/en_US.php"
-	 *
-	 * directories are taken into use.
-	 *
-	 */
-	'dif_lang_packs' => [],
+	'lang' => 'en_US',
 
 	/**
 	 * Enter your sitename
+	 * 
+	 * @var string
 	 */
 	'site_name' => 'Scriptor',
 
 	/**
 	 * Without the file extension.
 	 * Extension by default is .php
+	 * 
+	 * @var string
 	 */
 	'404page' => '404',
 
@@ -41,16 +35,30 @@ $config = [
 	 * one hour: 3600
 	 * month: 262974383
 	 * etc
+	 * 
+	 * @var integer
 	 */
 	'markup_cache_time' => 262974383,
 
 	/**
-	 * Relative path to the admin folder
+	 * Relative path to the admin folder.
 	 *
 	 * Please note, if you change the folder name, you have to change the paths
 	 * in the .htaccess file, in the root directory accordingly.
+	 * 
+	 * @var string
 	 */
 	'admin_path' => 'editor/',
+
+	/**
+	 * Editor template. 
+	 * Relative path + file name without the file extension (default extension is .php).
+	 * If no path is given, it will be searched under:
+	 *    /~admin_path~/~editor_template~.php
+	 * 
+	 * @var string
+	 */
+	'editor_template' => 'theme/template',
 
 	/**
 	 * Enables CSRF (cross site request forgery) protection on all Scriptor forms,
@@ -65,24 +73,28 @@ $config = [
 	 * Corresponds to the number of tabs opened at the same time.
 	 * It is useful if you want to work with the application in multiple browser tabs.
 	 *
-	 * @var int
+	 * @var integer
 	 */
 	'maxNumTokens' => 5,
 
 	/**
 	 * Number of failed login attempts before lockout.
 	 * 
-	 * @var int
+	 * @var integer
 	 */
 	'maxFailedAccessAttempts' => 5,
 
 	/**
 	 * Access lockout duration in minutes
+	 * 
+	 * @var integer
 	 */
 	'accessLockoutDuration' => 5,
 
 	/**
 	 * Enable HTML tags in page content output
+	 * 
+	 * @var bool
 	 */
 	'allowHtmlOutput' => false,
 
@@ -93,6 +105,7 @@ $config = [
 	 *
 	 * The structure is as follows:
 	 *
+	 * // Key should be the same as the slug
 	 * 'pages' => [                                       // URL Segment that resolves to the module (array)
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
 	 *     'active' => true,                              // Enables or disables module (bool)
@@ -104,6 +117,8 @@ $config = [
 	 *     ],
 	 *     'description' => ''                            // Module description (string)
 	 * ]
+	 * 
+	 * @var array
 	 */
 	'modules' => [
 		'pages' => [
