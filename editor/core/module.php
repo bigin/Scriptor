@@ -1,13 +1,17 @@
 <?php
+
+namespace Scriptor;
+
+use Imanager\Util;
+
 /**
  * Class Module
  *
  * Extendable module class
  *
  */
-class Module
+class Module implements ModuleInterface
 {
-	const VERSION = '1.3.5';
 	/**
 	 * @var object $imanager - Instance of IManager
 	 */
@@ -44,28 +48,6 @@ class Module
 	protected $segments;
 
 	/**
-	 * @var array $pages - An array of Page objects
-	 */
-	protected $pages;
-
-	/**
-	 * @var object $page - The current page object instance
-	 */
-	protected $page;
-
-	/**
-	 * @var array $users - An array of Users objects
-	 */
-	protected $users;
-
-	/**
-	 * @var object $user - A current user object instance
-	 */
-	protected $user;
-
-	public $csrf;
-
-	/**
 	 * @var array $msgs - An array of local error messages
 	 */
 	protected $msgs;
@@ -73,7 +55,7 @@ class Module
 	/**
 	 * @var array $i18n - An array of language sets
 	 */
-	public $i18n;
+	public $i18n = [];
 
 	/**
 	 * @var string $messages - rendered messages (markup)
@@ -95,19 +77,10 @@ class Module
 	 */
 	protected $headerResources = [];
 
-	/**
-	 * Module constructor
-	 *
-	 * @param $config
-	 */
-	public function __construct($config)
-	{
-		$this->config = $config;
-		$this->config['version'] = self::VERSION;
-		$this->csrf = new CSRF($this->config);
-		require "lang/{$this->config['editor_lang']}.php";
-		$this->i18n = $i18n;
-	}
+
+	public function execute(){}
+
+    public function checkAction(){}
 
 	/**
 	 * Init module class
@@ -117,40 +90,19 @@ class Module
 	 */
 	public function init()
 	{
-		if($this->config['dif_lang_packs']) {
-			foreach($this->config['dif_lang_packs'] as $pack) {
-				if(file_exists("../data/lang/$pack{$this->config['editor_lang']}.php")) {
-					$customI18n = include "../data/lang/$pack{$this->config['editor_lang']}.php";
-					$this->i18n = array_merge($this->i18n, $customI18n);
-				}
-			}
-		}
-		$this->imanager = imanager();
-		$this->pageUrl = $this->imanager->config->getUrl();
+		// var_dump($this->scriptor);
+		$this->config = Scriptor::getProperty('config');
+		$this->imanager = Scriptor::getProperty('imanager');
+		$this->i18n = Scriptor::getProperty('i18n');
+		$this->msgs = Scriptor::getProperty('msgs');
+		$this->siteUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
 		$this->segments = $this->input->urlSegments;
-		$this->pages = $this->imanager->getCategory('name=Pages');
-		$this->users = $this->imanager->getCategory('name=Users');
+
 		if(!isset($_SESSION['msgs'])) {
-			$_SESSION['msgs'] = [];
-		}
-		$this->msgs = & $_SESSION['msgs'];
-
-		$this->execute();
-		$this->renderMessages();
-	}
-
-	/**
-	 * Editor mapper
-	 *
-	 * @param $editor
-	 */
-	protected function map($editor)
-	{
-		$this->editor = & $editor;
-		foreach($this->editor as $key => $value) {
-			$this->$key = & $this->editor->$key;
-		}
+            $_SESSION['msgs'] = [];
+        }
+        $this->msgs = & $_SESSION['msgs'];
 	}
 
 	/**
@@ -158,22 +110,36 @@ class Module
 	 * 
 	 * If a module exists an instance of this module 
 	 * will be returned, if not then null. 
+	 * 
+	 * @var string $moduleName - Module name to load
+	 * @var string $namespace - Constant with a a trailing slash 
 	 *  
+	 * @return object|null - Module instance or null
 	 */
-	protected function loadModule($moduleName)
+	public function loadModule($moduleName, $namespace = __NAMESPACE__.'\\')
 	{
 		$module = isset($this->config['modules'][$moduleName]) ? $this->config['modules'][$moduleName] : null;
 		// Is module disabled module file exists?
-		if(!$module || !$module['active'] || !file_exists(__DIR__ ."/$module[path].php")) { return null; }
+		if(!$module || !$module['active']) { return false; } 
+		// Module paths (Core & Site)
+		$coreModulePath = dirname(__DIR__)."/$module[path].php";
+		$siteModulePath = IM_DATAPATH."$module[path].php";
 		// include module
-		include_once $module['path'] . '.php';
-		return new $module['class']($this->config);
+		if(file_exists($siteModulePath)) {
+			include_once $siteModulePath;
+		}
+		elseif(file_exists($coreModulePath)) {
+			include_once $coreModulePath;
+		}
+		else { return null; }
+
+		$class = $namespace.$module['class'];
+		return new $class();
 	}
 
-	protected function execute(){}
-
-	protected function checkAction(){}
-
+	/**
+	 * 
+	 */
 	protected function addHeaderResource($context, $url)
 	{
 		if($context == 'js') $this->headerResources[$context][] =

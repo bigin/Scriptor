@@ -69,15 +69,15 @@ class UrlSegments
 	public function __construct($sanitizer) { $this->sanitizer = $sanitizer; }
 
 	public function set($id, $value) {
-		$this->segment{$id} = $this->sanitizer->path($value);
+		$this->segment[$id] = $this->sanitizer->path($value);
 	}
 
 	public function get($id) {
-		return isset($this->segment{$id}) ? $this->segment{$id} : null;
+		return isset($this->segment[$id]) ? $this->segment[$id] : null;
 	}
 
 	public function getLast() {
-		return isset($this->segment{($this->total - 1)}) ? $this->segment{($this->total - 1)} : null;
+		return isset($this->segment[($this->total - 1)]) ? $this->segment[($this->total - 1)] : null;
 	}
 
 	public function getUrl($options = [])
@@ -88,11 +88,11 @@ class UrlSegments
 		$options = array_merge($defaults, $options);
 		if($this->total <= 1) {
 			if($this->total == 0) { return '';}
-			return $this->segment{($this->total - 1)}.(($options['useTrailingSlash']) ? '/' : '');
+			return $this->segment[($this->total - 1)].(($options['useTrailingSlash']) ? '/' : '');
 		}
 		$buf = '';
 		foreach($this->segment as $key => $value) {
-			$buf .= $this->segment{($key)}.'/';
+			$buf .= $this->segment[($key)].'/';
 		}
 		return (($options['useTrailingSlash']) ? $buf : substr($buf, 0, -1));
 	}

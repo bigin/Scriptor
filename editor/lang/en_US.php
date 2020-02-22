@@ -17,6 +17,8 @@ $i18n = [
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 
 	or try again in [[count]] minutes.",
 	'error_cookie' => 'The use of session cookie is mandatory.',
+	'error_module_not_found' => 'Error: Module <mark>[[module]]</mark> was not found.',
+	'error_module' => 'Module-Error',
 	'username_label' => 'Username',
 	'password_label' => 'Password',
 	'new_password_label' => 'New Password',
@@ -63,7 +65,7 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'contact_developer' => 'Contact developer',
 	'dashboard_content' => '
-			<img src="images/scriptor-dashboard.png">
+			<img src="theme/images/scriptor-dashboard.png">
 			<h1>Welcome to Scriptor</h1>
 			<hr>
 			<h3>What is Scriptor?</h3>

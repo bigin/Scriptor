@@ -1,5 +1,7 @@
 <?php
 
+namespace Scriptor;
+
 class Settings extends Module
 {
     /**
@@ -10,6 +12,8 @@ class Settings extends Module
 		$this->pageContent = $this->renderSettingsEditor();
 		$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
 		$this->i18n['settings_menu'].'</span></li>';
+
+		$this->renderMessages();
     }
 
     protected function renderSettingsEditor()

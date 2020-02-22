@@ -1,5 +1,6 @@
 <?php
 
+namespace Scriptor;
 /**
  * Class CSRF
  *
@@ -22,9 +23,9 @@ class CSRF
 	/**
 	 * CSRF constructor.
 	 */
-	public function __construct($config)
+	public function __construct()
 	{
-		$this->config = $config;
+		$this->config = Scriptor::getProperty('config');
 	}
 
 	/**

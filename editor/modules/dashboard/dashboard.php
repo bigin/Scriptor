@@ -1,5 +1,7 @@
 <?php
 
+namespace Scriptor;
+
 class Dashboard extends Module
 {
     /**

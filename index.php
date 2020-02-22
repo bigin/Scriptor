@@ -1,19 +1,27 @@
 <?php
-/**
- * Scriptor skeleton
- */
+
+use Scriptor\Scriptor;
+use Scriptor\Site;
+
 include __DIR__.'/imanager.php';
 include __DIR__.'/data/settings/scriptor-config.php';
 if(file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) { 
     include __DIR__.'/data/settings/custom.scriptor-config.php';
 }
-include __DIR__."/$config[admin_path]module.php";
-include __DIR__."/$config[admin_path]site.php";
-include __DIR__."/$config[admin_path]csrf.php";
 
-$page = null;
+require __DIR__."/$config[admin_path]core/scriptor.php";
+include __DIR__."/$config[admin_path]core/moduleInterface.php";
+include __DIR__."/$config[admin_path]core/module.php";
+include __DIR__."/$config[admin_path]core/site.php";
+include __DIR__."/$config[admin_path]core/csrf.php";
+
+Scriptor::build($config);
+
+$site = null;
 if(file_exists(__DIR__.'/site/theme/_ext.php')) { include __DIR__.'/site/theme/_ext.php';}
-else { $page = new Site($config); }
-$page->init();
+else { 
+    $site = Scriptor::getSite();
+    $site->execute();
+}
 include __DIR__.'/site/theme/template.php';
 ?>

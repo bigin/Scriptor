@@ -1,8 +1,24 @@
 <?php defined('IS_IM') or die('You cannot access this page directly');
-
 /*
-Enter here the configuration parameters that you want to overwrite, e.g:   
-$config = array_merge($config, [
-	'site_name' => 'My Websitename',
-]);
-*/
+ * This file contains your site-specific configuration options and is not 
+ * overwritten during upgrades.
+ *  
+ * You may modify settings in this file or add additional settings as needed.
+ */
+/* $config = array_replace_recursive($config, [
+	
+	'site_name' => 'Your Site Name',
+
+	'modules' => [
+		'YourModule' => [
+			'menu' => '',
+			'active' => true,
+			'auth' => false,
+			'path' =>  'modules/your-module-dir/YourModuleFile',
+			'class' => 'YourModuleClass',
+			'display_type' => [
+			],
+			'description' => "Your module description"
+		]
+	]
+]); */

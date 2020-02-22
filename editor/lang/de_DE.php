@@ -13,10 +13,12 @@ $i18n = [
 	Hinweis: Wenn Sie eine beständige Konfiguration wünschen verwenden erstellen Sie eine
 	<mark>custom.scriptor-config.php</mark> Datei im selben Verzeichnis.',
 	'profile_menu' => 'Profil',
-	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche',
+	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche.',
 	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
 	versuchen Sie es erneut oder versuchen Sie es in [[count]] Minuten wieder.',
 	'error_cookie' => 'Die Verwendung von Session-Cookie ist zwingend erforderlich.',
+	'error_module_not_found' => 'Fehler: Modul <mark>[[module]]</mark> wurde nicht gefunden.',
+	'error_module' => 'Module-Error',
 	'username_label' => 'Benutzername',
 	'password_label' => 'Kennwort',
 	'new_password_label' => 'Neues Kennwort',
@@ -63,7 +65,7 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'contact_developer' => 'Entwickler kontaktieren',
 	'dashboard_content' => '
-			<img src="images/scriptor-dashboard.png">
+			<img src="theme/images/scriptor-dashboard.png">
 			<h1>Willkommen bei Scriptor</h1>
 			<hr>
 			<h3>Was ist Scriptor?</h3>
