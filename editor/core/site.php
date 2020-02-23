@@ -215,7 +215,7 @@ class Site extends Module
 
 		if($childs) {
 			$prefix = '<li' . $this->getClass($item) . '><a href="' .
-				$url . (($item->id != 1 && !$item->parent) ? $item->slug . '/' : '') . '">' . $item->name . '</a>';
+				$url . (($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
 			$buff = '';
 			foreach($childs as $curitem) {
 				$buff .= $this->getChildren($curitem, $items,
@@ -224,7 +224,7 @@ class Site extends Module
 			$children = $prefix . '<ul>' . $buff . '</ul></li>';
 		} else {
 			$children = '<li'.$this->getClass($item).'><a href="'.
-				$url.((!$item->parent) ? $item->slug.'/' : '').'">'.$item->name.'</a></li>';
+				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '').'">'.$item->name.'</a></li>';
 		}
 		return  $children;
 	}
