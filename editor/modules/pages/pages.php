@@ -16,6 +16,8 @@ use Imanager\Util;
  */
 class Pages extends Module
 {
+	private $page;
+
 	private static $reservedSlugs = [
 		'index',
 		'editor'

@@ -3,17 +3,17 @@
 use Scriptor\Scriptor;
 use Scriptor\Site;
 
-include __DIR__.'/imanager.php';
-include __DIR__.'/data/settings/scriptor-config.php';
+require __DIR__.'/imanager.php';
+require __DIR__.'/data/settings/scriptor-config.php';
 if(file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) { 
     include __DIR__.'/data/settings/custom.scriptor-config.php';
 }
 
 require __DIR__."/$config[admin_path]core/scriptor.php";
-include __DIR__."/$config[admin_path]core/moduleInterface.php";
-include __DIR__."/$config[admin_path]core/module.php";
-include __DIR__."/$config[admin_path]core/site.php";
-include __DIR__."/$config[admin_path]core/csrf.php";
+require __DIR__."/$config[admin_path]core/moduleInterface.php";
+require __DIR__."/$config[admin_path]core/module.php";
+require __DIR__."/$config[admin_path]core/site.php";
+require __DIR__."/$config[admin_path]core/csrf.php";
 
 Scriptor::build($config);
 

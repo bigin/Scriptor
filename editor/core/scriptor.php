@@ -4,22 +4,44 @@ namespace Scriptor;
 
 class Scriptor
 {
+    /**
+     * Application version
+     */
     const VERSION = '1.4.1';
 
-    private static $config;
+    /**
+     * @var array $config - Configuration parameter
+     */
+    private static $config = [];
 
+    /**
+     * @var object $imanager - ItemManager object instance
+     */
     private static $imanager;
 
-    private static $msgs;
+    /**
+     * @var array $i18n - Language variables
+     */
+    private static $i18n = [];
 
-    private static $i18n;
-
+    /**
+     * @var object $csrf - CSRF class instance
+     */
     private static $csrf = null;
 
+    /**
+     * @var object $site - Site class instance
+     */
     private static $site = null;
 
+    /**
+     * @var object $editor - Editor object instance
+     */
     private static $editor = null;
 
+    /**
+     * Build Scriptor class
+     */
     public static function build($config)
     {
         self::$config = $config;
@@ -41,6 +63,16 @@ class Scriptor
 
     /**
      * 
+     * @return void
+     */
+    public static function setEditor($editor, $init = false)
+    {
+        self::$editor = new $editor(); 
+        if($init) self::$editor->init();
+    }
+
+    /**
+     * 
      * @return object|null
      */
     public static function getEditor($init = true)
@@ -50,6 +82,16 @@ class Scriptor
             if($init) self::$editor->init();
         }
         return self::$editor;
+    }
+
+    /**
+     * 
+     * @return void
+     */
+    public static function setSite($site, $init = false)
+    {
+        self::$site = new $site(); 
+        if($init) self::$site->init();
     }
 
     /**
@@ -64,6 +106,7 @@ class Scriptor
         }
         return self::$site;
     }
+
 
     /**
      * 
