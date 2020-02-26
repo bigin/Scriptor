@@ -3,7 +3,7 @@
 	<span class="close">×</span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
-			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" src="<?php echo $editor->siteUrl; ?>theme/images/logo-horizontal.png"></a>
+			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" src="<?php echo $editor->siteUrl; ?>/theme/images/logo-horizontal.png"></a>
 		</div>
 		<?php if(isset($_SESSION['loggedin'])) { ?>
 		<ul class="summary">
@@ -13,7 +13,7 @@
 						?>
 						<li class="chapter<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' active' : ''); ?>"
 							data-level="1.1" data-path="./">
-							<a href="<?php echo $editor->siteUrl.$slug; ?>/"><?php
+							<a href="<?php echo $editor->siteUrl.'/'.$slug; ?>/"><?php
 								echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu']; ?></a>
 						</li>
 						<?php

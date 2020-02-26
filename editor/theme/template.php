@@ -7,14 +7,14 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" href="<?php echo $editor->siteUrl; ?>theme/favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>theme/css/prism.css">
-	<link href="<?php echo $editor->siteUrl; ?>theme/css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>theme/css/jquery-ui.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>theme/css/styles.css">
+	<link rel="icon" href="<?php echo $editor->siteUrl; ?>/theme/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/prism.css">
+	<link href="<?php echo $editor->siteUrl; ?>/theme/css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.css">
 	<?php echo $editor->getHeaderResources('css'); ?>
-	<script src="<?php echo $editor->siteUrl; ?>theme/scripts/jquery.min.js"></script>
-	<script src="<?php echo $editor->siteUrl; ?>theme/scripts/jquery-ui.min.js"></script>
+	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery.min.js"></script>
+	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery-ui.min.js"></script>
 	<?php echo $editor->getHeaderResources('js'); ?>
 </head>
 <body>
@@ -42,8 +42,8 @@
 		</div>
 	</footer>
 </main>
-<script src="<?php echo $editor->siteUrl; ?>theme/scripts/remarkable/remarkable.min.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>theme/scripts/prism.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>theme/scripts/editor.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/remarkable/remarkable.min.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/prism.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/editor.js"></script>
 </body>
 </html>

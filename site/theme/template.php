@@ -7,9 +7,9 @@
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="<?php echo $site->siteUrl.$site->config['admin_path']; ?>theme/css/prism.css">
-	<link rel="stylesheet" href="<?php echo $site->themeUrl; ?>css/styles.css">
-	<link rel="icon" href="<?php echo $site->siteUrl.$site->config['admin_path']; ?>theme/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="<?php echo $site->siteUrl.'/'.$site->config['admin_path']; ?>theme/css/prism.css">
+	<link rel="stylesheet" href="<?php echo $site->themeUrl; ?>/css/styles.css">
+	<link rel="icon" href="<?php echo $site->siteUrl.'/'.$site->config['admin_path']; ?>theme/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 <main role="main">
@@ -36,7 +36,7 @@
 		</div>
 	</footer>
 </main>
-<script src="<?php echo $site->siteUrl.$site->config['admin_path']; ?>theme/scripts/jquery.min.js"></script>
-<script src="<?php echo $site->siteUrl.$site->config['admin_path']; ?>theme/scripts/prism.js"></script>
+<script src="<?php echo $site->siteUrl.'/'.$site->config['admin_path']; ?>theme/scripts/jquery.min.js"></script>
+<script src="<?php echo $site->siteUrl.'/'.$site->config['admin_path']; ?>theme/scripts/prism.js"></script>
 </body>
 </html>

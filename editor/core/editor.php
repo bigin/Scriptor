@@ -30,7 +30,7 @@ class Editor extends Module
 			$auth = isset($module['auth']) ? $module['auth'] : true;
 			if(true === $auth && (!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin'])) {
 				// Todo: That should to be more dynamic
-				Util::redirect($this->siteUrl.'auth/login/');
+				Util::redirect($this->siteUrl.'/auth/login/');
 			}
 			$this->module = $this->loadModule(
 				$this->imanager->sanitizer->pageName($this->segments->get(0))
@@ -43,7 +43,7 @@ class Editor extends Module
 		// Module not found
 		else {
 			if(!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
-				Util::redirect($this->siteUrl.'auth/login/');
+				Util::redirect($this->siteUrl.'/auth/login/');
 			}
 			$this->moduleNotFound();
 		}
@@ -68,6 +68,4 @@ class Editor extends Module
 		$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
 			$this->i18n['error_module'].'</span></li>';	
 	}
-
-
 }
