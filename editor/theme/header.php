@@ -13,7 +13,7 @@ if(isset($_SESSION['loggedin'])) { ?>
 		foreach($editor->config['modules'] as $slug => $module) {
 			if($module['active'] && in_array('profile', $module['display_type'])) { ?>
 				<li<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' class="active" ' : '');
-				?>><a href="<?php echo $editor->siteUrl.$slug.'/'.(($module['menu'] == 'logout_menu') ?
+				?>><a href="<?php echo $editor->siteUrl.'/'.$slug.'/'.(($module['menu'] == 'logout_menu') ?
 					'logout/'.$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i> <?php
 						echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu'];
 						?></a></li>

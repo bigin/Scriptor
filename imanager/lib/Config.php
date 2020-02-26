@@ -30,7 +30,7 @@ class Config
 		$path_parts = pathinfo(htmlentities($_SERVER['PHP_SELF'], ENT_QUOTES));
 		//$path_parts = str_replace('/manager', "", $path_parts['dirname']);
 		$port = ($p = $_SERVER['SERVER_PORT']) != '80' && $p != '443' ? ':'.$p : '';
-		$this->url = $protocol.htmlentities($_SERVER['SERVER_NAME'], ENT_QUOTES).$port.$path_parts['dirname'].'/';
+		$this->url = $protocol.htmlentities($_SERVER['SERVER_NAME'], ENT_QUOTES).$port.rtrim($path_parts['dirname'], '/');
 		return $this->url;
 	}
 

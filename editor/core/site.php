@@ -116,7 +116,7 @@ class Site extends Module
 	public function init()
 	{
 		parent::init();
-		$this->themeUrl = $this->siteUrl.'site/theme/';
+		$this->themeUrl = $this->siteUrl.'/site/theme/';
 		$this->input = $this->imanager->input;
 		$this->segments = $this->input->urlSegments;
 		$this->pages = $this->imanager->getCategory('name=Pages');
@@ -129,8 +129,8 @@ class Site extends Module
 
 	public function execute()
 	{
+		// Home
 		if(!$this->lastSegment) {
-			// Home
 			$this->page = $this->pages->getItem(1);
 			if(!$this->page || !$this->page->active) { return $this->throw404(); }
 			$this->checkAction();
@@ -138,9 +138,10 @@ class Site extends Module
 			foreach($this->page as $key => $param) {
 				$this->$key = $param;
 			}
+		// Other pages
 		} else {
-			// Other pages
-			$this->page = $this->pages->getItem('slug=' . $this->imanager->sanitizer->pageName($this->lastSegment));
+			$total = $this->segments->total - 1;
+			$this->page = $this->getPage($this->segments->segment, $total);
 			if(!$this->page || !$this->page->active) {
 				return $this->throw404();
 			}
@@ -171,8 +172,9 @@ class Site extends Module
 
 	public function render($element)
 	{
+		$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
+
 		if($element == 'navigation') {
-			$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
 			if(!$navi = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
 				$navi = $this->buildNavi();
 				if($navi) {
@@ -182,15 +184,40 @@ class Site extends Module
 			return $navi;
 		}
 		elseif($element == 'content') {
-			$content = $this->templateParser->render($this->content, [
-				'BASE_URL' => $this->siteUrl,
-				'UPLOADS_URL' => $this->siteUrl.'data/uploads/'
-			]);
-			if(true !== $this->config['allowHtmlOutput']) {
-				$this->parsedown->setSafeMode(true);
+			if(!$content = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
+				$content = $this->templateParser->render($this->content, [
+					'BASE_URL' => $this->siteUrl,
+					'UPLOADS_URL' => $this->siteUrl.'/data/uploads/'
+				]);
+				if(true !== $this->config['allowHtmlOutput']) {
+					$this->parsedown->setSafeMode(true);
+				}
+				$content = $this->parsedown->text(htmlspecialchars_decode($content)); 
+				$this->imanager->sectionCache->save($content);
 			}
-			return $this->parsedown->text(htmlspecialchars_decode($content)); 
+			return $content;
 		}
+	}
+
+	protected function getPage($segments, $index = 0, $pages = null)
+	{
+		if(!isset($segments[$index])) return null;
+
+		$pages = $this->pages->getItems('slug='.$this->imanager->sanitizer->pageName($segments[($index)]));
+
+		if(!$pages) { return null; }
+		elseif(count($pages) == 1) {
+			return array_values($pages)[0];
+		}
+
+		// There are multiple pages with same slug
+		$parent = $this->getPage($segments, --$index, $pages);
+		if(!$parent) { return null; }
+
+		foreach($pages as $page) {
+			if($page->parent == $parent->id) {  return $page; }
+		}
+		return null;
 	}
 
 	protected function buildNavi()
@@ -204,7 +231,7 @@ class Site extends Module
 		foreach($topl as $item) {
 			$all_pages = $this->pages->getItems("active=1");
 			$all_pages = $this->pages->sort('position', 'asc', 0, 0, $all_pages);
-			$navi .= $this->getChildren($item, $all_pages, $this->siteUrl);
+			$navi .= $this->getChildren($item, $all_pages, rtrim($this->siteUrl, '/') . '/');
 		}
 		return $navi;
 	}
@@ -212,14 +239,13 @@ class Site extends Module
 	protected function getChildren($item, & $items, $url, $children = '')
 	{
 		$childs = $this->pages->getItems("parent=$item->id", 0, $items);
-
 		if($childs) {
 			$prefix = '<li' . $this->getClass($item) . '><a href="' .
-				$url . (($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
+				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
 			$buff = '';
 			foreach($childs as $curitem) {
 				$buff .= $this->getChildren($curitem, $items,
-					$url . ((!$item->parent) ? $item->slug . '/' : '') . $curitem->slug . '/', $children);
+					$url.((!$item->parent) ? "$item->slug/" : '') . $curitem->slug . '/', $children);
 			}
 			$children = $prefix . '<ul>' . $buff . '</ul></li>';
 		} else {
