@@ -49,7 +49,7 @@ https://yourwebsite.com/subdirectory/editor/
 
 
 ### More info
-Official website: https://ehret-studio.com/lab/scriptor-a-simple-flat-file-cms/   
+Official website: https://scriptor-cms.info   
 Demo (default template): https://demos.ehret-studio.com/scriptor/   
 Demo ([UIkit 3](https://getuikit.com) template): https://im.ehret-studio.com/tuts/   
 
