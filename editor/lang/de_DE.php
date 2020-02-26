@@ -108,7 +108,7 @@ $i18n = [
 			<p>Bitte ändere diese aus Sicherheitsgründen gleich nach der Installation.</p>
 			
 			<h3>Weitere Einstellungen</h3>
-			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>scriptor-config.php</mark> Datei vor, diese 
+			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>custom.scriptor-config.php</mark> Datei vor, diese 
 			befindet sich im <mark>data/settings/</mark> Verzeichnis.</p>
 			
 			<hr>

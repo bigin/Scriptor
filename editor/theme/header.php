@@ -6,7 +6,7 @@ if(isset($_SESSION['loggedin'])) { ?>
 		<li><a id="trigger" href="#">&nbsp</a></li>
 	</ul>
 	<ul class="breadcrumbs">
-		<?php echo $editor->breadcrumbs; ?>
+		<?php echo $editor->getProperty('breadcrumbs'); ?>
 	</ul>
 	<ul class="profile">
 	<?php if($editor->config['modules']) {

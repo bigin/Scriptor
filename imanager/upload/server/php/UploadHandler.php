@@ -555,7 +555,7 @@ class UploadHandler
 			$name = $this->upcount_name($name);
 		}
 		// Keep an existing filename if this is part of a chunked upload:
-		$uploaded_bytes = $this->fix_integer_overflow((int) $content_range[1]);
+		$uploaded_bytes = $this->fix_integer_overflow((int) @$content_range[1]);
 		while(is_file($this->get_upload_path($name))) {
 			if ($uploaded_bytes === $this->get_file_size(
 					$this->get_upload_path($name))) {
@@ -1066,7 +1066,7 @@ class UploadHandler
 						return $dimensions;
 					}
 					return false;
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					error_log($e->getMessage());
 				}
 			}
@@ -1134,8 +1134,7 @@ class UploadHandler
 			}
 		}
 		if (count($failed_versions)) {
-			$file->error = $this->get_error_message('image_resize')
-					.' ('.implode($failed_versions,', ').')';
+			$file->error = $this->get_error_message('image_resize').' ('.implode(', ', $failed_versions).')';
 		}
 		// Free memory:
 		$this->destroy_image_object($file_path);
