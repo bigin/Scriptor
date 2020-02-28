@@ -123,7 +123,7 @@ class Module implements ModuleInterface
 		if(!$module || !$module['active']) { return false; } 
 		// Module paths (Core & Site)
 		$coreModulePath = dirname(__DIR__)."/$module[path].php";
-		$siteModulePath = IM_DATAPATH."$module[path].php";
+		$siteModulePath = IM_ROOTPATH."site/$module[path].php";
 		// include module
 		if(file_exists($siteModulePath)) {
 			include_once $siteModulePath;

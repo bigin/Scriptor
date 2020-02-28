@@ -50,8 +50,8 @@ https://yourwebsite.com/subdirectory/editor/
 
 ### More info
 Official website: https://scriptor-cms.info   
-Demo (default template): https://demos.ehret-studio.com/scriptor/   
-Demo ([UIkit 3](https://getuikit.com) template): https://im.ehret-studio.com/tuts/   
+Demo (default template): https://demos.ehret-studio.com/scriptor/
+  
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)

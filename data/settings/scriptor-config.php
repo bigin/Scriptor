@@ -101,7 +101,7 @@ $config = [
 	/**
 	 * Installed Scriptor admin modules
 	 *
-	 * Add your custom modules to '/root/editor/modules/ModuleName/ModuleName.php'
+	 * Add your custom modules to '/site/modules/ModuleName/ModuleName.php'
 	 *
 	 * The structure is as follows:
 	 *
@@ -110,7 +110,7 @@ $config = [
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
 	 *     'active' => true,                              // Enables or disables module (bool)
 	 *     'auth' => true,                                // Enables or disables module authorization
-	 *     'path' => IM_DATAPATH.'modules/your-dir/file', // Path and file name without extension like '.php' (string)
+	 *     'path' => 'modules/your-dir/file',             // Path and file name without extension like '.php' (string)
 	 *     'class' => 'Pages',                            // The class to be called (string)
 	 *     'display_type' => [                            // Module display options (array)
 	 *         'sidebar'                                  // Show in 'sidebar' and/or 'profile' menu (string)
