@@ -2,12 +2,14 @@
 
 namespace Scriptor;
 
+use Imanager\Util;
+
 class Scriptor
 {
     /**
      * Application version
      */
-    const VERSION = '1.4.1';
+    const VERSION = '1.4.2';
 
     /**
      * @var array $config - Configuration parameter
@@ -23,6 +25,11 @@ class Scriptor
      * @var array $i18n - Language variables
      */
     private static $i18n = [];
+
+    /**
+     * @var float $startTime - Unix timestamp with microseconds
+     */
+    private static $startTime;
 
     /**
      * @var object $csrf - CSRF class instance
@@ -44,6 +51,7 @@ class Scriptor
      */
     public static function build($config)
     {
+        self::$startTime = microtime(true);
         self::$config = $config;
         self::$imanager = \imanager();
 
@@ -116,6 +124,12 @@ class Scriptor
     {
         if(self::$csrf === null) { self::$csrf = new CSRF(); }
         return self::$csrf;
+    }
+
+    public static function logRunTime($designation = 'Operation time:')
+    {
+        $after = microtime(true);
+        Util::dataLog("$designation ".($after - self::$startTime).' sec');
     }
 
    /**
