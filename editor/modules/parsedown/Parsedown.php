@@ -15,7 +15,7 @@ namespace Scriptor;
 #
 #
 
-class Parsedown
+class Parsedown extends Module
 {
     # ~
 

@@ -43,6 +43,11 @@ class Module implements ModuleInterface
 	public $input;
 
 	/**
+	 * @var object $sanitizer - ItemManager's Sanitizer instanze
+	 */
+	public $sanitizer;
+
+	/**
 	 * @var object $segments - Segments object instance
 	 */
 	protected $segments;
@@ -85,7 +90,7 @@ class Module implements ModuleInterface
 	/**
 	 * Init module class
 	 *
-	 * Prepares some variables for local use and executes actions.
+	 * Prepares some variables for local use
 	 *
 	 */
 	public function init()
@@ -97,6 +102,7 @@ class Module implements ModuleInterface
 		$this->msgs = Scriptor::getProperty('msgs');
 		$this->siteUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
+		$this->sanitizer = $this->imanager->sanitizer;
 		$this->segments = $this->input->urlSegments;
 
 		if(!isset($_SESSION['msgs'])) {
@@ -112,12 +118,23 @@ class Module implements ModuleInterface
 	 * will be returned, if not then null. 
 	 * 
 	 * @var string $moduleName - Module name to load
-	 * @var string $namespace - Constant with a a trailing slash 
+	 * @var array $options 
+	 *   - namespace - Namespace constant|string with a a trailing 
+	 *                 slash (Default: current Scriptor's namespace)
+	 * 
+	 *   - autoinit  - bool Should this module initialize automatically?
+	 *                 (Default: true)
 	 *  
 	 * @return object|null - Module instance or null
 	 */
-	public function loadModule($moduleName, $namespace = __NAMESPACE__.'\\')
+	public function loadModule($moduleName, $options = [])
 	{
+		$defaults = [
+			'namespace' => __NAMESPACE__.'\\',
+			'autoinit' => true
+		];
+		$config = array_merge($defaults, $options);
+
 		$module = isset($this->config['modules'][$moduleName]) ? $this->config['modules'][$moduleName] : null;
 		// Is module disabled module file exists?
 		if(!$module || !$module['active']) { return false; } 
@@ -133,7 +150,12 @@ class Module implements ModuleInterface
 		}
 		else { return null; }
 
-		$class = $namespace.$module['class'];
+		$class = $config['namespace'].$module['class'];
+		if($config['autoinit']) {
+			$currentModule = new $class();
+			if($currentModule) $currentModule->init();
+			return $currentModule;
+		}
 		return new $class();
 	}
 
