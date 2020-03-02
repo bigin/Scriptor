@@ -41,6 +41,13 @@ $config = [
 	'markup_cache_time' => 262974383,
 
 	/**
+	 * Relative path to the theme folder.
+	 * 
+	 * @var string
+	 */
+	'theme_path' => 'basic/',
+
+	/**
 	 * Relative path to the admin folder.
 	 *
 	 * Please note, if you change the folder name, you have to change the paths
@@ -110,6 +117,7 @@ $config = [
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
 	 *     'active' => true,                              // Enables or disables module (bool)
 	 *     'auth' => true,                                // Enables or disables module authorization
+	 *     'autoinit' => true,                            // Emables/disables auto initialization (bool) 
 	 *     'path' => 'modules/your-dir/file',             // Path and file name without extension like '.php' (string)
 	 *     'class' => 'Pages',                            // The class to be called (string)
 	 *     'display_type' => [                            // Module display options (array)
@@ -125,6 +133,7 @@ $config = [
 			'menu' => 'pages_menu',
 			'active' => true,
 			'auth' => true,
+			'autoinit' => true,
 			'path' =>  'modules/pages/pages',
 			'class' => 'Pages',
 			'display_type' => [
@@ -136,6 +145,7 @@ $config = [
 			'menu' => 'profile_menu',
 			'active' => true,
 			'auth' => true,
+			'autoinit' => true,
 			'path' => 'modules/profile/profile',
 			'class' => 'Profile',
 			'display_type' => [
@@ -148,6 +158,7 @@ $config = [
 			'menu' => 'logout_menu',
 			'active' => true,
 			'auth' => false, // Authorization will performed by module  itself
+			'autoinit' => true,
 			'path' => 'modules/auth/auth',
 			'class' => 'Auth',
 			'display_type' => [
@@ -160,6 +171,7 @@ $config = [
 			'menu' => '',
 			'active' => true,
 			'auth' => true,
+			'autoinit' => true,
 			'path' => 'modules/dashboard/dashboard',
 			'class' => 'Dashboard',
 			'display_type' => [
@@ -171,6 +183,7 @@ $config = [
 			'menu' => 'settings_menu',
 			'active' => true,
 			'auth' => true,
+			'autoinit' => true,
 			'path' => 'modules/settings/settings',
 			'class' => 'Settings',
 			'display_type' => [
@@ -182,6 +195,7 @@ $config = [
 			'menu' => '',
 			'active' => true,
 			'auth' => false,
+			'autoinit' => true,
 			'path' => 'modules/parsedown/Parsedown',
 			'class' => 'Parsedown',
 			'display_type' => [

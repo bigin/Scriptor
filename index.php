@@ -18,10 +18,10 @@ require __DIR__."/$config[admin_path]core/csrf.php";
 Scriptor::build($config);
 
 $site = null;
-if(file_exists(__DIR__.'/site/theme/_ext.php')) { include __DIR__.'/site/theme/_ext.php';}
-else { 
+if(file_exists(__DIR__."/site/themes/$config[theme_path]_ext.php")) { 
+    include __DIR__."/site/themes/$config[theme_path]_ext.php";
+} else { 
     $site = Scriptor::getSite();
     $site->execute();
 }
-include __DIR__.'/site/theme/template.php';
-?>
+include __DIR__."/site/themes/$config[theme_path]template.php";

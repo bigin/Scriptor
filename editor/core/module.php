@@ -129,15 +129,16 @@ class Module implements ModuleInterface
 	 */
 	public function loadModule($moduleName, $options = [])
 	{
-		$defaults = [
-			'namespace' => __NAMESPACE__.'\\',
-			'autoinit' => true
-		];
-		$config = array_merge($defaults, $options);
-
 		$module = isset($this->config['modules'][$moduleName]) ? $this->config['modules'][$moduleName] : null;
 		// Is module disabled module file exists?
 		if(!$module || !$module['active']) { return false; } 
+
+		$defaults = [
+			'namespace' => __NAMESPACE__.'\\',
+			'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
+		];
+		$config = array_merge($defaults, $options);
+
 		// Module paths (Core & Site)
 		$coreModulePath = dirname(__DIR__)."/$module[path].php";
 		$siteModulePath = IM_ROOTPATH."site/$module[path].php";
