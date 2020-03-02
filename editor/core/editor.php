@@ -33,7 +33,8 @@ class Editor extends Module
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
 			$this->module = $this->loadModule(
-				$this->imanager->sanitizer->pageName($this->segments->get(0))
+				$this->imanager->sanitizer->pageName($this->segments->get(0)),
+				['autoinit' => false]
 			);
 			if($this->module) {
 				$this->module->init();
