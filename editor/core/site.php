@@ -116,7 +116,7 @@ class Site extends Module
 	public function init()
 	{
 		parent::init();
-		$this->themeUrl = $this->siteUrl.'/site/theme/';
+		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
 		$this->segments = $this->input->urlSegments;
 		$this->pages = $this->imanager->getCategory('name=Pages');
@@ -288,7 +288,7 @@ class Site extends Module
 	protected function throw404()
 	{
 		header("HTTP/1.0 404 Not Found");
-		include 'site/theme/'.$this->config['404page'].'.php';
+		include 'site/themes/'.$this->config['theme_path'].$this->config['404page'].'.php';
 		die;
 	}
 }

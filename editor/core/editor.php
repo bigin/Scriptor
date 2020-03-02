@@ -9,8 +9,8 @@ use Imanager\Util;
  * Scriptor's Editor module
  * 
  * Is assigned to use the editor modules in Scriptor CMS.
- * Takes care of the loading and unloading of the editor 
- * modules.
+ * This module takes care of the loading and unloading of 
+ * the editor modules.
  */
 class Editor extends Module
 {
@@ -34,10 +34,11 @@ class Editor extends Module
 			}
 			$this->module = $this->loadModule(
 				$this->imanager->sanitizer->pageName($this->segments->get(0)),
-				['autoinit' => false]
+				[
+					'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
+				]
 			);
 			if($this->module) {
-				$this->module->init();
 				$this->module->execute();
 			}
 		}
@@ -58,6 +59,10 @@ class Editor extends Module
 		return isset($this->$property) ? $this->$property : null;
 	}
 
+	/**
+	 * If the user is logged into the editor, 
+	 * an error message is displayed.
+	 */
 	private function moduleNotFound()
 	{
 		$templateParser = new TemplateParser();
