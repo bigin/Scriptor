@@ -86,6 +86,9 @@ class Site extends Module
 	 */
 	public $content;
 
+	/**
+	 * @var string $version - Scriptor version
+	 */
 	public $version;
 
 	/**
@@ -157,6 +160,38 @@ class Site extends Module
 		}
 	}
 
+	public function getPages()
+	{
+		return $this->pages->getItems();
+	}
+
+	public function getPageLevels($options = [], $pages = [])
+	{
+		$defaults = [
+			'parent' => 0,
+			'maxLevel' => 1,
+			'sortBy' => 'position',
+			'order' => 'asc',
+			'active' => true
+		];
+		$configs = array_merge($defaults, $options);
+		
+		$topl = $this->pages->getItems("parent=$configs[parent]");
+		if(!$topl) return $pages;
+		if($configs['active']) {
+			$topl = $this->pages->getItems('active=1', 0, $topl);
+		}
+		$topl = $this->pages->sort($configs['sortBy'], $configs['order'], 0, 0, $topl);
+		$pages[$configs['parent']] = $topl;
+		if(count($pages) < $configs['maxLevel']) {
+			foreach($topl as $item) {
+				$buff = $this->getPageLevels(['parent' => $item->id] + $configs, $pages);
+				$pages = $pages + $buff;
+			}
+		}
+		return $pages;
+	}
+
 	public static function getPageUrl($item, $pages)
 	{
 		$return = '';
@@ -166,7 +201,7 @@ class Site extends Module
 				$return .= self::getPageUrl($parent, $pages);
 			}
 		}
-		$return .= $item->slug.'/';
+		$return .= ($item->id != 1) ? $item->slug.'/' : '';
 		return  $return;
 	}
 
@@ -231,12 +266,12 @@ class Site extends Module
 		foreach($topl as $item) {
 			$all_pages = $this->pages->getItems("active=1");
 			$all_pages = $this->pages->sort('position', 'asc', 0, 0, $all_pages);
-			$navi .= $this->getChildren($item, $all_pages, rtrim($this->siteUrl, '/') . '/');
+			$navi .= $this->getNaviChildren($item, $all_pages, rtrim($this->siteUrl, '/') . '/');
 		}
 		return $navi;
 	}
 
-	protected function getChildren($item, & $items, $url, $children = '')
+	protected function getNaviChildren($item, & $items, $url, $children = '')
 	{
 		$childs = $this->pages->getItems("parent=$item->id", 0, $items);
 		if($childs) {
@@ -244,7 +279,7 @@ class Site extends Module
 				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
 			$buff = '';
 			foreach($childs as $curitem) {
-				$buff .= $this->getChildren($curitem, $items,
+				$buff .= $this->getNaviChildren($curitem, $items,
 					$url.((!$item->parent) ? "$item->slug/" : '') . $curitem->slug . '/', $children);
 			}
 			$children = $prefix . '<ul>' . $buff . '</ul></li>';
