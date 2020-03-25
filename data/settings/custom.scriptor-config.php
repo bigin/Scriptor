@@ -12,6 +12,7 @@
 	'modules' => [
 		'YourModule' => [
 			'menu' => '',
+			'position' => 0,
 			'active' => true,
 			'auth' => false,
 			'path' =>  'modules/your-module-dir/YourModuleFile',

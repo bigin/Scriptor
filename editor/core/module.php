@@ -77,11 +77,6 @@ class Module implements ModuleInterface
 	 */
 	protected $auth = true;
 
-	/**
-	 * @var array - Header Resources
-	 */
-	protected $headerResources = [];
-
 
 	public function execute(){}
 
@@ -95,7 +90,6 @@ class Module implements ModuleInterface
 	 */
 	public function init()
 	{
-		// var_dump($this->scriptor);
 		$this->config = Scriptor::getProperty('config');
 		$this->imanager = Scriptor::getProperty('imanager');
 		$this->i18n = Scriptor::getProperty('i18n');
@@ -165,27 +159,38 @@ class Module implements ModuleInterface
 	 */
 	protected function addHeaderResource($context, $url)
 	{
-		if($context == 'js') $this->headerResources[$context][] =
+		$headerResources = Scriptor::getProperty('headerResources');
+		if($context == 'js') $headerResources[$context][] =
 			'<script src="'.$this->imanager->sanitizer->url($url).'"></script>'."\r\n";
-		elseif($context == 'css') $this->headerResources[$context][] =
+		elseif($context == 'css') $headerResources[$context][] =
 			'<link rel="stylesheet" href="'.$this->imanager->sanitizer->url($url).'">'."\r\n";
+		Scriptor::setProperty('headerResources', $headerResources);
 	}
 
 	/**
-	 * Delivers header resources (used in theme header).
+	 * Returns header resources (used in theme header).
 	 * 
 	 * @return null|string
 	 */
 	public function getHeaderResources($context)
 	{
+		$headerResources = Scriptor::getProperty('headerResources');
 		$result = null;
-		if(isset($this->headerResources[$context]) && is_array($this->headerResources[$context])) {
-			foreach($this->headerResources[$context] as $resource) {
+		if(isset($headerResources[$context]) && is_array($headerResources[$context])) {
+			foreach($headerResources[$context] as $resource) {
 				$result .= $resource;
 			}
 		}
 
 		return $result;
+	}
+
+	public static function order($a, $b)
+	{
+		if($a['position'] == $b['position']) {
+			return 0;
+		}
+		return ($a['position'] < $b['position']) ? -1 : 1;
 	}
 
 	/**

@@ -9,7 +9,7 @@ class Scriptor
     /**
      * Application version
      */
-    const VERSION = '1.4.2';
+    const VERSION = '1.4.3';
 
     /**
      * @var array $config - Configuration parameter
@@ -47,26 +47,50 @@ class Scriptor
     private static $editor = null;
 
     /**
+     * @var array $headerResources - An array of header resources
+	 */
+	private static $headerResources = [];
+
+    /**
      * Build Scriptor class
      */
     public static function build($config)
     {
         self::$startTime = microtime(true);
+        uasort($config['modules'], array('Scriptor\Module', 'order'));
         self::$config = $config;
         self::$imanager = \imanager();
-
         include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
-		self::$i18n = $i18n;
+        self::$i18n = $i18n;
+    }
+
+    /**
+     * Loads a file 
+     * 
+     * @var string $path
+     */
+    public static function load($path)
+    {
+        return require_once $path;
     }
 
     /**
      * 
      * @return mixed|null
      */
-    public static function getProperty($property)
+    public static function & getProperty($property)
     {
-        if(isset(self::${$property})) { return self::${$property}; }
-        return null;
+        $return = null;
+        if(property_exists('Scriptor\Scriptor', $property)) { 
+             $return = self::${$property}; 
+             return $return;
+        }
+        return $return;
+    }
+
+    public static function setProperty($property, $value)
+    {
+        if(property_exists('Scriptor\Scriptor', $property)) { self::${$property} = $value; }
     }
 
     /**
@@ -80,12 +104,21 @@ class Scriptor
     }
 
     /**
+     * Retrieve an instance of the Editor class and 
+     * loads language files of the modules into memory.
      * 
      * @return object|null
      */
     public static function getEditor($init = true)
     {
         if(self::$editor === null) { 
+            foreach(self::$config['modules'] as $module) {
+                $modLang = IM_ROOTPATH.'site/'.dirname($module['path']).'/lang/'.
+                    self::$config['lang'].'.php';
+                if(file_exists($modLang) && $module['active']) {
+                    self::$i18n = array_merge(self::$i18n, include $modLang);
+                }
+            }
             self::$editor = new Editor(); 
             if($init) self::$editor->init();
         }

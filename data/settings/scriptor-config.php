@@ -115,6 +115,7 @@ $config = [
 	 * // Key should be the same as the slug
 	 * 'pages' => [                                       // URL Segment that resolves to the module (array)
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
+	 *     'position' => 4,                               // Module load order position (integer) (default 0)
 	 *     'active' => true,                              // Enables or disables module (bool)
 	 *     'auth' => true,                                // Enables or disables module authorization
 	 *     'autoinit' => true,                            // Emables/disables auto initialization (bool) 
@@ -131,6 +132,7 @@ $config = [
 	'modules' => [
 		'pages' => [
 			'menu' => 'pages_menu',
+			'position' => 1,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -143,6 +145,7 @@ $config = [
 		],
 		'profile' => [
 			'menu' => 'profile_menu',
+			'position' => 0,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -156,6 +159,7 @@ $config = [
 		],
 		'auth' => [
 			'menu' => 'logout_menu',
+			'position' => 0,
 			'active' => true,
 			'auth' => false, // Authorization will performed by module  itself
 			'autoinit' => true,
@@ -169,6 +173,7 @@ $config = [
 		],
 		'dashboard' => [
 			'menu' => '',
+			'position' => 0,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -181,6 +186,7 @@ $config = [
 		],
 		'settings' => [
 			'menu' => 'settings_menu',
+			'position' => 2,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -193,6 +199,7 @@ $config = [
 		],
 		'parsedown' => [
 			'menu' => '',
+			'position' => 0,
 			'active' => true,
 			'auth' => false,
 			'autoinit' => true,
