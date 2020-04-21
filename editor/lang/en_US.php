@@ -112,7 +112,7 @@ $i18n = [
 			<mark>data/settings/</mark> directory.</p>
 			
 			<hr>
-			<p><a href="https://ehret-studio.com/articles/scriptor-a-simple-flat-file-cms/"
+			<p><a href="https://scriptor-cms.info"
 			>Official Website &rsaquo;</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a 
 			href="https://github.com/bigin/Scriptor"><i class="fab fa-github"></i> 
 			Clone Repo &rsaquo;</a></p>
