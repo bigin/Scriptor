@@ -189,7 +189,9 @@ class FieldFileupload implements FieldInterface
 			"option",
 			{
 				previewMaxWidth: '.$this->imanager->config->thumbSize['width'].',
-				previewMaxHeight: '.$this->imanager->config->thumbSize['height'].'
+				previewMaxHeight: '.$this->imanager->config->thumbSize['height'].',
+				maxNumberOfFiles: '.(isset($this->configs->max_number_of_files) ?
+                    $this->configs->max_number_of_files : 'null').',
 			},
 			"redirect",
 				window.location.href.replace(
