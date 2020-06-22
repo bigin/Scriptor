@@ -73,7 +73,15 @@ $config = [
 	 *
 	 * @var bool
 	 */
-	'protectCSRF' => true,
+    'protectCSRF' => true,
+    
+    /**
+     * Are sessions allowed? Typically boolean 'true', unless 
+     * provided a callable function that returns boolean.
+     * 
+     * @var bool|callable
+     */
+    'sessionAllow' => true,
 
 	/**
 	 * Maximum number of CSRF tokens allowed per user.

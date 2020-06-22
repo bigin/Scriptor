@@ -118,6 +118,7 @@ class Site extends Module
 	 */
 	public function init()
 	{
+        if(isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
 		parent::init();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
@@ -325,5 +326,30 @@ class Site extends Module
 		header("HTTP/1.0 404 Not Found");
 		include 'site/themes/'.$this->config['theme_path'].$this->config['404page'].'.php';
 		die;
-	}
+    }
+    
+    /**
+     * It checks if the value of the config 
+     * variable sessionAllow is set to false, 
+     * if so session and cookies should not 
+     * be used.
+     * 
+     */
+    protected function checkCookieAllowed()
+    {
+        if($this->config['sessionAllow'] instanceof \Closure) {
+            $allowed = $this->config['sessionAllow']();
+        } else { 
+            $allowed = $this->config['sessionAllow']; 
+        }
+        if($allowed != true) {
+            if(ini_get('session.use_cookies')) {
+                $params = session_get_cookie_params();
+                setcookie(session_name(), '', time() - 42000, $params['path'],
+                    $params['domain'], $params['secure'], $params['httponly']
+                );
+            }
+            session_destroy();
+        }
+    }
 }
