@@ -114,4 +114,28 @@
      'created' => 1581357741,
      'updated' => 1581357741,
   )),
+  'images' => 
+  Imanager\Field::__set_state(array(
+     'categoryid' => 1,
+     'id' => 6,
+     'name' => 'images',
+     'label' => 'Images',
+     'type' => 'fileupload',
+     'position' => 6,
+     'default' => NULL,
+     'options' => 
+    array (
+    ),
+     'info' => NULL,
+     'required' => false,
+     'minimum' => 0,
+     'maximum' => 0,
+     'cssclass' => NULL,
+     'configs' => 
+    Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => 'gif|jpe?g|png',
+    )),
+     'created' => 1595519012,
+     'updated' => 1595519012,
+  )),
 ); ?>

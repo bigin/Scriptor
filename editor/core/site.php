@@ -221,9 +221,18 @@ class Site extends Module
 		}
 		elseif($element == 'content') {
 			if(!$content = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
+                $imgPath = '';
+                $field = $this->pages->getField('name=images');
+                $pageId = isset($this->page->id) ? $this->page->id : null;
+                if($pageId && $field && $this->pages) {
+                    $imgPath = "$pageId.{$this->pages->id}.$field->id/";
+                } else {
+                    $imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
+                }
 				$content = $this->templateParser->render($this->content, [
 					'BASE_URL' => $this->siteUrl,
-					'UPLOADS_URL' => $this->siteUrl.'/data/uploads/'
+                    'UPLOADS_URL' => $this->siteUrl.'/data/uploads/',
+                    'IMAGES_URL' => $this->siteUrl."/data/uploads/$imgPath"
 				]);
 				if(true !== $this->config['allowHtmlOutput']) {
 					$this->parsedown->setSafeMode(true);

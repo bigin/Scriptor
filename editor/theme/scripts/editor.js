@@ -77,9 +77,6 @@ $("#render").click(function (e) {
 		if(result && result.status == 1) {
 			$("#page-text").html(result.text);
 		}
-		/* if(text.length > 0) {
-			$("#page-text").html(text);
-		} */
 	});
 	$("#screen").show();
 	return false;
@@ -118,3 +115,15 @@ $(document).on({
 		$("#delay").fadeOut();
 	}
 });
+
+// Fixed Width Sortable Tables Row with jQueryUI
+$('table tbody').sortable({
+    helper: fixWidthHelper
+}).disableSelection();
+function fixWidthHelper(e, ui) {
+    ui.children().each(function() {
+        $(this).width($(this).width());
+        $(this).height($(this).height());
+    });
+    return ui;
+}

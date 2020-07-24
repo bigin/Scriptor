@@ -24,9 +24,9 @@ class InputFileupload implements InputInterface
 
 	public function __set($name, $value) { $this->$name = $value; }
 
-	public function prepareInput($values, $sanitize = false)
+	public function prepareInput($value, $sanitize = false)
 	{
-		if(!is_array($values) || !is_array($values['file'])) {
+		if(!is_array($value) || !is_array($value['file'])) {
 			$this->remove(null);
 			$this->value = null;
 			Util::cleanUpTempContainers();
@@ -37,9 +37,9 @@ class InputFileupload implements InputInterface
 		$itemid = $this->itemid;
 
 		// It might be a new item?
-		if($itemid && !empty($values['timestamp'])) {
+		if($itemid && !empty($value['timestamp'])) {
 			// 'uploads/.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/'
-			$stamp = (int) $values['timestamp'];
+			$stamp = (int) $value['timestamp'];
 			if(file_exists(IM_UPLOADPATH.".tmp_{$stamp}_{$categoryid}.{$this->field->id}") &&
 				!file_exists(IM_UPLOADPATH."$categoryid.$itemid.{$this->field->id}")) {
 				/*@mkdir(dirname(IM_UPLOADPATH."$categoryid.$itemid.{$this->field->id}"),
@@ -53,7 +53,7 @@ class InputFileupload implements InputInterface
 
 		$newNames = array();
 		// Check outside coming data for correctness
-		foreach($values['file'] as $pos => $file) {
+		foreach($value['file'] as $pos => $file) {
 			if(!$this->field->categoryid) {
 				$this->errorCode = self::UNDEFINED_CATEGORY_ID;
 				return false;
@@ -65,8 +65,8 @@ class InputFileupload implements InputInterface
 				if(file_exists(IM_UPLOADPATH."$categoryid.$itemid.{$this->field->id}/$file")) {
 					$this->value[$pos]->set('name', $file);
 					$this->value[$pos]->set('path', IM_SITEROOT."uploads/$categoryid.$itemid.{$this->field->id}/");
-					$this->value[$pos]->set('title', isset($values['title'][$pos]) ?
-						(($sanitize) ? $this->sanitize($values['title'][$pos]) : $values['title'][$pos]) : '');
+					$this->value[$pos]->set('title', isset($value['title'][$pos]) ?
+						(($sanitize) ? $this->sanitize($value['title'][$pos]) : $value['title'][$pos]) : '');
 					$this->value[$pos]->set('position', $pos);
 
 					$newNames[] = $file;

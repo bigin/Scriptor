@@ -2,6 +2,9 @@
 
 namespace Scriptor;
 
+use Imanager\Field;
+use Imanager\FieldConfigs;
+use Imanager\FieldFileupload;
 use Imanager\Item;
 use Imanager\TemplateParser;
 use Imanager\Util;
@@ -27,13 +30,14 @@ class Pages extends Module
 	{
 		parent::init();
 		$this->csrf = Scriptor::getCSRF();
-		$this->pages = $this->imanager->getCategory('name=Pages');
+        $this->pages = $this->imanager->getCategory('name=Pages');
+        $this->imanager->fieldMapper->init($this->pages->id, true);
 	}
 
 	public function execute()
 	{
-		$this->checkAction();
-
+        $this->checkAction();
+        
 		if($this->segments->get(0) == 'pages' && !$this->segments->get(1)) {
 			$this->pageTitle = 'Page list - Scriptor';
 			$this->pageContent = $this->renderPageList();
@@ -100,109 +104,99 @@ class Pages extends Module
 						$parent->name).'</option>';
 			}
 		}
-		if(!$page) {
-			ob_start(); ?>
-			<!-- The Modal -->
-			<div id="screen" class="modal">
-				<!-- Modal content -->
-				<div id="screen-content">
-					<span class="close">&times;</span>
-					<div id="page-text"></div>
-				</div>
-			</div>
-			<h1><?php echo $this->i18n['page_create_header']; ?></h1>
-			<hr>
-			<form id="page-form" action="./" method="post">
-				<div class="form-control">
-					<label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
-					<input name="name" id="pagename" type="text" value="">
-				</div>
-				<div class="form-control">
-					<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
-					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
-					<input name="slug" id="slug" type="text" value="">
-				</div>
-				<div class="form-control">
-					<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
-					<textarea id="markdown" name="content" onkeyup="auto_grow(this)"></textarea>
-				</div>
-				<div class="form-control">
-					<label for="parent"><?php echo $this->i18n['parent_label']; ?></label>
-					<select name="parent" id="parent">
-						<option><?php echo $this->i18n['parent_select_option']; ?></option>
-						<?php echo $parent_options; ?>
-					</select>
-				</div>
-				<div class="form-control">
-					<label for="template"><?php echo $this->i18n['template_label']; ?></label>
-					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['template_field_infotext'] ?></p>
-					<input name="template" id="template" type="text" value="">
-				</div>
-				<div class="form-control">
-					<label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
-						(($page && $page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
-				</div>
-				<input type="hidden" name="action" value="save-page">
-				<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
-					<?php echo $this->i18n['create_button']; ?></button>
-				<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
-					<?php echo $this->i18n['view_button']; ?></button>
-				<?php echo $this->csrf->renderInputs(); ?>
-			</form>
-			<?php
-		} else {
-			ob_start(); ?>
-			<!-- The Modal -->
-			<div id="screen" class="modal">
-				<!-- Modal content -->
-				<div id="screen-content">
-					<span class="close">&times;</span>
-					<div id="page-text"></div>
-				</div>
-			</div>
-			<h1><?php echo $this->i18n['page_edit_header']; ?></h1>
-			<hr>
-			<form id="page-form" action="./?page=<?php echo (int)$this->input->get->page; ?>" method="post">
-				<div class="form-control">
-					<label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
-					<input name="name" id="pagename" type="text" value="<?php echo $page->name; ?>">
-				</div>
-				<div class="form-control">
-					<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
-					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
-					<input name="slug" id="slug" type="text" value="<?php echo $this->page->slug; ?>">
-				</div>
-				<div class="form-control">
-					<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
-					<textarea id="markdown" name="content" onkeyup="auto_grow(this)"><?php echo $page->content; ?></textarea>
-				</div>
-				<div class="form-control">
-					<label for="parent"><?php echo $this->i18n['parent_label']; ?></label>
-					<select name="parent" id="parent">
-						<option><?php echo $this->i18n['parent_select_option']; ?></option>
-						<?php echo $parent_options; ?>
-					</select>
-				</div>
-				<div class="form-control">
-					<label for="template"><?php echo $this->i18n['template_label']; ?></label>
-					<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
-						echo $this->i18n['template_field_infotext'] ?></p>
-					<input name="template" id="template" type="text" value="<?php echo $this->page->template; ?>">
-				</div>
-				<div class="form-control">
-					<label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
-						echo (($page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
-				</div>
-				<input type="hidden" name="action" value="save-page">
-				<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
-					<?php echo $this->i18n['save_button']; ?></button>
-				<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
-					<?php echo $this->i18n['view_button']; ?></button>
-				<?php echo $this->csrf->renderInputs(); ?>
-			</form>
-			<?php
-		}
-		return ob_get_clean();
+        ob_start(); ?>
+        <!-- The Modal -->
+        <div id="screen" class="modal">
+            <!-- Modal content -->
+            <div id="screen-content">
+                <span class="close">&times;</span>
+                <div id="page-text"></div>
+            </div>
+        </div>
+        <h1><?php echo $this->i18n['page_edit_header']; ?></h1>
+        <hr>
+        <form id="page-form" action="./<?php echo isset($this->input->get->page) ? 
+            '?page='.(int)$this->input->get->page : ''; ?>" method="post">
+            <div class="form-control">
+                <label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
+                <input name="name" id="pagename" type="text" value="<?php echo isset($page->name) ? $page->name : ''; ?>">
+            </div>
+            <div class="form-control">
+                <label for="slug"><?php echo $this->i18n['name_label']; ?></label>
+                <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
+                <input name="slug" id="slug" type="text" value="<?php echo isset($page->slug) ? $page->slug : ''; ?>">
+            </div>
+            <div class="form-control">
+                <label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
+                <textarea id="markdown" name="content" onkeyup="auto_grow(this)"><?php echo isset($page->content) ? $page->content : ''; ?></textarea>
+            </div>
+            <div class="form-control">
+                <label><?php echo $this->i18n['header_image_label']; ?></label>
+                <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['header_image_infotext']; ?></p>
+                <?php
+                $labels = array(
+                    'add_files' => $this->i18n['upload_add_files'],
+                    'start' => $this->i18n['upload_start'],
+                    'cancel' => $this->i18n['upload_cancel'],
+                    'name_heading' => $this->i18n['upload_name_heading'],
+                    'delete' => $this->i18n['upload_delete'],
+                    'placeholder' => $this->i18n['upload_placeholder'],
+                );
+                // We'll use our own template, which is provided with special placeholders
+                $tpl = $this->imanager->templateParser->render(
+                    file_get_contents(__DIR__.'/tpls/fileupload.tpl'), [
+                        'size_heading' => $this->i18n['upload_size_heading']
+                    ]
+                );
+                $dirname = dirname($this->siteUrl);
+                $timestamp_images = ($this->input->post->timestamp_images) ? 
+                        $this->input->post->timestamp_images : time();
+                $fieldMarkup = new FieldFileupload();
+                $field = $this->pages->getField('name=images');
+                $field->configs->max_number_of_files = 100;
+                $fieldMarkup->set('labels', $labels);
+                $fieldMarkup->set('fileUploadTpl', $tpl, false);
+                $fieldMarkup->set('url', "$dirname/");
+                $fieldMarkup->set('action', "$dirname/imanager/upload/server/php/index.php");
+                $fieldMarkup->set('id', $field->name);
+                $fieldMarkup->set('categoryid', $field->categoryid);
+                $fieldMarkup->set('itemid', isset($page->id) ? $page->id : null);
+                $fieldMarkup->set('timestamp', $timestamp_images);
+                $fieldMarkup->set('fieldid', $field->id);
+                $fieldMarkup->set('configs', $field->configs, false);
+                $fieldMarkup->set('name', $field->name);
+
+                echo $fieldMarkup->render();
+                echo $fieldMarkup->renderJsBlock();
+                echo $fieldMarkup->renderJsLibs();
+                ?>
+            </div>
+            <div class="form-control">
+                <label for="parent"><?php echo $this->i18n['parent_label']; ?></label>
+                <select name="parent" id="parent">
+                    <option><?php echo $this->i18n['parent_select_option']; ?></option>
+                    <?php echo $parent_options; ?>
+                </select>
+            </div>
+            <div class="form-control">
+                <label for="template"><?php echo $this->i18n['template_label']; ?></label>
+                <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
+                    echo $this->i18n['template_field_infotext'] ?></p>
+                <input name="template" id="template" type="text" value="<?php echo isset($page->template) ? $page->template : ''; ?>">
+            </div>
+            <div class="form-control">
+                <label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
+                    echo (isset($page->active) && !empty($page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
+            </div>
+            <input type="hidden" name="action" value="save-page">
+            <button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
+                <?php echo $this->i18n['save_button']; ?></button>
+            <button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
+                <?php echo $this->i18n['view_button']; ?></button>
+            <?php echo $this->csrf->renderInputs(); ?>
+        </form>
+
+        <?php return ob_get_clean();
 	}
 
 
@@ -268,16 +262,30 @@ class Pages extends Module
 		return $rows;
 	}
 
+    /**
+     * Is called when the View button is clicked, e.g. 
+     * when rendering Markdown.
+     */
 	protected function renderContent() 
 	{
 		$parsedown = $this->loadModule('parsedown');
-
-		$templateParser = new TemplateParser();
-
+        $templateParser = new TemplateParser();
+        
+        $imgPath = '';
+        $field = $this->pages->getField('name=images');
+        $pageId = isset($this->page->id) ? $this->page->id : null;
+        if($pageId && $field && $this->pages) {
+            $imgPath = "$pageId.{$this->pages->id}.$field->id/";
+        } else {
+            $imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
+        }
+        
 		$content = $templateParser->render($this->input->post->content, [
 			'BASE_URL' => dirname($this->siteUrl).'/',
-			'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/'
-		]);
+            'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/',
+            'IMAGES_URL' => dirname($this->siteUrl)."/data/uploads/$imgPath",
+        ]);
+        
 		if(true === $this->config['allowHtmlOutput']) {
 			$content = htmlspecialchars_decode($content);
 			//$parsedown->setSafeMode(true);
@@ -387,7 +395,7 @@ class Pages extends Module
 			return false;
 		}
 		// Invalid News name
-		if(!$slug) {
+		if($name && !$slug) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_page_name']
@@ -438,16 +446,54 @@ class Pages extends Module
 			);
 			return false;
 		}
-
-		if($this->page->save()) {
-			$this->imanager->sectionCache->expire();
-			$this->msgs[] = array(
-				'type' => 'success',
-				'value' => $this->i18n['successful_saved_page']
-			);
-
-			Util::redirect("./?page={$this->page->id}");
-		}
-		return false;
-	}
+        // Save page
+        if($this->page->save()) {
+            // Save images
+            if($this->imagesSet()) {
+                // Save page again
+                $this->page->save();
+                $this->imanager->sectionCache->expire();
+                $this->msgs[] = array(
+                    'type' => 'success',
+                    'value' => $this->i18n['successful_saved_page']
+                );
+                Util::redirect("./?page={$this->page->id}");
+            }
+            $this->imanager->sectionCache->expire();
+            
+            $this->msgs[] = array(
+                'type' => 'error',
+                'value' => $this->i18n['error_page_images']
+            );
+            return false;
+        }
+        
+        $this->msgs[] = array(
+            'type' => 'error',
+            'value' => $this->i18n['error_saving_page']
+        );
+        return false;
+    }
+    
+    private function imagesSet()
+    {
+        // Intercept timestamp in order to identify the temporary folder later    
+        $timestamp_images = time();
+        if($this->input->post->timestamp_images) {
+            $timestamp_images = $this->sanitizer->date($this->input->post->timestamp_images);
+        }
+        $dataSent = array(
+            'file' => $this->input->post->position_images,
+            'title' => $this->input->post->title_images,
+            'timestamp' => $timestamp_images
+        );
+        if(false === $this->page->set('images', $dataSent)) {
+            $this->msgs[] = array(
+                'type' => 'error',
+                'value' => $this->i18n['error_page_images']
+            );
+            return false;
+        }
+        return true;
+    }
 }
