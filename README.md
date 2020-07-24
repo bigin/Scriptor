@@ -55,3 +55,7 @@ Demo (default template): https://demos.ehret-studio.com/scriptor/
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
+
+### Changelog
+- `1.4.5` `NEW: File upload field as an integral part of the core application.`
+
