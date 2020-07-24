@@ -64,27 +64,26 @@
 			<span class="preview"></span>
 		</td>
 		<td>
-			<p class="name"><span class="heading">[[name_heading]]</span> {%=file.name%}</p>
-	<strong class="error text-danger"></strong>
-	</td>
-	<td>
-	<p class="size">Processing...</p>
-	<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-		<div class="progress-bar progress-bar-success" style="width:0%;"></div>
-	</div>
-	</td>
-	<td>
-	{% if (!i && !o.options.autoUpload) { %}
-				<button class="btn btn-primary start" disabled>
-					<i class="fa fa-upload"></i>
-				</button>
-			{% } %}
-	{% if (!i) { %}
-				<button class="btn btn-warning cancel">
-					<i class="fa fa-times"></i>
-				</button>
-			{% } %}
-	</td>
+			<p class="name"><span class="heading">[[name_heading]] {%=file.name%}</span></p>
+	        <p class="error-wrapper"><strong class="error text-danger"></strong></p>
+            <br>
+            <p class="name size">Processing...</p>
+	        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+		        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+	        </div>
+            <p class="name">
+            {% if (!i && !o.options.autoUpload) { %}
+            <button class="btn btn-primary start" disabled>
+                <i class="fa fa-upload"></i> [[start_upload]]
+            </button>
+            {% } %}
+            {% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="fa fa-times"></i> [[cancel_upload]]
+            </button>
+            {% } %}
+            </p>
+	    </td>
 	</tr>
 	{% } %}
 </script>
@@ -115,17 +114,15 @@
 				<input class="tit" type="text" placeholder="[[imagetitle_placeholder]]" name="title_[[id]][{%=file.position%}]" value="{%=file.title%}">
 			</p>
 			{% if (file.error) { %}
-				<div><span class="label label-danger">Error</span> {%=file.error%}</div>
-	{% } %}
-		</td>
-		<td>
-			<span class="size">{%=o.formatFileSize(file.size)%}</span>
-		</td>
-		<td>
-			{% if (file.deleteUrl) { %}
+				<div><span class="label label-danger">Error:</span> {%=file.error%}</div>
+	        {% } %}
+            <br>
+            <p class="name"><span class="heading size">[[size_heading]] {%=o.formatFileSize(file.size)%}</span></p>
+            <p class="name">
+            {% if (file.deleteUrl) { %}
 				<button class="btn btn-danger delete" data-type="{%=file.deleteType%}"
 					data-url="{%=file.deleteUrl%}[[deleteurl]]"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-					<i class="fa fa-trash"></i>
+					<i class="fa fa-trash"></i> <span>[[delete_upload]]</span>
 				</button>
 				<input type="checkbox" name="delete" value="1" class="toggle">
 			{% } else { %}
@@ -133,6 +130,7 @@
 					<i class="fa fa-times"></i>
 				</button>
 			{% } %}
+            </p>
 		</td>
 	</tr>
 {% } %}

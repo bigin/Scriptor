@@ -78,9 +78,20 @@ class FieldFileupload implements FieldInterface
 		'add_files' => 'Add Files',
 		'start' => 'Upload',
 		'cancel' => 'Cancel',
-		'delete' => 'Remove',
+        'delete' => 'Remove',
+        'name_heading' => 'Name',
 		'placeholder' => 'Enter an image title',
-	);
+    );
+    
+    /** 
+     * @var string relative path to the file upload template.
+     * 
+     * @since 2020-07
+     * Default: '/imanager/lib/tpls/fields/fileupload'
+     * Of course you can also initiate your own custom template as a string e.g:
+     *  $fileUploadTpl = '<div> .......';
+     */
+    protected $fileUploadTpl = 'fields/fileupload';
 
 	/**
 	 * FieldFileupload constructor
@@ -99,9 +110,20 @@ class FieldFileupload implements FieldInterface
 		}
 	}
 
-	public function set($name, $value, $sanitize = true) {
-		$this->{strtolower($name)} = ($sanitize) ? $this->imanager->sanitizer->text($value) : $value;
-	}
+    public function set($name, $value, $sanitize = true) 
+    {
+        if($sanitize && is_array($value)) {
+            foreach($value as $key => $entry) {
+                $this->{$name}[$key] = $this->imanager->sanitizer->text($entry);        
+            }
+        } else {
+            $this->{$name} = ($sanitize) ? $this->imanager->sanitizer->text($value) : $value;
+        }
+    }
+    
+    public function add($key, $name, $value, $sanitize = true) {
+        $this->{$key}[$name] = ($sanitize) ? $this->imanager->sanitizer->text($value) : $value;
+    }
 
 	public function render()
 	{
@@ -110,11 +132,12 @@ class FieldFileupload implements FieldInterface
 		$urlParams = "itemid={$this->itemid}&categoryid={$this->categoryid}&fieldid={$this->
 			fieldid}&timestamp={$this->timestamp}&siteurl={$siteUrl}";
 
-		return $this->imanager->templateParser->render('fields/fileupload', array(
+		return $this->imanager->templateParser->render($this->fileUploadTpl, array(
 				'action' => $this->action,
 				'add_files' => $this->labels['add_files'],
 				'start_upload' => $this->labels['start'],
-				'cancel_upload' => $this->labels['cancel'],
+                'cancel_upload' => $this->labels['cancel'],
+                'name_heading' => $this->labels['name_heading'],
 				'delete_upload' => $this->labels['delete'],
 				'imagetitle_placeholder' => $this->labels['placeholder'],
 				'jsurl' => $this->jsurl,

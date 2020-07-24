@@ -276,9 +276,11 @@ class Util
 	 */
 	public static function imErrorHandler($number, $string, $file, $line, $context)
 	{
-
-		// Determine if this error is one of the enabled ones in php config (php.ini, .htaccess, etc)
-		$error_is_enabled = (bool)($number & ini_get('error_reporting') );
+        // Determine if this error is one of the enabled ones in php config (php.ini, .htaccess, etc)
+        $error_is_enabled = (bool)($number & ini_get('error_reporting'));
+        
+        // DISABLED by @ e.g. @your_function() ...
+        if(error_reporting() === 0) return;
 
 		// -- FATAL ERROR
 		// throw an Error Exception, to be handled by whatever Exception handling logic is available in this context

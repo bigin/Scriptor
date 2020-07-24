@@ -16,7 +16,7 @@ interface InputInterface
 
 	public function __construct(Field $field);
 
-	public function prepareInput($value, $sanitize);
+	public function prepareInput($value, $sanitize = false);
 
 	public function prepareOutput();
 }
