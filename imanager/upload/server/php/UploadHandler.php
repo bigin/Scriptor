@@ -48,12 +48,12 @@ class UploadHandler
 		$this->imanager = imanager();
 
 		if(!$this->imanager->input->get->fieldid || !$this->imanager->input->get->categoryid) {
-			//trigger_error('fieldid and categoryid expected', E_USER_WARNING);
+            Util::dataLog(__METHOD__.'(); Aborting: The field object and category ID expected.');
 			return false;
-		}
+        }
 
 		if(!$this->imanager->input->get->itemid && !$this->imanager->input->get->timestamp) {
-			//trigger_error('Neither a timestamp nor an itemid was passed', E_USER_WARNING);
+            Util::dataLog(__METHOD__.'(); Aborting: Neither a time stamp nor an item ID was submitted.');
 			return false;
 		}
 
@@ -63,12 +63,18 @@ class UploadHandler
 		$this->imanager->fieldMapper->init($categoryid);
 		$field = $this->imanager->fieldMapper->getField($fieldid);
 		// Only a fileupload field is allowed
-		if($field->type != 'fileupload') { return false; }
+		if($field->type != 'fileupload') { 
+            Util::dataLog(__METHOD__.'(); Aborting: Field type is not allowed.');
+            return false; 
+        }
 
 		// A new item (Upload directory has not yet been created)
 		if(!$this->imanager->input->get->itemid) {
-			$timestamp = $this->imanager->sanitizer->date($this->imanager->input->get->timestamp);
-			if(!$timestamp) { return false; }
+            $timestamp = $this->imanager->sanitizer->date($this->imanager->input->get->timestamp);
+			if(!$timestamp) { 
+                Util::dataLog(__METHOD__.'(); Aborting: Invalid format of the time stamp.');
+                return false; 
+            }
 			$siteurl = rawurldecode($this->imanager->input->get->siteurl);
 			$upload_dir = IM_UPLOADPATH.'.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/';
 			$upload_url = $siteurl.IM_SITEROOT.'uploads/.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/';
@@ -82,8 +88,9 @@ class UploadHandler
 		}
 
 		$item = null;
-		$category = $this->imanager->getCategory($categoryid);
-		if($category) { $item = $category->getItem($this->imanager->input->get->itemid); }
+        $category = $this->imanager->getCategory($categoryid);
+        
+		if(isset($itemid) && $category) { $item = $category->getItem($itemid); }
 		if($item && $field) {
 			if(empty($this->positions) && $item->{$field->name}) {
 				foreach($item->{$field->name} as $i => $itemfile) {
@@ -554,8 +561,9 @@ class UploadHandler
 		while(is_dir($this->get_upload_path($name))) {
 			$name = $this->upcount_name($name);
 		}
-		// Keep an existing filename if this is part of a chunked upload:
-		$uploaded_bytes = $this->fix_integer_overflow((int) @$content_range[1]);
+        // Keep an existing filename if this is part of a chunked upload:
+        $cr = isset($content_range[1]) ? (int) $content_range[1] : 0;
+		$uploaded_bytes = $this->fix_integer_overflow($cr);
 		while(is_file($this->get_upload_path($name))) {
 			if ($uploaded_bytes === $this->get_file_size(
 					$this->get_upload_path($name))) {
