@@ -29,8 +29,20 @@ by a mandatory template engine.
 3. Rename the file `/data/settings/_custom.scriptor-config.php` to `custom.scriptor-config.php` (without `_` prefix/underscore).
 4. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
     
-> NOTE: You might have to adjust the .htaccess file.
-    
+> NOTE: You might have to adjust the .htaccess file.    
+
+### How to upgrade from Scriptor 1.4.4- to 1.4.5+:
+>NOTE: Backup any files you replace or delete!
+
+  – Replace: /editor/ with the new version   
+  – Replace: /imanager/ with the new version   
+  – Replace: /index.php with the new version   
+  – Replace: /imanager.php with the new version   
+  – Replace: /data/datasets/buffers/fields/1.fields.php with the new version   
+  – Replace: /data/settings/scriptor-config.php with the new version    
+
+  Your site is now upgraded, test that everything works.
+
 ### Admin
 Once installed, to access the administrator area of your Scriptor site go to your websites homepage, then simply add the text `editor/` to the URL in your browsers, for example: 
 ```
