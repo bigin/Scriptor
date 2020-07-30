@@ -30,16 +30,16 @@ class Pages extends Module
 	{
 		parent::init();
 		$this->csrf = Scriptor::getCSRF();
-        $this->pages = $this->imanager->getCategory('name=Pages');
-        $this->imanager->fieldMapper->init($this->pages->id, true);
+		$this->pages = $this->imanager->getCategory('name=Pages');
+		$this->imanager->fieldMapper->init($this->pages->id, true);
 
-        if(Scriptor::execHook($this) && $this->event->replace) return;
+		if(Scriptor::execHook($this) && $this->event->replace) return;
 	}
 
 	public function execute()
 	{
-        $this->checkAction();
-        
+		$this->checkAction();
+		
 		if($this->segments->get(0) == 'pages' && !$this->segments->get(1)) {
 			$this->pageTitle = 'Page list - Scriptor';
 			$this->pageContent = $this->renderPageList();
@@ -64,12 +64,12 @@ class Pages extends Module
 	{
 		if($this->input->get->page) {
 			$this->page = $this->pages->getItem((int)$this->input->get->page);
-        }
+		}
 		// Save page data
 		if($this->input->post->action == 'save-page') {
 			if($this->savePage()) {
-                $this->redirect("./?page={$this->page->id}");
-            }
+				$this->redirect("./?page={$this->page->id}");
+			}
 		}
 		// Renumber pages
 		elseif($this->input->post->action == 'renumber-pages') {
@@ -87,125 +87,125 @@ class Pages extends Module
 		}
 		// Delete page
 		elseif($this->segments->get(1) == 'delete' && $this->input->get->page) {
-            $status = $this->removePage();
-            $this->redirect('../');
+			$status = $this->removePage();
+			$this->redirect('../');
 			exit;
 		}
 	}
 
 	protected function ___renderEditorPage()
 	{
-        $page = $this->page;
-        //$this->anon->myFunction();
-        ob_start(); ?>
-        <!-- The Modal -->
-        <div id="screen" class="modal">
-            <!-- Modal content -->
-            <div id="screen-content">
-                <span class="close">&times;</span>
-                <div id="page-text"></div>
-            </div>
-        </div>
-        <h1><?php echo $this->i18n['page_edit_header']; ?></h1>
-        <hr>
-        <form id="page-form" action="./<?php echo isset($this->input->get->page) ? 
-            '?page='.(int)$this->input->get->page : ''; ?>" method="post">
-            <?php 
-            echo $this->renderEditorTitleField($page);
-            echo $this->renderEditorNameField($page);
-            echo $this->renderEditorContentField($page);
-            echo $this->renderEditorImageField($page);
-            echo $this->renderEditorPageParentField($page);
-            echo $this->renderEditorTemplateField($page);
-            echo $this->renderEditorPublishField($page);
-            echo $this->renderEditorActionFields($page);
-            ?>
-        </form>
+		$page = $this->page;
+		//$this->anon->myFunction();
+		ob_start(); ?>
+		<!-- The Modal -->
+		<div id="screen" class="modal">
+			<!-- Modal content -->
+			<div id="screen-content">
+				<span class="close">&times;</span>
+				<div id="page-text"></div>
+			</div>
+		</div>
+		<h1><?php echo $this->i18n['page_edit_header']; ?></h1>
+		<hr>
+		<form id="page-form" action="./<?php echo isset($this->input->get->page) ? 
+			'?page='.(int)$this->input->get->page : ''; ?>" method="post">
+			<?php 
+			echo $this->renderEditorTitleField($page);
+			echo $this->renderEditorNameField($page);
+			echo $this->renderEditorContentField($page);
+			echo $this->renderEditorImageField($page);
+			echo $this->renderEditorPageParentField($page);
+			echo $this->renderEditorTemplateField($page);
+			echo $this->renderEditorPublishField($page);
+			echo $this->renderEditorActionFields($page);
+			?>
+		</form>
 
-        <?php return ob_get_clean();
-    }
-    
-    protected function ___renderEditorTitleField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
-            <input name="name" id="pagename" type="text" value="<?php echo isset($page->name) ? $page->name : ''; ?>">
-        </div>
-        <?php return ob_get_clean();
-    }
+		<?php return ob_get_clean();
+	}
+	
+	protected function ___renderEditorTitleField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
+			<input name="name" id="pagename" type="text" value="<?php echo isset($page->name) ? $page->name : ''; ?>">
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorNameField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label for="slug"><?php echo $this->i18n['name_label']; ?></label>
-            <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
-            <input name="slug" id="slug" type="text" value="<?php echo isset($page->slug) ? $page->slug : ''; ?>">
-        </div>
-        <?php return ob_get_clean();
-    }
+	protected function ___renderEditorNameField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
+			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
+			<input name="slug" id="slug" type="text" value="<?php echo isset($page->slug) ? $page->slug : ''; ?>">
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorContentField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
-            <textarea id="markdown" name="content" onkeyup="auto_grow(this)"><?php echo isset($page->content) ? $page->content : ''; ?></textarea>
-        </div>
-        <?php return ob_get_clean();
-    }
+	protected function ___renderEditorContentField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
+			<textarea id="markdown" name="content" onkeyup="auto_grow(this)"><?php echo isset($page->content) ? $page->content : ''; ?></textarea>
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorImageField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label><?php echo $this->i18n['header_image_label']; ?></label>
-            <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['header_image_infotext']; ?></p>
-            <?php
-            $labels = array(
-                'add_files' => $this->i18n['upload_add_files'],
-                'start' => $this->i18n['upload_start'],
-                'cancel' => $this->i18n['upload_cancel'],
-                'name_heading' => $this->i18n['upload_name_heading'],
-                'delete' => $this->i18n['upload_delete'],
-                'placeholder' => $this->i18n['upload_placeholder'],
-            );
-            // We'll use our own template, which is provided with special placeholders
-            $tpl = $this->imanager->templateParser->render(
-                file_get_contents(__DIR__.'/tpls/fileupload.tpl'), [
-                    'size_heading' => $this->i18n['upload_size_heading']
-                ]
-            );
-            $dirname = dirname($this->siteUrl);
-            $timestamp_images = ($this->input->post->timestamp_images) ? 
-                    $this->input->post->timestamp_images : time();
-            $fieldMarkup = new FieldFileupload();
-            $field = $this->pages->getField('name=images');
-            $field->configs->max_number_of_files = 100;
-            $fieldMarkup->set('labels', $labels);
-            $fieldMarkup->set('fileUploadTpl', $tpl, false);
-            $fieldMarkup->set('url', "$dirname/");
-            $fieldMarkup->set('action', "$dirname/imanager/upload/server/php/index.php");
-            $fieldMarkup->set('id', $field->name);
-            $fieldMarkup->set('categoryid', $field->categoryid);
-            $fieldMarkup->set('itemid', isset($page->id) ? $page->id : null);
-            $fieldMarkup->set('timestamp', $timestamp_images);
-            $fieldMarkup->set('fieldid', $field->id);
-            $fieldMarkup->set('configs', $field->configs, false);
-            $fieldMarkup->set('name', $field->name);
+	protected function ___renderEditorImageField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label><?php echo $this->i18n['header_image_label']; ?></label>
+			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['header_image_infotext']; ?></p>
+			<?php
+			$labels = array(
+				'add_files' => $this->i18n['upload_add_files'],
+				'start' => $this->i18n['upload_start'],
+				'cancel' => $this->i18n['upload_cancel'],
+				'name_heading' => $this->i18n['upload_name_heading'],
+				'delete' => $this->i18n['upload_delete'],
+				'placeholder' => $this->i18n['upload_placeholder'],
+			);
+			// We'll use our own template, which is provided with special placeholders
+			$tpl = $this->imanager->templateParser->render(
+				file_get_contents(__DIR__.'/tpls/fileupload.tpl'), [
+					'size_heading' => $this->i18n['upload_size_heading']
+				]
+			);
+			$dirname = dirname($this->siteUrl);
+			$timestamp_images = ($this->input->post->timestamp_images) ? 
+					$this->input->post->timestamp_images : time();
+			$fieldMarkup = new FieldFileupload();
+			$field = $this->pages->getField('name=images');
+			$field->configs->max_number_of_files = 100;
+			$fieldMarkup->set('labels', $labels);
+			$fieldMarkup->set('fileUploadTpl', $tpl, false);
+			$fieldMarkup->set('url', "$dirname/");
+			$fieldMarkup->set('action', "$dirname/imanager/upload/server/php/index.php");
+			$fieldMarkup->set('id', $field->name);
+			$fieldMarkup->set('categoryid', $field->categoryid);
+			$fieldMarkup->set('itemid', isset($page->id) ? $page->id : null);
+			$fieldMarkup->set('timestamp', $timestamp_images);
+			$fieldMarkup->set('fieldid', $field->id);
+			$fieldMarkup->set('configs', $field->configs, false);
+			$fieldMarkup->set('name', $field->name);
 
-            echo $fieldMarkup->render();
-            echo $fieldMarkup->renderJsBlock();
-            echo $fieldMarkup->renderJsLibs();
-            ?>
-        </div>
-        <?php return ob_get_clean();
-    }
+			echo $fieldMarkup->render();
+			echo $fieldMarkup->renderJsBlock();
+			echo $fieldMarkup->renderJsLibs();
+			?>
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorPageParentField($page)
-    {
-        // Parents
+	protected function ___renderEditorPageParentField($page)
+	{
+		// Parents
 		$parent_options = '';
 		if(count($this->pages->items)) {
 			foreach($this->pages->items as $parent) {
@@ -216,50 +216,50 @@ class Pages extends Module
 						$parent->name).'</option>';
 			}
 		}
-        ob_start(); ?>
-        <div class="form-control">
-            <label for="parent"><?php echo $this->i18n['parent_label']; ?></label>
-            <select name="parent" id="parent">
-                <option><?php echo $this->i18n['parent_select_option']; ?></option>
-                <?php echo $parent_options; ?>
-            </select>
-        </div>
-        <?php return ob_get_clean();
-    }
+		ob_start(); ?>
+		<div class="form-control">
+			<label for="parent"><?php echo $this->i18n['parent_label']; ?></label>
+			<select name="parent" id="parent">
+				<option><?php echo $this->i18n['parent_select_option']; ?></option>
+				<?php echo $parent_options; ?>
+			</select>
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorTemplateField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label for="template"><?php echo $this->i18n['template_label']; ?></label>
-            <p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
-                echo $this->i18n['template_field_infotext'] ?></p>
-            <input name="template" id="template" type="text" value="<?php echo isset($page->template) ? $page->template : ''; ?>">
-        </div>
-        <?php return ob_get_clean();
-    }
+	protected function ___renderEditorTemplateField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label for="template"><?php echo $this->i18n['template_label']; ?></label>
+			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
+				echo $this->i18n['template_field_infotext'] ?></p>
+			<input name="template" id="template" type="text" value="<?php echo isset($page->template) ? $page->template : ''; ?>">
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorPublishField($page)
-    {
-        ob_start(); ?>
-        <div class="form-control">
-            <label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
-                echo (isset($page->active) && !empty($page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
-        </div>
-        <?php return ob_get_clean();
-    }
+	protected function ___renderEditorPublishField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label for="publish"><input name="published" id="publish" type="checkbox" value="1"<?php
+				echo (isset($page->active) && !empty($page->active) ? ' checked' : '') ?>> <?php echo $this->i18n['published_label']; ?></label>
+		</div>
+		<?php return ob_get_clean();
+	}
 
-    protected function ___renderEditorActionFields($page)
-    {
-        ob_start()?>
-        <input type="hidden" name="action" value="save-page">
-        <button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
-            <?php echo $this->i18n['save_button']; ?></button>
-        <button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
-            <?php echo $this->i18n['view_button']; ?></button>
-        <?php echo $this->csrf->renderInputs(); ?>
-        <?php return ob_get_clean();
-    }
+	protected function ___renderEditorActionFields($page)
+	{
+		ob_start()?>
+		<input type="hidden" name="action" value="save-page">
+		<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
+			<?php echo $this->i18n['save_button']; ?></button>
+		<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
+			<?php echo $this->i18n['view_button']; ?></button>
+		<?php echo $this->csrf->renderInputs(); ?>
+		<?php return ob_get_clean();
+	}
 
 	protected function ___renderPageList()
 	{
@@ -320,30 +320,30 @@ class Pages extends Module
 		return $rows;
 	}
 
-    /**
-     * Is called when the View button is clicked, e.g. 
-     * when rendering Markdown.
-     */
+	/**
+	 * Is called when the View button is clicked, e.g. 
+	 * when rendering Markdown.
+	 */
 	protected function ___renderContent() 
 	{
 		$parsedown = $this->loadModule('parsedown');
-        $templateParser = new TemplateParser();
-        
-        $imgPath = '';
-        $field = $this->pages->getField('name=images');
-        $pageId = isset($this->page->id) ? $this->page->id : null;
-        if($pageId && $field && $this->pages) {
-            $imgPath = "$pageId.{$this->pages->id}.$field->id/";
-        } else {
-            $imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
-        }
-        
+		$templateParser = new TemplateParser();
+		
+		$imgPath = '';
+		$field = $this->pages->getField('name=images');
+		$pageId = isset($this->page->id) ? $this->page->id : null;
+		if($pageId && $field && $this->pages) {
+			$imgPath = "$pageId.{$this->pages->id}.$field->id/";
+		} else {
+			$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
+		}
+		
 		$content = $templateParser->render($this->input->post->content, [
 			'BASE_URL' => dirname($this->siteUrl).'/',
-            'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/',
-            'IMAGES_URL' => dirname($this->siteUrl)."/data/uploads/$imgPath",
-        ]);
-        
+			'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/',
+			'IMAGES_URL' => dirname($this->siteUrl)."/data/uploads/$imgPath",
+		]);
+		
 		if(true === $this->config['allowHtmlOutput']) {
 			$content = htmlspecialchars_decode($content);
 			//$parsedown->setSafeMode(true);
@@ -503,59 +503,59 @@ class Pages extends Module
 			);
 			return false;
 		}
-        // Save page
-        if($this->page->save()) {
-            // Save images
-            if($this->imagesSet()) {
-                // Save page again
-                $this->page->save();
-                $this->imanager->sectionCache->expire();
-                $this->msgs[] = array(
-                    'type' => 'success',
-                    'value' => $this->i18n['successful_saved_page']
-                );
-                return true;
-            }
-            $this->imanager->sectionCache->expire();
-            
-            $this->msgs[] = array(
-                'type' => 'error',
-                'value' => $this->i18n['error_page_images']
-            );
-            return false;
-        }
-        
-        $this->msgs[] = array(
-            'type' => 'error',
-            'value' => $this->i18n['error_saving_page']
-        );
-        return false;
-    }
-    
-    protected function imagesSet()
-    {
-        // Intercept timestamp in order to identify the temporary folder later    
-        $timestamp_images = time();
-        if($this->input->post->timestamp_images) {
-            $timestamp_images = $this->sanitizer->date($this->input->post->timestamp_images);
-        }
-        $dataSent = array(
-            'file' => $this->input->post->position_images,
-            'title' => $this->input->post->title_images,
-            'timestamp' => $timestamp_images
-        );
-        if(false === $this->page->set('images', $dataSent)) {
-            $this->msgs[] = array(
-                'type' => 'error',
-                'value' => $this->i18n['error_page_images']
-            );
-            return false;
-        }
-        return true;
-    }
+		// Save page
+		if($this->page->save()) {
+			// Save images
+			if($this->imagesSet()) {
+				// Save page again
+				$this->page->save();
+				$this->imanager->sectionCache->expire();
+				$this->msgs[] = array(
+					'type' => 'success',
+					'value' => $this->i18n['successful_saved_page']
+				);
+				return true;
+			}
+			$this->imanager->sectionCache->expire();
+			
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_page_images']
+			);
+			return false;
+		}
+		
+		$this->msgs[] = array(
+			'type' => 'error',
+			'value' => $this->i18n['error_saving_page']
+		);
+		return false;
+	}
+	
+	protected function imagesSet()
+	{
+		// Intercept timestamp in order to identify the temporary folder later    
+		$timestamp_images = time();
+		if($this->input->post->timestamp_images) {
+			$timestamp_images = $this->sanitizer->date($this->input->post->timestamp_images);
+		}
+		$dataSent = array(
+			'file' => $this->input->post->position_images,
+			'title' => $this->input->post->title_images,
+			'timestamp' => $timestamp_images
+		);
+		if(false === $this->page->set('images', $dataSent)) {
+			$this->msgs[] = array(
+				'type' => 'error',
+				'value' => $this->i18n['error_page_images']
+			);
+			return false;
+		}
+		return true;
+	}
 
-    protected function ___redirect($url)
-    {
-        Util::redirect($url);
-    }
+	protected function ___redirect($url)
+	{
+		Util::redirect($url);
+	}
 }

@@ -8,14 +8,14 @@ $i18n = [
 	'settings_menu' => 'Einstellungen',
 	'page_successful_removed' => 'Die Seite wurde erfolgreich gelöscht.',
 	'error_deleting_page' => 'Fehler beim Löschen der Seite.',
-    'no_page' => 'Es wurde keine Seite gefunden.',
-    'settings_page_header' => 'Systemeinstellungen',
-    'settings_page_text' => 'Scriptor verfolgt eine andere Vorgehensweise bei den Einstellungen, als Sie es vielleicht gewohnt sind: 
-       Alle Einstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
-       HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, sollten Sie die Parameter in der Datei 
-       <mark>scriptor-config.php</mark> nicht ändern. Verwenden Sie stattdessen die <mark>_custom.scriptor-config.php</mark> Datei, 
-       die sich im gleichen Verzeichnis befindet.<br><br>Beachten Sie auch, dass Sie die Datei vor der Verwendung in 
-       <mark>custom.scriptor-config.php</mark> umbenennen müssen (ohne den Unterstrich <mark>_</mark> Präfix).',
+	'no_page' => 'Es wurde keine Seite gefunden.',
+	'settings_page_header' => 'Systemeinstellungen',
+	'settings_page_text' => 'Scriptor verfolgt eine andere Vorgehensweise bei den Einstellungen, als Sie es vielleicht gewohnt sind: 
+	   Alle Einstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
+	   HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, sollten Sie die Parameter in der Datei 
+	   <mark>scriptor-config.php</mark> nicht ändern. Verwenden Sie stattdessen die <mark>_custom.scriptor-config.php</mark> Datei, 
+	   die sich im gleichen Verzeichnis befindet.<br><br>Beachten Sie auch, dass Sie die Datei vor der Verwendung in 
+	   <mark>custom.scriptor-config.php</mark> umbenennen müssen (ohne den Unterstrich <mark>_</mark> Präfix).',
 	'profile_menu' => 'Profil',
 	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche.',
 	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
@@ -56,18 +56,18 @@ $i18n = [
 	'template_field_infotext' => 'Jede Kombination von Buchstaben, Bindestrichen oder Unterstrichen (keine Leerzeichen).',
 	'published_label' => 'Veröffentlicht',
 	'page_edit_header' => 'Seite bearbeiten',
-    'page_create_header' => 'Neue Seite',
+	'page_create_header' => 'Neue Seite',
 
-    'header_image_label' => 'Bilder',
-    'header_image_infotext' => 'Laden Sie ein Bild hoch (nur Bilder mit den Endungen jpg, gif oder png sind erlaubt).',
-    'upload_add_files' => 'Bild auswählen',
-    'upload_start' => 'Hochladen',
-    'upload_cancel' => 'Abbrechen',
-    'upload_delete' => 'Löschen',    
-    'upload_placeholder' => '',
-    'error_page_images' => 'Fehler beim Bildupload',
-    'upload_name_heading' => 'Bildname:',
-    'upload_size_heading' => 'Bildgröße:',
+	'header_image_label' => 'Bilder',
+	'header_image_infotext' => 'Laden Sie ein Bild hoch (nur Bilder mit den Endungen jpg, gif oder png sind erlaubt).',
+	'upload_add_files' => 'Bild auswählen',
+	'upload_start' => 'Hochladen',
+	'upload_cancel' => 'Abbrechen',
+	'upload_delete' => 'Löschen',    
+	'upload_placeholder' => '',
+	'error_page_images' => 'Fehler beim Bildupload',
+	'upload_name_heading' => 'Bildname:',
+	'upload_size_heading' => 'Bildgröße:',
 	'error_page_title' => 'Bitte geben Sie einen Seitentitel ein.',
 	'error_page_name' => 'Bitte geben Sie einen anderen Artikel-Namen ein.',
 	'error_slug_reserved' => 'Dieser Name ist reserviert und kann nicht verwendet werden.',
@@ -77,8 +77,8 @@ $i18n = [
 	'parent_select_option' => 'Auswählen',
 	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',
 	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.',
-    'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
-    'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
+	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
+	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
 	'contact_developer' => 'Entwickler kontaktieren',
 	'dashboard_content' => '
 			<img src="theme/images/scriptor-dashboard.png">
@@ -117,10 +117,10 @@ $i18n = [
 			
 			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
 			
-            <h4>Deine Zugangsdaten für den Adminbereich</h4>
-            <mark><strong>(!) ACHUNG:</strong> Ändere das Standardpasswort beim ersten Login!</mark>
+			<h4>Deine Zugangsdaten für den Adminbereich</h4>
+			<mark><strong>(!) ACHUNG:</strong> Ändere das Standardpasswort beim ersten Login!</mark>
 			<p>User: <mark>admin</mark><br>
-            Password: <mark>gT5nLazzyBob</mark></p>
+			Password: <mark>gT5nLazzyBob</mark></p>
 			
 			<h3>Weitere Einstellungen</h3>
 			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>custom.scriptor-config.php</mark> Datei vor, diese 
