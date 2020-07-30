@@ -73,15 +73,15 @@ $config = [
 	 *
 	 * @var bool
 	 */
-    'protectCSRF' => true,
-    
-    /**
-     * Are sessions allowed? Typically boolean 'true', unless 
-     * provided a callable function that returns boolean.
-     * 
-     * @var bool|callable
-     */
-    'sessionAllow' => true,
+	'protectCSRF' => true,
+	
+	/**
+	 * Are sessions allowed? Typically boolean 'true', unless 
+	 * provided a callable function that returns boolean.
+	 * 
+	 * @var bool|callable
+	 */
+	'sessionAllow' => true,
 
 	/**
 	 * Maximum number of CSRF tokens allowed per user.
@@ -111,7 +111,7 @@ $config = [
 	 * 
 	 * @var bool
 	 */
-    'allowHtmlOutput' => false,
+	'allowHtmlOutput' => false,
 
 	/**
 	 * Installed Scriptor admin modules
@@ -217,16 +217,16 @@ $config = [
 			],
 			'description' => 'A default module for parsing markdown'
 		],
-    ],
-    
-    /**
+	],
+	
+	/**
 	 * Installed Scriptor hooks
 	 * 
-     * Also note the correct syntax, more info in: 
-     *  /data/settings/custom.scriptor-config.php
-     * 
-     * @var array
-     */ 
-    'hooks' => [],
+	 * Also note the correct syntax, more info in: 
+	 *  /data/settings/custom.scriptor-config.php
+	 * 
+	 * @var array
+	 */ 
+	'hooks' => [],
 
 ];

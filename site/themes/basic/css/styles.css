@@ -7,7 +7,7 @@ body {
 	font-size: 1.6rem;
 	text-rendering: optimizeLegibility;
 	font-smoothing: antialiased;
-    font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+	font-family: ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -16,7 +16,7 @@ body {
 	-webkit-text-size-adjust: none;
 	-webkit-touch-callout: none;
 	-webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 main {
@@ -78,7 +78,7 @@ header .brand-wrapper .brand a:hover {
 }
 
 h1, h2, h3, h4, h5, strong {
-    font-weight: 600;
+	font-weight: 600;
 }
 
 #page-header h1 {
@@ -240,7 +240,7 @@ a.btn {
 }
 
 #content blockquote p:last-child {
-    margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 #content p {

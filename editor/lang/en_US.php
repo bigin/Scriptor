@@ -8,14 +8,14 @@ $i18n = [
 	'settings_menu' => 'Settings',
 	'page_successful_removed' => 'The page was successfully deleted.',
 	'error_deleting_page' => 'Error deleting the page.',
-    'no_page' => 'No page found.',
-    'settings_page_header' => 'System Settings',
-    'settings_page_text' => 'Scriptor takes a different approach to settings than you might be used to:
-      The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br><br>
-      NOTE: If you want to keep the configuration settings permanently, you should not change the settings in 
-      <mark>scriptor-config.php</mark> file. Instead, use the <mark>_custom.scriptor-config.php</mark> file 
-      located in the same directory.<br><br>Also note, you must rename the file to 
-      <mark>custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
+	'no_page' => 'No page found.',
+	'settings_page_header' => 'System Settings',
+	'settings_page_text' => 'Scriptor takes a different approach to settings than you might be used to:
+	  The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br><br>
+	  NOTE: If you want to keep the configuration settings permanently, you should not change the settings in 
+	  <mark>scriptor-config.php</mark> file. Instead, use the <mark>_custom.scriptor-config.php</mark> file 
+	  located in the same directory.<br><br>Also note, you must rename the file to 
+	  <mark>custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 
@@ -56,17 +56,17 @@ $i18n = [
 	'template_field_infotext' => 'Any combination of letters, dashes or underscores (no spaces).',
 	'published_label' => 'Published',
 	'page_edit_header' => 'Edit page',
-    'page_create_header' => 'New page',
-    'upload_name_heading' => 'Name:',
-    'upload_size_heading' => 'Size:',
-    'header_image_label' => 'Images',
-    'header_image_infotext' => 'Upload an image (only images with the extensions jpg, gif or png are allowed).',
-    'upload_add_files' => 'Select picture',
-    'upload_start' => 'Upload',
-    'upload_cancel' => 'Cancel',
-    'upload_delete' => 'Delete',
-    'upload_placeholder' => '',
-    'error_page_images' => 'Error while uploading images',
+	'page_create_header' => 'New page',
+	'upload_name_heading' => 'Name:',
+	'upload_size_heading' => 'Size:',
+	'header_image_label' => 'Images',
+	'header_image_infotext' => 'Upload an image (only images with the extensions jpg, gif or png are allowed).',
+	'upload_add_files' => 'Select picture',
+	'upload_start' => 'Upload',
+	'upload_cancel' => 'Cancel',
+	'upload_delete' => 'Delete',
+	'upload_placeholder' => '',
+	'error_page_images' => 'Error while uploading images',
 	'error_page_title' => 'Please enter a page title.',
 	'error_page_name' => 'Please enter a different article name.',
 	'error_slug_reserved' => 'This name is reserved and cannot be used.',
@@ -76,8 +76,8 @@ $i18n = [
 	'parent_select_option' => 'Select option',
 	'error_deleting_first_page' => 'Error when deleting primary page. The page with ID 1, cannot be deleted.',
 	'error_remove_parent_page' => 'Error deleting the page, you cannot delete a page that contains children pages.',
-    'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
-    'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
+	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
+	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
 	'contact_developer' => 'Contact developer',
 	'dashboard_content' => '
 			<img src="theme/images/scriptor-dashboard.png">
@@ -116,10 +116,10 @@ $i18n = [
 			
 			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
 			
-            <h4>Your access data for the admin</h4>
-            <mark><strong>(!) NOTE:</strong> Change default password at first login.</mark>
+			<h4>Your access data for the admin</h4>
+			<mark><strong>(!) NOTE:</strong> Change default password at first login.</mark>
 			<p>User: <mark>admin</mark><br>
-            Password: <mark>gT5nLazzyBob</mark></p>
+			Password: <mark>gT5nLazzyBob</mark></p>
 			
 			<h3>Other settings</h3>
 			<p>All further settings are made in the <mark>custom.scriptor-config.php</mark> file, which is located in the 

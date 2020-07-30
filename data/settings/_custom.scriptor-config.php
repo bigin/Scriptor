@@ -26,24 +26,24 @@
 			],
 			'description' => 'Your module description'
 		]
-    ],
-    
-    'hooks' => [
-        // @var string - Hook name (hookable method)
-        'Pages::afterRenderEditorTemplateField' => [
-            [
-                // @var string|null - Name of the module 
-                'module' => 'YourModule', 
-                // @var string|closure - Module method that should be called
-                'method' => 'renderYourPageField'
-            ]
-        ],
-        // Next hook name ...
-        'Pages::afterSavePage' => [
-            [
-                'module' => 'YourModule',
-                'method' => 'saveYourCustomPage'
-            ]
-        ],
-    ]
+	],
+	
+	'hooks' => [
+		// @var string - Hook name (hookable method)
+		'Pages::afterRenderEditorTemplateField' => [
+			[
+				// @var string|null - Name of the module 
+				'module' => 'YourModule', 
+				// @var string|closure - Module method that should be called
+				'method' => 'renderYourPageField'
+			]
+		],
+		// Next hook name ...
+		'Pages::afterSavePage' => [
+			[
+				'module' => 'YourModule',
+				'method' => 'saveYourCustomPage'
+			]
+		],
+	]
 ]);*/

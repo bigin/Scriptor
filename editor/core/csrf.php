@@ -133,7 +133,7 @@ class CSRF
 	 *
 	 * @param $name
 	 * @param $value
-	 * @throws WireCSRFException if token not valid
+	 * @throws ErrorExceptionion if token not valid
 	 *
 	 * @return bool returns true or throws exception
 	 *

@@ -6,7 +6,7 @@ $base = dirname(dirname(__DIR__));
 require "$base/imanager.php";
 require "$base/data/settings/scriptor-config.php";
 if(file_exists("$base/data/settings/custom.scriptor-config.php")) { 
-    include "$base/data/settings/custom.scriptor-config.php";
+	include "$base/data/settings/custom.scriptor-config.php";
 }
 
 require __DIR__.'/scriptor.php';
@@ -21,9 +21,9 @@ $editor = Scriptor::getEditor();
 $editor->execute();
 
 if(file_exists("$base/$config[editor_template].php")) {
-    include "$base/$config[editor_template].php";
+	include "$base/$config[editor_template].php";
 } elseif(file_exists("$base/$config[admin_path]$config[editor_template].php")) {
-    include "$base/$config[admin_path]$config[editor_template].php";
+	include "$base/$config[admin_path]$config[editor_template].php";
 } else {
-    include "$base/$config[admin_path]theme/template.php";
+	include "$base/$config[admin_path]theme/template.php";
 }

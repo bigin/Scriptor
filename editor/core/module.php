@@ -73,17 +73,17 @@ class Module implements ModuleInterface
 	/**
 	 * @var bool $auth - Module authorization needed?
 	 */
-    protected $auth = true;
-    
-    /**
-     * @var null|object - Hook event
-     */
-    protected $event = null;
+	protected $auth = true;
+	
+	/**
+	 * @var null|object - Hook event
+	 */
+	protected $event = null;
 
 
 	public function execute(){}
 
-    public function checkAction(){}
+	public function checkAction(){}
 
 	/**
 	 * Init module class
@@ -100,20 +100,20 @@ class Module implements ModuleInterface
 		$this->siteUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
 		$this->sanitizer = $this->imanager->sanitizer;
-        $this->segments = $this->input->urlSegments;
-        $this->event = $this->createEvent();
+		$this->segments = $this->input->urlSegments;
+		$this->event = $this->createEvent();
 
 		if(!isset($_SESSION['msgs'])) $_SESSION['msgs'] = [];
-        $this->msgs = & $_SESSION['msgs'];
-    }
-    
-    public function createEvent()
-    {
-        $event = new \stdClass;
-        $event->return = null;
-        $event->replace = false;
-        return $event;
-    }
+		$this->msgs = & $_SESSION['msgs'];
+	}
+	
+	public function createEvent()
+	{
+		$event = new \stdClass;
+		$event->return = null;
+		$event->replace = false;
+		return $event;
+	}
 
 	/**
 	 * Loads and returns editor module
@@ -158,57 +158,57 @@ class Module implements ModuleInterface
 			return $currentModule;
 		}
 		return new $class();
-    }
-    
-    /**
+	}
+	
+	/**
 	 * Provides the gateway for calling hooks in Scriptor
 	 * 
 	 * When a non-existant method is called, this checks to 
-     * see if any hooks have been defined and sends the call 
-     * to them. 
-     * 
-     * @param string - The method to be called
-     * @param array - Arguments
-     */
-    public function __call($method, array $args = [])
-    {
-        // Call hookable method
-        if(method_exists($this, "___$method")) {
+	 * see if any hooks have been defined and sends the call 
+	 * to them. 
+	 * 
+	 * @param string - The method to be called
+	 * @param array - Arguments
+	 */
+	public function __call($method, array $args = [])
+	{
+		// Call hookable method
+		if(method_exists($this, "___$method")) {
 
-            $this->event->args = & $args;
+			$this->event->args = & $args;
 
-            // Execute before hook
-            if(Scriptor::execHook($this, $method, $this->event->args, 'before')) {
-                if($this->event->return !== null || $this->event->replace) {
-                    $return = $this->event->return;
-                    $this->event = $this->createEvent();
-                    return $return;
-                }
-            }
-            // Hooked function call
-            $return = call_user_func_array(array($this, "___$method"), $this->event->args);
-        
-            // Execute after hook
-            if(Scriptor::execHook($this, $method, $return, 'after')) {
-                if($this->event->return !== null) {
-                    $return = $this->event->return;
-                    $this->event = $this->createEvent();
-                    return $return;
-                }
-            }
-            
-            return $return;
-        }
-        else {
-            trigger_error('The called method '.$method.' was not found', E_USER_ERROR);
-        }
-    }
+			// Execute before hook
+			if(Scriptor::execHook($this, $method, $this->event->args, 'before')) {
+				if($this->event->return !== null || $this->event->replace) {
+					$return = $this->event->return;
+					$this->event = $this->createEvent();
+					return $return;
+				}
+			}
+			// Hooked function call
+			$return = call_user_func_array(array($this, "___$method"), $this->event->args);
+		
+			// Execute after hook
+			if(Scriptor::execHook($this, $method, $return, 'after')) {
+				if($this->event->return !== null) {
+					$return = $this->event->return;
+					$this->event = $this->createEvent();
+					return $return;
+				}
+			}
+			
+			return $return;
+		}
+		else {
+			trigger_error('The called method '.$method.' was not found', E_USER_ERROR);
+		}
+	}
 
 	/**
 	 * Adds heder resources to the HeaderResources Buffer.
-     * 
-     * @param string - Can currently only be 'js' or 'css'
-     * @param $url - resource URL
+	 * 
+	 * @param string - Can currently only be 'js' or 'css'
+	 * @param $url - resource URL
 	 */
 	protected function addHeaderResource($context, $url)
 	{
@@ -222,7 +222,7 @@ class Module implements ModuleInterface
 
 	/**
 	 * Returns header resources 
-     * e.g. used in theme header 
+	 * e.g. used in theme header 
 	 * 
 	 * @return null|string
 	 */
@@ -237,15 +237,15 @@ class Module implements ModuleInterface
 		return $result;
 	}
 
-    /**
-     * Comparison function 
-     * used in sorting methods
-     * 
-     * @param array $a Operand
-     * @param array $b Operand
-     * 
-     * @return integer
-     */
+	/**
+	 * Comparison function 
+	 * used in sorting methods
+	 * 
+	 * @param array $a Operand
+	 * @param array $b Operand
+	 * 
+	 * @return integer
+	 */
 	public static function order($a, $b)
 	{
 		if($a['position'] == $b['position']) return 0;
@@ -254,9 +254,9 @@ class Module implements ModuleInterface
 
 	/**
 	 * Generates default messages markup and 
-     * flushes the message buffer.
-     * 
-     * @return string
+	 * flushes the message buffer.
+	 * 
+	 * @return string
 	 */
 	protected function renderMessages()
 	{
@@ -273,15 +273,15 @@ class Module implements ModuleInterface
 			unset($_SESSION['msgs']);
 			$_SESSION['msgs'] = null;
 		}
-    }
-    
-    public function getProperty($name)
-    {
-        return isset($this->$name) ? $this->$name : null;
-    }
+	}
+	
+	public function getProperty($name)
+	{
+		return isset($this->$name) ? $this->$name : null;
+	}
 
-    public function setProperty($name, $value)
-    {
-        if(property_exists($this, $name)) $this->$name = $value;
-    }
+	public function setProperty($name, $value)
+	{
+		if(property_exists($this, $name)) $this->$name = $value;
+	}
 }

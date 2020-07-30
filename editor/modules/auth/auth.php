@@ -19,7 +19,7 @@ class Auth extends Module
 		$this->csrf = Scriptor::getCSRF();
 	}
 
-    /**
+	/**
 	 * Default execute module method
 	 */
 	public function execute()
@@ -31,9 +31,9 @@ class Auth extends Module
 		}
 		$this->pageTitle = 'Login - Scriptor';
 		$this->pageContent = $this->renderLoginForm();
-    }
-    
-    /**
+	}
+	
+	/**
 	 * Checks user actions
 	 */
 	public function checkAction()
@@ -44,9 +44,9 @@ class Auth extends Module
 		} elseif($this->segments->get(1) == 'logout') { 
 			$this->logoutAction(); 
 		}
-    }
-    
-    /**
+	}
+	
+	/**
 	 * Login process
 	 * This method checks whether the user input is correct and
 	 * performs the login process.
