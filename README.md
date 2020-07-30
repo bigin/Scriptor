@@ -18,7 +18,7 @@ by a mandatory template engine.
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- PHP 7 or newer (7.3+ preferable).   
+- PHP 7.2 or newer (7.3+ preferable).   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
@@ -26,36 +26,36 @@ by a mandatory template engine.
 ### Installing from zip
 1. Click `Clone or download`
 2. Unpack the archive and rename the `Scriptor-master` folder as you like.
-3. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
+3. Rename the file `/data/settings/_custom.scriptor-config.php` to `custom.scriptor-config.php` (without `_` prefix/underscore).
+4. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
     
-> NOTE: If you want to use Scriptor in a subdirectory, you might have to adjust the .htaccess file.
-> If you rename the `editor` directory, you have to adjust the config.php as well.
+> NOTE: You might have to adjust the .htaccess file.
     
 ### Admin
 Once installed, to access the administrator area of your Scriptor site go to your websites homepage, then simply add the text `editor/` to the URL in your browsers, for example: 
 ```
-https://yourwebsite.com/editor/
+https://your-website.com/editor/
 ```
 
 If you are using Scriptor in a subdirectory: 
 ```
-https://yourwebsite.com/subdirectory/editor/
+https://your-website.com/subdirectory/editor/
 ```
 
 ### Admin initial login  
-`Change password at first login!`  
+`(!) Change password at first login!`  
 > User: `admin`   
 > Password: `gT5nLazzyBob`
 
 
 ### More info
 Official website: https://scriptor-cms.info   
-Demo (default template): https://demos.ehret-studio.com/scriptor/
+Demo (default installation): https://demos.ehret-studio.com/scriptor/
   
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
 ### Changelog
-- `1.4.5` `NEW: File upload field as an integral part of the core application.`
-
+- `1.4.6` `NEW`: `This core version adds the ability to hook into the Editor methods.`   
+- `1.4.5` `NEW`: `File upload field as an integral part of the core application.`

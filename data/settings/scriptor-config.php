@@ -3,7 +3,7 @@
  * Static site configuration file.
  * NOTE: The variables in this file are overwritten during 
  * the update. Instead, use custom.scriptor-config.php for 
- * your specific configuration options.
+ * your custom configuration options.
  * 
  * @var array
  */
@@ -111,7 +111,7 @@ $config = [
 	 * 
 	 * @var bool
 	 */
-	'allowHtmlOutput' => false,
+    'allowHtmlOutput' => false,
 
 	/**
 	 * Installed Scriptor admin modules
@@ -169,7 +169,7 @@ $config = [
 			'menu' => 'logout_menu',
 			'position' => 0,
 			'active' => true,
-			'auth' => false, // Authorization will performed by module  itself
+			'auth' => false, // Authorization will performed by module itself
 			'autoinit' => true,
 			'path' => 'modules/auth/auth',
 			'class' => 'Auth',
@@ -217,5 +217,16 @@ $config = [
 			],
 			'description' => 'A default module for parsing markdown'
 		],
-	]
+    ],
+    
+    /**
+	 * Installed Scriptor hooks
+	 * 
+     * Also note the correct syntax, more info in: 
+     *  /data/settings/custom.scriptor-config.php
+     * 
+     * @var array
+     */ 
+    'hooks' => [],
+
 ];
