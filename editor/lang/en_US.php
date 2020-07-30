@@ -8,10 +8,14 @@ $i18n = [
 	'settings_menu' => 'Settings',
 	'page_successful_removed' => 'The page was successfully deleted.',
 	'error_deleting_page' => 'Error deleting the page.',
-	'no_page' => 'No page found.',
-	'settings_page_text' => 'The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br>
-	NOTE: If you prefer to have a permanent configuration, create a <mark>custom.scriptor-config.php</mark> 
-	file in the same directory.',
+    'no_page' => 'No page found.',
+    'settings_page_header' => 'System Settings',
+    'settings_page_text' => 'Scriptor takes a different approach to settings than you might be used to:
+      The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br><br>
+      NOTE: If you want to keep the configuration settings permanently, you should not change the settings in 
+      <mark>scriptor-config.php</mark> file. Instead, use the <mark>_custom.scriptor-config.php</mark> file 
+      located in the same directory.<br><br>Also note, you must rename the file to 
+      <mark>custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 
@@ -112,11 +116,10 @@ $i18n = [
 			
 			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
 			
-			<h4>Your access data for the admin</h4>
+            <h4>Your access data for the admin</h4>
+            <mark><strong>(!) NOTE:</strong> Change default password at first login.</mark>
 			<p>User: <mark>admin</mark><br>
-			Password: <mark>gT5nLazzyBob</mark></p>
-			
-			<p>For security reasons, please change these immediately after installation.</p>
+            Password: <mark>gT5nLazzyBob</mark></p>
 			
 			<h3>Other settings</h3>
 			<p>All further settings are made in the <mark>custom.scriptor-config.php</mark> file, which is located in the 

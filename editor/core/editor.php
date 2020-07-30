@@ -38,9 +38,7 @@ class Editor extends Module
 					'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
 				]
 			);
-			if($this->module) {
-				$this->module->execute();
-			}
+			if($this->module) $this->module->execute();
 		}
 		// Module not found
 		else {

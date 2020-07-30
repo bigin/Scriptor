@@ -9,7 +9,7 @@ class Scriptor
     /**
      * Application version
      */
-    const VERSION = '1.4.5';
+    const VERSION = '1.4.6';
 
     /**
      * @var array $config - Configuration parameter
@@ -46,6 +46,9 @@ class Scriptor
      */
     private static $editor = null;
 
+
+    private static $hooked = [];
+
     /**
      * @var array $headerResources - An array of header resources
 	 */
@@ -60,6 +63,7 @@ class Scriptor
         uasort($config['modules'], array('Scriptor\Module', 'order'));
         self::$config = $config;
         self::$imanager = \imanager();
+        self::load(__DIR__.'/helper.php');
         include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
         self::$i18n = $i18n;
     }
@@ -94,8 +98,13 @@ class Scriptor
     }
 
     /**
+     * Is used to setup custom Editor module.
      * 
-     * @return void
+     * This method can be used to replace the default 
+     * Editor module with custom ones.
+     * 
+     * @var string Editor module name
+     * @var bool - Flag; Used to force initialization
      */
     public static function setEditor($editor, $init = false)
     {
@@ -123,6 +132,87 @@ class Scriptor
             if($init) self::$editor->init();
         }
         return self::$editor;
+    }
+
+    /**
+     * Executes Hook
+     *
+     * @since 1.4.6 
+     *
+     * @param $object 
+     * @param string $method - Method or property to run hooks for.
+     * @param string $args - Method arguments.
+     * @param string $type - May be any one of the following: 
+	 *  - '': for hooked methods (default)
+	 *  - before: only run before hooks and do nothing else
+	 *  - after:  only run after hooks and do nothing else
+     */
+    public static function execHook($object, $method = '', $args = [], $type = '') 
+    {
+        $result = null;
+        // Check method hooked?
+        $method = !empty($method) ? ucfirst($method) : '';
+        $hookName = Helper::rawClassName(get_class($object)).(!empty($method) ? '::'.$type.ucfirst($method) : '');
+        // No hook to execute, just exit
+        if(!isset(self::$config['hooks'][$hookName])) return;
+        // Get installed hooks
+        $hooks = self::$config['hooks'][$hookName];
+        // Invalid hook specification
+        if(!is_array($hooks) || empty($hooks)) {
+            trigger_error('Invalid hook formatting specification', E_USER_WARNING);
+            return false;
+        }
+
+        $event = $object->getProperty('event');
+        $event->object = $object;
+        $event->method = $method;
+        if($type !== 'after') { 
+            $event->args = $args;
+            $event->return = null;
+        } else { 
+            $event->return = $args; 
+        }
+        $event->type = $type;
+        $event->replace = false;
+
+        foreach($hooks as $hook) {
+            // If hooked class instance already exists, just call the method
+            $class = '';
+            if(isset(self::$hooked[$hookName])) {
+                $class = Helper::rawClassName(get_class(self::$hooked[$hookName]));
+            }
+
+            if(isset(self::$hooked[$hookName]) && $class == $hook['module']) {
+                $result = self::$hooked[$hookName]->{$hook['method']}($event);
+                return true;
+            } else {
+                // Anonymous class / closure ...
+                if(!isset($hook['module']) || !$hook['module']) {                    
+                    // closure
+                    if(Helper::isCallable($hook['method'])) {
+                        $result = $hook['method']($event);
+                        return true;
+                    } // class
+                    elseif((new \ReflectionClass($hook['method']))->isAnonymous()) {
+                        $object->extension = $hook['method'];
+                        return true;
+                    }
+                }
+                // Module method 
+                else {
+                    self::$hooked[$hookName] = $object->loadModule($hook['module']);
+                    if(!self::$hooked[$hookName]) {
+                        trigger_error("Module $hook[module] not installed or is disabled", E_USER_WARNING);
+                        return false;
+                    }
+                    $result = self::$hooked[$hookName]->{$hook['method']}($event);
+                    return true;
+                }
+            }
+        }
+        // Currently we use no return apart from $event->return
+        //return $result;
+        return false;
     }
 
     /**

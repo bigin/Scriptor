@@ -8,10 +8,14 @@ $i18n = [
 	'settings_menu' => 'Einstellungen',
 	'page_successful_removed' => 'Die Seite wurde erfolgreich gelöscht.',
 	'error_deleting_page' => 'Fehler beim Löschen der Seite.',
-	'no_page' => 'Es wurde keine Seite gefunden.',
-	'settings_page_text' => 'Die Einstellungen finden Sie unter <mark>data/settings/scriptor-config.php</mark>.<br>
-	Hinweis: Wenn Sie eine beständige Konfiguration wünschen verwenden erstellen Sie eine
-	<mark>custom.scriptor-config.php</mark> Datei im selben Verzeichnis.',
+    'no_page' => 'Es wurde keine Seite gefunden.',
+    'settings_page_header' => 'Systemeinstellungen',
+    'settings_page_text' => 'Scriptor verfolgt eine andere Vorgehensweise bei den Einstellungen, als Sie es vielleicht gewohnt sind: 
+       Alle Einstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
+       HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, sollten Sie die Parameter in der Datei 
+       <mark>scriptor-config.php</mark> nicht ändern. Verwenden Sie stattdessen die <mark>_custom.scriptor-config.php</mark> Datei, 
+       die sich im gleichen Verzeichnis befindet.<br><br>Beachten Sie auch, dass Sie die Datei vor der Verwendung in 
+       <mark>custom.scriptor-config.php</mark> umbenennen müssen (ohne den Unterstrich <mark>_</mark> Präfix).',
 	'profile_menu' => 'Profil',
 	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche.',
 	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
@@ -113,11 +117,10 @@ $i18n = [
 			
 			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
 			
-			<h4>Deine Zugangsdaten für den Adminbereich</h4>
+            <h4>Deine Zugangsdaten für den Adminbereich</h4>
+            <mark><strong>(!) ACHUNG:</strong> Ändere das Standardpasswort beim ersten Login!</mark>
 			<p>User: <mark>admin</mark><br>
-			Password: <mark>gT5nLazzyBob</mark></p>
-			
-			<p>Bitte ändere diese aus Sicherheitsgründen gleich nach der Installation.</p>
+            Password: <mark>gT5nLazzyBob</mark></p>
 			
 			<h3>Weitere Einstellungen</h3>
 			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>custom.scriptor-config.php</mark> Datei vor, diese 
