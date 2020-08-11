@@ -60,10 +60,10 @@ class Scriptor
 	public static function build($config)
 	{
 		self::$startTime = microtime(true);
-		uasort($config['modules'], array('Scriptor\Module', 'order'));
+		self::load(__DIR__.'/helper.php');
+		uasort($config['modules'], array('Scriptor\Helper', 'order'));
 		self::$config = $config;
 		self::$imanager = \imanager();
-		self::load(__DIR__.'/helper.php');
 		include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
 		self::$i18n = $i18n;
 	}
