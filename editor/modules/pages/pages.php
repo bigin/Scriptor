@@ -60,7 +60,7 @@ class Pages extends Module
 	/**
 	 * Checks user actions
 	 */
-	public function checkAction()
+	public function ___checkAction()
 	{
 		if($this->input->get->page) {
 			$this->page = $this->pages->getItem((int)$this->input->get->page);

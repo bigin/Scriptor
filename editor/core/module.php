@@ -83,7 +83,11 @@ class Module implements ModuleInterface
 
 	public function execute(){}
 
-	public function checkAction(){}
+	/**
+	 * Check if this is really needed, if not remove it completely.
+	 * NOTE: that this method is also commented out in ModuleInterface.
+	 */
+	//public function checkAction(){}
 
 	/**
 	 * Init module class
@@ -235,21 +239,6 @@ class Module implements ModuleInterface
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Comparison function 
-	 * used in sorting methods
-	 * 
-	 * @param array $a Operand
-	 * @param array $b Operand
-	 * 
-	 * @return integer
-	 */
-	public static function order($a, $b)
-	{
-		if($a['position'] == $b['position']) return 0;
-		return ($a['position'] < $b['position']) ? -1 : 1;
 	}
 
 	/**

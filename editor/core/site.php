@@ -137,7 +137,7 @@ class Site extends Module
 		if(!$this->lastSegment) {
 			$this->page = $this->pages->getItem(1);
 			if(!$this->page || !$this->page->active) { return $this->throw404(); }
-			$this->checkAction();
+			//$this->checkAction();
 			$this->title = $this->page->name;
 			foreach($this->page as $key => $param) {
 				$this->$key = $param;

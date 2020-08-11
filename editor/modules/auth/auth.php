@@ -17,6 +17,8 @@ class Auth extends Module
 		$this->userIP = $this->getIP();
 		$this->templateParser = new TemplateParser();
 		$this->csrf = Scriptor::getCSRF();
+
+		if(Scriptor::execHook($this) && $this->event->replace) return;
 	}
 
 	/**
@@ -36,7 +38,7 @@ class Auth extends Module
 	/**
 	 * Checks user actions
 	 */
-	public function checkAction()
+	public function ___checkAction()
 	{
 		// Check log-in form user input
 		if(!isset($_SESSION['loggedin']) || true !== $_SESSION['loggedin']) {
