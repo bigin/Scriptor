@@ -2,8 +2,7 @@
 
 # Scriptor
 
-_Scriptor is a simple flat-file CMS, based on [ItemManager](https://github.com/bigin/ItemManager-3) - 
-decoupled and reusable PHP library for web applications._   
+_Scriptor is a simple flat-file CMS_   
 
 ## Features   
 Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
@@ -39,7 +38,7 @@ by a mandatory template engine.
   – Replace: /index.php with the new version   
   – Replace: /imanager.php with the new version   
   – Replace: /data/datasets/buffers/fields/1.fields.php with the new version   
-  – Replace: /data/settings/scriptor-config.php with the new version    
+  – Replace: /data/settings/scriptor-config.php with the new version   
 
   Your site is now upgraded, test that everything works.
 

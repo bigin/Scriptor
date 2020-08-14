@@ -40,6 +40,7 @@
 		</div>
 		<!-- The table listing the files available for upload/download -->
 		<table role="presentation" class="table table-striped highlight"><tbody class="files"></tbody></table>
+		<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 	</div>
 </div>
 <!-- The blueimp Gallery widget -->
@@ -58,32 +59,31 @@
 	<tr class="template-upload fade">
 		<td>
 			<input class="pos" type="hidden" name="position_[[id]][{%=file.position%}]" value="{%=file.name%}">
-			<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 		</td>
 		<td>
 			<span class="preview"></span>
 		</td>
 		<td>
 			<p class="name"><span class="heading">[[name_heading]] {%=file.name%}</span></p>
-			<p class="error-wrapper"><strong class="error text-danger"></strong></p>
-			<br>
-			<p class="name size">Processing...</p>
-			<div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-				<div class="progress-bar progress-bar-success" style="width:0%;"></div>
-			</div>
-			<p class="name">
-			{% if (!i && !o.options.autoUpload) { %}
-			<button class="btn btn-primary start" disabled>
-				<i class="fa fa-upload"></i> [[start_upload]]
-			</button>
-			{% } %}
-			{% if (!i) { %}
-			<button class="btn btn-warning cancel">
-				<i class="fa fa-times"></i> [[cancel_upload]]
-			</button>
-			{% } %}
-			</p>
-		</td>
+	        <p class="error-wrapper"><strong class="error text-danger"></strong></p>
+            <br>
+            <p class="name size">Processing...</p>
+	        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+		        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+	        </div>
+            <p class="name">
+            {% if (!i && !o.options.autoUpload) { %}
+            <button class="btn btn-primary start" disabled>
+                <i class="fa fa-upload"></i> [[start_upload]]
+            </button>
+            {% } %}
+            {% if (!i) { %}
+            <button class="btn btn-warning cancel">
+                <i class="fa fa-times"></i> [[cancel_upload]]
+            </button>
+            {% } %}
+            </p>
+	    </td>
 	</tr>
 	{% } %}
 </script>
@@ -94,7 +94,6 @@
 		<td>
 			<i class="fa fa-hand-o-up"></i>
 			<input class="pos" type="hidden" name="position_[[id]][{%=file.position%}]" value="{%=file.name%}">
-			<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 		</td>
 		<td>
 			<span class="preview">
@@ -115,11 +114,11 @@
 			</p>
 			{% if (file.error) { %}
 				<div><span class="label label-danger">Error:</span> {%=file.error%}</div>
-			{% } %}
-			<br>
-			<p class="name"><span class="heading size">[[size_heading]] {%=o.formatFileSize(file.size)%}</span></p>
-			<p class="name">
-			{% if (file.deleteUrl) { %}
+	        {% } %}
+            <br>
+            <p class="name"><span class="heading size">[[size_heading]] {%=o.formatFileSize(file.size)%}</span></p>
+            <p class="name">
+            {% if (file.deleteUrl) { %}
 				<button class="btn btn-danger delete" data-type="{%=file.deleteType%}"
 					data-url="{%=file.deleteUrl%}[[deleteurl]]"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
 					<i class="fa fa-trash"></i> <span>[[delete_upload]]</span>
@@ -130,7 +129,7 @@
 					<i class="fa fa-times"></i>
 				</button>
 			{% } %}
-			</p>
+            </p>
 		</td>
 	</tr>
 {% } %}
