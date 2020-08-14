@@ -11,6 +11,8 @@ class Profile extends Module
 		parent::init();
 		$this->users = $this->imanager->getCategory('name=Users');
 		$this->csrf = Scriptor::getCSRF();
+
+		if(Scriptor::execHook($this) && $this->event->replace) return;
 	 }
 
 	/**
@@ -32,7 +34,7 @@ class Profile extends Module
 	/**
 	 * Checks user actions
 	 */
-	public function checkAction()
+	public function ___checkAction()
 	{
 		// Just redirect to profile view
 		if($this->segments->get(0) == 'profile' && !$this->segments->get(1)) {
@@ -46,7 +48,7 @@ class Profile extends Module
 		}
 	}
 
-	private function checkProfileData($userid)
+	private function ___checkProfileData($userid)
 	{
 		$this->user = $this->users->getItem((int)$userid);
 
@@ -92,7 +94,7 @@ class Profile extends Module
 		return true;
 	}
 
-	private function saveProfileData()
+	private function ___saveProfileData()
 	{
 		if($this->user->save()) {
 			$this->msgs[] = array(
@@ -105,7 +107,7 @@ class Profile extends Module
 		return false;
 	}
 
-	private function renderProfileEditor($userid)
+	private function ___renderProfileEditor($userid)
 	{
 		$user = $this->user;
 		if(!$user) { $user = $this->users->getItem((int)$userid); }

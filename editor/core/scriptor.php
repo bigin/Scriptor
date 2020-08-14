@@ -150,6 +150,7 @@ class Scriptor
 	public static function execHook($object, $method = '', $args = [], $type = '') 
 	{
 		$result = null;
+		$return = false;
 		// Check method hooked?
 		$method = !empty($method) ? ucfirst($method) : '';
 		$hookName = Helper::rawClassName(get_class($object)).(!empty($method) ? '::'.$type.ucfirst($method) : '');
@@ -184,18 +185,18 @@ class Scriptor
 
 			if(isset(self::$hooked[$hookName]) && $class == $hook['module']) {
 				$result = self::$hooked[$hookName]->{$hook['method']}($event);
-				return true;
+				$return = true;
 			} else {
 				// Anonymous class / closure ...
 				if(!isset($hook['module']) || !$hook['module']) {                    
 					// closure
 					if(Helper::isCallable($hook['method'])) {
 						$result = $hook['method']($event);
-						return true;
+						$return = true;
 					} // class
 					elseif((new \ReflectionClass($hook['method']))->isAnonymous()) {
 						$object->extension = $hook['method'];
-						return true;
+						$return = true;
 					}
 				}
 				// Module method 
@@ -203,16 +204,16 @@ class Scriptor
 					self::$hooked[$hookName] = $object->loadModule($hook['module']);
 					if(!self::$hooked[$hookName]) {
 						trigger_error("Module $hook[module] not installed or is disabled", E_USER_WARNING);
-						return false;
+						$return = false;
 					}
 					$result = self::$hooked[$hookName]->{$hook['method']}($event);
-					return true;
+					$return = true;
 				}
 			}
 		}
 		// Currently we use no return apart from $event->return
 		//return $result;
-		return false;
+		return $return;
 	}
 
 	/**
