@@ -8,7 +8,7 @@ Options +SymLinksIfOwnerMatch
 #RewriteBase /
 
 # Allow harmless files
-RewriteCond %{REQUEST_URI} !\.(?:css|js|jpe?g|gif|png)$
+RewriteCond %{REQUEST_URI} !\.(?:css|js|map|jpe?g|gif|png|svg|webp)$
 # Allow file upoad handler
 RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$
 # Block access to any htaccess files

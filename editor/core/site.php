@@ -206,7 +206,7 @@ class Site extends Module
 		return  $return;
 	}
 
-	public function render($element)
+	public function ___render($element)
 	{
 		$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
 
