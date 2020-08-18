@@ -48,7 +48,7 @@ class Profile extends Module
 		}
 	}
 
-	private function ___checkProfileData($userid)
+	protected function ___checkProfileData($userid)
 	{
 		$this->user = $this->users->getItem((int)$userid);
 
@@ -94,7 +94,7 @@ class Profile extends Module
 		return true;
 	}
 
-	private function ___saveProfileData()
+	protected function ___saveProfileData()
 	{
 		if($this->user->save()) {
 			$this->msgs[] = array(
@@ -107,7 +107,7 @@ class Profile extends Module
 		return false;
 	}
 
-	private function ___renderProfileEditor($userid)
+	protected function ___renderProfileEditor($userid)
 	{
 		$user = $this->user;
 		if(!$user) { $user = $this->users->getItem((int)$userid); }
