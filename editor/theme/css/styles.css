@@ -442,8 +442,7 @@ label.required:after {
 	border: none;
 	color: inherit;
 	padding: .2em;
-	background: #f5f5f5 !important;
-
+	background: #f5f5f5;
 }
 
 .page-wrapper pre, #page-text pre {
