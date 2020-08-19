@@ -26,6 +26,8 @@ class Pages extends Module
 		'editor'
 	];
 
+	public $jsConfig;
+
 	public function init()
 	{
 		parent::init();
@@ -121,8 +123,11 @@ class Pages extends Module
 			echo $this->renderEditorActionFields($page);
 			?>
 		</form>
-
-		<?php return ob_get_clean();
+		<?php 
+		$this->jsConfig = $this->buildJsConfig([
+			'allowHtmlOutput' => $this->config['allowHtmlOutput']
+		]);
+		return ob_get_clean();
 	}
 	
 	protected function ___renderEditorTitleField($page)
@@ -151,7 +156,7 @@ class Pages extends Module
 		ob_start(); ?>
 		<div class="form-control">
 			<label class="required" for="markdown"><?php echo $this->i18n['content_label']; ?></label>
-			<textarea id="markdown" name="content" onkeyup="auto_grow(this)"><?php echo isset($page->content) ? $page->content : ''; ?></textarea>
+			<textarea id="markdown" name="content"><?php echo isset($page->content) ? $page->content : ''; ?></textarea>
 		</div>
 		<?php return ob_get_clean();
 	}
@@ -343,12 +348,13 @@ class Pages extends Module
 			'UPLOADS_URL' => dirname($this->siteUrl).'/data/uploads/',
 			'IMAGES_URL' => dirname($this->siteUrl)."/data/uploads/$imgPath",
 		]);
-		
-		if(true === $this->config['allowHtmlOutput']) {
-			$content = htmlspecialchars_decode($content);
-			//$parsedown->setSafeMode(true);
-		}
+
 		return $parsedown->text($content);
+	}
+
+	protected function buildJsConfig(array $config) 
+	{
+		return '<script>const editConf = '.json_encode($config).'</script>';
 	}
 
 	protected function renumberPages()

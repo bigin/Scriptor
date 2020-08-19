@@ -428,13 +428,22 @@ label.required:after {
 }
 
 .page-wrapper code, .page-wrapper pre, #page-text code, #page-text pre {
-	font-family: Consolas,"Liberation Mono",Menlo,Courier,monospace;
+	font-family: 'Source Code Pro',monospace !important;
+	text-shadow: 0 1px white;
 	direction: ltr;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	font-size: 14px;
+	line-height: 1.8em;
+	vertical-align: middle;
 	margin: 0;
 	border: none;
 	color: inherit;
-	font-size: .95em;
-	background-color: #f4f4f4;
+	padding: .2em;
+	background: #f5f5f5 !important;
+
 }
 
 .page-wrapper pre, #page-text pre {

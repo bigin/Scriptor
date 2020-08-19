@@ -42,6 +42,7 @@
 		</div>
 	</footer>
 </main>
+<?php echo $editor->getProperty('jsConfig'); ?>
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/remarkable/remarkable.min.js"></script>
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/prism.js"></script>
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/editor.js"></script>
