@@ -1,4 +1,4 @@
-![](https://demos.ehret-studio.com/scriptor/data/uploads/scriptor-dashboard-github.png)
+![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png)
 
 # Scriptor
 
