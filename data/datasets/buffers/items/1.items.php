@@ -8,8 +8,8 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1596100310,
-     'content' => '![]([[IMAGES_URL]]dashboard-screen740.png)    
+     'updated' => 1597921708,
+     'content' => '![]([[IMAGES_URL]]scriptor-dashboard.png)    
 
 ### Iove oscula propositum acerris iusque
 
@@ -67,7 +67,7 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.',
     array (
       0 => 
       Imanager\FileuploadFieldValue::__set_state(array(
-         'name' => 'dashboard-screen740.png',
+         'name' => 'scriptor-dashboard.png',
          'path' => 'data/uploads/1.1.6/',
          'title' => '',
          'position' => 0,
