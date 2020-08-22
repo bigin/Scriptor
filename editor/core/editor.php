@@ -69,7 +69,7 @@ class Editor extends Module
 			$this->i18n['error_module_not_found'], [
 			'module' => $this->imanager->sanitizer->pageName($this->segments->get(0))
 		]);
-		$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
+		$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><span>'.
 			$this->i18n['error_module'].'</span></li>';	
 	}
 }

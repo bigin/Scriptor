@@ -45,15 +45,15 @@ class Pages extends Module
 		if($this->segments->get(0) == 'pages' && !$this->segments->get(1)) {
 			$this->pageTitle = 'Page list - Scriptor';
 			$this->pageContent = $this->renderPageList();
-			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a></li><li><span>'.
+			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><span>'.
 				$this->i18n['pages_menu'].'</span></li>';
 		}
 		// Page editor
 		elseif($this->segments->get(0) == 'pages' && $this->segments->get(1) == 'edit') {
 			$this->pageTitle = 'Page editor - Scriptor';
 			$this->pageContent = $this->renderEditorPage();
-			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a></li><li><a href="../">'.
-				$this->i18n['pages_menu'].'</a></li><li>'. (($this->page) ?
+			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><a href="../">'.
+				$this->i18n['pages_menu'].'</a><i class="gg-chevron-right"></i></li><li>'. (($this->page) ?
 					'<span>'.$this->i18n['pages_edit_menu'].'</span>' : '<span>'.
 					$this->i18n['pages_create_menu']).'</span></li>';
 		}
@@ -104,7 +104,7 @@ class Pages extends Module
 		<div id="screen" class="modal">
 			<!-- Modal content -->
 			<div id="screen-content">
-				<span class="close">&times;</span>
+				<span class="close"><i class="gg-close"></i></span>
 				<div id="page-text"></div>
 			</div>
 		</div>
@@ -145,7 +145,7 @@ class Pages extends Module
 		ob_start(); ?>
 		<div class="form-control">
 			<label for="slug"><?php echo $this->i18n['name_label']; ?></label>
-			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['name_field_infotext'] ?></p>
+			<p class="info-text i-wrapp"><i class="gg-danger"></i><?php echo $this->i18n['name_field_infotext'] ?></p>
 			<input name="slug" id="slug" type="text" value="<?php echo isset($page->slug) ? $page->slug : ''; ?>">
 		</div>
 		<?php return ob_get_clean();
@@ -166,7 +166,7 @@ class Pages extends Module
 		ob_start(); ?>
 		<div class="form-control">
 			<label><?php echo $this->i18n['header_image_label']; ?></label>
-			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php echo $this->i18n['header_image_infotext']; ?></p>
+			<p class="info-text i-wrapp"><i class="gg-danger"></i><?php echo $this->i18n['header_image_infotext']; ?></p>
 			<?php
 			$labels = array(
 				'add_files' => $this->i18n['upload_add_files'],
@@ -237,7 +237,7 @@ class Pages extends Module
 		ob_start(); ?>
 		<div class="form-control">
 			<label for="template"><?php echo $this->i18n['template_label']; ?></label>
-			<p class="info-text"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> <?php
+			<p class="info-text i-wrapp"><i class="gg-danger"></i><?php
 				echo $this->i18n['template_field_infotext'] ?></p>
 			<input name="template" id="template" type="text" value="<?php echo isset($page->template) ? $page->template : ''; ?>">
 		</div>
@@ -258,10 +258,10 @@ class Pages extends Module
 	{
 		ob_start()?>
 		<input type="hidden" name="action" value="save-page">
-		<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
-			<?php echo $this->i18n['save_button']; ?></button>
-		<button class="icons" type="submit" id="render" name="render" value="1"><i class="fas fa-eye"></i>
-			<?php echo $this->i18n['view_button']; ?></button>
+		<button class="icons" type="submit" id="save" name="save" value="1"><i class="gg-drive"></i>
+			<span>&nbsp;<?php echo $this->i18n['save_button']; ?></span></button>
+		<button class="icons button" type="submit" id="render" name="render" value="1"><i 
+			class="gg-screen"></i><span>&nbsp;<?php echo $this->i18n['view_button']; ?></span></button>
 		<?php echo $this->csrf->renderInputs(); ?>
 		<?php return ob_get_clean();
 	}
@@ -294,10 +294,10 @@ class Pages extends Module
 				<input type="hidden" name="action" value="renumber-pages">
 			</form>
 		</div>
-		<a class="btn" href="./edit/"><button class="icons" name="button" value="
+		<a class="btn" href="./edit/"><button class="icons button" name="button" value="
 			<?php echo $this->i18n['create_button']; ?>" type="button">
-			<span class="ui-button-text"><i class="fa fa-plus-circle"></i> &nbsp;
-				<?php echo $this->i18n['create_button']; ?></span></button></a>
+			<i class="gg-math-plus"></i>&nbsp;<?php 
+			echo $this->i18n['create_button']; ?></button></a>
 		<?php
 		return ob_get_clean();
 	}
@@ -312,13 +312,13 @@ class Pages extends Module
 		foreach($sorted as $page) {
 			$rows .= '
 				<tr class="sortable">
-					<td><i class="fas fa-sort"></i><input type="hidden" name="position[]" value="'.$page->id.'" ></td>
+					<td><i class="gg-swap-vertical"></i><input type="hidden" name="position[]" value="'.$page->id.'" ></td>
 					<td>'.$page->id.'</td>
 					<td>'.(($page->parent) ? $page->parent : '').'</td>
 					<td><a href="edit/?page='.$page->id.'">'.
 				((mb_strlen($page->name) > 80) ? mb_substr($page->name, 0,80).'...' : $page->name).
 				'</td></a><td><a class="remove" rel="'.$this->i18n['pre_delete_msg'].
-				'" href="delete/?page='.$page->id.$token.'"><i class="far fa-trash-alt"></i></a></td>
+				'" href="delete/?page='.$page->id.$token.'"><i class="gg-trash"></i></a></td>
 				</tr>
 			';
 		}

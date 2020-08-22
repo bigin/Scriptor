@@ -1,9 +1,9 @@
 <?php defined('IS_IM') or die('You cannot access this page directly'); ?>
 <div class="summary-wrapper">
-	<span class="close">×</span>
+	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
-			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" src="<?php echo $editor->siteUrl; ?>/theme/images/logo-horizontal.png"></a>
+			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" src="<?php echo $editor->siteUrl; ?>/theme/images/logo.png"></a>
 		</div>
 		<?php if(isset($_SESSION['loggedin'])) { ?>
 		<ul class="summary">

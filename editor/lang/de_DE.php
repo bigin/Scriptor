@@ -127,9 +127,8 @@ $i18n = [
 			befindet sich im <mark>data/settings/</mark> Verzeichnis.</p>
 			
 			<hr>
-			<p><a href="https://scriptor-cms.info"
-			>Official Website &rsaquo;</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a 
-			href="https://github.com/bigin/Scriptor"><i class="fab fa-github"></i> 
-			Clone Repo &rsaquo;</a></p>
+			<p class="i-wrapp"><i class="gg-link"></i>&nbsp;&nbsp;<a href="https://scriptor-cms.info"
+			>Official Website &rsaquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;<i class="gg-link"></i>&nbsp;&nbsp;<a
+			href="https://github.com/bigin/Scriptor">Clone Repo &rsaquo;</a></p>
 	'
 ];

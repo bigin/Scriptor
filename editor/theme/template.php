@@ -9,9 +9,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="icon" href="<?php echo $editor->siteUrl; ?>/theme/favicon.ico" type="image/x-icon" />
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/prism.css">
-	<link href="<?php echo $editor->siteUrl; ?>/theme/css/fontawesome/on-server/css/fontawesome-all.css" rel="stylesheet">
+	<link href="<?php echo $editor->siteUrl; ?>/theme/css/css-gg.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.min.css">
 	<?php echo $editor->getHeaderResources('css'); ?>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery.min.js"></script>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery-ui.min.js"></script>
@@ -32,13 +32,11 @@
 	</div>
 	<footer role="contentinfo">
 		<div>
-			<a href="https://github.com/bigin/Scriptor/releases">Scriptor <?php echo
+			<a href="https://scriptor-cms.info">Scriptor <?php echo
 				Scriptor\Scriptor::VERSION; ?></a> |
 			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 			<a href="https://ehret-studio.com">Ehret Studio</a> |
 			Powered by <a href="https://github.com/bigin/ItemManager-3">ItemManager</a>
-			<a class="right-pos" href="https://ehret-studio.com/contact/"><?php echo
-				$editor->i18n['contact_developer']; ?> <i class="far fa-paper-plane"></i></a>
 		</div>
 	</footer>
 </main>

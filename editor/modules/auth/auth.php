@@ -197,8 +197,8 @@ class Auth extends Module
 				<input type="password" id="pass" name="password">
 			</div>
 			<input type="hidden" name="action" value="login">
-			<button class="icons" type="submit" name="submit"><i class="fas fa-sign-in-alt"></i>
-			<?php echo $this->i18n['login_button']; ?></button>
+			<button class="icons button" type="submit" name="submit"><i class="gg-log-in"></i>
+			<span><?php echo $this->i18n['login_button']; ?></span></button>
 			<?php echo $this->csrf->renderInputs(); ?>
 		</form>
 		<?php return ob_get_clean();
