@@ -3,7 +3,7 @@
 if(isset($_SESSION['loggedin'])) { ?>
 <header>
 	<ul class="guillotine">
-		<li><a id="trigger" href="#">&nbsp</a></li>
+		<li><a id="trigger" href="#"><span class="gg-menu"></span></a></li>
 	</ul>
 	<ul class="breadcrumbs">
 		<?php echo $editor->getProperty('breadcrumbs'); ?>
@@ -11,12 +11,12 @@ if(isset($_SESSION['loggedin'])) { ?>
 	<ul class="profile">
 	<?php if($editor->config['modules']) {
 		foreach($editor->config['modules'] as $slug => $module) {
-			if($module['active'] && in_array('profile', $module['display_type'])) { ?>
-				<li<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' class="active" ' : '');
+			if($module['active'] && in_array('profile', $module['display_type'])) { ?><li<?php 
+			echo(($imanager->input->urlSegments->get(0) == $slug) ? ' class="active" ' : '');
 				?>><a href="<?php echo $editor->siteUrl.'/'.$slug.'/'.(($module['menu'] == 'logout_menu') ?
-					'logout/'.$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i> <?php
+					'logout/'.$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i><span><?php
 						echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu'];
-						?></a></li>
+						?></span></a></li>
 		<?php	}
 			}
 		}

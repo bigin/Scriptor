@@ -8,20 +8,20 @@
 			<div class="col-lg-7">
 				<!-- The fileinput-button span is used to style the file input field as button -->
 				<span class="file-upload button">
-					<i class="fa fa-plus"></i>
+					<i class="gg-math-plus"></i>
 					<span>&nbsp;[[add_files]]</span>
 					<input type="file" name="files[]" multiple>
 				</span>
 				<button type="submit" class="button start">
-					<i class="fa fa-upload"></i>
+					<i class="gg-software-upload"></i>
 					<span>&nbsp;[[start_upload]]</span>
 				</button>
 				<button type="reset" class="button cancel">
-					<i class="fa fa-times"></i>
-					<span>&nbsp;[[cancel_upload]]</span>
+					<i class="gg-close"></i>
+					<span>[[cancel_upload]]</span>
 				</button>
 				<button type="button" class="button delete">
-					<i class="fa fa-trash"></i>
+					<i class="gg-trash"></i>
 					<span>&nbsp;[[delete_upload]]</span>
 				</button>
 				<input type="checkbox" class="toggle">
@@ -71,18 +71,20 @@
 	        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
 		        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
 	        </div>
-            <p class="name">
+            <div class="name i-wrapp">
             {% if (!i && !o.options.autoUpload) { %}
             <button class="btn btn-primary start" disabled>
-                <i class="fa fa-upload"></i> [[start_upload]]
+                <i class="gg-software-upload"></i>
+				<span>&nbsp;[[start_upload]]</span>
             </button>
             {% } %}
             {% if (!i) { %}
             <button class="btn btn-warning cancel">
-                <i class="fa fa-times"></i> [[cancel_upload]]
+                <i class="gg-close"></i> 
+				<span>&nbsp;[[cancel_upload]]</span>
             </button>
             {% } %}
-            </p>
+            </div>
 	    </td>
 	</tr>
 	{% } %}
@@ -119,9 +121,9 @@
             <p class="name"><span class="heading size">[[size_heading]] {%=o.formatFileSize(file.size)%}</span></p>
             <p class="name">
             {% if (file.deleteUrl) { %}
-				<button class="btn btn-danger delete" data-type="{%=file.deleteType%}"
+				<button class="btn button btn-danger delete" data-type="{%=file.deleteType%}"
 					data-url="{%=file.deleteUrl%}[[deleteurl]]"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-					<i class="fa fa-trash"></i> <span>[[delete_upload]]</span>
+					<i class="gg-trash"></i> <span>&nbsp;[[delete_upload]]</span>
 				</button>
 				<input type="checkbox" name="delete" value="1" class="toggle">
 			{% } else { %}

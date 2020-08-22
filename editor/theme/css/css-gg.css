@@ -1,0 +1,494 @@
+/**
+ * Icons astrit/css.gg
+ * https://github.com/
+ * https://css.gg/app
+ */
+.gg-menu {
+    transform: scale(var(--ggs,0.8))
+}
+.gg-menu,
+.gg-menu::after,
+.gg-menu::before {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 3px;
+    background: currentColor
+}
+.gg-menu::after,
+.gg-menu::before {
+    content: "";
+    position: absolute;
+    top: -6px
+}
+.gg-menu::after {
+    top: 6px
+}
+
+.gg-arrow-align-v {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 10px;
+    height: 20px;
+    background:
+     linear-gradient(
+         to left,
+         currentColor 15px,transparent 0)
+         no-repeat 4px 2px/2px 6px,
+     linear-gradient(
+         to left,
+         currentColor 15px,transparent 0)
+         no-repeat 4px 12px/2px 6px,
+     linear-gradient(
+         to left,
+         currentColor 15px,transparent 0)
+         no-repeat center/10px 2px
+ }
+ .gg-arrow-align-v::after,
+ .gg-arrow-align-v::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    transform: rotate(-45deg);
+    left: 2px
+ }
+ .gg-arrow-align-v::after {
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    bottom: 1px
+ }
+ .gg-arrow-align-v::before {
+    border-top: 2px solid;
+    border-right: 2px solid;
+    top: 1px
+ }
+
+ .gg-trash {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 10px;
+    height: 12px;
+    border: 2px solid transparent;
+    box-shadow:
+        0 0 0 2px,
+        inset -2px 0 0,
+        inset 2px 0 0;
+    border-bottom-left-radius: 1px;
+    border-bottom-right-radius: 1px;
+    margin-top: 4px
+}
+.gg-trash::after,
+.gg-trash::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute
+}
+.gg-trash::after {
+    background: currentColor;
+    border-radius: 3px;
+    width: 16px;
+    height: 2px;
+    top: -4px;
+    left: -5px
+}
+.gg-trash::before {
+    width: 10px;
+    height: 4px;
+    border: 2px solid;
+    border-bottom: transparent;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    top: -7px;
+    left: -2px
+}
+
+.gg-add {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 22px;
+    border: 2px solid;
+    transform: scale(var(--ggs,0.9));
+    border-radius: 22px
+ }
+ .gg-add::after,
+ .gg-add::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 5px;
+    top: 8px;
+    left: 4px
+ }
+ .gg-add::after {
+    width: 2px;
+    height: 10px;
+    top: 4px;
+    left: 8px
+ }
+
+ .gg-profile,
+.gg-profile::after,
+.gg-profile::before {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid;
+    border-radius: 100px
+}
+.gg-profile {
+    overflow: hidden;
+    transform: scale(var(--ggs,0.8));
+    width: 22px;
+    height: 22px;
+    position: relative
+}
+.gg-profile::after,
+.gg-profile::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 5px;
+    width: 8px;
+    height: 8px
+}
+.gg-profile::after {
+    border-radius: 200px;
+    top: 11px;
+    left: 0px;
+    width: 18px;
+    height: 18px
+}
+
+.gg-log-in {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 6px;
+    height: 22px;
+    border: 2px solid;
+    border-left: 0;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+    margin-right: -10px
+}
+.gg-log-in::after,
+.gg-log-in::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute
+}
+.gg-log-in::after {
+    border-top: 2px solid;
+    border-right: 2px solid;
+    transform: rotate(45deg);
+    width: 8px;
+    height: 8px;
+    left: -8px;
+    bottom: 5px
+}
+.gg-log-in::before {
+    border-radius: 3px;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+    left: -11px;
+    bottom: 8px
+}
+
+.gg-chevron-right {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 22px;
+    height: 22px;
+    border: 2px solid transparent;
+    border-radius: 100px
+}
+.gg-chevron-right::after {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid;
+    border-right: 2px solid;
+    transform: rotate(-45deg);
+    right: 6px;
+    top: 4px
+}
+
+.gg-link {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: rotate(-45deg) scale(var(--ggs,0.8));
+    width: 8px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 4px
+}
+.gg-link::after,
+.gg-link::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    width: 8px;
+    height: 10px;
+    border: 2px solid;
+    top: -4px
+}
+.gg-link::before {
+    border-right: 0;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    left: -6px
+}
+.gg-link::after {
+    border-left: 0;
+    border-top-right-radius: 40px;
+    border-bottom-right-radius: 40px;
+    right: -6px
+}
+
+.gg-danger {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,1));
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-radius: 40px
+}
+.gg-danger::after,
+.gg-danger::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    width: 2px;
+    background: currentColor;
+    left: 7px
+}
+.gg-danger::after {
+    top: 2px;
+    height: 8px
+}
+.gg-danger::before {
+    height: 2px;
+    bottom: 2px
+}
+
+.gg-math-plus,
+.gg-math-plus::after {
+    display: block;
+    box-sizing: border-box;
+    background: currentColor;
+    border-radius: 10px
+}
+.gg-math-plus {
+    margin-top: -2px;
+    position: relative;
+    transform: scale(var(--ggs, 0.8));
+    width: 16px;
+    height: 2px
+}
+.gg-math-plus::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 16px;
+    top: -7px;
+    left: 7px
+}
+
+.gg-software-upload {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 16px;
+    height: 6px;
+    border: 2px solid;
+    border-top: 0;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    margin-top: 8px
+}
+.gg-software-upload::after {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid;
+    border-top: 2px solid;
+    transform: rotate(45deg);
+    left: 2px;
+    bottom: 4px
+}
+.gg-software-upload::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    width: 2px;
+    height: 10px;
+    background: currentColor;
+    left: 5px;
+    bottom: 3px
+}
+
+.gg-math-minus {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    border-radius: 10px
+}
+
+.gg-close {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 22px;
+    height: 22px;
+    border: 2px solid transparent;
+    border-radius: 40px
+}
+.gg-close::after,
+.gg-close::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background: currentColor;
+    transform: rotate(45deg);
+    border-radius: 5px;
+    top: 8px;
+    left: 1px
+}
+.gg-close::after {
+    transform: rotate(-45deg)
+}
+
+.gg-screen {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 22px;
+    height: 14px;
+    border: 2px solid;
+    border-radius: 3px;
+    margin-top: -4px
+}
+.gg-screen::after,
+.gg-screen::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    border-radius: 3px;
+    width: 10px;
+    height: 2px;
+    background: currentColor;
+    top: 14px;
+    left: 4px
+}
+.gg-screen::before {
+    width: 2px;
+    height: 6px;
+    top: 10px;
+    left: 8px
+}
+
+.gg-drive {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: scale(var(--ggs,0.8));
+    width: 26px;
+    height: 10px;
+    border: 2px solid;
+    border-radius: 2px
+}
+.gg-drive::after,
+.gg-drive::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 10px;
+    background: currentColor;
+    top: 2px;
+    right: 2px
+}
+.gg-drive::before {
+    right: 6px
+}
+
+.gg-swap-vertical {
+    box-sizing: border-box;
+    position: relative;
+    display: block;
+    transform: rotate(90deg) scale(var(--ggs,1));
+    box-shadow:
+        -2px 2px 0,
+        2px -2px 0;
+    width: 6px;
+    height: 2px
+}
+.gg-swap-vertical::after,
+.gg-swap-vertical::before {
+    content: "";
+    display: block;
+    box-sizing: border-box;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-top: 3px solid transparent;
+    border-bottom: 3px solid transparent
+}
+.gg-swap-vertical::before {
+    border-left: 3px solid;
+    top: -4px;
+    right: -4px
+}
+.gg-swap-vertical::after {
+    border-right: 3px solid;
+    bottom: -4px;
+    left: -4px
+}

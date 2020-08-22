@@ -162,7 +162,7 @@ $config = [
 			'display_type' => [
 				'profile'
 			],
-			'icon' => 'fas fa-user-circle',
+			'icon' => 'gg-profile',
 			'description' => 'A Profile edit module for showing in the header menu'
 		],
 		'auth' => [
@@ -176,7 +176,7 @@ $config = [
 			'display_type' => [
 				'profile'
 			],
-			'icon' => 'fas fa-sign-out-alt',
+			'icon' => 'gg-log-in',
 			'description' => 'Login, logout actions module'
 		],
 		'dashboard' => [

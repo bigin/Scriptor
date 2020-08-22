@@ -1,8 +1,9 @@
-![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png)
+![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png?v=1)
 
 # Scriptor
 
 _Scriptor is a simple flat-file CMS_   
+The perfect solution for building any kind of microsites.
 
 ## Features   
 Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
@@ -68,5 +69,11 @@ Demo (default installation): https://demos.ehret-studio.com/scriptor/
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
 ### Changelog
+- `1.4.9` `NEW`: `Several design adjustments.`
+          `ENH`: `Dropped Font Awesome support`
+- `1.4.8` `FIX`: `Scriptor\Profile properties.`
+          `NEW`: `Shared configuration parameters PHP and Javascript.`   
+          `ENH`: `Styles adjustments.`
+- `1.4.7` `ENH`: `Code quality improvements.`   
 - `1.4.6` `NEW`: `This core version adds the ability to hook into the Editor methods.`   
 - `1.4.5` `NEW`: `File upload field as an integral part of the core application.`
