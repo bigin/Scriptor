@@ -208,7 +208,7 @@ hr {
 	overflow-y: auto;
 	height: auto;
 	color: #364149;
-	background: #fbfbff;
+	background: #f8f8fb;
 	border-right: 3px solid rgba(0,0,0,.07);
 	-webkit-transition: left 250ms ease;
 	-moz-transition: left 250ms ease;
@@ -432,12 +432,12 @@ label.required:after {
 	font-size: small;
 	font-style: italic;
 	color: #888eaf;
-	background-color: #fbfbff;
+	background-color: #f8f8fb;
 	border: solid 1px;
-	border-top-color: #fbfbff;
+	border-top-color: #f8f8fb;
 	border-right-color: #f4f4f7;
 	border-bottom-color: #f4f4f7;
-	border-left-color: #fbfbff;
+	border-left-color: #f8f8fb;
 }
 
 .info-text.i-wrapp i {
@@ -468,7 +468,7 @@ label.required:after {
 	margin: 0;
 	padding: 0 15px;
 	color: #818181;
-	background-color: #fbfbff;
+	background-color: #f8f8fb;
 	border-left: 4px solid #dbdbdb;
 }
 
@@ -543,7 +543,7 @@ label.required:after {
 
 #page-list-table th {
 	text-align: left;
-	background-color: #fbfbff;
+	background-color: #f8f8fb;
 }
 
 #page-list-table th:first-child, #page-list-table td:first-child {
@@ -563,7 +563,7 @@ label.required:after {
 }
 
 #page-list-table tr:nth-child(even) {
-	background-color: #fbfbff;
+	background-color: #f8f8fb;
 }
 .sortable {
 	cursor: all-scroll;
@@ -765,7 +765,7 @@ button, .button {
 }
 
 #fileupload_images table tr td .name:first-child span, #fileupload_images table tr td .name:first-child a {
-	background-color: #fbfbff;/* rgba(232, 239, 255, 0.60); */
+	background-color: #f8f8fb;/* rgba(232, 239, 255, 0.60); */
 	padding: 3px 8px
 }
 #fileupload_images table tr td .name .btn {

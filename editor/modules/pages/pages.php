@@ -338,7 +338,7 @@ class Pages extends Module
 		$field = $this->pages->getField('name=images');
 		$pageId = isset($this->page->id) ? $this->page->id : null;
 		if($pageId && $field && $this->pages) {
-			$imgPath = "$pageId.{$this->pages->id}.$field->id/";
+			$imgPath = $this->pages->id.".$pageId.$field->id/";
 		} else {
 			$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
 		}
