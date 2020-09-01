@@ -47,6 +47,7 @@ class Editor extends Module
 			}
 			$this->moduleNotFound();
 		}
+		Scriptor::execHook($this, 'execute', [], 'after');
 		// The last step is to render the messages.
 		$this->renderMessages();
 	}
