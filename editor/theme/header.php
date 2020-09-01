@@ -1,7 +1,7 @@
 <?php defined('IS_IM') or die('You cannot access this page directly');
 
 if(isset($_SESSION['loggedin'])) { ?>
-<header>
+<header class="arounder">
 	<ul class="guillotine">
 		<li><a id="trigger" href="#"><span class="gg-menu"></span></a></li>
 	</ul>

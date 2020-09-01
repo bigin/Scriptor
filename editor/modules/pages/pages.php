@@ -109,7 +109,6 @@ class Pages extends Module
 			</div>
 		</div>
 		<h1><?php echo $this->i18n['page_edit_header']; ?></h1>
-		<hr>
 		<form id="page-form" action="./<?php echo isset($this->input->get->page) ? 
 			'?page='.(int)$this->input->get->page : ''; ?>" method="post">
 			<?php 
@@ -275,7 +274,6 @@ class Pages extends Module
 		ob_start(); ?>
 		<div id="page-list-wrapper">
 			<h1><?php echo $this->i18n['pages_header'] ?></h1>
-			<hr>
 			<form id="page-list-form" action="./" method="post">
 				<table id="page-list-table">
 					<thead>

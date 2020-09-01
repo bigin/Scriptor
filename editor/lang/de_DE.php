@@ -11,9 +11,8 @@ $i18n = [
 	'no_page' => 'Es wurde keine Seite gefunden.',
 	'settings_page_header' => 'Systemeinstellungen',
 	'settings_page_text' => 'Scriptor verfolgt eine andere Vorgehensweise bei den Einstellungen, als Sie es vielleicht gewohnt sind: 
-	   Alle Einstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
-	   HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, sollten Sie die Parameter in der Datei 
-	   <mark>scriptor-config.php</mark> nicht ändern. Verwenden Sie stattdessen die <mark>_custom.scriptor-config.php</mark> Datei, 
+	   Die Standardeinstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
+	   HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, verwenden Sie bitte die <mark>_custom.scriptor-config.php</mark> Datei, 
 	   die sich im gleichen Verzeichnis befindet.<br><br>Beachten Sie auch, dass Sie die Datei vor der Verwendung in 
 	   <mark>custom.scriptor-config.php</mark> umbenennen müssen (ohne den Unterstrich <mark>_</mark> Präfix).',
 	'profile_menu' => 'Profil',

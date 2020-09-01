@@ -114,7 +114,6 @@ class Profile extends Module
 		if(!$user) { return; }
 		ob_start(); ?>
 		<h1><?php echo $this->i18n['profile_editor_header']; ?></h1>
-		<hr>
 		<form id="profile-form" action="./" method="post">
 			<div class="form-control">
 				<label class="required" for="username"><?php echo $this->i18n['username_label']; ?></label>
@@ -133,8 +132,9 @@ class Profile extends Module
 				<input name="password_confirm" id="pass_confirm" type="password">
 			</div>
 			<input type="hidden" name="action" value="save-profile">
-			<button class="icons" type="submit" id="save" name="save" value="1"><i class="fas fa-save"></i>
-				<?php echo $this->i18n['save_button']; ?></button>
+			<button class="icons" type="submit" id="save" name="save" value="1"><i 
+				class="gg-drive"></i>
+				<span>&nbsp;<?php echo $this->i18n['save_button']; ?></span></button>
 			<?php echo $this->csrf->renderInputs(); ?>
 		</form>
 		<?php return ob_get_clean();

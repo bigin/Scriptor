@@ -186,7 +186,6 @@ class Auth extends Module
 	{
 		ob_start(); ?>
 		<h1><?php echo $this->i18n['login_header']; ?></h1>
-		<hr>
 		<form id="login-form" action="./" method="post">
 			<div class="form-control">
 				<label for="username"><?php echo $this->i18n['username_label']; ?></label>

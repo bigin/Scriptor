@@ -24,7 +24,7 @@
 	<?php include 'header.php'; ?>
 	<div class="page-wrapper">
 		<div class="page">
-			<div class="page-inner">
+			<div class="page-inner arounder">
 				<?php echo $editor->getProperty('messages'); ?>
 				<?php echo $editor->getProperty('pageContent'); ?>
 			</div>

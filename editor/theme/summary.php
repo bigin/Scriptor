@@ -1,5 +1,5 @@
 <?php defined('IS_IM') or die('You cannot access this page directly'); ?>
-<div class="summary-wrapper">
+<div class="summary-wrapper arounder">
 	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
@@ -13,8 +13,9 @@
 						?>
 						<li class="chapter<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' active' : ''); ?>"
 							data-level="1.1" data-path="./">
-							<a href="<?php echo $editor->siteUrl.'/'.$slug; ?>/"><?php
-								echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu']; ?></a>
+							<a href="<?php echo $editor->siteUrl.'/'.$slug; ?>/"><?php echo (isset($module['icon']) && !empty($module['icon'])) ? 
+								'<i class="'.$module['icon'].'"></i>' : ''; ?><span><?php echo (isset($editor->i18n[$module['menu']])) ? 
+								$editor->i18n[$module['menu']] : $module['menu']; ?></span></a>
 						</li>
 						<?php
 					}

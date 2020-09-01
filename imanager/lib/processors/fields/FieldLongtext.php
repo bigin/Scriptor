@@ -1,17 +1,17 @@
-<?php
+<?php namespace Imanager;
+
 class FieldLongtext implements FieldInterface
 {
 	public $properties;
-	protected $tpl;
 
-	public function __construct(TemplateEngine $tpl)
+	public function __construct()
 	{
-		$this->tpl = $tpl;
+		$this->tpl = $this->imanager->templateParser;
 		$this->name = null;
 		$this->class = null;
 		$this->id = null;
 		$this->value = null;
-		$this->configs = new stdClass();
+		$this->configs = new \stdClass();
 	}
 
 

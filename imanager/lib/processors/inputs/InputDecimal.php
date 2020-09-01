@@ -1,72 +1,84 @@
 <?php namespace Imanager;
 
-class InputDecimal implements InputInterface
+class InputDecimal extends InputText implements InputInterface
 {
-	protected $value;
 
-	protected $field;
-
-	public $errorCode = null;
-
-	public function __construct(Field $field)
-	{
-		$this->field = $field;
-		$this->value = null;
-		settype($this->value, 'float');
+	/**
+	 * InputLongtext constructor.
+	 *
+	 * @param Field $field
+	 */
+	public function __construct(Field $field) {
+		parent::__construct($field);
 	}
 
-	public function prepareInput($value, $sanitize = false)
-	{
-		// check value, only numbers and thousand separators are permitted
-		if(!preg_match('/^[0-9\., ]+$/', $value)) {
-			$this->errorCode = self::WRONG_VALUE_FORMAT;
-			return false;
-		}
 
-		// check input required
-		if(!empty($this->field->required) && !$value) {
+	/**
+	 * This method checks the field inputs and sets the field contents.
+	 * If an error occurs, the method creates an error code.
+	 *
+	 * @param $value
+	 * @param bool $sanitize
+	 *
+	 * @return boolean
+	 */
+    public function prepareInput($value, $sanitize = false) 
+    {    
+        // Set empty value, the input isn't required
+		if(empty($value) && !$this->required) {
+			$this->value = !isset($value) ? (float) $this->default : $value;
+			return true;
+		} else {
+            $this->value = $value;
+        }
+
+		// Check input required
+		if(($this->required) && empty($value)) {
 			$this->errorCode = self::EMPTY_REQUIRED;
 			return false;
 		}
 
-		// let's change value into float format
-		$this->value = $this->toDecimal($value);
-		if(!$this->value) {
-			$this->errorCode = self::EMPTY_REQUIRED;
-			return false;
+		// Sanitize input
+		if($sanitize) {
+            // let's change value into float format
+            $this->value = $this->toDecimal($this->value);
+            $this->value = $this->sanitize($this->value);
+            // Sanitizer has wiped the value?
+            if(!$this->value) {
+                $this->errorCode = self::WRONG_VALUE_FORMAT;
+                return false;
+            }
+		} else {
+			$this->value = $value;
 		}
 
-		// check min value
-		if(!empty($this->field->minimum) && $this->value < (int)$this->field->minimum) {
+		// Check min value length
+		if($this->minLen > 0 && mb_strlen($this->value, 'UTF-8') < (int) $this->minLen) {
 			$this->errorCode = self::ERR_MIN_LENGTH;
 			return false;
 		}
-		// check input max value
-		if(!empty($this->field->maximum) && $this->value > $this->field->maximum) {
+
+		// Check max value length
+		if($this->maxLen > 0 && mb_strlen($this->value, 'UTF-8') > (int) $this->maxLen) {
 			$this->errorCode = self::ERR_MAX_LENGTH;
 			return false;
 		}
+
 		return true;
 	}
 
+	public function prepareOutput(){ return $this->value; }
 
-	public function prepareOutput($sanitize = false){return ($sanitize) ? $this->sanitize($this->value) : $this->values;}
-
-	public static function toDecimal($money)
+	public static function toDecimal($value)
 	{
-		$cleanString = preg_replace('/([^0-9\.,])/i', '', $money);
-		$onlyNumbersString = preg_replace('/([^0-9])/i', '', $money);
+        $minus = (strpos($value, '-') !== false) ? '-' : '';
+		$cleanString = preg_replace('/([^0-9\.,])/i', '', $value);
+		$onlyNumbersString = preg_replace('/([^0-9])/i', '', $value);
 		$separatorsCountToBeErased = strlen($cleanString) - strlen($onlyNumbersString) - 1;
 		$stringWithCommaOrDot = preg_replace('/([,\.])/', '', $cleanString, $separatorsCountToBeErased);
 		$removedThousendSeparator = preg_replace('/(\.|,)(?=[0-9]{3,}$)/', '',  $stringWithCommaOrDot);
-		return (float) str_replace(',', '.', $removedThousendSeparator);
+        return $minus. (float) str_replace(',', '.', $removedThousendSeparator);
 	}
 
-
-	protected function sanitize($value) {
-		//$storedValue = ini_get('serialize_precision');
-		//ini_set('serialize_precision', $this->precision);
-		return imanager('sanitizer')->float($value);
-		//ini_set('serialize_precision', $storedValue);
-	}
+	protected function sanitize($value) { return imanager('sanitizer')->float($value); }
 }

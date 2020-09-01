@@ -20,7 +20,6 @@ class Settings extends Module
 	protected function renderSettingsEditor()
 	{
 		return '<h1>'.$this->i18n['settings_page_header'].'</h1>'.
-			   '<hr>'.
 			   '<p>'.$this->i18n['settings_page_text'].'</p>';
 	}
 }
