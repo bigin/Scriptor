@@ -66,12 +66,12 @@ class InputText implements InputInterface
 
 	/**
 	 * This method checks the field inputs and sets the field contents.
-	 * If an error occurs, the method returns an error code.
+	 * If an error occurs, the method creates an error code.
 	 *
-	 * @param $value
+	 * @param mixed $value
 	 * @param bool $sanitize
 	 *
-	 * @return int|stdClass
+	 * @return boolean
 	 */
 	public function prepareInput($value, $sanitize = false)
 	{

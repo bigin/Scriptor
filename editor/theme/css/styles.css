@@ -36,6 +36,7 @@ header {
 	font-size: 14px;
 	display: flex;
 	align-items: center;
+	background-color: #fff;
 }
 @media (min-width: 1100px) {
 	header {
@@ -102,6 +103,9 @@ hr {
 .i-wrapp-inline {
 	display: inline-flex;
 	align-items: center;
+}
+.arounder {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .breadcrumbs {
 	width: inherit;
@@ -208,8 +212,7 @@ hr {
 	overflow-y: auto;
 	height: auto;
 	color: #364149;
-	background: #f8f8fb;
-	border-right: 3px solid rgba(0,0,0,.07);
+	background: #fff;
 	-webkit-transition: left 250ms ease;
 	-moz-transition: left 250ms ease;
 	-o-transition: left 250ms ease;
@@ -228,14 +231,17 @@ hr {
 	border-bottom: 1px solid rgba(0,0,0,.07);
 }
 .summary-wrapper nav ul li:hover {
-	background-color: white;
+	background-color: #f8f8fb;
+}
+.summary-wrapper nav ul li.active {
+	background-color: #f8f8fb;
 }
 .summary-wrapper nav ul li ul {
 	padding-left: 20px;
 }
-.summary-wrapper ul li a, .summary-wrapper ul li span {
+.summary-wrapper ul li>a, .summary-wrapper ul li>span {
 	display: block;
-	padding: 10px 20px;
+	padding: 12px 20px;
 	border-bottom: none;
 	color: inherit;
 	background: 0 0;
@@ -244,7 +250,13 @@ hr {
 	white-space: nowrap;
 	position: relative;
 	text-decoration: none;
+	display: flex;
+	align-items: center;
 }
+.summary-wrapper ul li>a>span, .summary-wrapper ul li>span>span {
+	padding-left: 8px;
+}
+
 .summary-wrapper ul li a {
 	color: #008cff;
 }
@@ -254,7 +266,7 @@ hr {
 }
 .summary-wrapper .brand-wrapper {
 	width: 100%;
-	padding: 10px 15px;
+	padding: 20px;
 	text-align: center;
 	background-color: transparent;
 	border-bottom: 1px solid rgba(0,0,0,.07);
@@ -294,6 +306,8 @@ hr {
 .page-wrapper {
 	position: relative;
 	outline: 0;
+	background-color: #f8f8fb;
+	padding: 20px 0;
 }
 
 .page {
@@ -311,9 +325,15 @@ hr {
 
 .page-inner {
 	position: relative;
-	max-width: 800px;
+	max-width: 850px;
 	margin: 0 auto;
-	padding: 20px 15px 40px 15px;
+	padding: 30px 40px 20px 40px;
+	background-color: #fff;
+}
+
+.page-inner>h1,.page-inner>#page-list-wrapper>h1 {
+	/* margin: 0.1em 0em 0.7em; */
+	margin-bottom: 0.6em;
 }
 
 .page-inner p {
@@ -533,11 +553,13 @@ label.required:after {
 	display: table-header-group;
 	border-color: inherit;
 }
+#page-list-table thead tr {
+	border-top: 1px solid rgb(236, 236, 236);
+}
 
 #page-list-table th, #page-list-table td {
 	margin: 0;
 	border-bottom: 3px solid rgb(236, 236, 236);
-	border-left: 3px solid rgb(236, 236, 236);
 	padding: 0.5em;
 }
 
@@ -662,6 +684,7 @@ button, .button {
 	white-space: nowrap;
 	height: 40px;
 	padding: 8px 25px 8px 22px !important;
+	min-width: 124px;
 	font-size: inherit;
 	line-height: normal;
 	border-radius: 80px !important;

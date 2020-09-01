@@ -40,6 +40,7 @@
 		</div>
 		<!-- The table listing the files available for upload/download -->
 		<table role="presentation" class="table table-striped highlight"><tbody class="files"></tbody></table>
+		<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 	</div>
 </div>
 <!-- The blueimp Gallery widget -->
@@ -58,7 +59,6 @@
 	<tr class="template-upload fade">
 		<td>
 			<input class="pos" type="hidden" name="position_[[id]][{%=file.position%}]" value="{%=file.name%}">
-			<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 		</td>
 		<td>
 			<span class="preview"></span>
@@ -95,7 +95,6 @@
 		<td>
 			<i class="fa fa-hand-o-up"></i>
 			<input class="pos" type="hidden" name="position_[[id]][{%=file.position%}]" value="{%=file.name%}">
-			<input type="hidden" name="timestamp_[[id]]" value="[[timestamp]]">
 		</td>
 		<td>
 			<span class="preview">

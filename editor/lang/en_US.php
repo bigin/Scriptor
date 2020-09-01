@@ -11,11 +11,9 @@ $i18n = [
 	'no_page' => 'No page found.',
 	'settings_page_header' => 'System Settings',
 	'settings_page_text' => 'Scriptor takes a different approach to settings than you might be used to:
-	  The settings can be found under <mark>data/settings/scriptor-config.php</mark>.<br><br>
-	  NOTE: If you want to keep the configuration settings permanently, you should not change the settings in 
-	  <mark>scriptor-config.php</mark> file. Instead, use the <mark>_custom.scriptor-config.php</mark> file 
-	  located in the same directory.<br><br>Also note, you must rename the file to 
-	  <mark>custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
+	  The default settings can be found under <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark>.<br><br>
+	  NOTE: If you want to keep the configuration permanently, you can modify the <mark class="uk-text-nowrap">_custom.scriptor-config.php</mark> 
+	  file located in the same directory. Rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 

@@ -235,7 +235,8 @@ class Util
 	public static function isOpCacheEnabled()
 	{
 		if(function_exists('opcache_invalidate')
-			&& (@opcache_get_status(false)['opcache_enabled'] == 1)) { return true; }
+			&& (isset(opcache_get_status(false)['opcache_enabled']) && 
+				@opcache_get_status(false)['opcache_enabled'] == 1)) { return true; }
 		return false;
 	}
 

@@ -149,6 +149,7 @@ $config = [
 			'display_type' => [
 				'sidebar'
 			],
+			'icon' => 'gg-list',
 			'description' => "Scriptor's build-in module to display and edit pages"
 		],
 		'profile' => [
@@ -203,6 +204,7 @@ $config = [
 			'display_type' => [
 				'sidebar'
 			],
+			'icon' => 'gg-components',
 			'description' => 'A default module for showing settings menu'
 		],
 		'parsedown' => [
