@@ -29,14 +29,7 @@ by a mandatory template engine.
 3. Rename the file `/data/settings/_custom.scriptor-config.php` to `custom.scriptor-config.php` (without `_` prefix/underscore).
 4. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
    
-> NOTE: You might have to adjust the .htaccess file.   
-```    
-> Options -Indexes
-> Options +SymLinksIfOwnerMatch
-> # Options +SymLinksifOwnerMatch
-> 
-> #RewriteBase / 
-```
+> NOTE: You might have to adjust the .htaccess file `RewriteBase /` etc    
 
 ### How to upgrade from Scriptor 1.4.4- to 1.4.5+:
 >NOTE: Backup any files you replace or delete!
@@ -70,14 +63,15 @@ https://your-website.com/subdirectory/editor/
 ### More info
 Official website: https://scriptor-cms.info  
 ### Links   
-Demo (default installation): https://demos.ehret-studio.com/scriptor/
-Module extensions: https://scriptor-cms.info/extensions/extensions-modules/ 
+Documentation: https://scriptor-cms.info/documentation/    
+Demo (default installation): https://demos.ehret-studio.com/scriptor/    
+Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
 ### Changelog
-- `1.4.10` `ENH`: `added a new hookable method editor::afterExecute() in addition to some minor design updates.`    
+- `1.4.10` `ENH`: `Added a new hookable method editor::afterExecute()` | `Minor design updates.`    
 - `1.4.9` `NEW`: `Several design adjustments.` | `ENH`: `Dropped Font Awesome support`    
 - `1.4.8` `FIX`: `Scriptor\Profile properties.` | `NEW`: `Shared configuration parameters PHP and Javascript.` | `ENH`: `Styles adjustments.`    
 - `1.4.7` `ENH`: `Code quality improvements.`   
