@@ -344,21 +344,28 @@ class Site extends Module
 	 * be used.
 	 * 
 	 */
-	protected function checkCookieAllowed()
+	protected function checkCookieAllowed(): void
 	{
 		if($this->config['sessionAllow'] instanceof \Closure) {
 			$allowed = $this->config['sessionAllow']();
 		} else { 
 			$allowed = $this->config['sessionAllow']; 
 		}
-		if($allowed != true) {
-			if(ini_get('session.use_cookies')) {
-				$params = session_get_cookie_params();
-				setcookie(session_name(), '', time() - 42000, $params['path'],
-					$params['domain'], $params['secure'], $params['httponly']
-				);
+
+		if($allowed) {
+			if(! isset($_SESSION)) { 
+				session_name('IMSESSID');
+				session_start(); 
 			}
-			session_destroy();
+			return;
 		}
+
+		if(ini_get('session.use_cookies')) {
+			$params = session_get_cookie_params();
+			setcookie(session_name(), '', time() - 42000, $params['path'],
+				$params['domain'], $params['secure'], $params['httponly']
+			);
+		}
+		session_destroy();
 	}
 }

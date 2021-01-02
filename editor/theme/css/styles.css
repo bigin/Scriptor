@@ -463,6 +463,7 @@ label.required:after {
 .info-text.i-wrapp i {
 	margin-right: 3px;
 	--ggs: 0.7;
+	min-width: 20px;
 }
 
 #page-text {

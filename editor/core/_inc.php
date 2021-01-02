@@ -2,6 +2,11 @@
 
 use Scriptor\Scriptor;
 
+if(! isset($_SESSION)) { 
+	session_name('IMSESSID');
+	session_start(); 
+}
+
 $base = dirname(dirname(__DIR__));
 require "$base/imanager.php";
 require "$base/data/settings/scriptor-config.php";

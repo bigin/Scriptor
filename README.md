@@ -1,4 +1,4 @@
-![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png?v=1)
+![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png)
 
 # Scriptor
 
@@ -6,19 +6,22 @@ _Scriptor is a simple flat-file CMS_
 The perfect solution for building any kind of microsites.
 
 ## Features   
-Get started quickly and easily: Intuitive, user-friendly control panel helps you get up and running quickly. 
+#### Get started quickly: 
+Intuitive, user-friendly control panel helps you get up and running easily. 
 You will have it installed in 2 minutes - ready to use.   
 
-Flexible features extensible architecture: You have a variety of options and a powerful [ItemManager](https://github.com/bigin/ItemManager-3) 
+#### Flexible features extensible architecture:
+You have a variety of options and a powerful [ItemManager](https://github.com/bigin/ItemManager-3) 
 framework for module development.
 
-You have total freedom: Themes and Modules can contain plain HTML/PHP source code. Scriptor does not restrict the user's development approach 
+#### You have total freedom:
+Themes and Modules can contain plain HTML/PHP source code. Scriptor does not restrict the user's development approach 
 by a mandatory template engine.
 
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- PHP 7.2 or newer (7.3+ preferable).   
+- PHP 7.4 or newer (8.0 preferable).   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
@@ -28,11 +31,11 @@ by a mandatory template engine.
 2. Unpack the archive and rename the `Scriptor-master` folder as you like.
 3. Rename the file `/data/settings/_custom.scriptor-config.php` to `custom.scriptor-config.php` (without `_` prefix/underscore).
 4. Upload the contents of the folder to your server, or upload the folder if you want to run the application in a subfolder.
-    
-> NOTE: You might have to adjust the .htaccess file.    
+   
+> (!) You might have to adjust the .htaccess file, comment out `RewriteBase /` etc.    
 
 ### How to upgrade from Scriptor 1.4.4- to 1.4.5+:
->NOTE: Backup any files you replace or delete!
+> (!) Backup any files you replace or delete!
 
   – Replace: /editor/ with the new version   
   – Replace: /imanager/ with the new version   
@@ -55,22 +58,24 @@ https://your-website.com/subdirectory/editor/
 ```
 
 ### Admin initial login  
-`(!) Change password at first login!`  
+`(!) Change password/username at first login`  
 > User: `admin`   
 > Password: `gT5nLazzyBob`
 
-
-### More info
-Official website: https://scriptor-cms.info   
-Demo (default installation): https://demos.ehret-studio.com/scriptor/
-  
+### Links   
+Official website: https://scriptor-cms.info
+Documentation: https://scriptor-cms.info/documentation/    
+Demo: https://demos.ehret-studio.com/scriptor/        
+Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
 ### Changelog
-- `1.4.9` `NEW`: `Several design adjustments.` | `ENH`: `Dropped Font Awesome support`
-- `1.4.8` `FIX`: `Scriptor\Profile properties.` | `NEW`: `Shared configuration parameters PHP and Javascript.` | `ENH`: `Styles adjustments.`
+- `1.4.11` `ENH`: `The handling for session cookie.` | `ENH`: `Exception Handling.` | `FIX`: `Security update for session check statement on file upload.`   
+- `1.4.10` `ENH`: `Added a new hookable method editor::afterExecute()` | `Minor design updates.`    
+- `1.4.9` `NEW`: `Several design adjustments.` | `ENH`: `Dropped Font Awesome support`    
+- `1.4.8` `FIX`: `Scriptor\Profile properties.` | `NEW`: `Shared configuration parameters PHP and Javascript.` | `ENH`: `Styles adjustments.`    
 - `1.4.7` `ENH`: `Code quality improvements.`   
 - `1.4.6` `NEW`: `This core version adds the ability to hook into the Editor methods.`   
-- `1.4.5` `NEW`: `File upload field as an integral part of the core application.`
+- `1.4.5` `NEW`: `File upload field as an integral part of the core application.`    

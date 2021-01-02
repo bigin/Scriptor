@@ -3,8 +3,11 @@
 class Input
 {
 	public $sanitizer;
+	public $requestBody;
 	public $post;
 	public $get;
+	public $put;
+	public $patch;
 	public $pageNumber = 0;
 	public $urlSegments;
 
@@ -13,10 +16,13 @@ class Input
 	public function __construct($config, $sanitizer) {
 		$this->sanitizer = $sanitizer;
 		$this->config = $config;
+		$this->requestBody = file_get_contents('php://input'); 
 		$this->urlSegments = new UrlSegments($this->sanitizer);
 		$this->parseUrl();
 		$this->post = new Post();
 		$this->get = new Get();
+		$this->patch = new Patch();
+		$this->put = new Put();
 		$this->whitelist = new Whitelist();
 		$this->buildSubmitedData();
 	}
@@ -54,6 +60,15 @@ class Input
 	private function buildSubmitedData() {
 		foreach($_POST as $key => $value) { $this->post->{$key} = $value; }
 		foreach($_GET as $key => $value) { $this->get->{$key} = $value; }
+		if($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+			parse_str($this->requestBody, $_PATCH);
+			foreach($_PATCH as $key => $value) { $this->patch->{$key} = $value; }
+		}
+		elseif($_SERVER['REQUEST_METHOD'] == 'PUT') {
+			parse_str($this->requestBody, $_PUT);
+			foreach($_PUT as $key => $value) { $this->put->{$key} = $value; }
+		}
+		//foreach($_PATCH as $key => $value) { $this->post->{$key} = $value; }
 		if(!$this->pageNumber && isset($_GET[$this->config->pageNumbersUrlSegment]) &&
 			(int) $_GET[$this->config->pageNumbersUrlSegment] != 0) {
 			$this->pageNumber = (int) $_GET[$this->config->pageNumbersUrlSegment];
@@ -113,6 +128,34 @@ class Post
 }
 
 class Get
+{
+	/**
+	 * Provides direct reference access to set values in the $data array
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * return $this
+	 *
+	 */
+	public function __set($key, $value) { $this->{$key} = $value; }
+	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+}
+
+class Patch
+{
+	/**
+	 * Provides direct reference access to set values in the $data array
+	 *
+	 * @param string $key
+	 * @param mixed $value
+	 * return $this
+	 *
+	 */
+	public function __set($key, $value) { $this->{$key} = $value; }
+	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+}
+
+class Put
 {
 	/**
 	 * Provides direct reference access to set values in the $data array

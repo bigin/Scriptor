@@ -84,7 +84,7 @@ class Item extends FieldMapper
 	 *
 	 * @param $name
 	 */
-	public function init($categoryid, $force = false) { if(!isset($this->imanager)) { parent::init($categoryid, $force);} }
+	public function init(int $categoryid, bool $force = false) { if(!isset($this->imanager)) { parent::init($categoryid, $force);} }
 
 	/**
 	 * Restricted parent init.
@@ -120,7 +120,7 @@ class Item extends FieldMapper
 	/**
 	 * Retrives item attributes array
 	 */
-	private function getAttributes() {
+	private function getAttributes(): array {
 		return array('categoryid', 'id', 'name', 'label', 'position', 'active', 'created', 'updated');
 	}
 
@@ -129,7 +129,7 @@ class Item extends FieldMapper
 	 *
 	 * @return int
 	 */
-	private function getNextId()
+	private function getNextId(): int
 	{
 		$ids = array();
 		$maxid = 1;
