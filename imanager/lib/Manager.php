@@ -33,8 +33,6 @@ class Manager
 		$this->config = Util::buildConfig();
 		$this->sanitizer = new Sanitizer();
 		$this->input = new Input($this->config, $this->sanitizer);
-		Util::buildLanguage();
-		set_error_handler(__NAMESPACE__.'\Util::imErrorHandler');
 	}
 
 	/**
