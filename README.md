@@ -63,7 +63,7 @@ https://your-website.com/subdirectory/editor/
 > Password: `gT5nLazzyBob`
 
 ### Links   
-Official website: https://scriptor-cms.info
+Official website: https://scriptor-cms.info   
 Documentation: https://scriptor-cms.info/documentation/    
 Demo: https://demos.ehret-studio.com/scriptor/        
 Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
