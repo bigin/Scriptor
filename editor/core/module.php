@@ -214,7 +214,7 @@ class Module implements ModuleInterface
 	 * @param string - Can currently only be 'js' or 'css'
 	 * @param $url - resource URL
 	 */
-	protected function addHeaderResource($context, $url)
+	public function addHeaderResource($context, $url)
 	{
 		$headerResources = Scriptor::getProperty('headerResources');
 		if($context == 'js') $headerResources[$context][] =
@@ -247,7 +247,7 @@ class Module implements ModuleInterface
 	 * 
 	 * @return string
 	 */
-	protected function renderMessages()
+	public function renderMessages()
 	{
 		if(!empty($this->msgs)) {
 			$this->messages .= '<div class="message">';
