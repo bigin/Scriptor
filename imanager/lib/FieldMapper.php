@@ -41,7 +41,7 @@ class FieldMapper extends Mapper
 	 *
 	 * @return bool
 	 */
-	public function init($category_id, $force = false)
+	public function init(int $category_id, bool $force = false)
 	{
 		if(self::$initialized && !$force && self::$category_id === $category_id) return true;
 		self::$category_id = $category_id;

@@ -118,7 +118,7 @@ $config = [
 	 *
 	 * Add your custom modules to '/site/modules/ModuleName/ModuleName.php'
 	 *
-	 * The structure is as follows:
+	 * The param structure is as follows:
 	 *
 	 * // Key should be the same as the slug
 	 * 'pages' => [                                       // URL Segment that resolves to the module (array)

@@ -14,6 +14,13 @@
 $config->debug = true;
 
 /**
+ * If ItemManager's own ErrorHandler should be used "true"
+ * 
+ * @var bool
+ */
+$config->imErrorHandler = true;
+
+/**
  * Max length for the fieds names
  *
  * @var integer
