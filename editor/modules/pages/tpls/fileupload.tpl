@@ -107,7 +107,8 @@
 		<td>
 			<p class="name"><span class="heading">[[name_heading]] </span>
 				{% if (file.url) { %}
-					<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+					<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a> 
+					<a class="copy i-wrapp-inline" title="Copy to clipboard" href="#" rel="![]([[IMAGES_URL]]{%=file.name%})"><i class="gg-copy"></i></a>
 				{% } else { %}
 					<span>{%=file.name%}</span>
 				{% } %}
