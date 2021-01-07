@@ -35,11 +35,15 @@ class Input
 		$this->buildSegments($pathOnly);
 	}
 
+	/*
+	 * foreach(array_values(array_filter(array_map('trim', explode('/', $parseUrl['path'])), function($value) {
+	 *				return ($value !== null && $value !== false && $value !== ''); 
+	 *		})) as $key => $value) { ...
+	 */
 	private function buildSegments($url) {
 		$parseUrl = parse_url(trim($url));
 		if(isset($parseUrl['path'])) {
-			foreach(array_values(array_filter(array_map('trim',
-				explode('/', $parseUrl['path'])))) as $key => $value) {
+			foreach(array_values(array_filter(array_map('trim', explode('/', $parseUrl['path'])), 'strlen')) as $key => $value) {
 				$this->urlSegments->set($key, $value);
 				$this->urlSegments->total++;
 			}

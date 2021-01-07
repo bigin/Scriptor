@@ -28,7 +28,7 @@ class Editor extends Module
 			// Is module disabled?
 			if(!$module['active']) { return; }
 			$auth = isset($module['auth']) ? $module['auth'] : true;
-			if(true === $auth && (!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin'])) {
+			if(true === $auth && (! isset($_SESSION['loggedin']) || true != $_SESSION['loggedin'])) {
 				// Todo: That should to be more dynamic
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
