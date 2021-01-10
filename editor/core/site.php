@@ -366,6 +366,7 @@ class Site extends Module
 				$params['domain'], $params['secure'], $params['httponly']
 			);
 		}
-		session_destroy();
+		
+		! isset($_SESSION) OR session_destroy();
 	}
 }
