@@ -7,16 +7,13 @@ The perfect solution for building any kind of microsites.
 
 ## Features   
 #### Get started quickly: 
-Intuitive, user-friendly control panel helps you get up and running easily. 
-You will have it installed in 2 minutes - ready to use.   
+Intuitive, user-friendly control panel helps you get up and running easily – you will have it installed in the blink of an eye.   
 
-#### Flexible features extensible architecture:
-You have a variety of options and a powerful [ItemManager](https://github.com/bigin/ItemManager-3) 
-framework for module development.
+#### A flexible and extensible architecture:
+You have a variety of options and a powerful [ItemManager](https://github.com/bigin/ItemManager-3) API for module development.
 
 #### You have total freedom:
-Themes and Modules can contain plain HTML/PHP source code. Scriptor does not restrict the user's development approach 
-by a mandatory template engine.
+Themes and modules can contain plain HTML/PHP code - Scriptor does not restrict the user's development approach with a mandatory template engine.
 
 
 ### Install Requirements
@@ -51,11 +48,11 @@ https://your-website.com/subdirectory/editor/
 > Password: `gT5nLazzyBob`
 
 ### Links   
-Official website: https://scriptor-cms.info   
-Documentation: https://scriptor-cms.info/documentation/    
-Demo: https://demos.ehret-studio.com/scriptor/      
-Showcase: https://github.com/bigin/Scriptor/discussions/15      
-Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
+- Official website: https://scriptor-cms.info   
+- Documentation: https://scriptor-cms.info/documentation/    
+- Demo: https://demos.ehret-studio.com/scriptor/      
+- Showcase: https://github.com/bigin/Scriptor/discussions/15      
+- Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
