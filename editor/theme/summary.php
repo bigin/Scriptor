@@ -3,7 +3,7 @@
 	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
-			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" width="137" height="104" src="<?php echo $editor->siteUrl; ?>/theme/images/logo.png"></a>
+			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" width="200" src="<?php echo $editor->siteUrl; ?>/theme/images/logo.png"></a>
 		</div>
 		<?php if(isset($_SESSION['loggedin'])) { ?>
 		<ul class="summary">

@@ -8,10 +8,10 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1598071835,
-     'content' => '![]([[IMAGES_URL]]scriptor-dashboard.png)    
+     'updated' => 1612906476,
+     'content' => '![]([[IMAGES_URL]]scriptor-banner.png)    
 
-### Iove oscula propositum acerris iusque
+### Iove oscula propositum acerris iusqu
 
 Lorem markdownum notam sibila Argolicis habet, manibus illa, et. Fera vestigia
 metuunt annos ignibus *commota quippe*. Graiumque tua vix volanti Diomedeos
@@ -67,7 +67,7 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.',
     array (
       0 => 
       Imanager\FileuploadFieldValue::__set_state(array(
-         'name' => 'scriptor-dashboard.png',
+         'name' => 'scriptor-banner.png',
          'path' => 'data/uploads/1.1.6/',
          'title' => '',
          'position' => 0,

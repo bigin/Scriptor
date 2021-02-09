@@ -507,10 +507,15 @@ class UploadHandler
 
 			// If we are auto rotating the image by default, do the checks on
 			// the correct orientation
+			$exif = null;
+			if(function_exists('exif_read_data') && function_exists('exif_imagetype')) {
+				if(exif_imagetype($uploaded_file) == IMAGETYPE_JPEG) 
+					$exif = @exif_read_data($uploaded_file);
+			}
 			if (
 				@$this->options['image_versions']['']['auto_orient'] &&
 				function_exists('exif_read_data') &&
-				($exif = @exif_read_data($uploaded_file)) &&
+				$exif &&
 				(isset($exif['Orientation']) && ((int) @$exif['Orientation']) >= 5 )
 			) {
 			  $tmp = $img_width;

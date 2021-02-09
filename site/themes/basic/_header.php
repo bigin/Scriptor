@@ -3,8 +3,8 @@
 	<div class="clip">
 		<ul class="brand-wrapper">
 			<li class="brand"><a href="<?php echo $site->siteUrl; ?>">
-				<img src="<?php echo $site->siteUrl.'/site/themes/basic/images/scriptor-logo.png'; ?>" 
-				alt="<?php echo $site->config['site_name']; ?>"></a>
+				<img src="<?php echo $site->siteUrl.'/site/themes/basic/images/scriptor-logo.svg'; ?>" 
+				alt="<?php echo $site->config['site_name']; ?>" width="100"></a>
 			</li>
 		</ul>
 	</div>
