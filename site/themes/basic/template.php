@@ -13,7 +13,7 @@
 </head>
 <body>
 <main role="main">
-	<?php include('header.php'); ?>
+	<?php include '_header.php'; ?>
 	<div class="page-wrapper">
 		<div class="page">
 			<div class="page-inner clear">
@@ -24,7 +24,7 @@
 				<div id="content" role="article">
 					<?php echo $site->render('content'); ?>
 				</div>
-				<?php include('sidebar.php'); ?>
+				<?php include '_sidebar.php'; ?>
 			</div>
 		</div>
 	</div>

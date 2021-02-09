@@ -79,6 +79,7 @@ header .brand-wrapper .brand a:hover {
 
 h1, h2, h3, h4, h5, strong {
 	font-weight: 600;
+	color: #444;
 }
 
 #page-header h1 {
