@@ -512,7 +512,7 @@ class UploadHandler
 				if(exif_imagetype($uploaded_file) == IMAGETYPE_JPEG) 
 					$exif = @exif_read_data($uploaded_file);
 			}
-			if (
+			if(
 				@$this->options['image_versions']['']['auto_orient'] &&
 				function_exists('exif_read_data') &&
 				$exif &&
