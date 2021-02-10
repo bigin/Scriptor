@@ -80,7 +80,7 @@ $i18n = [
 	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
 	'contact_developer' => 'Entwickler kontaktieren',
 	'dashboard_content' => '
-			<img src="theme/images/scriptor-dashboard.png">
+			<img src="theme/images/scriptor-dashboard.svg">
 			<h1>Willkommen bei Scriptor</h1>
 			<hr>
 			<h3>Was ist Scriptor?</h3>

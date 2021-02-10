@@ -78,7 +78,7 @@ $i18n = [
 	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
 	'contact_developer' => 'Contact developer',
 	'dashboard_content' => '
-			<img src="theme/images/scriptor-dashboard.png">
+			<img src="theme/images/scriptor-dashboard.svg">
 			<h1>Welcome to Scriptor</h1>
 			<hr>
 			<h3>What is Scriptor?</h3>
