@@ -178,7 +178,7 @@ class Site extends Module
 		$configs = array_merge($defaults, $options);
 		
 		$topl = $this->pages->getItems("parent=$configs[parent]");
-		if(!$topl) return $pages;
+		if(! $topl) return $pages;
 		if($configs['active']) {
 			$topl = $this->pages->getItems('active=1', 0, $topl);
 		}
@@ -191,6 +191,34 @@ class Site extends Module
 			}
 		}
 		return $pages;
+	}
+
+	public function getParentPages($options = [])
+	{
+		$return = [];
+		$defaults = [
+			'page' => $this->page->id, // Page id
+			'maxLevel' => 0,           // Zero means unlimited
+			'active' => true           // Active pages only
+		];
+		$configs = array_merge($defaults, $options);
+
+		$par = $this->pages->getItem($configs['page']);
+		if($configs['active'] && ! $par->active) return null;
+		$return[] = $par;
+		if(($configs['maxLevel'] > 0 && count($return) >= $configs['maxLevel']) 
+		   || ! $par->parent) return $return;
+		
+		   $options['page'] = $par->parent;
+		
+		$res = $this->getParentPages($options);
+		if(isset($res) && is_array($res)) {
+			foreach($res as $arr) $return[] = $arr;
+		} else {
+			$return[] = $res;
+		}
+
+		return $return;
 	}
 
 	public static function getPageUrl($item, $pages)
