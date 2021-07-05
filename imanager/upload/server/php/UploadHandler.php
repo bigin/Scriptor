@@ -721,8 +721,10 @@ class UploadHandler
 		if(!function_exists('exif_read_data')) {
 			return false;
 		}
+		//if(exif_imagetype($file_path) == IMAGETYPE_JPEG) {
 		$exif = @exif_read_data($file_path);
-		if($exif === false) {
+		//}
+		if(! isset($exif) || $exif === false) {
 			return false;
 		}
 		$orientation = isset($exif['Orientation']) ? (int) @$exif['Orientation'] : 0;

@@ -251,6 +251,17 @@ class Util
 	}
 
 	/**
+	 * Function to check string startingwith given substring
+	 * 
+	 * @return bool
+	 */ 
+	public static function startsWith($string, $startString)
+	{
+    	$len = strlen($startString);
+		return (substr($string, 0, $len) === $startString);
+	}
+
+	/**
 	 * ItemManager internal error handler
 	 *
 	 * To trigger the ERROR/WARNING/NOTICE messages, use trigger_error() function:
@@ -272,7 +283,7 @@ class Util
         // Determine if this error is one of the enabled ones in php config (php.ini, .htaccess, etc)
         $error_is_enabled = (bool)($number & ini_get('error_reporting'));
 		
-		self::dataLog($number);
+		//self::dataLog($number);
         // DISABLED by @ e.g. @your_function() ...
         if(error_reporting() === 0) return;
 
@@ -313,6 +324,18 @@ class Util
 	public static function logException(\Exception $e): void
 	{
 		$error_is_enabled = (bool)(ini_get('error_reporting'));
+
+		// Express fix. Some messages (UploadHandler) must be hidden, 
+		// even if error reporting is turned on.
+		$excludes = [
+			'exif_read_data('
+		];
+		$skip = false;
+		$msg = $e->getMessage();
+		foreach($excludes as $exclude) {
+    		$skip = self::startsWith($msg, $exclude);
+			if($skip) break;
+		}
 
 		if($error_is_enabled) {
 			print "<div style='text-align: center; font-family: monospace;'>";
