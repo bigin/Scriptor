@@ -1,3 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.tpl linguist-language=Template
+*.tpl linguist-language=HTML
+*.php linguist-language=PHP
