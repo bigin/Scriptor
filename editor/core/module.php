@@ -221,12 +221,13 @@ class Module implements ModuleInterface
 		$san = $this->imanager->sanitizer;
 
 		foreach($data as $arrt => $value) {
-			$attrs .= $san->text($arrt).'="'.$san->text($value).'" ';
+			if(is_int($arrt)) $attrs .= $san->text($value).' ';
+			else $attrs .= $san->text($arrt).'="'.$san->text($value).'" ';
 		}
 
 		$localArea = $san->text($area);
 		$resources = Scriptor::getProperty($localArea.'Resources');
-		$resources[$context][] = "<$context $attrs></$context>\r\n";
+		$resources[$context][] = ($context != 'link') ? "<$context $attrs></$context>\r\n" : "<$context $attrs>\r\n";
 		Scriptor::setProperty($localArea.'Resources', $resources);
 	}
 
