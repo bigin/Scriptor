@@ -12,10 +12,10 @@
 	<link href="<?php echo $editor->siteUrl; ?>/theme/css/css-gg.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.min.css">
-	<?php echo $editor->getHeaderResources('css'); ?>
+	<?php echo $editor->getResources('link'); ?>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery.min.js"></script>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery-ui.min.js"></script>
-	<?php echo $editor->getHeaderResources('js'); ?>
+	<?php echo $editor->getResources('script'); ?>
 </head>
 <body>
 <div id="delay"><div id="clamp"><span id="loader"></span></div></div>

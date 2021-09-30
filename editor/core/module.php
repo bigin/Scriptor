@@ -209,7 +209,31 @@ class Module implements ModuleInterface
 	}
 
 	/**
+	 * Adds resources to the resources buffer.
+	 * 
+	 * @param string $context - Any resource 'script' or 'link' etc.
+	 * @param array $data - Attribut name and value e.g. 'src' => '/your/resource-url/script.js'
+	 * @param string $area - Resource area e.g. 'header', 'boddy'. Default is 'header'.
+	 */
+	public function addResource(string $context, array $data, string $area = 'header')
+	{
+		$attrs = '';
+		$san = $this->imanager->sanitizer;
+
+		foreach($data as $arrt => $value) {
+			$attrs .= $san->text($arrt).'="'.$san->text($value).'" ';
+		}
+
+		$localArea = $san->text($area);
+		$resources = Scriptor::getProperty($localArea.'Resources');
+		$resources[$context][] = "<$context $attrs></$context>\r\n";
+		Scriptor::setProperty($localArea.'Resources', $resources);
+	}
+
+	/**
 	 * Adds heder resources to the HeaderResources Buffer.
+	 * 
+	 * @deprecated - Use Scriptor\Module::addResource() instead.
 	 * 
 	 * @param string - Can currently only be 'js' or 'css'
 	 * @param $url - resource URL
@@ -225,8 +249,41 @@ class Module implements ModuleInterface
 	}
 
 	/**
-	 * Returns header resources 
-	 * e.g. used in theme header 
+	 * Returns resources e.g. used in editor theme 
+	 * 
+	 * @param string $context
+	 * @param string $area
+	 * 
+	 * @return null|string
+	 */
+	public function getResources(string $context, string $area = 'header')
+	{
+		// Context converter because of backward compatibility
+		$oldContexts = [
+			'script' => 'js',
+			'link' => 'css'
+		];
+		$san = $this->imanager->sanitizer;
+		$resources = Scriptor::getProperty($san->text($area).'Resources');
+
+		$result = null;
+		if(isset($resources[$context]) && is_array($resources[$context])) {
+			foreach($resources[$context] as $resource) $result .= $resource;
+		}
+
+		// just for backward compatibility
+		elseif(isset($resources[$oldContexts[$context]]) && 
+			is_array($resources[$oldContexts[$context]])) {
+				foreach($resources[$oldContexts[$context]] as $resource) $result .= $resource;
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Returns header resources e.g. used in theme header 
+	 * 
+	 * @deprecated - Use Scriptor\Module::getResource() instead.
 	 * 
 	 * @return null|string
 	 */
