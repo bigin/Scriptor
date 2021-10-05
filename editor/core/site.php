@@ -133,6 +133,8 @@ class Site extends Module
 
 	public function execute()
 	{
+		if(Scriptor::execHook($this, 'execute', [], 'before') && 
+			$this->event->replace) return;
 		// Home
 		if(!$this->lastSegment) {
 			$this->page = $this->pages->getItem(1);
