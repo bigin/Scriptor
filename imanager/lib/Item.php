@@ -143,53 +143,49 @@ class Item extends FieldMapper
 	}
 
 	/**
-	 * A secure method to set the value of an attribute or item.
-	 * Used for internal purposes, users are recommended to write
-	 * their own function for this purpose.
+	 * A safe way to set the value of an attribute or 
+	 * item's field value. Used for internal purposes.
 	 *
 	 * @param string $name - Fieldname or attribute
 	 * @param int|string|boolean|array $value
 	 * @param bool $sanitize
 	 *
-	 * @return bool
+	 * @return null|object
 	 */
-	public function set($name, $value, $sanitize = true)
+	public function set($name, $value, $sanitize = true) :?object
 	{
 		$this->init($this->categoryid, true);
 		$attributeKey = strtolower(trim($name));
-		$isAttribute = !in_array($attributeKey, $this->getAttributes()) ? false : true;
-		if(!$isAttribute && !isset($this->fields[$name])) { Util::logException(new \ErrorException('Illegal item field name')); }
+		$isAttribute = ! in_array($attributeKey, $this->getAttributes()) ? false : true;
+		if(! $isAttribute && ! isset($this->fields[$name])) { Util::logException(new \ErrorException('Illegal attribute or field name')); }
 		if($isAttribute) {
 			if(in_array($attributeKey, array('categoryid', 'id', 'position', 'created', 'updated'))) {
 				$this->$attributeKey = (int) $value;
-				if($this->$attributeKey) return $this;
 			} elseif($attributeKey == 'name' || $attributeKey == 'label') {
-				$this->$attributeKey = $this->imanager->sanitizer->text($value,
-					array('maxLength' => $this->imanager->config->maxItemNameLength)
-				);
-				if($this->$attributeKey) return $this;
+				$this->$attributeKey = $this->imanager->sanitizer->text($value, [
+					'maxLength' => $this->imanager->config->maxItemNameLength
+				]);
 			} elseif($attributeKey == 'active') {
 				$this->$attributeKey = (boolean) $value;
-				if($this->$attributeKey) return $this;
 			}
-			return false;
+			return $this;
 		}
 		$field = $this->fields[$name];
 		$inputClassName = __NAMESPACE__.'\Input'.ucfirst($field->type);
 		$Input = new $inputClassName($field);
 		$Input->itemid = $this->id;
-		if(!$sanitize) {
+		if(! $sanitize) {
 			if(true !== $Input->prepareInput($value)) {
 				$this->errorCode = $Input->errorCode;
-				return false;
+				return null;
 			}
-			$this->{$name} = $Input->prepareOutput();
+			$this->$name = $Input->prepareOutput();
 		} else {
 			if(true !== $Input->prepareInput($value, true)) {
 				$this->errorCode = $Input->errorCode;
-				return false;
+				return null;
 			}
-			$this->{$name} = $Input->prepareOutput(true);
+			$this->$name = $Input->prepareOutput(true);
 		}
 		return $this;
 	}

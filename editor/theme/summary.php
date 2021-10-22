@@ -1,5 +1,5 @@
 <?php defined('IS_IM') or die('You cannot access this page directly'); ?>
-<div class="summary-wrapper arounder">
+<div class="summary-wrapper">
 	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">

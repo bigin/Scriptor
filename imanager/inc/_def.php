@@ -19,5 +19,5 @@ define('IM_UPLOADPATH', IM_DATAPATH.'uploads/');
 define('IM_TEMPLATEPATH', IM_ROOTPATH.'imanager/tpls/');
 define('IM_BACKUPPATH', IM_DATAPATH.'backups/');
 define('IM_TEMPLATE_SUFFIX', '.tpl');
-define('IM_VERSION', 321);
-define('IM_VERSION_HUMAN', '3.2.1');
+define('IM_VERSION', 322);
+define('IM_VERSION_HUMAN', '3.2.2');

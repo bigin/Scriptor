@@ -164,16 +164,18 @@ class Field extends ImObject
 	 * @param $val
 	 * @param bool $sanitize
 	 *
-	 * @return bool
+	 * @return object
 	 */
-	public function set($key, $val, $sanitize = true)
+	public function set($key, $val, $sanitize = true) :object
 	{
 		$this->init();
 		$sanitizer = $this->imanager->sanitizer;
 
 		$key = strtolower($key);
 
-		if(!in_array($key, $this->getAttributes())) { return false; }
+		if(!in_array($key, $this->getAttributes())) { 
+			Util::logException(new \ErrorException('Illegal field attribute'));
+		}
 
 		$literals = array('name', 'label', 'type', 'default', 'info', 'areaclass', 'labelclass', 'fieldclass');
 
@@ -197,7 +199,7 @@ class Field extends ImObject
 		} else {
 			$this->{$key} = ($sanitize) ? (int) $val : $val;
 		}
-
+		
 		return $this;
 	}
 
