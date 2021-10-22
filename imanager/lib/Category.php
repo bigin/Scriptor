@@ -210,16 +210,16 @@ class Category extends ImObject
 	 * @param $key
 	 * @param $val
 	 *
-	 * @return bool
+	 * @return object
 	 */
-	public function set($key, $val, $sanitize = true)
+	public function set($key, $val, $sanitize = true) :object
 	{
 		$this->init();
 		$sanitizer = $this->imanager->sanitizer;
 		$key = strtolower($key);
 
 		// Allowed attributes
-		if(!in_array($key, $this->getAttributes())) {
+		if(! in_array($key, $this->getAttributes())) {
 			Util::logException(new \ErrorException('Illegal category attribute'));
 		}
 
