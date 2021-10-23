@@ -1,9 +1,9 @@
-![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner.png)
+![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-dashboard.svg)
 
 # Scriptor
 
 _Scriptor is a simple flat-file CMS_   
-The perfect solution for building any kind of microsites.
+A lightweight flat-file CMS that allows you to get started with minimal effort and time investment.
 
 ## Features   
 #### Get started quickly: 
@@ -58,6 +58,7 @@ https://your-website.com/subdirectory/editor/
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
 ### Changelog
+- `1.4.15` `ENH`: `Minor styling updates` | `FIX`: `Return value of the set() methods in Category, Field and Item objects`   
 - `1.4.11` `ENH`: `The handling for session cookie.` | `ENH`: `Exception Handling.` | `FIX`: `Security update for session check statement on file upload.`   
 - `1.4.10` `ENH`: `Added a new hookable method editor::afterExecute()` | `Minor design updates.`    
 - `1.4.9` `NEW`: `Several design adjustments.` | `ENH`: `Dropped Font Awesome support`    
