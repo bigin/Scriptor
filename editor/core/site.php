@@ -266,8 +266,10 @@ class Site extends Module
 				]);
 				if(true !== $this->config['allowHtmlOutput']) {
 					$this->parsedown->setSafeMode(true);
+					$content = $this->parsedown->text(htmlspecialchars_decode($content));
+				} else {
+					$content = htmlspecialchars_decode($this->parsedown->text($content));
 				}
-				$content = $this->parsedown->text(htmlspecialchars_decode($content)); 
 				$this->imanager->sectionCache->save($content);
 			}
 			return $content;

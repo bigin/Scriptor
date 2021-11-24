@@ -88,7 +88,7 @@ h1,h2,h3,h4 {
 	font-weight: 600;
 }
 h1,h2,h3,h4,button,label,.heading,.file-upload.button {
-	color: #2f547c !important;
+	color: #1e4f9b !important;
 }
 hr {
 	height: 4px;
@@ -216,7 +216,7 @@ hr {
 	height: auto;
 	color: #364149;
 	background: #fff;
-	font-weight: 600;
+	font-weight: 500;
 	border-right: 1px solid rgba(0,0,0,.05);
 	-webkit-transition: left 250ms ease;
 	-moz-transition: left 250ms ease;
@@ -247,6 +247,7 @@ hr {
 .summary-wrapper ul li>a, .summary-wrapper ul li>span {
 	display: block;
 	padding: 12px 20px;
+	min-height: 44px;
 	border-bottom: none;
 	color: inherit;
 	background: 0 0;
@@ -259,9 +260,9 @@ hr {
 	align-items: center;
 }
 .summary-wrapper ul li>a>span, .summary-wrapper ul li>span>span {
-	padding-left: 8px;
+	padding-left: 30px;
+    position: absolute;
 }
-
 .summary-wrapper ul li a {
 	color: #008cff;
 }
@@ -362,7 +363,7 @@ hr {
 
 #markdown {
 	width: 100%;
-	border: 1px solid rgba(0,0,0,.07);
+	border: 1px solid rgba(0,0,0,.15);
 	padding: 5px 15px;
 	resize: none;
 	min-height: 300px;
@@ -398,9 +399,9 @@ select {
 	background-position: right 8px top 7px;
 }
 
-input[type="text"],input[type="password"],input[type="email"],select,input[type="number"] {
+input[type="text"],input[type="password"],input[type="email"],select,textarea,input[type="number"],input[type="url"] {
 	width: 100%;
-	border: 1px solid rgba(0,0,0,.07);
+	border: 1px solid rgba(0,0,0,.15);
 	padding: 5px 15px;
 	border-radius: 6px;
 	font-size: 1.6rem;
