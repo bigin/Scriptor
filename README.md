@@ -1,4 +1,4 @@
-![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner-21.png)
+![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner-21.png?v=1.02)
 
 # Scriptor
 
