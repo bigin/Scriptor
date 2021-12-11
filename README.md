@@ -57,12 +57,4 @@ https://your-website.com/subdirectory/editor/
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
 
-### Changelog
-- `1.4.15` `ENH`: `Minor styling updates` | `FIX`: `Return value of the set() methods in Category, Field and Item objects`   
-- `1.4.11` `ENH`: `The handling for session cookie.` | `ENH`: `Exception Handling.` | `FIX`: `Security update for session check statement on file upload.`   
-- `1.4.10` `ENH`: `Added a new hookable method editor::afterExecute()` | `Minor design updates.`    
-- `1.4.9` `NEW`: `Several design adjustments.` | `ENH`: `Dropped Font Awesome support`    
-- `1.4.8` `FIX`: `Scriptor\Profile properties.` | `NEW`: `Shared configuration parameters PHP and Javascript.` | `ENH`: `Styles adjustments.`    
-- `1.4.7` `ENH`: `Code quality improvements.`   
-- `1.4.6` `NEW`: `This core version adds the ability to hook into the Editor methods.`   
-- `1.4.5` `NEW`: `File upload field as an integral part of the core application.`    
+  
