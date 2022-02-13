@@ -107,11 +107,11 @@ return [
 		 * The email address from which the email will be sent
 		 * 
 		 */
-		'email_from' => 'juri.ehret@gmail.com',
+		'email_from' => 'your-mail@mail.com',
 
 		'email_from_name' => 'Website name - contact',
 
-		'email_to' => 'juri.ehret@gmail.com',
+		'email_to' => 'your-mail@mail.com',
 
 		'email_to_name' => 'Website admin'
 	],
