@@ -15,7 +15,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.0.0",
+        "php": ">=7.4.0",
         "ext-gd": "*"
     }
 }

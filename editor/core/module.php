@@ -97,7 +97,7 @@ class Module implements ModuleInterface
 	 */
 	public function init()
 	{
-		$this->config = & Scriptor::getProperty('config');
+		$this->config = Scriptor::getProperty('config');
 		$this->imanager = Scriptor::getProperty('imanager');
 		$this->i18n = Scriptor::getProperty('i18n');
 		$this->msgs = Scriptor::getProperty('msgs');
@@ -111,9 +111,6 @@ class Module implements ModuleInterface
 		$this->msgs = & $_SESSION['msgs'];
 	}
 	
-	/**
-	 * That can be static method
-	 */
 	public function createEvent()
 	{
 		$event = new \stdClass;
@@ -260,7 +257,7 @@ class Module implements ModuleInterface
 	 * 
 	 * @return null|string
 	 */
-	public function getResources(string $context, string $area = 'header') :?string
+	public function getResources(string $context, string $area = 'header')
 	{
 		// Context converter because of backward compatibility
 		$oldContexts = [
@@ -303,26 +300,14 @@ class Module implements ModuleInterface
 	}
 
 	/**
-	 * Adds a message to the message array
+	 * Generates default messages markup and 
+	 * flushes the message buffer.
 	 * 
-	 * @param string $type - Message type "error/success/..."
-	 * @param string $text - Message text
+	 * @return string
 	 */
-	public function addMsg(string $type, string $text) :void
+	public function renderMessages()
 	{
-		$this->msgs[] = [
-			'type' => $this->sanitizer->text($type),
-			'value' => $text
-		];
-	}
-
-	/**
-	 * Generates default messages markup and flushes the message buffer.
-	 * 
-	 */
-	public function renderMessages() :void
-	{
-		if(! empty($this->msgs)) {
+		if(!empty($this->msgs)) {
 			$this->messages .= '<div class="message">';
 			foreach($this->msgs as $msg) {
 				if($msg['type'] == 'error') {
@@ -337,12 +322,12 @@ class Module implements ModuleInterface
 		}
 	}
 	
-	public function getProperty(string $name) :mixed
+	public function getProperty($name)
 	{
 		return isset($this->$name) ? $this->$name : null;
 	}
 
-	public function setProperty($name, $value) :void
+	public function setProperty($name, $value)
 	{
 		if(property_exists($this, $name)) $this->$name = $value;
 	}

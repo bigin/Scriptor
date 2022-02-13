@@ -2,7 +2,6 @@
 
 namespace Scriptor;
 
-use Imanager\Item;
 use Imanager\TemplateParser;
 
 class Site extends Module
@@ -132,96 +131,58 @@ class Site extends Module
 		$this->version = Scriptor::VERSION;
 	}
 
-	public function execute() :void
+	public function execute()
 	{
 		if(Scriptor::execHook($this, 'execute', [], 'before') && 
 			$this->event->replace) return;
 		// Home
 		if(!$this->lastSegment) {
 			$this->page = $this->pages->getItem(1);
-			if(!$this->page || !$this->page->active) { 
-				$this->throw404(); 
+			if(!$this->page || !$this->page->active) { return $this->throw404(); }
+			//$this->checkAction();
+			$this->title = $this->page->name;
+			foreach($this->page as $key => $param) {
+				$this->$key = $param;
 			}
 		// Other pages
 		} else {
 			$total = $this->segments->total - 1;
-			$this->page = $this->getPageBySegment($this->segments->segment, $total);
+			$this->page = $this->getPage($this->segments->segment, $total);
 			if(!$this->page || !$this->page->active) {
-				$this->throw404();
+				return $this->throw404();
 			}
 			$curentUrl = $this->segments->getUrl();
 			$pageUrl = self::getPageUrl($this->page, $this->pages);
 			if(strpos($curentUrl, $pageUrl) === false) {
-				$this->throw404();
+				return $this->throw404();
+			}
+			$this->title = $this->page->name;
+			foreach($this->page as $key => $param) {
+				$this->$key = $param;
 			}
 		}
 	}
 
-	public function getPage(int|string $selector, array $pages = [])
+	public function getPages()
 	{
-		return $this->pages->getItem($selector, $pages);
+		return $this->pages->getItems();
 	}
 
-	/**
-	 * conds
-	 */
-	public function getPages(string $selector = '', array $conds = []) :?array
-	{
-		$defaults = [
-			'all' => false,
-			'sortBy' => 'position',
-			'order' => 'asc',
-			'offset' => 0,
-			'length' => 0,
-			'items' => []
-		];
-
-		$setup = array_merge($defaults, $conds);
-		
-		$pages = $this->pages->getItems($selector, 0, 0, $setup['items']);
-		if(!$pages) return null;
-	
-		if(!$setup['all']) {
-			$active = $this->pages->getItems('active=1', 0, 0, $pages);
-			if(!$active) return null;
-			$pages = $active;
-		}
-
-		$total = count($pages);
-
-		if($setup['sortBy'] != 'position' || strtolower($setup['order']) != 'asc') {
-			$pages = $this->pages->sort($setup['sortBy'], $setup['order'], 0, 0, $pages);
-		}
-
-		if(!empty($pages) && ($setup['offset'] > 0 || $setup['length'] > 0)) {
-			$pages = $this->pages->getItems('', $setup['offset'], $setup['length'], $pages);
-		}
-
-		return ['pages' => $pages, 'total' => $total];
-	}
-
-	public function getPageLevels($options = [], $pages = []) :array
+	public function getPageLevels($options = [], $pages = [])
 	{
 		$defaults = [
 			'parent' => 0,
 			'maxLevel' => 1,
 			'sortBy' => 'position',
 			'order' => 'asc',
-			'active' => true,
-			'exclude' => []
+			'active' => true
 		];
 		$configs = array_merge($defaults, $options);
 		
 		$topl = $this->pages->getItems("parent=$configs[parent]");
 		if(! $topl) return $pages;
 		if($configs['active']) {
-			$topl = $this->pages->getItems('active=1', 0, 0, $topl);
-		}
-		if(is_array($configs['exclude']) && ! empty($configs['exclude'])) {
-			foreach($configs['exclude'] as $exclude) {
-				$topl = $this->pages->getItems("parent!=$exclude", 0, 0, $topl);
-				$topl = $this->pages->getItems("id!=$exclude", 0, 0, $topl);
-			}
+			$topl = $this->pages->getItems('active=1', 0, $topl);
 		}
 		$topl = $this->pages->sort($configs['sortBy'], $configs['order'], 0, 0, $topl);
 		$pages[$configs['parent']] = $topl;
@@ -275,41 +236,47 @@ class Site extends Module
 		return  $return;
 	}
 
-	public function ___render(string $element) :?string
+	public function ___render($element)
 	{
 		$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
 
 		if($element == 'navigation') {
-			$navi = $this->buildNavi();
+			if(!$navi = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
+				$navi = $this->buildNavi();
+				if($navi) {
+					$this->imanager->sectionCache->save($navi);
+				}
+			}
 			return $navi;
-		} elseif($element == 'content') {
-			$imgPath = '';
-			$field = $this->pages->getField('name=images');
-			$pageId = isset($this->page->id) ? $this->page->id : null;
-			if($pageId && $field && $this->pages) {
-				$imgPath = $this->pages->id.".$pageId.$field->id/";
-			} else {
-				$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
+		}
+		elseif($element == 'content') {
+			if(!$content = $this->imanager->sectionCache->get($name, $this->config['markup_cache_time'])) {
+				$imgPath = '';
+				$field = $this->pages->getField('name=images');
+				$pageId = isset($this->page->id) ? $this->page->id : null;
+				if($pageId && $field && $this->pages) {
+					$imgPath = $this->pages->id.".$pageId.$field->id/";
+				} else {
+					$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->pages->id}.$field->id/";
+				}
+				$content = $this->templateParser->render($this->content, [
+					'BASE_URL' => $this->siteUrl,
+					'UPLOADS_URL' => $this->siteUrl.'/data/uploads/',
+					'IMAGES_URL' => $this->siteUrl."/data/uploads/$imgPath"
+				]);
+				if(true !== $this->config['allowHtmlOutput']) {
+					$this->parsedown->setSafeMode(true);
+					$content = $this->parsedown->text(htmlspecialchars_decode($content));
+				} else {
+					$content = htmlspecialchars_decode($this->parsedown->text($content));
+				}
+				$this->imanager->sectionCache->save($content);
 			}
-			$content = $this->templateParser->render($this->page->content, [
-				'BASE_URL' => $this->siteUrl,
-				'UPLOADS_URL' => $this->siteUrl.'/data/uploads/',
-				'IMAGES_URL' => $this->siteUrl."/data/uploads/$imgPath"
-			]);
-			if(true !== $this->config['allowHtmlOutput']) {
-				$this->parsedown->setSafeMode(true);
-				$content = $this->parsedown->text(htmlspecialchars_decode($content));
-			} else {
-				$content = htmlspecialchars_decode($this->parsedown->text($content));
-			}
-			
 			return $content;
 		}
-
-		return null;
 	}
 
-	protected function getPageBySegment($segments, $index = 0, $pages = null)
+	protected function getPage($segments, $index = 0, $pages = null)
 	{
 		if(!isset($segments[$index])) return null;
 
@@ -321,7 +288,7 @@ class Site extends Module
 		}
 
 		// There are multiple pages with same slug
-		$parent = $this->getPageBySegment($segments, --$index, $pages);
+		$parent = $this->getPage($segments, --$index, $pages);
 		if(!$parent) { return null; }
 
 		foreach($pages as $page) {
@@ -335,7 +302,7 @@ class Site extends Module
 		$navi = '';
 		$topl = $this->pages->getItems('parent=0');
 		// Todo: check if topl exists if 0 pages created
-		$topl = $this->pages->getItems('active=1', 0, 0, $topl);
+		$topl = $this->pages->getItems('active=1', 0, $topl);
 		$topl = $this->pages->sort('position', 'asc', 0, 0, $topl);
 		if(!$topl) return $navi;
 		foreach($topl as $item) {
@@ -348,7 +315,7 @@ class Site extends Module
 
 	protected function getNaviChildren($item, & $items, $url, $children = '')
 	{
-		$childs = $this->pages->getItems("parent=$item->id", 0, 0, $items);
+		$childs = $this->pages->getItems("parent=$item->id", 0, $items);
 		if($childs) {
 			$prefix = '<li' . $this->getClass($item) . '><a href="' .
 				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
@@ -395,7 +362,7 @@ class Site extends Module
 		return (($class) ? ' class="'.$class.'"' : '');
 	}
 
-	public function throw404()
+	protected function throw404()
 	{
 		header("HTTP/1.0 404 Not Found");
 		include 'site/themes/'.$this->config['theme_path'].$this->config['404page'].'.php';

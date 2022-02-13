@@ -9,12 +9,11 @@ if(file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) {
 	include __DIR__.'/data/settings/custom.scriptor-config.php';
 }
 
-$corePath = __DIR__."/$config[admin_path]core/";
-require $corePath.'scriptor.php';
-require $corePath.'moduleInterface.php';
-require $corePath.'module.php';
-require $corePath.'site.php';
-require $corePath.'csrf.php';
+require __DIR__."/$config[admin_path]core/scriptor.php";
+require __DIR__."/$config[admin_path]core/moduleInterface.php";
+require __DIR__."/$config[admin_path]core/module.php";
+require __DIR__."/$config[admin_path]core/site.php";
+require __DIR__."/$config[admin_path]core/csrf.php";
 
 Scriptor::build($config);
 

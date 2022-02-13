@@ -31,23 +31,4 @@ class Helper
 		if($a['position'] == $b['position']) return 0;
 		return ($a['position'] < $b['position']) ? -1 : 1;
 	}
-
-	/**
-	 * Sends Json response and terminates the script execution.
-	 *
-	 * @param string|array $data - Data to send
-	 */
-	public static function sendJsonResponse($data = null, $code = null, $options = null)
-	{
-		if($code) {
-			header('Access-Control-Allow-Headers: Authorization, Content-Type');
-			http_response_code($code);
-		}
-		if($data) {
-			header('Access-Control-Allow-Headers: Authorization, Content-Type');
-			header('Content-type: application/json; charset=utf-8');
-			echo json_encode($data, $options);
-		}
-		exit;
-	}
 }

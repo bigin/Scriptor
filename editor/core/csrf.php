@@ -1,7 +1,6 @@
 <?php
 
 namespace Scriptor;
-
 /**
  * Class CSRF
  *
@@ -117,10 +116,15 @@ class CSRF
 	public function isTokenValid($name, $value, $reset = null)
 	{
 		$return = false;
+
 		if(!isset($_SESSION['token'][$name])) return $return;
+
 		$tokenValue = $_SESSION['token'][$name];
+
 		if($value === $tokenValue) $return = true;
+
 		if($reset) $this->resetToken($name);
+
 		return $return;
 	}
 

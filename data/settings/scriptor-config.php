@@ -116,12 +116,12 @@ $config = [
 	/**
 	 * Installed Scriptor admin modules
 	 *
-	 * Add your custom modules to '/site/modules/<ModuleName>/<ModuleName.php>'
+	 * Add your custom modules to '/site/modules/ModuleName/ModuleName.php'
 	 *
-	 * Parameters description:
+	 * The param structure is as follows:
 	 *
-	 * // Note: the key 'pages' is the URL segment in admin ...
-	 * 'pages' => [                                       // Module name / URL segment that resolves to the module (array)
+	 * // Key should be the same as the slug
+	 * 'pages' => [                                       // URL Segment that resolves to the module (array)
 	 *     'menu' => 'your_menu',                         // i18n variable name or string (string)
 	 *     'position' => 4,                               // Module load order position (integer) (default 0)
 	 *     'active' => true,                              // Enables or disables module (bool)
@@ -140,7 +140,7 @@ $config = [
 	'modules' => [
 		'pages' => [
 			'menu' => 'pages_menu',
-			'position' => 0,
+			'position' => 1,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -154,7 +154,7 @@ $config = [
 		],
 		'profile' => [
 			'menu' => 'profile_menu',
-			'position' => 1,
+			'position' => 0,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
@@ -168,7 +168,7 @@ $config = [
 		],
 		'auth' => [
 			'menu' => 'logout_menu',
-			'position' => 1,
+			'position' => 0,
 			'active' => true,
 			'auth' => false, // Authorization will performed by module itself
 			'autoinit' => true,
@@ -179,6 +179,19 @@ $config = [
 			],
 			'icon' => 'gg-log-in',
 			'description' => 'Login, logout actions module'
+		],
+		'dashboard' => [
+			'menu' => '',
+			'position' => 0,
+			'active' => true,
+			'auth' => true,
+			'autoinit' => true,
+			'path' => 'modules/dashboard/dashboard',
+			'class' => 'Dashboard',
+			'display_type' => [
+			],
+			'icon' => '',
+			'description' => "A default Scriptor's dashboard module"
 		],
 		'settings' => [
 			'menu' => 'settings_menu',
@@ -196,7 +209,7 @@ $config = [
 		],
 		'parsedown' => [
 			'menu' => '',
-			'position' => 4,
+			'position' => 0,
 			'active' => true,
 			'auth' => false,
 			'autoinit' => true,
@@ -205,7 +218,7 @@ $config = [
 			'display_type' => [
 			],
 			'description' => 'A default module for parsing markdown'
-		]
+		],
 	],
 	
 	/**

@@ -333,8 +333,8 @@ class Util
 		$skip = false;
 		$msg = $e->getMessage();
 		foreach($excludes as $exclude) {
-			$skip = self::startsWith($msg, $exclude);
-			if($skip) return;
+    		$skip = self::startsWith($msg, $exclude);
+			if($skip) break;
 		}
 
 		if($error_is_enabled) {
