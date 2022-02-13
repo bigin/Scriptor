@@ -26,8 +26,7 @@ class Profile extends Module
 		if($this->segments->get(0) == 'profile' && $this->segments->get(1) == 'edit') {
 			$this->pageTitle = 'Profile editor - Scriptor';
 			$this->pageContent = $this->renderProfileEditor($_SESSION['userid']);
-			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a><i 
-				class="gg-chevron-right"></i></li><li><span>'.$this->i18n['profile_menu'].'</span></li>';
+			$this->breadcrumbs .= '<li><span>'.$this->i18n['profile_menu'].'</span></li>';
 		}
 	}
 

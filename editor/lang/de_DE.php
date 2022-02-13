@@ -38,7 +38,7 @@ $i18n = [
 	'profile_successful_saved' => 'Ihre Profildaten wurden erfolgreich gespeichert.',
 	'create_button' => 'Erstellen',
 	'logout_menu' => 'Logout',
-	'position_table_header' => 'Pos',
+	'position_table_header' => 'Pos.',
 	'id_table_header' => 'ID',
 	'parent_table_header' => 'Parent',
 	'title_table_header' => 'Titel',
@@ -48,6 +48,8 @@ $i18n = [
 	'view_button' => 'Ansehen',
 	'content_label' => 'Inhalt',
 	'title_label' => 'Titel',
+	'menu_title_label' => 'Menü Titel',
+	'menu_title_field_infotext' => 'Beliebige Kombination von Buchstaben oder Zahlen.',
 	'name_label' => 'Name',
 	'name_field_infotext' => 'Jede Kombination von Buchstaben (a-z), Zahlen (0-9), Bindestrichen oder Unterstrichen (keine Leerzeichen).',
 	'parent_label' => 'Übergeordnete Seite',
@@ -78,56 +80,5 @@ $i18n = [
 	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.',
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
-	'contact_developer' => 'Entwickler kontaktieren',
-	'dashboard_content' => '
-			<img src="theme/images/scriptor-dashboard.svg">
-			<h1>Willkommen bei Scriptor</h1>
-			<hr>
-			<h3>Was ist Scriptor?</h3>
-			<p>Scriptor ist ein einfaches Flat-File-CMS auf Basis von ItemManager, es unterstützt Markdown und Syntaxhervorhebung.</p>
-			
-			<h3>Installationsanforderungen</h3>
-			<ul>
-				<li>Ein Unix- oder Windows-basierter Webserver, auf dem Apache ausgeführt wird.</li>
-				<li>PHP 7 oder höher (vorzugsweise 7+). Es kann auch unter PHP 5.6 verwendet werden, wurde aber noch 
-				nicht getestet.</li>
-				<li>Das gesamte Verzeichnis <mark>data/</mark> mit Ausnahme des Ordners <mark>data/config/</mark> muss 
-				beschreibbar sein.</li>
-				<li>Das Apache-Modul <mark>mod_rewrite</mark> muss aktiviert sein.</li>
-				<li>Der Apache muss die <mark>.htaccess</mark> unterstützen.</li>
-			</ul>
-			
-			<h3>Scriptor aus einer Zip-Datei installieren</h3>
-			<ol>
-				<li>Gehe dazu auf die <a href="https://github.com/bigin/Scriptor/releases">Downloadseite</a> und lade 
-				dir die letzte Scriptor Version herunter.</li>
-				<li>Entpacke das Archiv und benenne das <mark>Scriptor-*</mark> Ordner nach Belieben um.</li>
-				<li>Lade den Inhalt des Ordners auf deinen Server, oder lade den gesamten Ordner hoch, wenn du die 
-				Anwendung in einem Unterordner ausführen möchtest.</li>
-			</ol>
-			
-			<h3>Administrator</h3>
-			<p>Nach der Installation erreichst du Administratorbereich deiner Scriptor-Website, indem du in die 
-			Adresszeile deines Browsers <mark>editor/</mark> eingibst, Bsp:</p>
-			
-			<pre><code>https://your-website.com/editor/</code></pre>
-			
-			<p>Oder wenn du dein Scriptor in einem Unterordner installiert hast:</p>
-			
-			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
-			
-			<h4>Deine Zugangsdaten für den Adminbereich</h4>
-			<mark><strong>(!) ACHUNG:</strong> Ändere das Standardpasswort beim ersten Login!</mark>
-			<p>User: <mark>admin</mark><br>
-			Password: <mark>gT5nLazzyBob</mark></p>
-			
-			<h3>Weitere Einstellungen</h3>
-			<p>Alle anderen Einstellungen nimmst du direkt in der <mark>custom.scriptor-config.php</mark> Datei vor, diese 
-			befindet sich im <mark>data/settings/</mark> Verzeichnis.</p>
-			
-			<hr>
-			<p class="i-wrapp"><i class="gg-link"></i>&nbsp;&nbsp;<a href="https://scriptor-cms.info"
-			>Official Website &rsaquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;<i class="gg-link"></i>&nbsp;&nbsp;<a
-			href="https://github.com/bigin/Scriptor">Clone Repo &rsaquo;</a></p>
-	'
+	'contact_developer' => 'Entwickler kontaktieren'
 ];
