@@ -183,18 +183,21 @@ class ItemMapper extends Mapper
 	/**
 	 * Select method for multiple items
 	 *
-	 * @param $selector        - Selector
-	 * @param int $length  - A clause that is used to specify the number of records to return
+	 * @param string $selector - Selector
+	 * @param int $offset - Specify which record to start from retrieving data.
+	 * @param int $length  - Used to specify the number of records to return
 	 * @param array $items - Item array rekursion
 	 *
 	 * @return array|bool
 	 */
-	public function getItems($selector = '', $length = 0, $items = array())
+	public function getItems($selector = '', $offset = 0, $length = 0, $items = array())
 	{
-		$offset = 0;
 		settype($length, 'integer');
-		// reset offset
-		$offset = ($offset > 0) ? $offset-1 : $offset;
+		// normalize the offset
+		//$offset = ($offset == 1) ? 0 : $offset;
+		$offset = ($offset) ? $offset :
+			(($this->imanager->input->pageNumber) ? (($this->imanager->input->pageNumber -1) * $length) : 0);
+		
 		if(empty($items) && is_array($items)) $items = $this->items;
 		// nothing to select
 		if(!$items) return null;
@@ -223,13 +226,13 @@ class ItemMapper extends Mapper
 	 *
 	 * @param string $filterby - Filter by Item attribute
 	 * @param string $order    - The order in which Items are listed
-	 * @param int|null $offset - The first row to return
-	 * @param length $length   - Specifies the maximum number of rows to return
+	 * @param int $offset - The first row to return
+	 * @param int $length   - Specifies the maximum number of rows to return
 	 * @param array $items     - Elements to search through or empty if the buffered Items shall be used instead
 	 *
 	 * @return boolean|array   - An array of Item objects
 	 */
-	public function sort($filterby = null, $order = 'asc',  $offset = 0, $length = 0, array $items = array())
+	public function sort(string $filterby = null, string $order = 'asc', int $offset = 0, int $length = 0, array $items = []) :?array
 	{
 		settype($offset, 'integer');
 		settype($length, 'integer');
@@ -239,7 +242,7 @@ class ItemMapper extends Mapper
 
 		$localItems = (!empty($items) ? $items : $this->items);
 
-		if(empty($localItems)) return false;
+		if(empty($localItems)) return null;
 
 		$this->filterby = ($filterby) ? $filterby : $this->imanager->config->filterByItems;
 

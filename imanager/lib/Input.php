@@ -48,10 +48,11 @@ class Input
 				$this->urlSegments->total++;
 			}
 		}
-		if($this->urlSegments->total && (false !== strpos($this->urlSegments->getLast(),
-					$this->config->pageNumbersUrlSegment)) ) {
-			$this->pageNumber = (int)str_replace($this->config->pageNumbersUrlSegment, '',
-				$this->urlSegments->getLast());
+		// /* (false !== strpos($this->urlSegments->getLast(), $this->config->pageNumbersUrlSegment)) */ 
+		if($this->urlSegments->total && preg_match('/'.$this->config->pageNumbersUrlSegment.'(\d+)/i', $this->urlSegments->getLast())) {
+			$this->pageNumber = (int) str_replace($this->config->pageNumbersUrlSegment, '', $this->urlSegments->getLast());
+			$this->urlSegments->total--;
+			unset($this->urlSegments->segment[$this->urlSegments->total]);
 		}
 	}
 
