@@ -123,10 +123,10 @@ return [
 	 * More info: https://mailchimp.com/en/help/about-api-keys/
 	 */
 	'mail_chimp' => [
-		'username' => 'Bigizmund',
-		'api_key' => '1985a17d6d102dcc570ac4e8e87b64b8-us10',
-    	'dc' => 'us10',
-    	'list_id' => 'a48be57b78'
+		'username' => '*******',
+		'api_key' => '*******************',
+    	'dc' => '****',
+    	'list_id' => '*******'
 	],
 
 	/**
