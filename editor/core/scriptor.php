@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.4.16';
+	const VERSION = '1.5.0';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -154,7 +154,7 @@ class Scriptor
 		// Check method hooked?
 		$method = !empty($method) ? ucfirst($method) : '';
 		$hookName = Helper::rawClassName(get_class($object)).(!empty($method) ? '::'.$type.ucfirst($method) : '');
-		// No hook to execute, just exit
+		// There no hook to execute, just return
 		if(!isset(self::$config['hooks'][$hookName])) return;
 		// Get installed hooks
 		$hooks = self::$config['hooks'][$hookName];

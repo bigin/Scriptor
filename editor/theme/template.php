@@ -32,11 +32,8 @@
 	</div>
 	<footer role="contentinfo">
 		<div>
-			<a href="https://scriptor-cms.info">Scriptor <?php echo
-				Scriptor\Scriptor::VERSION; ?></a> |
-			Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
-			<a href="https://ehret-studio.com">Ehret Studio</a> |
-			Powered by <a href="https://github.com/bigin/ItemManager-3">ItemManager</a>
+			<a href="https://scriptor-cms.info">Scriptor</a> <?php echo
+				Scriptor\Scriptor::VERSION; ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 		</div>
 	</footer>
 </main>
