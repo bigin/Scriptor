@@ -48,7 +48,7 @@ https://your-website.com/subdirectory/editor/
 ### Links   
 - Official website: https://scriptor-cms.info   
 - Documentation: https://scriptor-cms.info/documentation/    
-- Demo: https://demos.ehret-studio.com/scriptor/      
+- Demo: https://scriptor-demo.000webhostapp.com/      
 - Showcase: https://github.com/bigin/Scriptor/discussions/15      
 - Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
 
