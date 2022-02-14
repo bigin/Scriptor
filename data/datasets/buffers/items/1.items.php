@@ -98,9 +98,28 @@ This page acts as a container for blog articles. All pages that are in this cont
      'position' => 8,
      'active' => true,
      'created' => 1638895123,
-     'updated' => 1644755320,
+     'updated' => 1644860779,
      'slug' => 'get-started-with-scriptor',
-     'content' => '...',
+     'content' => 'Vigil, Evangelina. &ldquo;Es todo&rdquo; en Thirty an&rsquo; Seen a Lot. Houston, Arte P&uacute;blico Press. 1985. 51
+
+### Primero t&uacute;
+
+Con una compa&ntilde;era de clase discute sobre algunas maneras en que se ha visto a la mujer mexicoamericana en la sociedad norteamericana. Comenta el papel que tiene las mujeres de tu barrio, ciudad o regi&oacute;n en la familia y en la sociedad en general. Si crees que la mujer mexicoamericana deber&iacute;a tener un papel m&aacute;s preponderante en alg&uacute;n &aacute;mbito social, expr&eacute;salo y explica tu postura. Comparte tus ideas con los compa&ntilde;eros de clase. &iquest;Est&aacute;n de acuerdo con tus comentarios y opiniones?
+
+### Despu&eacute;s de leer
+
+Contesta las siguientes preguntas en oraciones completas.
+
+  &iquest;En qu&eacute; parte de la ciudad crees que se desarrolla la acci&oacute;n descrita en el poema?
+  &iquest;C&oacute;mo clasificar&iacute;as el estilo de la escritura utilizada por la autora? &iquest;Crees que refleja el habla de una parte de la sociedad?
+  Comenta el uso de regionalismos utilizado por la autora. &iquest;Son similares a los que se usan en tu ciudad o son completamente diferentes?
+  &iquest;A d&oacute;nde piensas que va la protagonista en el poema? Explica tu respuesta.
+En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; importancia piensas que tiene dichos accesorios?
+  &iquest;Qu&eacute; te sugiere el que la protagonista eche un vistazo (glance) a su reloj?
+  &iquest;C&oacute;mo visualizas la comunidad en que se desarrolla el poema?
+
+
+&iexcl;Buena suerte!',
      'template' => 'default',
      'parent' => 2,
      'pagetype' => 1,
@@ -115,62 +134,6 @@ This page acts as a container for blog articles. All pages that are in this cont
       )),
     ),
      'menu_title' => 'Get started with Scriptor',
-  )),
-  4 => 
-  Imanager\Item::__set_state(array(
-     'categoryid' => 1,
-     'id' => 4,
-     'name' => 'There are many ways',
-     'label' => NULL,
-     'position' => 9,
-     'active' => true,
-     'created' => 1638899331,
-     'updated' => 1644755398,
-     'slug' => 'there-are-many-ways',
-     'content' => '...',
-     'template' => '',
-     'parent' => 2,
-     'pagetype' => 1,
-     'images' => 
-    array (
-      0 => 
-      Imanager\FileuploadFieldValue::__set_state(array(
-         'name' => 'myxa69--leu7wqgJ8Q-unsplash.jpeg',
-         'path' => 'data/uploads/1.4.6/',
-         'title' => '',
-         'position' => 0,
-      )),
-    ),
-     'menu_title' => 'There are many ways',
-  )),
-  5 => 
-  Imanager\Item::__set_state(array(
-     'categoryid' => 1,
-     'id' => 5,
-     'name' => 'Your contribution is needed',
-     'label' => NULL,
-     'position' => 10,
-     'active' => true,
-     'created' => 1613127079,
-     'updated' => 1644755439,
-     'slug' => 'your-contribution-is-needed',
-     'content' => 'UPDATE 24th October 15.10 BST &mdash; Vivamus sed consequat urna. Fusce vitae urna sed ante placerat iaculis. Suspendisse potenti. Pellentesque quis fringilla libero. In hac habitasse platea dictumst.   
-
-Ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.',
-     'template' => '',
-     'parent' => 2,
-     'pagetype' => 1,
-     'images' => 
-    array (
-      0 => 
-      Imanager\FileuploadFieldValue::__set_state(array(
-         'name' => 'aydin-hassan-NZrg1OCPneM-unsplash.jpeg',
-         'path' => 'data/uploads/1.5.6/',
-         'title' => '',
-         'position' => 0,
-      )),
-    ),
-     'menu_title' => 'Your contribution is needed',
   )),
   6 => 
   Imanager\Item::__set_state(array(
@@ -268,24 +231,6 @@ Ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas sem
      'content' => '...',
      'template' => '',
      'parent' => 8,
-     'pagetype' => 1,
-     'images' => NULL,
-  )),
-  11 => 
-  Imanager\Item::__set_state(array(
-     'categoryid' => 1,
-     'id' => 11,
-     'name' => 'Just a test article',
-     'label' => NULL,
-     'position' => 11,
-     'active' => true,
-     'created' => 1642069076,
-     'updated' => 1642069076,
-     'menu_title' => 'Just a test article',
-     'slug' => 'just-a-test-article',
-     'content' => '...',
-     'template' => '',
-     'parent' => 2,
      'pagetype' => 1,
      'images' => NULL,
   )),
