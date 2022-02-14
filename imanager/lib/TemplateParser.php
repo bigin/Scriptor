@@ -73,7 +73,7 @@ class TemplateParser
 		return $output;
 	}
 
-	public function renderPagination(& $items, array $params = array(), $argtpls = array())
+	public function renderPagination(& $items, array $params = [], $argtpls = [])
 	{
 		$config = $this->imanager->config;
 

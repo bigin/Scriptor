@@ -133,11 +133,11 @@ class Category extends ImObject
 	 *
 	 * @return mixed
 	 */
-	public function getItems($selector = '', $length = 0, $items = array(), $force = false)
+	public function getItems($selector = '', $offset = 0, $length = 0, $items = array(), $force = false)
 	{
 		$this->init();
 		$this->imanager->itemMapper->init($this->id, $force);
-		return $this->imanager->itemMapper->getItems($selector, $length, $items);
+		return $this->imanager->itemMapper->getItems($selector, $offset, $length, $items);
 	}
 
 	/**

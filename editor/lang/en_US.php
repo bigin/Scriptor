@@ -37,7 +37,7 @@ $i18n = [
 	'profile_successful_saved' => 'Your profile data has been saved successfully.',
 	'create_button' => 'Create',
 	'logout_menu' => 'Logout',
-	'position_table_header' => 'Pos',
+	'position_table_header' => 'Pos.',
 	'id_table_header' => 'ID',
 	'parent_table_header' => 'Parent',
 	'title_table_header' => 'Title',
@@ -47,6 +47,8 @@ $i18n = [
 	'view_button' => 'View',
 	'content_label' => 'Content',
 	'title_label' => 'Title',
+	'menu_title_label' => 'Menu Title',
+	'menu_title_field_infotext' => 'Any combination of letters or numbers.',
 	'name_label' => 'Name',
 	'name_field_infotext' => 'Any combination of letters (a-z), numbers (0-9), dashes or underscores (no spaces).',
 	'parent_label' => 'Parent Page',
@@ -73,59 +75,8 @@ $i18n = [
 	'successful_saved_page' => 'The page was saved successfully.',
 	'parent_select_option' => 'Select option',
 	'error_deleting_first_page' => 'Error when deleting primary page. The page with ID 1, cannot be deleted.',
-	'error_remove_parent_page' => 'Error deleting the page, you cannot delete a page that contains children pages.',
+	'error_remove_parent_page' => 'Error deleting the page, you cannot delete a page that contains children pages.',
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
-	'contact_developer' => 'Contact developer',
-	'dashboard_content' => '
-			<img src="theme/images/scriptor-dashboard.svg">
-			<h1>Welcome to Scriptor</h1>
-			<hr>
-			<h3>What is Scriptor?</h3>
-			<p>Scriptor is a simple flat-file CMS based on ItemManager, supports Markdown and Syntax highlighting.</p>
-			
-			<h3>Install Requirements</h3>
-			<ul>
-				<li>A Unix or Windows-based web server running Apache.</li>
-				<li>PHP 7 or newer (7+ preferable). However, it will also work with PHP 5.6, but it has not been tested 
-				yet.</li>
-				<li>Write permission has to be granted into the complete <mark>data/</mark> directory except 
-				<mark>data/config/</mark> folder.</li>
-				<li>Apache must have <mark>mod_rewrite</mark> enabled.</li>
-				<li>Apache must support <mark>.htaccess</mark> file.</li>
-			</ul>
-			
-			<h3>Installing from zip</h3>
-			<ol>
-				<li>Go to the <a href="https://github.com/bigin/Scriptor/releases">download</a> page and download the 
-				latest version of Scriptor.</li>
-				<li>Unzip the archive and rename the <mark>Scriptor-*</mark> folder to your liking.</li>
-				<li>Upload the contents of the folder to your server, or upload the folder if you want to run the 
-				application in a subfolder.</li>
-			</ol>
-			
-			<h3>Admin</h3>
-			<p>Once installed, to access the administrator area of your Scriptor site go to your websites homepage, then 
-			simply add the text <mark>editor/</mark> to the URL in your browsers, for example:</p>
-			
-			<pre><code>https://your-website.com/editor/</code></pre>
-			
-			<p>If you are using Scriptor in a subdirectory:</p>
-			
-			<pre><code>https://your-website.com/scriptor-directory/editor/</code></pre>
-			
-			<h4>Your access data for the admin</h4>
-			<mark><strong>(!) NOTE:</strong> Change default password at first login.</mark>
-			<p>User: <mark>admin</mark><br>
-			Password: <mark>gT5nLazzyBob</mark></p>
-			
-			<h3>Other settings</h3>
-			<p>All further settings are made in the <mark>custom.scriptor-config.php</mark> file, which is located in the 
-			<mark>data/settings/</mark> directory.</p>
-			
-			<hr>
-			<p class="i-wrapp"><i class="gg-link"></i>&nbsp;&nbsp;<a href="https://scriptor-cms.info"
-			>Official Website &rsaquo;</a>&nbsp;&nbsp;&nbsp;&nbsp;<i class="gg-link"></i>&nbsp;&nbsp;<a
-			href="https://github.com/bigin/Scriptor">Clone Repo &rsaquo;</a></p>
-	'
+	'contact_developer' => 'Contact developer'
 ];

@@ -45,17 +45,15 @@ class Pages extends Module
 		if($this->segments->get(0) == 'pages' && !$this->segments->get(1)) {
 			$this->pageTitle = 'Page list - Scriptor';
 			$this->pageContent = $this->renderPageList();
-			$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><span>'.
-				$this->i18n['pages_menu'].'</span></li>';
+			$this->breadcrumbs .= '<li><span>'.$this->i18n['pages_menu'].'</span></li>';
 		}
 		// Page editor
 		elseif($this->segments->get(0) == 'pages' && $this->segments->get(1) == 'edit') {
 			$this->pageTitle = 'Page editor - Scriptor';
 			$this->pageContent = $this->renderEditorPage();
-			$this->breadcrumbs = '<li><a href="../../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><a href="../">'.
-				$this->i18n['pages_menu'].'</a><i class="gg-chevron-right"></i></li><li>'. (($this->page) ?
-					'<span>'.$this->i18n['pages_edit_menu'].'</span>' : '<span>'.
-					$this->i18n['pages_create_menu']).'</span></li>';
+			$this->breadcrumbs .= '<li><a href="../">'.$this->i18n['pages_menu'].'</a><i class="gg-chevron-right"></i></li><li>'. 
+				(($this->page) ? '<span>'.$this->i18n['pages_edit_menu'].'</span>' : '<span>'.$this->i18n['pages_create_menu']).
+					'</span></li>';
 		}
 	}
 
@@ -113,6 +111,7 @@ class Pages extends Module
 			'?page='.(int)$this->input->get->page : ''; ?>" method="post">
 			<?php 
 			echo $this->renderEditorTitleField($page);
+			echo $this->renderEditorMenuTitleField($page);
 			echo $this->renderEditorNameField($page);
 			echo $this->renderEditorContentField($page);
 			echo $this->renderEditorImageField($page);
@@ -135,6 +134,17 @@ class Pages extends Module
 		<div class="form-control">
 			<label class="required" for="pagename"><?php echo $this->i18n['title_label']; ?></label>
 			<input name="name" id="pagename" type="text" value="<?php echo isset($page->name) ? $page->name : ''; ?>">
+		</div>
+		<?php return ob_get_clean();
+	}
+
+	protected function ___renderEditorMenuTitleField($page)
+	{
+		ob_start(); ?>
+		<div class="form-control">
+			<label for="slug"><?php echo $this->i18n['menu_title_label']; ?></label>
+			<p class="info-text i-wrapp"><i class="gg-danger"></i><?php echo $this->i18n['menu_title_field_infotext'] ?></p>
+			<input name="menu_title" id="menu-title" type="text" value="<?php echo isset($page->menu_title) ? $page->menu_title : ''; ?>">
 		</div>
 		<?php return ob_get_clean();
 	}
@@ -439,6 +449,13 @@ class Pages extends Module
 		}
 		$this->page->set('name', $name);
 
+		if($this->input->post->menu_title) {
+			$menuTitle = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->menu_title));
+		} else {
+			$menuTitle = $name;
+		}
+		$this->page->set('menu_title', $menuTitle);
+
 		$url = trim($name, '-');
 		if($this->input->post->slug) {
 			$slug = preg_replace("/(-)\\1+/", "$1",
@@ -543,12 +560,18 @@ class Pages extends Module
 		if($this->input->post->timestamp_images) {
 			$timestamp_images = $this->sanitizer->date($this->input->post->timestamp_images);
 		}
+		/* $sanitize = ($this->config['allowHtmlImageTitle']) ? false : true;
+		if($this->config['allowHtmlImageTitle'] && ! empty($this->input->post->title_images)) {
+			foreach($this->input->post->title_images as $key => $title) {
+				$this->input->post->title_images[$key] = trim(htmlentities(str_replace('"', '', $title)));
+			}
+		} */
 		$dataSent = array(
 			'file' => $this->input->post->position_images,
 			'title' => $this->input->post->title_images,
 			'timestamp' => $timestamp_images
 		);
-		if(false === $this->page->set('images', $dataSent)) {
+		if($this->page->set('images', $dataSent) === false) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_page_images']

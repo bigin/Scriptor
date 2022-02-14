@@ -19,8 +19,12 @@ class Editor extends Module
 
 	public function execute()
 	{
-		// Set default start segment
-		if(!$this->segments->get(0)) { $this->segments->set(0, 'dashboard'); }
+		// Set default start segment & redirect
+		if(!$this->segments->get(0)) {
+			$fstKey = array_key_first($this->config['modules']);
+			$this->segments->set(0, $fstKey);
+			Util::redirect($this->siteUrl.'/'.$this->segments->get(0).'/');
+		}
 		$this->csrf = Scriptor::getCSRF();
 		// Execute Module
 		if(array_key_exists($this->segments->get(0), $this->config['modules'])) {
@@ -28,7 +32,7 @@ class Editor extends Module
 			// Is module disabled?
 			if(!$module['active']) { return; }
 			$auth = isset($module['auth']) ? $module['auth'] : true;
-			if(true === $auth && (! isset($_SESSION['loggedin']) || true != $_SESSION['loggedin'])) {
+			if($auth === true && (! isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true)) {
 				// Todo: That should to be more dynamic
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
@@ -52,7 +56,7 @@ class Editor extends Module
 		$this->renderMessages();
 	}
 
-	public function getProperty($property)
+	public function getProperty($property) :mixed
 	{
 		if(isset($this->module->$property)) { return $this->module->$property; }
 		return isset($this->$property) ? $this->$property : null;
@@ -70,7 +74,5 @@ class Editor extends Module
 			$this->i18n['error_module_not_found'], [
 			'module' => $this->imanager->sanitizer->pageName($this->segments->get(0))
 		]);
-		$this->breadcrumbs = '<li><a href="../">'.$this->i18n['dashboard_menu'].'</a><i class="gg-chevron-right"></i></li><li><span>'.
-			$this->i18n['error_module'].'</span></li>';	
 	}
 }
