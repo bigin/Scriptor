@@ -16,7 +16,7 @@ Use the default theme or create your own, as simple as you like. Write custom mo
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- PHP 8.0 or newer preferable.   
+- Min. PHP 8.0 or newer preferable.   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
