@@ -11,7 +11,7 @@ Intuitive, user-friendly control panel helps you get up and running easily – y
 You have a variety of options and a fun API for custom module development. The front-end and admin panel are simply designed and consist only of modules and templates.
 
 #### You have total freedom:
-Use the default theme or create your own, as simple as you like. Or hook into the admin methods and change their logic to your needs.
+Use the default theme or create your own, as simple as you like. Write custom modules or hook into the admin methods and change their logic to your needs.
 
 
 ### Install Requirements
@@ -54,6 +54,3 @@ https://your-website.com/subdirectory/editor/
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
-
-### Last changes
-`ENH`: `Minor styling updates` | `FIX`: `Return value of the set() methods in Category, Field and Item objects`
