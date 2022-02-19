@@ -614,6 +614,8 @@ class BasicTheme extends Site
 
 		$subscriber = $mc->get($subscData['email']);
 
+		$result = '';
+		
 		if(isset($subscriber['email_address']) && isset($subscriber['email_address']) == $subscData['email']) {
 			// already subscriber?
 			if($subscriber['status'] == 'subscribed') {
