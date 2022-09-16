@@ -548,9 +548,10 @@ class Sanitizer {
 		);
 
 		$value = $this->text($value, $textOptions);
-		if(!strlen($value)) return '';
+		if(!$value || !strlen($value)) return '';
 
 		$scheme = parse_url($value, PHP_URL_SCHEME);
+		($scheme) OR $scheme = false;
 		if($scheme !== false && strlen($scheme)) {
 			$_scheme = $scheme;
 			$scheme = strtolower($scheme);

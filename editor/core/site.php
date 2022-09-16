@@ -157,7 +157,7 @@ class Site extends Module
 		}
 	}
 
-	public function getPage(int|string $selector, array $pages = [])
+	public function getPage($selector, array $pages = [])
 	{
 		return $this->pages->getItem($selector, $pages);
 	}

@@ -65,9 +65,10 @@ class TemplateParser
 		$output = $this->output;
 
 		if(!empty($tvs))
-			foreach($tvs as $key => $val)
+			foreach($tvs as $key => $val) {
+				($val) OR $val = '';
 				$output = preg_replace('%\[\[( *)'.$key.'( *)\]\]%', $val, $output);
-
+			}
 		if($clean) return preg_replace('%\[\[(.*)\]\]%', '', $output);
 
 		return $output;

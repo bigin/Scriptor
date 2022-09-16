@@ -37,7 +37,7 @@ class Helper
 	 *
 	 * @param string|array $data - Data to send
 	 */
-	public static function sendJsonResponse($data = null, $code = null, $options = null)
+	public static function sendJsonResponse($data = null, $code = null, $options = 0)
 	{
 		if($code) {
 			header('Access-Control-Allow-Headers: Authorization, Content-Type');

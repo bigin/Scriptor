@@ -731,7 +731,7 @@ class BasicTheme extends Site
 			$urlArr = explode('?', $_SERVER['REQUEST_URI'], 2);
 			if(is_array($urlArr)) {
 				$url = $this->sanitizer->url($urlArr[0]);
-				return str_replace($this->input->get->id, '', $url);
+				return str_replace((string) $this->input->get->id, '', $url);
 			}
 		}
 		return $this->siteUrl.'/';
@@ -757,7 +757,7 @@ class BasicTheme extends Site
 	/**
 	 * Page output caching
 	 * 
-	 * Allows to cache rendered output of a complete page to the cache.
+	 * Allows to cache rendered output of a complete page.
 	 * Note that only the pages listed in the "cacheable_templates" 
 	 * configuration variable will be cached.
 	 * 
