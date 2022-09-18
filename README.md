@@ -3,9 +3,8 @@
 # Scriptor   
 A lightweight flat-file CMS that allows you to get started with minimal effort and time investment.
 
-## Features   
-#### Get started quickly: 
-Intuitive, user-friendly control panel helps you get up and running easily – you will have it installed in the blink of an eye.   
+#### Get started quickly:
+Intuitive, user-friendly control panel helps you get up and running easily – you will have it installed in the blink of an eye.
 
 #### Flexible and extensible:
 You have a variety of options and a fun API for custom module development. The front-end and admin panel are simply designed and consist only of modules and templates.
@@ -16,7 +15,7 @@ Use the default theme or create your own, as simple as you like. Write custom mo
 
 ### Install Requirements
 - A Unix or Windows-based web server running Apache.   
-- Min. PHP 8.0 or newer preferable.   
+- Minimum PHP version of 8.1.   
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
