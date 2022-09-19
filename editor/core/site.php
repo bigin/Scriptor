@@ -300,7 +300,7 @@ class Site extends Module
 				$this->parsedown->setSafeMode(true);
 				$content = $this->parsedown->text(htmlspecialchars_decode($content));
 			} else {
-				$content = htmlspecialchars_decode($this->parsedown->text($content));
+				$content = $this->parsedown->text(htmlspecialchars_decode($content));
 			}
 			
 			return $content;

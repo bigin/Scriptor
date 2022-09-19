@@ -848,7 +848,7 @@ class UploadHandler
 			$new_height = $img_height * $scale;
 			$dst_x = 0;
 			$dst_y = 0;
-			$new_img = imagecreatetruecolor($new_width, $new_height);
+			$new_img = imagecreatetruecolor((int) $new_width, (int) $new_height);
 		} else {
 			if (($img_width / $img_height) >= ($max_width / $max_height)) {
 				$new_width = $img_width / ($img_height / $max_height);
@@ -874,14 +874,14 @@ class UploadHandler
 		$success = imagecopyresampled(
 			$new_img,
 			$src_img,
-			$dst_x,
-			$dst_y,
+			(int) $dst_x,
+			(int) $dst_y,
 			0,
 			0,
-			$new_width,
-			$new_height,
-			$img_width,
-			$img_height
+			(int) $new_width,
+			(int) $new_height,
+			(int) $img_width,
+			(int) $img_height
 		) && $write_func($new_img, $new_file_path, $image_quality);
 		$this->gd_set_image_object($file_path, $new_img);
 		return $success;
