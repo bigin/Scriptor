@@ -757,7 +757,7 @@ class BasicTheme extends Site
 	/**
 	 * Page output caching
 	 * 
-	 * Allows to cache rendered output of a complete page to the cache.
+	 * Allows to cache rendered output of a complete page.
 	 * Note that only the pages listed in the "cacheable_templates" 
 	 * configuration variable will be cached.
 	 * 
