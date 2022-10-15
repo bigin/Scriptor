@@ -58,7 +58,7 @@ const basicMethods = {
 			if(scrollToObj && typeof scrollToObj.getBoundingClientRect === 'function') {
 				scrollTo = window.pageYOffset + scrollToObj.getBoundingClientRect().top;
 			} else {
-				throw `Error: No element found with the selector "${scrollTo}"`;
+				throw `Error: No element found with selector "${scrollTo}"`;
 			}
 		} else if(typeof scrollTo !== 'number') {
 			scrollTo = 0;
