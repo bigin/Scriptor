@@ -1,15 +1,17 @@
-![Scriptor Banner](https://scriptor-cms.info/data/uploads/scriptor-banner-21.png)
+![Scriptor Header](https://scriptor-cms.info/site/themes/info/images/scriptor-header.png)
 
 # Scriptor   
-A lightweight flat-file CMS that allows you to get started with minimal effort and time investment.
+A lightweight, versatile flat-file CMS for creating microsites.   
+
+Demo: https://demos.scriptor-cms.info    
 
 #### Get started quickly:
 Intuitive, user-friendly control panel helps you get up and running easily – you will have it installed in the blink of an eye.
 
-#### Flexible and extensible:
+#### Extensible:
 You have a variety of options and a fun API for custom module development. The front-end and admin panel are simply designed and consist only of modules and templates.
 
-#### You have total freedom:
+#### Theming:
 Use the default theme or create your own, as simple as you like. Write custom modules or hook into the admin methods and change their logic to your needs.
 
 
@@ -47,9 +49,12 @@ https://your-website.com/subdirectory/editor/
 ### Links   
 - Official website: https://scriptor-cms.info   
 - Documentation: https://scriptor-cms.info/documentation/    
+- Module extensions: https://scriptor-cms.info/extensions/extensions-modules/    
 - Demo: https://demos.scriptor-cms.info      
 - Showcase: https://github.com/bigin/Scriptor/discussions/15      
-- Module extensions: https://scriptor-cms.info/extensions/extensions-modules/     
+
+### Header image by
+[Freepik](https://www.freepik.com/free-vector/flat-cms-content-landing-page-style_11817459.htm#query=website%20cms%20content&position=3&from_view=search&track=sph#position=3&query=website%20cms%20content)    
 
 ### License
 The [MIT License (MIT)](https://github.com/bigin/Scriptor/blob/master/LICENSE)
