@@ -13,7 +13,7 @@ class Helper
 	 */
 	public static function rawClassName($classname)
 	{
-		if($pos = strrpos($classname, '\\')) return substr($classname, $pos + 1);
+		if ($pos = strrpos($classname, '\\')) return substr($classname, $pos + 1);
 		return $pos;
 	}
 
@@ -28,7 +28,7 @@ class Helper
 	 */
 	public static function order($a, $b)
 	{
-		if($a['position'] == $b['position']) return 0;
+		if ($a['position'] == $b['position']) return 0;
 		return ($a['position'] < $b['position']) ? -1 : 1;
 	}
 
@@ -39,11 +39,11 @@ class Helper
 	 */
 	public static function sendJsonResponse($data = null, $code = null, $options = 0)
 	{
-		if($code) {
+		if ($code) {
 			header('Access-Control-Allow-Headers: Authorization, Content-Type');
 			http_response_code($code);
 		}
-		if($data) {
+		if ($data) {
 			header('Access-Control-Allow-Headers: Authorization, Content-Type');
 			header('Content-type: application/json; charset=utf-8');
 			echo json_encode($data, $options);

@@ -9,13 +9,13 @@ defined('IS_IM') or die('You cannot access this page directly');
  * 
  */
 
-use Scriptor\BasicRouter;
+use Themes\Basic\BasicRouter;
 use Scriptor\Scriptor;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 // BasicTheme extends default Site class
-Scriptor::setSite('Scriptor\BasicTheme', true);
+Scriptor::setSite('BasicTheme', true, 'Themes\Basic');
 $site = Scriptor::getSite();
 
 // Routing instance and pass $site 
@@ -26,7 +26,7 @@ $router->execute();
  * SuperCache 
  * Check if there's a cached version of that page.
  */
-if($output = $site->imanager->sectionCache->get(
+if ($output = $site->imanager->sectionCache->get(
     md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), 
     $site->getTCP('markup_cache_time'))
     ) {

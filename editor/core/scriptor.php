@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.5.2';
+	const VERSION = '1.5.3';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -217,13 +217,20 @@ class Scriptor
 	}
 
 	/**
+	 * Injects the Site object
 	 * 
 	 * @return void
 	 */
-	public static function setSite($site, $init = false)
+	public static function setSite($site, bool $init = false, string $namespace = '')
 	{
-		self::$site = new $site(); 
-		if($init) self::$site->init();
+		if (!empty($namespace)) {
+			$class = "$namespace\\$site";
+			self::$site = new $class();
+		} else {
+			self::$site = new $site(); 
+		}
+
+		if ($init) self::$site->init();
 	}
 
 	/**
@@ -232,9 +239,9 @@ class Scriptor
 	 */
 	public static function getSite($init = true)
 	{
-		if(self::$site === null) { 
+		if (self::$site === null) { 
 			self::$site = new Site(); 
-			if($init) self::$site->init();
+			if ($init) self::$site->init();
 		}
 		return self::$site;
 	}
