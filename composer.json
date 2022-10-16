@@ -2,7 +2,7 @@
     "name": "bigin/scriptor",
     "type": "library",
     "description": "Scriptor CMS/CMF",
-    "keywords": [ "scriptor", "cms", "cmf", "flat file", "content management system" ],
+    "keywords": [ "scriptor", "cms", "cmf", "flat file" ],
     "license": "MIT",
     "homepage": "https://scriptor-cms.info",
     "authors": [
@@ -15,7 +15,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=8.0.0",
-        "ext-gd": "*"
+        "php": ">=8.1.0",
+        "ext-gd": "*",
+        "ext-mbstring": "*"
     }
 }
