@@ -20,6 +20,6 @@
         "ext-mbstring": "*"
     },
 	"autoload": {
-		"files": [ "./index.php" ]
+		"files": [ "index.php" ]
 	}
 }
