@@ -4,7 +4,7 @@ use Scriptor\Scriptor;
 
 require __DIR__.'/imanager.php';
 require __DIR__.'/data/settings/scriptor-config.php';
-if(file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) { 
+if (file_exists(__DIR__.'/data/settings/custom.scriptor-config.php')) { 
 	include __DIR__.'/data/settings/custom.scriptor-config.php';
 }
 
