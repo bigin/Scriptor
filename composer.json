@@ -20,6 +20,6 @@
         "ext-mbstring": "*"
     },
 	"autoload": {
-		"files": [ "vendor/bigins/scriptor/boot.php" ]
+		"files": ["./vendor/bigins/scriptor/boot.php"]
 	}
 }
