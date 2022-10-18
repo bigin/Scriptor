@@ -119,7 +119,7 @@ class Site extends Module
 	 */
 	public function init()
 	{
-		if(isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
+		if (isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
 		parent::init();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
@@ -132,6 +132,11 @@ class Site extends Module
 		$this->version = Scriptor::VERSION;
 	}
 
+	/**
+	 * Attempts to define current page using URL segments, no 
+	 * matching one is found, then a 404 page is displayed.
+	 * 
+	 */
 	public function execute() :void
 	{
 		if(Scriptor::execHook($this, 'execute', [], 'before') && 
@@ -157,13 +162,21 @@ class Site extends Module
 		}
 	}
 
+	/**
+	 * Wrapper around IM's getItem() method.
+	 * 
+	 * @param string|int $selector 
+	 */
 	public function getPage($selector, array $pages = [])
 	{
 		return $this->pages->getItem($selector, $pages);
 	}
 
 	/**
-	 * conds
+	 * Wrapper around IM's getItems() method.
+	 * 
+	 * @param string|int $selector
+	 * @param array $conds - Selector conditions 
 	 */
 	public function getPages(string $selector = '', array $conds = []) :?array
 	{

@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.6.1';
+	const VERSION = '1.6.2';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -155,11 +155,11 @@ class Scriptor
 		$method = !empty($method) ? ucfirst($method) : '';
 		$hookName = Helper::rawClassName(get_class($object)).(!empty($method) ? '::'.$type.ucfirst($method) : '');
 		// There no hook to execute, just return
-		if(!isset(self::$config['hooks'][$hookName])) return;
+		if (!isset(self::$config['hooks'][$hookName])) return;
 		// Get installed hooks
 		$hooks = self::$config['hooks'][$hookName];
 		// Invalid hook specification
-		if(!is_array($hooks) || empty($hooks)) {
+		if (!is_array($hooks) || empty($hooks)) {
 			trigger_error('Invalid hook formatting specification', E_USER_WARNING);
 			return false;
 		}

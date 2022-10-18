@@ -1,6 +1,6 @@
 {
     "name": "bigins/scriptor",
-    "type": "project",
+    "type": "library",
     "description": "Scriptor CMS/CMF",
     "keywords": [ "scriptor", "cms", "cmf", "flat file" ],
     "license": "MIT",
@@ -20,6 +20,6 @@
         "ext-mbstring": "*"
     },
 	"autoload": {
-		"files": ["./boot.php"]
+		"files": ["boot.php"]
 	}
 }
