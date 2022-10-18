@@ -51,7 +51,7 @@ or use composer autoload:
 require '../vendor/autoload.php'; 
 ```
 
-Now you can just use Scriptor library in your own projects:
+Now you can just use Scriptor library in your own code:
 ```php
 <?php // /public/index.php
 
