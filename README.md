@@ -21,6 +21,50 @@ Use the default theme or create your own, as simple as you like. Write custom mo
 - Write permission has to be granted into the complete `data/` directory except `data/config` folder.   
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
+
+### Via Composer Create-Project
+Scriptor is available from Packagist and can also be installed by entering the composer command:
+```
+composer create-project bigins/scriptor your-scriptor-project
+```
+
+### Via Composer Require
+If you prefer, you can add Scriptor to an existing project inside the `vendor/` directory:
+```
+composer require bigins/scriptor
+```
+
+### Git Clone
+```
+git clone git@github.com:bigin/Scriptor.git
+```
+
+### Use Scriptor as a library
+To use Scriptor library in your own project, just include the `boot.php` file:
+
+```php
+require './your-scriptor-project/boot.php'; 
+```
+
+or use composer autoload:
+```php
+require '../vendor/autoload.php'; 
+```
+
+Now you can just use Scriptor library in your own projects:
+```php
+<?php // /public/index.php
+
+use Imanager\Util;
+use Scriptor\Scriptor;
+
+require dirname(__DIR__) . '/vendor/autoload.php'; 
+
+$site = Scriptor::getSite();
+$page = $site->getPage('slug=scriptors-demo-page');
+
+Util::preformat($page->name);
+```
     
 ### Installing from zip
 1. Click `Clone or download`
