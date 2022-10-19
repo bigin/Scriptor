@@ -107,7 +107,8 @@ class Site extends Module
 	 *
 	 * @param $config
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->config = Scriptor::getProperty('config');
 		$this->templateParser = new TemplateParser();
 	}
@@ -119,7 +120,7 @@ class Site extends Module
 	 */
 	public function init()
 	{
-		if(isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
+		if (isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
 		parent::init();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
@@ -132,17 +133,24 @@ class Site extends Module
 		$this->version = Scriptor::VERSION;
 	}
 
+	/**
+	 * Attempts to define current page using URL segments, if 
+	 * no matching one is found throw 404.
+	 * 
+	 */
 	public function execute() :void
 	{
-		if(Scriptor::execHook($this, 'execute', [], 'before') && 
-			$this->event->replace) return;
+		if (Scriptor::execHook(
+			$this, 'execute', [], 'before'
+			) && $this->event->replace) return;
+
 		// Home
-		if(!$this->lastSegment) {
+		if (!$this->lastSegment) {
 			$this->page = $this->pages->getItem(1);
 			if(!$this->page || !$this->page->active) { 
 				$this->throw404(); 
 			}
-		// Other pages
+		// other pages
 		} else {
 			$total = $this->segments->total - 1;
 			$this->page = $this->getPageBySegment($this->segments->segment, $total);
@@ -157,13 +165,21 @@ class Site extends Module
 		}
 	}
 
-	public function getPage(int|string $selector, array $pages = [])
+	/**
+	 * Wrapper around IM's getItem() method.
+	 * 
+	 * @param string|int $selector 
+	 */
+	public function getPage($selector, array $pages = [])
 	{
 		return $this->pages->getItem($selector, $pages);
 	}
 
 	/**
-	 * conds
+	 * Wrapper around IM's getItems() method.
+	 * 
+	 * @param string|int $selector
+	 * @param array $conds - Selector conditions 
 	 */
 	public function getPages(string $selector = '', array $conds = []) :?array
 	{
@@ -300,7 +316,7 @@ class Site extends Module
 				$this->parsedown->setSafeMode(true);
 				$content = $this->parsedown->text(htmlspecialchars_decode($content));
 			} else {
-				$content = htmlspecialchars_decode($this->parsedown->text($content));
+				$content = $this->parsedown->text(htmlspecialchars_decode($content));
 			}
 			
 			return $content;
@@ -349,18 +365,20 @@ class Site extends Module
 	protected function getNaviChildren($item, & $items, $url, $children = '')
 	{
 		$childs = $this->pages->getItems("parent=$item->id", 0, 0, $items);
-		if($childs) {
+		if ($childs) {
 			$prefix = '<li' . $this->getClass($item) . '><a href="' .
-				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">' . $item->name . '</a>';
+				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">'.
+					($item->menu_title ?? $item->name).'</a>';
 			$buff = '';
-			foreach($childs as $curitem) {
+			foreach ($childs as $curitem) {
 				$buff .= $this->getNaviChildren($curitem, $items,
 					$url.((!$item->parent) ? "$item->slug/" : '') . $curitem->slug . '/', $children);
 			}
 			$children = $prefix . '<ul>' . $buff . '</ul></li>';
 		} else {
 			$children = '<li'.$this->getClass($item).'><a href="'.
-				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '').'">'.$item->name.'</a></li>';
+				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '').'">'.
+					($item->menu_title ?? $item->name).'</a></li>';
 		}
 		return  $children;
 	}

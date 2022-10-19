@@ -84,7 +84,7 @@ class Sanitizer {
 
 		if($needsWork) {
 			$value = str_replace(array("'", '"'), '', $value); // blank out any quotes
-			$value = filter_var($value, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_NO_ENCODE_QUOTES);
+			$value = filter_var($value, FILTER_UNSAFE_RAW, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH | FILTER_FLAG_NO_ENCODE_QUOTES);
 			$hyphenPos = strpos($extras, '-');
 			if($hyphenPos !== false && $hyphenPos !== 0) {
 				// if hyphen present, ensure it's first (per PCRE requirements)
@@ -548,9 +548,10 @@ class Sanitizer {
 		);
 
 		$value = $this->text($value, $textOptions);
-		if(!strlen($value)) return '';
+		if(!$value || !strlen($value)) return '';
 
 		$scheme = parse_url($value, PHP_URL_SCHEME);
+		($scheme) OR $scheme = false;
 		if($scheme !== false && strlen($scheme)) {
 			$_scheme = $scheme;
 			$scheme = strtolower($scheme);

@@ -1,7 +1,11 @@
 <?php
-namespace Scriptor;
+namespace Themes\Basic;
 
 use Imanager\Util;
+use Scriptor\Helper;
+use Scriptor\Scriptor;
+use Scriptor\Site;
+use Themes\Basic\Subscriber\MailChimp;
 
 class BasicTheme extends Site
 {
@@ -113,9 +117,8 @@ class BasicTheme extends Site
 			$articles = $this->getArticlesWithin($start, $end);
 			if($articles) {
 				return $this->renderArticlesContent($articles);
-			} else {
-				$this->throw404();
 			}
+			$this->throw404();
 		}
 	}
 	
@@ -230,14 +233,14 @@ class BasicTheme extends Site
 	 */
 	private function renderArticlesContent(array $articles = []) :string
 	{
-		if(!isset($articles['pages']) || empty($articles['pages'])) {
+		if (!isset($articles['pages']) || empty($articles['pages'])) {
 			return $this->templateParser->render($this->tpls['empty_article_row'], [
 				'TEXT' => $this->getTCP('msgs')['no_articles_found']
 			]);
 		}
 	
 		$list = '';
-		foreach($articles['pages'] as $article) {
+		foreach ($articles['pages'] as $article) {
 			isset($i) OR $i = 0; $i++;
 
 			$date = $this->getFormatedPageDate($article->created);
@@ -245,7 +248,7 @@ class BasicTheme extends Site
 			$articleUrl = $this->getBasePath().$this->getPageUrl($article, $this->pages);
 
 			$figure = '';
-			if(isset($article->images[0])) {
+			if (isset($article->images[0])) {
 				$imageUrl = $this->getBasePath().$article->images[0]->resize(800, 350, 0, 'adaptiveResize');
 				$info = '';
 				if($article->images[0]->title) {
@@ -264,7 +267,7 @@ class BasicTheme extends Site
 
 			$this->parsedown->setSafeMode(true);
 
-			if(mb_strlen($article->content) > $this->getTCP('summary_character_len')) {
+			if (mb_strlen($article->content) > $this->getTCP('summary_character_len')) {
 				$content = $this->parsedown->text(mb_substr(htmlspecialchars_decode($article->content), 0, 
 					$this->getTCP('summary_character_len')).' ...');
 			} else {
@@ -338,7 +341,7 @@ class BasicTheme extends Site
 	public function addMsg(string $type, string $text, string $header = '') :void 
 	{
 		$headline = '';
-		if(!empty($header)) {
+		if (!empty($header)) {
 			$headline .= $this->templateParser->render($this->tpls['msg_header'], [
 				'TEXT' => $header,
 			]);
@@ -361,7 +364,7 @@ class BasicTheme extends Site
 	{
 		$messages = '';
 		$msgs = $this->getProperty('msgs');
-		if(!empty($msgs)) {
+		if (!empty($msgs)) {
 			foreach($msgs as $msg) {
 				$messages .= $this->templateParser->render($this->tpls['msg'], [ 
 					'TYPE' => $msg['type'],
@@ -384,7 +387,7 @@ class BasicTheme extends Site
 	private function renderFooterNav() :string
 	{
 		$container = $this->getPage($this->getTCP('footer_container_id'));
-		if($container) {
+		if ($container) {
 			return $this->templateParser->render($this->tpls['footer_nav'], [
 				'MENU_TITLE' => $container->menu_title,
 				'INFO' => $container->content,
@@ -452,7 +455,7 @@ class BasicTheme extends Site
 	private function renderSocIcons() :string
 	{
 		$icons = '';
-		foreach($this->getTCP('soc') as $name => $ref) {
+		foreach ($this->getTCP('soc') as $name => $ref) {
 			$icons .= $this->templateParser->render($this->tpls['icon_nav_row'], [
 				'URL' => $ref['href'],
 				'ICON_NAME' => $name
@@ -489,8 +492,8 @@ class BasicTheme extends Site
 		$err = false;
 		$csrf = Scriptor::getCSRF();
 
-		if($this->config['protectCSRF']) {
-			if(!$csrf->isTokenValid($this->input->post->tokenName, $this->input->post->tokenValue)) {
+		if ($this->config['protectCSRF']) {
+			if (!$csrf->isTokenValid($this->input->post->tokenName, $this->input->post->tokenValue)) {
 				$this->addMsg('danger', $this->getTCP('msgs')['csrf_token_mismatch']);
 				$this->renderMsgs();
 				Helper::sendJsonResponse([
@@ -508,15 +511,15 @@ class BasicTheme extends Site
 			'body' => $this->sanitizer->textarea($this->input->post->text)
 		];
 
-		if(empty($mailData['from'])) {
+		if (empty($mailData['from'])) {
 			$this->addMsg('danger', $this->getTCP('msgs')['empty_from_field']);
 			$err = true;
-		} elseif(empty($mailData['from_name']) || empty($mailData['body'])) {
+		} elseif (empty($mailData['from_name']) || empty($mailData['body'])) {
 			$this->addMsg('danger', $this->getTCP('msgs')['empty_mandatory_fields']);
 			$err = true;
 		}
 
-		if($err) {
+		if ($err) {
 			$this->renderMsgs();
 			Helper::sendJsonResponse([
 				'msgs' => $this->articles->msgs
@@ -525,7 +528,7 @@ class BasicTheme extends Site
 
 		$result = $this->sendMail($mailData);
 
-		if($result !== true) {
+		if ($result !== true) {
 			$this->addMsg('danger', $this->getTCP('msgs')['error_sending_email']);
 			$this->renderMsgs();
 			Helper::sendJsonResponse([
@@ -586,8 +589,8 @@ class BasicTheme extends Site
 	{
 		$csrf = Scriptor::getCSRF();
 
-		if($this->config['protectCSRF']) {
-			if(!$csrf->isTokenValid($this->input->post->tokenName, $this->input->post->tokenValue)) {
+		if ($this->config['protectCSRF']) {
+			if (!$csrf->isTokenValid($this->input->post->tokenName, $this->input->post->tokenValue)) {
 				$this->addMsg('danger', $this->getTCP('msgs')['csrf_token_mismatch']);
 				Helper::sendJsonResponse([
 					'msgs' => $this->renderMsgs(),
@@ -602,7 +605,7 @@ class BasicTheme extends Site
 			'email' => mb_strtolower($this->sanitizer->email($this->input->post->email))
 		];
 
-		if(empty($subscData['email'])) {
+		if (empty($subscData['email'])) {
 			$this->addMsg('danger', $this->getTCP('msgs')['empty_email_field']);
 			Helper::sendJsonResponse([
 				'success' => true,
@@ -611,14 +614,12 @@ class BasicTheme extends Site
 		}
 
 		$mc = new MailChimp($this->getTCP('mail_chimp'));
-
 		$subscriber = $mc->get($subscData['email']);
-
 		$result = '';
 		
-		if(isset($subscriber['email_address']) && isset($subscriber['email_address']) == $subscData['email']) {
+		if (isset($subscriber['email_address']) && isset($subscriber['email_address']) == $subscData['email']) {
 			// already subscriber?
-			if($subscriber['status'] == 'subscribed') {
+			if ($subscriber['status'] == 'subscribed') {
 				$this->addMsg('success', $this->getTCP('msgs')['subsc_email_exists']);
 				Helper::sendJsonResponse([
 					'success' => true,
@@ -632,7 +633,7 @@ class BasicTheme extends Site
 				'status_if_new' => 'pending',
 				'status' => 'pending'
 			]);
-			if($mc->code == 200) {
+			if ($mc->code == 200) {
 				// Show notice: email sent
 				$sec = $this->templateParser->render($this->getTCP('msgs')['subsc_email_confirmation'], [
 					'EMAIL' => $subscData['email']
@@ -645,12 +646,12 @@ class BasicTheme extends Site
 			}
 
 		// The contact doesn’t exist in the mailing list
-		} elseif($mc->code == 404) {
+		} elseif ($mc->code == 404) {
             $result = $mc->add([
 				'email_address' => $subscData['email'],
 				'status' => 'pending'
 			]);
-            if($mc->code == 200) {
+            if ($mc->code == 200) {
 				// Show notice: email sent
 				$sec = $this->templateParser->render($this->getTCP('msgs')['subsc_email_confirmation'], [
 					'EMAIL' => $subscData['email']
@@ -685,14 +686,14 @@ class BasicTheme extends Site
 		$contId = $this->getTCP('articles_page_id');
 		$levels = $this->getPageLevels(['parent' => $contId]);
 
-		if(!isset($levels[$contId]) || empty($levels[$contId])) return null;
+		if (!isset($levels[$contId]) || empty($levels[$contId])) return null;
 
 		$articles = $this->getPages("created >= $start", [
 			'items' => $levels[$contId],
 			'length' => 0
 		]);
 
-		if(!$articles || empty($articles['pages']) ) return null;
+		if (!$articles || empty($articles['pages']) ) return null;
 		
 		$period = $this->getPages("created < $end", [
 			'items' => $articles['pages'],
@@ -727,11 +728,11 @@ class BasicTheme extends Site
 	 */
 	public function getBasePath() :string
 	{
-		if(isset($_SERVER['REQUEST_URI']) && ! empty($_SERVER['REQUEST_URI'])) {
+		if (isset($_SERVER['REQUEST_URI']) && ! empty($_SERVER['REQUEST_URI'])) {
 			$urlArr = explode('?', $_SERVER['REQUEST_URI'], 2);
-			if(is_array($urlArr)) {
+			if (is_array($urlArr)) {
 				$url = $this->sanitizer->url($urlArr[0]);
-				return str_replace($this->input->get->id, '', $url);
+				return str_replace((string) $this->input->get->id, '', $url);
 			}
 		}
 		return $this->siteUrl.'/';
@@ -747,7 +748,7 @@ class BasicTheme extends Site
 	public function getFormatedPageDate(int $datestamp) :string
 	{
 		$dtz = $this->getTCP('datetime_zone');
-		if($dtz) $date = new \DateTime('now', new \DateTimeZone($dtz));
+		if ($dtz) $date = new \DateTime('now', new \DateTimeZone($dtz));
 		else $date = new \DateTime();
 		
 		$date->setTimestamp($datestamp);
@@ -766,7 +767,7 @@ class BasicTheme extends Site
 	public function cache() :string
 	{
 		$output = ob_get_clean();
-		if($this->page && in_array($this->page->template, $this->getTCP('cacheable_templates'))) {
+		if ($this->page && in_array($this->page->template, $this->getTCP('cacheable_templates'))) {
 			$this->imanager->sectionCache->save($output);
 		}
 		return $output;

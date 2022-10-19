@@ -848,7 +848,7 @@ class UploadHandler
 			$new_height = $img_height * $scale;
 			$dst_x = 0;
 			$dst_y = 0;
-			$new_img = imagecreatetruecolor($new_width, $new_height);
+			$new_img = imagecreatetruecolor((int) $new_width, (int) $new_height);
 		} else {
 			if (($img_width / $img_height) >= ($max_width / $max_height)) {
 				$new_width = $img_width / ($img_height / $max_height);
@@ -874,14 +874,14 @@ class UploadHandler
 		$success = imagecopyresampled(
 			$new_img,
 			$src_img,
-			$dst_x,
-			$dst_y,
+			(int) $dst_x,
+			(int) $dst_y,
 			0,
 			0,
-			$new_width,
-			$new_height,
-			$img_width,
-			$img_height
+			(int) $new_width,
+			(int) $new_height,
+			(int) $img_width,
+			(int) $img_height
 		) && $write_func($new_img, $new_file_path, $image_quality);
 		$this->gd_set_image_object($file_path, $new_img);
 		return $success;
@@ -1174,7 +1174,7 @@ class UploadHandler
 			if ($uploaded_file && is_uploaded_file($uploaded_file)) {
 				// multipart/formdata uploads (POST method uploads)
 				if ($append_file) {
-					file_put_contents(
+					file_put_contents (
 						$file_path,
 						fopen($uploaded_file, 'r'),
 						FILE_APPEND
@@ -1184,7 +1184,7 @@ class UploadHandler
 				}
 			} else {
 				// Non-multipart uploads (PUT method support)
-				file_put_contents(
+				file_put_contents (
 					$file_path,
 					fopen('php://input', 'r'),
 					$append_file ? FILE_APPEND : 0
@@ -1199,6 +1199,7 @@ class UploadHandler
 			} else {
 				$file->size = $file_size;
 				if (!$content_range && $this->options['discard_aborted_uploads']) {
+					//Util::dataLog($file_path);
 					unlink($file_path);
 					$file->error = $this->get_error_message('abort');
 				}
@@ -1258,7 +1259,7 @@ class UploadHandler
 
 	protected function get_file_name_param() {
 		$name = $this->get_singular_param_name();
-		return basename(stripslashes($this->get_query_param($name)));
+		return basename(stripslashes((string) $this->get_query_param($name)));
 	}
 
 	protected function get_file_names_params() {
@@ -1351,7 +1352,9 @@ class UploadHandler
 		$this->response = $content;
 		if ($print_response) {
 			$json = json_encode($content);
-			$redirect = stripslashes($this->get_query_param('redirect'));
+			$redirect = null;
+			$redstr = (string) $this->get_query_param('redirect');
+			($redstr) OR $redirect = stripslashes($redstr);
 			if ($redirect) {
 				$this->header('Location: '.sprintf($redirect, rawurlencode($json)));
 				return;

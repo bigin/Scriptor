@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.5.0';
+	const VERSION = '1.6.2';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -155,11 +155,11 @@ class Scriptor
 		$method = !empty($method) ? ucfirst($method) : '';
 		$hookName = Helper::rawClassName(get_class($object)).(!empty($method) ? '::'.$type.ucfirst($method) : '');
 		// There no hook to execute, just return
-		if(!isset(self::$config['hooks'][$hookName])) return;
+		if (!isset(self::$config['hooks'][$hookName])) return;
 		// Get installed hooks
 		$hooks = self::$config['hooks'][$hookName];
 		// Invalid hook specification
-		if(!is_array($hooks) || empty($hooks)) {
+		if (!is_array($hooks) || empty($hooks)) {
 			trigger_error('Invalid hook formatting specification', E_USER_WARNING);
 			return false;
 		}
@@ -217,13 +217,20 @@ class Scriptor
 	}
 
 	/**
+	 * Injects the Site object
 	 * 
 	 * @return void
 	 */
-	public static function setSite($site, $init = false)
+	public static function setSite($site, bool $init = false, string $namespace = '')
 	{
-		self::$site = new $site(); 
-		if($init) self::$site->init();
+		if (!empty($namespace)) {
+			$class = "$namespace\\$site";
+			self::$site = new $class();
+		} else {
+			self::$site = new $site(); 
+		}
+
+		if ($init) self::$site->init();
 	}
 
 	/**
@@ -232,9 +239,9 @@ class Scriptor
 	 */
 	public static function getSite($init = true)
 	{
-		if(self::$site === null) { 
+		if (self::$site === null) { 
 			self::$site = new Site(); 
-			if($init) self::$site->init();
+			if ($init) self::$site->init();
 		}
 		return self::$site;
 	}

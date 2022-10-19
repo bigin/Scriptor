@@ -7,9 +7,9 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'Scriptor\\BasicRouter' => $baseDir . '/lib/BasicRouter.php',
-    'Scriptor\\BasicTheme' => $baseDir . '/lib/Basic.php',
-    'Scriptor\\Connector' => $baseDir . '/lib/subscriber/Connector.php',
-    'Scriptor\\MailChimp' => $baseDir . '/lib/subscriber/MailChimp.php',
-    'Scriptor\\Request' => $baseDir . '/lib/subscriber/Request.php',
+    'Themes\\Basic\\BasicRouter' => $baseDir . '/lib/BasicRouter.php',
+    'Themes\\Basic\\BasicTheme' => $baseDir . '/lib/Basic.php',
+    'Themes\\Basic\\Subscriber\\Connector' => $baseDir . '/lib/subscriber/Connector.php',
+    'Themes\\Basic\\Subscriber\\MailChimp' => $baseDir . '/lib/subscriber/MailChimp.php',
+    'Themes\\Basic\\Subscriber\\Request' => $baseDir . '/lib/subscriber/Request.php',
 );

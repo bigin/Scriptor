@@ -1,6 +1,6 @@
 <?php
+namespace Themes\Basic\Subscriber;
 
-namespace Scriptor;
 
 /**
  * A simple API connection class

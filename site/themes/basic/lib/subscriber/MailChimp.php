@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Themes\Basic\Subscriber;
 
 use Imanager\Util;
 

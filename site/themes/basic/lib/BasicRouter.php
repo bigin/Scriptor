@@ -1,5 +1,7 @@
 <?php
-namespace Scriptor;
+namespace Themes\Basic;
+
+use Scriptor\Module;
 
 class BasicRouter
 {
@@ -29,13 +31,19 @@ class BasicRouter
 
 		$articles = $this->site->getPage((int) $this->site->getTCP('articles_page_id'));
 		
-		if($articles->slug != $this->site->segments->getlast()) {
+		if ($articles && $articles->slug != $this->site->segments->getlast()) {
 			$this->site->execute();
-			if($this->site->page->parent == $articles->id) $this->site->page->template = 'blog-post';
+			if ($this->site->page->parent == $articles->id) {
+				$this->site->page->template = 'blog-post';
+			}
 		} else {
-			if(!$articles || !$articles->active) $this->site->throw404();
+			if (!$articles || !$articles->active) {
+				$this->site->throw404();
+			}
 			$pageUrl = $this->site->getPageUrl($articles, $articles->pages);
-			if(strpos($this->site->segments->getUrl(), $pageUrl) === false) $this->site->throw404();
+			if (strpos($this->site->segments->getUrl(), $pageUrl) === false) {
+				$this->site->throw404();
+			}
 			$this->site->page = $articles;
 		}
 	}
@@ -46,7 +54,7 @@ class BasicRouter
 	private function actions() :void
 	{
 		$post = $this->site->input->post;
-		if($post->action && in_array($post->action, $this->site->getTCP('allowed_actions'))) {
+		if ($post->action && in_array($post->action, $this->site->getTCP('allowed_actions'))) {
 			$name = $post->action;
 			$func = $name.'Action';
 			$this->site->$func();
