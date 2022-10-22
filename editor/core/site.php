@@ -356,7 +356,7 @@ class Site extends Module
 		$options = array_merge([
 			'clearCache' => true,
 			'recursive' => false, // delete recursively
-			'force' => true
+			'force' => false
 		], $opts);
 
 		if (is_integer($target)) {

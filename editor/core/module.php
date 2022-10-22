@@ -2,6 +2,8 @@
 
 namespace Scriptor\Core;
 
+use Imanager\Util;
+
 /**
  * Class Module
  *
@@ -157,8 +159,11 @@ class Module implements ModuleInterface
 		if(file_exists($siteModulePath)) include_once $siteModulePath;
 		elseif(file_exists($coreModulePath)) include_once $coreModulePath;
 		else return null;
-		// "Scriptor\Core\Pages"
 		$class = $config['namespace'].$module['class'];
+		// e.g. using user module: inside editor
+		if (!class_exists($class)) {
+			$class = 'Scriptor\Modules\\'.$module['class'];
+		}
 		if($config['autoinit']) {
 			$currentModule = new $class();
 			if($currentModule) $currentModule->init();
