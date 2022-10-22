@@ -56,7 +56,7 @@ Now you can just use Scriptor library in your own code:
 <?php // /public/index.php
 
 use Imanager\Util;
-use Scriptor\Scriptor;
+use Scriptor\Core\Scriptor;
 
 require dirname(__DIR__) . '/vendor/autoload.php'; 
 
