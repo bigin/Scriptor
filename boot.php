@@ -1,6 +1,6 @@
 <?php
 
-use Scriptor\Scriptor;
+use Scriptor\Core\Scriptor;
 
 require __DIR__.'/imanager.php';
 require __DIR__.'/data/settings/scriptor-config.php';
@@ -12,6 +12,7 @@ $corePath = __DIR__."/$config[admin_path]core/";
 require $corePath.'scriptor.php';
 require $corePath.'moduleInterface.php';
 require $corePath.'module.php';
+require $corePath.'page.php';
 require $corePath.'site.php';
 require $corePath.'csrf.php';
 

@@ -1,5 +1,5 @@
 <?php 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 class Helper 
 {

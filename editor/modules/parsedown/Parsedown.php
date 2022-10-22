@@ -1,6 +1,8 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core\Modules;
+
+use Scriptor\Core\Module;
 
 #
 #

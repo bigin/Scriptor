@@ -47,7 +47,7 @@ return [
 	 * See /data/settings/scriptor-config.php resp. custom.scriptor-config.php
 	 * or change to a static value: 262974383
 	 */
-	'markup_cache_time' => \Scriptor\Scriptor::getProperty('config')['markup_cache_time'],
+	'markup_cache_time' => \Scriptor\Core\Scriptor::getProperty('config')['markup_cache_time'],
 
 	/**
 	 * Enter the templates of the pages where you want the output to be cached.

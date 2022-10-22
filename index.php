@@ -1,5 +1,5 @@
 <?php
-use Scriptor\Scriptor;
+use Scriptor\Core\Scriptor;
 
 require_once  __DIR__.'/boot.php';
 

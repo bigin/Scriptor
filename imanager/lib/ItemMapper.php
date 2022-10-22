@@ -83,11 +83,11 @@ class ItemMapper extends Mapper
 	/**
 	 * Method deletes the passed Item object
 	 *
-	 * @param Item $item
+	 * @param object $item
 	 *
 	 * @return bool
 	 */
-	public function remove(Item & $item, $complete = true)
+	public function remove(object & $item, $complete = true)
 	{
 		$this->init($item->categoryid);
 		if(!isset($this->items[$item->id])) return false;

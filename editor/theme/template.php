@@ -33,7 +33,7 @@
 	<footer role="contentinfo">
 		<div>
 			<a href="https://scriptor-cms.info">Scriptor</a> <?php echo
-				Scriptor\Scriptor::VERSION; ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
+				Scriptor\Core\Scriptor::VERSION; ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 		</div>
 	</footer>
 </main>

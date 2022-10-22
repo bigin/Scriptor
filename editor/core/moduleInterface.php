@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 /**
  * ModuleInterface currently not used but reserved for future functionality

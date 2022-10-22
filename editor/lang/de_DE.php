@@ -77,8 +77,9 @@ $i18n = [
 	'successful_saved_page' => 'Die Seite wurde erfolgreich gespeichert.',
 	'parent_select_option' => 'Auswählen',
 	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',
-	'error_remove_parent_page' => 'Fehler beim Löschen der Seite, Sie können eine Seite mit untergeordneten Seiten nicht löschen.',
+	'error_remove_parent_page' => 'Die Seite kann nicht gelöscht werden, da sie mindestens eine Unterseite hat.',
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
-	'contact_developer' => 'Entwickler kontaktieren'
+	'contact_developer' => 'Entwickler kontaktieren',
+	'page_not_found' => 'Seite nicht gefunden.'
 ];

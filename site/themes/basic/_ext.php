@@ -10,15 +10,15 @@ defined('IS_IM') or die('You cannot access this page directly');
  */
 
 use Themes\Basic\BasicRouter;
-use Scriptor\Scriptor;
+use Scriptor\Core\Scriptor;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// BasicTheme extends default Site class
+/* BasicTheme extends default Site class */
 Scriptor::setSite('BasicTheme', true, 'Themes\Basic');
 $site = Scriptor::getSite();
 
-// Routing instance and pass $site 
+/* Routing instance and pass $site */
 $router = new BasicRouter($site);
 $router->execute();
 
@@ -33,9 +33,6 @@ if ($output = $site->imanager->sectionCache->get(
     echo $output;
     exit;
 }
-
-//exit;
-//$site->execute();
 
 /* 
 UPGRADE SCRIPTOR V. 1.4.16 > 1.4.17

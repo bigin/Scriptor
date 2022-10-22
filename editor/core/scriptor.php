@@ -1,6 +1,6 @@
 <?php 
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 use Imanager\Util;
 
@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.6.2';
+	const VERSION = '1.7.0';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -51,6 +51,8 @@ class Scriptor
 
 	/**
 	 * @var array $headerResources - An array of header resources
+	 * 
+	 * TODO: Is it currently in use?
 	 */
 	private static $headerResources = [];
 
@@ -60,8 +62,8 @@ class Scriptor
 	public static function build($config)
 	{
 		self::$startTime = microtime(true);
-		self::load(__DIR__.'/helper.php');
-		uasort($config['modules'], array('Scriptor\Helper', 'order'));
+		self::load (__DIR__ . '/helper.php');
+		uasort($config['modules'], ['Scriptor\Core\Helper', 'order']);
 		self::$config = $config;
 		self::$imanager = \imanager();
 		include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
@@ -85,7 +87,7 @@ class Scriptor
 	public static function & getProperty($property)
 	{
 		$return = null;
-		if(property_exists('Scriptor\Scriptor', $property)) { 
+		if(property_exists('Scriptor\Core\Scriptor', $property)) { 
 			 $return = self::${$property}; 
 			 return $return;
 		}
@@ -94,7 +96,7 @@ class Scriptor
 
 	public static function setProperty($property, $value)
 	{
-		if(property_exists('Scriptor\Scriptor', $property)) { self::${$property} = $value; }
+		if(property_exists('Scriptor\Core\Scriptor', $property)) { self::${$property} = $value; }
 	}
 
 	/**

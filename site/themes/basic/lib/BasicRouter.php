@@ -1,7 +1,8 @@
 <?php
+
 namespace Themes\Basic;
 
-use Scriptor\Module;
+use Scriptor\Core\Module;
 
 class BasicRouter
 {

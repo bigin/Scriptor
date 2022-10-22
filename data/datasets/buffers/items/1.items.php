@@ -1,6 +1,6 @@
 <?php return array (
   1 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 1,
      'name' => 'Scriptor\'s Demo Page',
@@ -8,7 +8,7 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1665833212,
+     'updated' => 1666435130,
      'content' => 'Lorem markdownum notam sibila Argolicis habet, manibus illa, et. Fera vestigia
 metuunt annos ignibus *commota quippe*. Graiumque tua vix volanti Diomedeos
 lacrimis.
@@ -70,7 +70,7 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
      'menu_title' => 'Home',
   )),
   2 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 2,
      'name' => 'Articles',
@@ -90,7 +90,7 @@ This page acts as a container for blog articles. All pages that are in this cont
      'menu_title' => 'Articles',
   )),
   3 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 3,
      'name' => 'Get started with Scriptor',
@@ -136,7 +136,7 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'menu_title' => 'Get started with Scriptor',
   )),
   6 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 6,
      'name' => 'Contact',
@@ -163,7 +163,7 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
     ),
   )),
   7 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 7,
      'name' => 'Legal notice',
@@ -181,7 +181,7 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   8 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 8,
      'name' => 'Footer Pages',
@@ -199,7 +199,7 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   9 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 9,
      'name' => 'Privacy statement',
@@ -217,7 +217,7 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   10 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 10,
      'name' => 'Getting Help',

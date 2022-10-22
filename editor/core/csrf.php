@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 /**
  * Class CSRF

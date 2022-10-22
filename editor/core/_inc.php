@@ -1,6 +1,6 @@
 <?php
 
-use Scriptor\Scriptor;
+use Scriptor\Core\Scriptor;
 
 if(! isset($_SESSION)) { 
 	session_name('IMSESSID');
@@ -17,6 +17,7 @@ if(file_exists("$base/data/settings/custom.scriptor-config.php")) {
 require __DIR__.'/scriptor.php';
 require __DIR__.'/moduleInterface.php';
 require __DIR__.'/module.php';
+require __DIR__.'/page.php';
 require __DIR__.'/editor.php';
 require __DIR__.'/csrf.php';
 

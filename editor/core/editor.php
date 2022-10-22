@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 use Imanager\TemplateParser;
 use Imanager\Util;
@@ -20,33 +20,34 @@ class Editor extends Module
 	public function execute()
 	{
 		// Set default start segment & redirect
-		if(!$this->segments->get(0)) {
+		if (!$this->segments->get(0)) {
 			$fstKey = array_key_first($this->config['modules']);
 			$this->segments->set(0, $fstKey);
 			Util::redirect($this->siteUrl.'/'.$this->segments->get(0).'/');
 		}
 		$this->csrf = Scriptor::getCSRF();
 		// Execute Module
-		if(array_key_exists($this->segments->get(0), $this->config['modules'])) {
+		if (array_key_exists($this->segments->get(0), $this->config['modules'])) {
 			$module = $this->config['modules'][$this->segments->get(0)];
 			// Is module disabled?
-			if(!$module['active']) { return; }
+			if (!$module['active']) { return; }
 			$auth = isset($module['auth']) ? $module['auth'] : true;
-			if($auth === true && (! isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true)) {
+			if ($auth === true && (! isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true)) {
 				// Todo: That should to be more dynamic
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
 			$this->module = $this->loadModule(
 				$this->imanager->sanitizer->pageName($this->segments->get(0)),
 				[
+					'namespace' => __NAMESPACE__.'\Modules\\',
 					'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
 				]
 			);
-			if($this->module) $this->module->execute();
+			if ($this->module) $this->module->execute();
 		}
 		// Module not found
 		else {
-			if(!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
+			if (!isset($_SESSION['loggedin']) || true != $_SESSION['loggedin']) {
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
 			$this->moduleNotFound();

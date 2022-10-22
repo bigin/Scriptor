@@ -2,9 +2,9 @@
 namespace Themes\Basic;
 
 use Imanager\Util;
-use Scriptor\Helper;
-use Scriptor\Scriptor;
-use Scriptor\Site;
+use Scriptor\Core\Helper;
+use Scriptor\Core\Scriptor;
+use Scriptor\Core\Site;
 use Themes\Basic\Subscriber\MailChimp;
 
 class BasicTheme extends Site

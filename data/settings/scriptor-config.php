@@ -114,6 +114,16 @@ $config = [
 	'allowHtmlOutput' => false,
 
 	/**
+	 * Array with reserved slugs
+	 * 
+	 * @var array 
+	 */
+	'reservedSlugs' => [
+		'index',
+		'editor'
+	],
+
+	/**
 	 * Installed Scriptor admin modules
 	 *
 	 * Add your custom modules to '/site/modules/<ModuleName>/<ModuleName.php>'

@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 /**
  * Class Module
@@ -144,11 +144,11 @@ class Module implements ModuleInterface
 		// Is module disabled module file exists?
 		if(!$module || !$module['active']) return false;
 
-		$defaults = [
-			'namespace' => __NAMESPACE__.'\\',
-			'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
-		];
-		$config = array_merge($defaults, $options);
+		$config = array_merge([
+				'namespace' => 'Scriptor\Modules\\',
+				'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
+			], 
+			$options);
 
 		// Module paths (Core & Site)
 		$coreModulePath = dirname(__DIR__)."/$module[path].php";
@@ -157,7 +157,7 @@ class Module implements ModuleInterface
 		if(file_exists($siteModulePath)) include_once $siteModulePath;
 		elseif(file_exists($coreModulePath)) include_once $coreModulePath;
 		else return null;
-
+		// "Scriptor\Core\Pages"
 		$class = $config['namespace'].$module['class'];
 		if($config['autoinit']) {
 			$currentModule = new $class();

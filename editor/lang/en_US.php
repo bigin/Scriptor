@@ -75,8 +75,9 @@ $i18n = [
 	'successful_saved_page' => 'The page was saved successfully.',
 	'parent_select_option' => 'Select option',
 	'error_deleting_first_page' => 'Error when deleting primary page. The page with ID 1, cannot be deleted.',
-	'error_remove_parent_page' => 'Error deleting the page, you cannot delete a page that contains children pages.',
+	'error_remove_parent_page' => 'The page cannot be deleted because it has at least one subpage.',
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
-	'contact_developer' => 'Contact developer'
+	'contact_developer' => 'Contact developer',
+	'page_not_found' => 'Page not found.'
 ];

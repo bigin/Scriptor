@@ -1,9 +1,11 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core\Modules;
 
 use Imanager\TemplateParser;
 use Imanager\Util;
+use Scriptor\Core\Module;
+use Scriptor\Core\Scriptor;
 
 class Auth extends Module
 {

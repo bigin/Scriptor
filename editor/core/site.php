@@ -1,9 +1,10 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core;
 
 use Imanager\Item;
 use Imanager\TemplateParser;
+use Imanager\Util;
 
 class Site extends Module
 {
@@ -103,6 +104,12 @@ class Site extends Module
 	public $templateParser;
 
 	/**
+	 * @var array - Messages container
+	 * 
+	 */
+	protected static $notes = [];
+
+	/**
 	 * Site constructor.
 	 *
 	 * @param $config
@@ -129,7 +136,7 @@ class Site extends Module
 		$this->users = $this->imanager->getCategory('name=Users');
 		$this->firstSegment = $this->segments->get(0);
 		$this->lastSegment = $this->segments->getLast();
-		$this->parsedown = $this->loadModule('parsedown');
+		$this->parsedown = $this->loadModule('parsedown', ['namespace' => __NAMESPACE__.'\Modules\\']);
 		$this->version = Scriptor::VERSION;
 	}
 
@@ -166,49 +173,45 @@ class Site extends Module
 	}
 
 	/**
-	 * Wrapper around IM's getItem() method.
+	 * Searches the records for a specific page using a selector statement.
 	 * 
-	 * @param string|int $selector 
+	 * @param int|string $selector
+	 * @param array $pages
 	 */
-	public function getPage($selector, array $pages = [])
+	public function getPage(int|string $selector, array $pages = [])
 	{
 		return $this->pages->getItem($selector, $pages);
 	}
-
+	
 	/**
-	 * Wrapper around IM's getItems() method.
+	 * Searches the records with a selector statement for any amount of the pages.
 	 * 
-	 * @param string|int $selector
-	 * @param array $conds - Selector conditions 
+	 * @param string $selector - e.g. 'field_name=value' or 'attribute_name=value'
+	 * @param array $conds - Conditions
 	 */
 	public function getPages(string $selector = '', array $conds = []) :?array
 	{
-		$defaults = [
+		$setup = array_merge( [
 			'all' => false,
 			'sortBy' => 'position',
 			'order' => 'asc',
 			'offset' => 0,
 			'length' => 0,
 			'items' => []
-		];
-
-		$setup = array_merge($defaults, $conds);
+		], $conds);
 		
 		$pages = $this->pages->getItems($selector, 0, 0, $setup['items']);
-		if(!$pages) return null;
-	
-		if(!$setup['all']) {
+		if (!$pages) return null;
+
+		if (!$setup['all']) {
 			$active = $this->pages->getItems('active=1', 0, 0, $pages);
 			if(!$active) return null;
 			$pages = $active;
 		}
-
 		$total = count($pages);
-
 		if($setup['sortBy'] != 'position' || strtolower($setup['order']) != 'asc') {
 			$pages = $this->pages->sort($setup['sortBy'], $setup['order'], 0, 0, $pages);
 		}
-
 		if(!empty($pages) && ($setup['offset'] > 0 || $setup['length'] > 0)) {
 			$pages = $this->pages->getItems('', $setup['offset'], $setup['length'], $pages);
 		}
@@ -216,17 +219,40 @@ class Site extends Module
 		return ['pages' => $pages, 'total' => $total];
 	}
 
+	/**
+	 * Do not select, only sort.
+	 * 
+	 * @param array $conds - The sorting conditions. 
+	 */
+	public function sortPages(array $conds = [])
+	{
+		$setup = array_merge([
+			'sortBy' => 'position', // string sort by attribute or field name
+			'order' => 'asc',
+			'offset' => 0,
+			'length' => 0,
+			'items' => []
+		], $conds);
+
+		return $this->pages->sort(
+			$setup['sortBy'], 
+			$setup['order'], 
+			$setup['offset'], 
+			$setup['length'], 
+			$setup['items']
+		);
+	}
+
 	public function getPageLevels($options = [], $pages = []) :array
 	{
-		$defaults = [
+		$configs = array_merge([
 			'parent' => 0,
 			'maxLevel' => 1,
 			'sortBy' => 'position',
 			'order' => 'asc',
 			'active' => true,
 			'exclude' => []
-		];
-		$configs = array_merge($defaults, $options);
+		], $options);
 		
 		$topl = $this->pages->getItems("parent=$configs[parent]");
 		if(! $topl) return $pages;
@@ -276,6 +302,156 @@ class Site extends Module
 		}
 
 		return $return;
+	}
+
+	/**
+	 * Method for determining the IDs of the children under a page
+	 * 
+	 * @param Page $page
+	 * @param array $options
+	 * @param array $idBuffer
+	 */
+	public function getPageChildrenIds(
+		Page $page, 
+		array $options = [], 
+		array $idBuffer = []) :array 
+	{
+
+		$configs = array_merge([
+			'all' => false,
+			'sortBy' => 'position',
+			'order' => 'asc',
+			'offset' => 0,
+			'length' => 0,
+			'items' => []
+		], $options);
+
+		$childs = $this->getPages("parent=$page->id", $configs);
+		if ($childs) {
+			foreach ($childs['pages'] as $p) {
+				$idBuffer[] = $p->id;
+				$idBuffer = $this->getPageChildrenIds($p, $configs, $idBuffer);
+			}
+		}
+		return $idBuffer;
+	}
+
+	/**
+	 * Delete a page.
+	 * 
+	 * You can pass a number of parameters to specify how the 
+	 * deletion should be done. 
+	 * 
+	 * If you set the "recursive" option to "true", all child pages 
+	 * will be deleted as well. 
+	 * 
+	 * Ohh, and the cache will be flushed too, if you don't want that, 
+	 * set the parameter "clearCache" to false.
+	 * 
+	 * @param int|object $target
+	 * @param array $opts
+	 */
+	public function deletePage(int|object $target, array $opts = []) : bool
+	{
+		$options = array_merge([
+			'clearCache' => true,
+			'recursive' => false, // delete recursively
+			'force' => true
+		], $opts);
+
+		if (is_integer($target)) {
+			$page = $this->getPage($target);
+		} else {
+			$page = $this->getPage((int) $target->id);// do not use a passed object 
+		}
+
+		if (!is_object($page)) {
+			self::addNote([
+				'type' => 'error',
+				'value' => $this->i18n['page_not_found']
+			]);
+			return false;
+		}
+
+		if (!$this->isDeletionSafe($page, $options)) return false;
+		
+		if ($this->completeDeletion($page, $options['recursive'])) {
+			if ($options['clearCache']) {
+				$this->imanager->sectionCache->expire();
+			}
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * If there is at least one child page or the page you want 
+	 * to delete has an ID 1, deletion should not be possible.
+	 * 
+	 * Never allow the deletion of a page with id 1.
+	 * 
+	 * @param object $page - Page/Item Object
+	 * @param array $opts - Deletion options
+	 */
+	private function isDeletionSafe(object $page, array $opts = []) :bool
+	{
+		$options = array_merge([
+			'recursive' => false,
+			'force' => false
+		], $opts);
+
+		if ($page->id == 1) {
+			self::addNote([
+				'type' => 'error',
+				'value' => $this->i18n['error_deleting_first_page']
+			]);
+			return false;
+		}
+
+		// If the force option is set, child pages will not be checked.
+		if ($options['force']) return true;
+		// does it have the child pages?
+		$child = $this->getPage("parent=$page->id");
+		if ($child) {
+			if ($options['recursive']) return true;
+			self::addNote([
+				'type' => 'error',
+				'value' => $this->i18n['error_remove_parent_page']
+			]);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Finishes the deletion process.
+	 * 
+	 * If the "recursive" parameter is set to "true", the child pages 
+	 * will also be deleted recursively. 
+	 * 
+	 * @param object $page
+	 * @param bool $recursive
+	 */
+	private function completeDeletion(object $page, bool $recursive = false) :bool
+	{
+		if (!$recursive) return $this->pages->remove($page);
+		
+		$res = true;
+		$pageIds = $this->getPageChildrenIds($page, [], [$page->id]);
+		if (empty($pageIds)) return $res;
+
+		foreach ($pageIds as $id) {
+			$trash = $this->getPage((int) $id);
+			if ($trash && ! $this->pages->remove($trash)) {
+				self::addNote([
+					'type' => 'error',
+					'value' => $this->i18n['error_deleting_page']
+				]);
+				$res = false;
+			}
+		}
+		return $res;
 	}
 
 	public static function getPageUrl($item, $pages)
@@ -362,6 +538,9 @@ class Site extends Module
 		return $navi;
 	}
 
+	/**
+	 * TODO: This function should be moved off-site
+	 */
 	protected function getNaviChildren($item, & $items, $url, $children = '')
 	{
 		$childs = $this->pages->getItems("parent=$item->id", 0, 0, $items);
@@ -401,6 +580,9 @@ class Site extends Module
 		}
 	}
 
+	/**
+	 * TODO: This function should be moved off-site
+	 */
 	protected function getClass(& $item)
 	{
 		$class = null;
@@ -413,6 +595,33 @@ class Site extends Module
 		return (($class) ? ' class="'.$class.'"' : '');
 	}
 
+	/**
+	 * Add note to the container
+	 * 
+	 * @param array $note 
+	 * @param int $key
+	 */
+	protected function addNote(array $note, int $key = null) :?int
+	{
+		if ($key) self::$notes[$key] = $note;
+		else self::$notes[] = $note;
+
+		return ($key) ? $key : count(self::$notes)-1;
+	}
+
+	public function getNote(int $key)
+	{
+		return self::$notes[$key] ?? null;
+	}
+
+	public function getNotes()
+	{
+		return self::$notes;
+	}
+
+	/**
+	 * Throws 404 page
+	 */
 	public function throw404()
 	{
 		header("HTTP/1.0 404 Not Found");

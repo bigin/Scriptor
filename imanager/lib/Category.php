@@ -175,10 +175,11 @@ class Category extends ImObject
 	public function remove(& $obj, $complete = true)
 	{
 		$this->init();
-		if($obj instanceof Item) {
-			return $this->imanager->itemMapper->remove($obj, $complete);
-		} elseif($obj instanceof Field) {
+		if ($obj instanceof Field) {
 			return $this->imanager->fieldMapper->remove($obj, $complete);
+		// $obj instanceof Item
+		} else {
+			return $this->imanager->itemMapper->remove($obj, $complete);
 		}
 		trigger_error('Object type is unknown', E_USER_WARNING);
 		return false;

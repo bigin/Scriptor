@@ -1,6 +1,6 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core\Modules;
 
 use Imanager\Field;
 use Imanager\FieldConfigs;
@@ -8,23 +8,18 @@ use Imanager\FieldFileupload;
 use Imanager\Item;
 use Imanager\TemplateParser;
 use Imanager\Util;
+use Scriptor\Core\Module;
+use Scriptor\Core\Scriptor;
 
 /**
  * Pages class
- *
- *
- * NOTE:
- * You can use $editor - Inherited from Module
  *
  */
 class Pages extends Module
 {
 	public $page;
 
-	public static $reservedSlugs = [
-		'index',
-		'editor'
-	];
+	private $reservedSlugs;
 
 	public $jsConfig;
 
@@ -34,8 +29,8 @@ class Pages extends Module
 		$this->csrf = Scriptor::getCSRF();
 		$this->pages = $this->imanager->getCategory('name=Pages');
 		$this->imanager->fieldMapper->init($this->pages->id, true);
-
-		if(Scriptor::execHook($this) && $this->event->replace) return;
+		$this->reservedSlugs = $this->config['reservedSlugs'];
+		if (Scriptor::execHook($this) && $this->event->replace) return;
 	}
 
 	public function execute()
@@ -429,11 +424,15 @@ class Pages extends Module
 	{
 		$this->page = null;
 
-		if($this->input->get->page) { $this->page = $this->pages->getItem((int)$this->input->get->page); }
-		if(!$this->page) { $this->page = new Item($this->pages->id); }
+		if ($this->input->get->page) { 
+			$this->page = $this->pages->getItem((int)$this->input->get->page); 
+		}
+		if (!$this->page) { 
+			$this->page = new Page($this->pages->id); 
+		}
 
 		$name = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->name));
-		if(!$name) {
+		if (!$name) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_page_title']
@@ -441,7 +440,7 @@ class Pages extends Module
 		}
 		// Check if the name already exists
 		$exists = $this->pages->getItem("name=$name");
-		if($exists && $exists->id != $this->page->id) {
+		if ($exists && $exists->id != $this->page->id) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_page_title_exists']
@@ -449,7 +448,7 @@ class Pages extends Module
 		}
 		$this->page->set('name', $name);
 
-		if($this->input->post->menu_title) {
+		if ($this->input->post->menu_title) {
 			$menuTitle = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->menu_title));
 		} else {
 			$menuTitle = $name;
@@ -465,7 +464,7 @@ class Pages extends Module
 				$this->imanager->sanitizer->pageName($url));
 		}
 		// Its one of the reserved names?
-		if(in_array($slug, self::$reservedSlugs)) {
+		if(in_array($slug, $this->reservedSlugs)) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_slug_reserved']

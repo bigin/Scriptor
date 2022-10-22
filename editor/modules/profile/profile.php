@@ -1,6 +1,9 @@
 <?php
 
-namespace Scriptor;
+namespace Scriptor\Core\Modules;
+
+use Scriptor\Core\Module;
+use Scriptor\Core\Scriptor;
 
 class Profile extends Module
 {
