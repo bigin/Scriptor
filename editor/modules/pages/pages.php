@@ -9,6 +9,7 @@ use Imanager\Item;
 use Imanager\TemplateParser;
 use Imanager\Util;
 use Scriptor\Core\Module;
+use Scriptor\Core\Page;
 use Scriptor\Core\Scriptor;
 
 /**
