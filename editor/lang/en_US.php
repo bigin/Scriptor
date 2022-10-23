@@ -79,5 +79,5 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
 	'contact_developer' => 'Contact developer',
-	'page_not_found' => 'Page not found.'
+	'error_operation_failed' => 'The operation was not successful, see the log for more information.'
 ];

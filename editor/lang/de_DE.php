@@ -81,5 +81,5 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
 	'contact_developer' => 'Entwickler kontaktieren',
-	'page_not_found' => 'Seite nicht gefunden.'
+	'error_operation_failed' => 'Der Vorgang war nicht erfolgreich, weitere Informationen finden Sie im Log.'
 ];

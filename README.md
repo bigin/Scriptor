@@ -6,13 +6,7 @@ A lightweight, versatile flat-file CMS for creating microsites.
 Demo: https://demos.scriptor-cms.info    
 
 #### Get started quickly:
-Intuitive, user-friendly control panel helps you get up and running easily – you will have it installed in the blink of an eye.
-
-#### Extensible:
-You have a variety of options and a fun API for custom module development. The front-end and admin panel are simply designed and consist only of modules and templates.
-
-#### Theming:
-Use the default theme or create your own, as simple as you like. Write custom modules or hook into the admin methods and change their logic to your needs.
+The intuitive control panel helps you get up and running - you'll have it installed in no time. Use the default theme or create your own as simple as you like. Create custom modules or hook into the admin methods and change their logic according to your needs.
 
 
 ### Install Requirements
@@ -22,19 +16,19 @@ Use the default theme or create your own, as simple as you like. Write custom mo
 - Apache must have mod_rewrite enabled.   
 - Apache must support .htaccess file.   
 
-### Via Composer Create-Project
+#### Via Composer Create-Project
 Scriptor is available from Packagist and can also be installed by entering the composer command:
 ```
 composer create-project bigins/scriptor your-scriptor-project
 ```
 
-### Via Composer Require
+#### Via Composer Require
 If you prefer, you can add Scriptor to an existing project inside the `vendor/` directory:
 ```
 composer require bigins/scriptor
 ```
 
-### Git Clone
+#### Git Clone
 ```
 git clone git@github.com:bigin/Scriptor.git
 ```

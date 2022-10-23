@@ -350,6 +350,7 @@ class Site extends Module
 	 * 
 	 * @param int|object $target
 	 * @param array $opts
+	 * @throws \ErrorException
 	 */
 	public function deletePage(int|object $target, array $opts = []) : bool
 	{
@@ -361,28 +362,27 @@ class Site extends Module
 
 		if (is_integer($target)) {
 			$page = $this->getPage($target);
+			$pageId = $target;
 		} else {
-			$page = $this->getPage((int) $target->id);// do not use a passed object 
+			$page = $this->getPage((int) $target->id);// do not use a passed object
+			$pageId = $target->id;
 		}
 
 		if (!is_object($page)) {
-			self::addNote([
-				'type' => 'error',
-				'value' => $this->i18n['page_not_found']
-			]);
-			return false;
+			throw new \ErrorException("Page ID '$pageId' not found.");
 		}
 
-		if (!$this->isDeletionSafe($page, $options)) return false;
+		if (!$this->isDeletionSafe($page, $options)) {
+			throw new \ErrorException('The operation was not approved.');
+		}
 		
-		if ($this->completeDeletion($page, $options['recursive'])) {
-			if ($options['clearCache']) {
-				$this->imanager->sectionCache->expire();
-			}
-			return true;
+		$this->completeDeletion($page, $options['recursive']);
+
+		if ($options['clearCache']) {
+			$this->imanager->sectionCache->expire();
 		}
 
-		return false;
+		return true;
 	}
 
 	/**
@@ -432,26 +432,35 @@ class Site extends Module
 	 * 
 	 * @param object $page
 	 * @param bool $recursive
+	 * @throws \ErrorException
 	 */
 	private function completeDeletion(object $page, bool $recursive = false) :bool
 	{
-		if (!$recursive) return $this->pages->remove($page);
+		if (!$recursive) {
+			if (!$this->pages->remove($page)) {
+				self::addNote([
+					'type' => 'error',
+					'value' => $this->i18n['error_operation_failed']
+				]);
+				throw new \ErrorException("The operation was not successful.");
+			}
+			return true;
+		}
 		
-		$res = true;
 		$pageIds = $this->getPageChildrenIds($page, [], [$page->id]);
-		if (empty($pageIds)) return $res;
+		if (empty($pageIds)) return true;
 
 		foreach ($pageIds as $id) {
 			$trash = $this->getPage((int) $id);
 			if ($trash && ! $this->pages->remove($trash)) {
 				self::addNote([
 					'type' => 'error',
-					'value' => $this->i18n['error_deleting_page']
+					'value' => $this->i18n['error_operation_failed']
 				]);
-				$res = false;
+				throw new \ErrorException("The operation was not successful.");
 			}
 		}
-		return $res;
+		return true;
 	}
 
 	public static function getPageUrl($item, $pages)

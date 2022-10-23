@@ -159,6 +159,10 @@ class ItemMapper extends Mapper
 		if(is_numeric($selector)) return !empty($this->items[$selector]) ? $this->items[$selector] : null;
 		// Separate selector
 		$data = explode('=', $selector, 2);
+		if (empty($data[1]) || empty($data[0])) {
+			trigger_error('Not allowed selector.', E_USER_ERROR);
+			return null;
+		}
 		$key = strtolower(trim($data[0]));
 		$val = trim($data[1]);
 		$num = substr_count($val, '%');
