@@ -126,7 +126,7 @@ class Site extends Module
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
 		$this->segments = $this->input->urlSegments;
-		$this->pages = new Pages(); //$this->imanager->getCategory('name=Pages');
+		$this->pages = new Pages();
 		$this->users = $this->imanager->getCategory('name=Users');
 		$this->firstSegment = $this->segments->get(0);
 		$this->lastSegment = $this->segments->getLast();
@@ -226,14 +226,14 @@ class Site extends Module
 	protected function buildNavi()
 	{
 		$navi = '';
-		$topl = $this->pages->getItems('parent=0');
+		$topl = $this->pages->category->getItems('parent=0');
 		// Todo: check if topl exists if 0 pages created
-		$topl = $this->pages->getItems('active=1', 0, 0, $topl);
-		$topl = $this->pages->sort('position', 'asc', 0, 0, $topl);
+		$topl = $this->pages->category->getItems('active=1', 0, 0, $topl);
+		$topl = $this->pages->category->sort('position', 'asc', 0, 0, $topl);
 		if (!$topl) return $navi;
 		foreach($topl as $item) {
-			$all_pages = $this->pages->getItems("active=1");
-			$all_pages = $this->pages->sort('position', 'asc', 0, 0, $all_pages);
+			$all_pages = $this->pages->category->getItems("active=1");
+			$all_pages = $this->pages->category->sort('position', 'asc', 0, 0, $all_pages);
 			$navi .= $this->getNaviChildren($item, $all_pages, rtrim($this->siteUrl, '/') . '/');
 		}
 		return $navi;
@@ -244,7 +244,7 @@ class Site extends Module
 	 */
 	protected function getNaviChildren($item, & $items, $url, $children = '')
 	{
-		$childs = $this->pages->getItems("parent=$item->id", 0, 0, $items);
+		$childs = $this->pages->category->getItems("parent=$item->id", 0, 0, $items);
 		if ($childs) {
 			$prefix = '<li' . $this->getClass($item) . '><a href="' .
 				$url.(($item->id != 1 && !$item->parent) ? "$item->slug/" : '') . '">'.
@@ -273,7 +273,7 @@ class Site extends Module
 			return true;
 		}
 		else {
-			$parent = $this->pages->getItem((int)$current->parent);
+			$parent = $this->pages->category->getItem((int)$current->parent);
 			if($parent) {
 				return $this->parrentOf($item, $parent);
 			}

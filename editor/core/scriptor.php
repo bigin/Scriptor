@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.7.1';
+	const VERSION = '1.8.0';
 
 	/**
 	 * @var array $config - Configuration parameter
