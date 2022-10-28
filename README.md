@@ -5,7 +5,7 @@
 
 # Scriptor
 
-**A lightweight, versatile flat-file CMS for creating microsites, blogs or wikis.**
+A lightweight, versatile flat-file CMS for creating microsites, blogs or wikis.
 
   
 
@@ -18,47 +18,37 @@ Demo: https://demos.scriptor-cms.info
 The intuitive control panel helps you get up and running – you'll have it installed in no time. A basic blog theme is already pre-installed, so you can get started right away. Use the default theme or create your own as simple as you like. 
   
   
+  
 
-### Install Requirements
+
+## Install
+
+#### Install Requirements
 
 - A Unix or Windows-based web server running Apache.
-
 - Minimum PHP version of 8.1.
-
 - ext-mbstring
-
 - ext-gd
-
 - ext-mbstring
-
 - ext-dom
-
 - ext-json
-
 - Apache must support .htaccess file.
 
-  
----
+
 #### Via Composer Create-Project
 
 Scriptor is available from Packagist and can also be installed by entering the composer command:
 
 ```
-
 composer create-project bigins/scriptor your-scriptor-project
-
 ```
-
-  
 
 #### Via Composer Require
 
 If you prefer, you can add Scriptor to an existing project inside the `vendor/` directory:
 
 ```
-
 composer require bigins/scriptor
-
 ```
 
   
@@ -66,19 +56,15 @@ composer require bigins/scriptor
 #### Git Clone
 
 ```
-
 git clone git@github.com:bigin/Scriptor.git
-
 ```
 
 #### Installing from zip
-```
-1. Click `download`
 
+1. Click [download](https://scriptor-cms.info).
 2. Unpack the archive and rename the folder as you like.
-
 3. Upload the contents of Scriptor folder to root on the server, or upload it in the folder if you want to run the CMS in a subfolder.
-```
+
   
 ---
 ### Use Scriptor as a library
@@ -88,9 +74,7 @@ To make the Scriptor library available in your own project, simply include the `
   
 
 ```php
-
 require  './your-scriptor-project/boot.php';
-
 ```
 
   
@@ -98,9 +82,7 @@ require  './your-scriptor-project/boot.php';
 or use composer autoload:
 
 ```php
-
 require  '../vendor/autoload.php';
-
 ```
 
   
@@ -108,63 +90,40 @@ require  '../vendor/autoload.php';
 Now you can just add Scriptor in your own code:
 
 ```php
-
 <?php  // /public/index.php
-
-  
-
-use Imanager\Util;
 
 use Scriptor\Core\Scriptor;
 
-  
-
 require  dirname(__DIR__) .  '/vendor/autoload.php';
 
-  
-
 $site  =  Scriptor::getSite();
-
 $page  =  $site->getPage('slug=scriptors-demo-page');
-
-  
-
-Util::preformat($page->name);
-
 ```
 
+---
   
 ### Use Scriptor as your website platform
 In that case, Scriptor would have to be in the root of your domain.
 
 ### Admin panel
-
 To access the admin panel, go to the home page of your website and simply add the text `editor/` to the URL in your browser:
 
 ```
-
 https://your-website.com/editor/
-
 ```
-
   
 
 If you are using Scriptor in a subdirectory:
 
 ```
-
 https://your-website.com/subdirectory/editor/
-
 ```
-
-  
 
 ### Admin initial login
 
 `(!) Change password/username at first login`
 
-> User: `admin`
-
+> User: `admin`   
 > Password: `gT5nLazzyBob`
 
   
