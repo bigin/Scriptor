@@ -82,6 +82,12 @@ class Module implements ModuleInterface
 	 */
 	protected $event = null;
 
+	/**
+	 * @var array - locale messages container
+	 * 
+	 */
+	protected static $notes = [];
+
 
 	public function execute(){}
 
@@ -340,6 +346,30 @@ class Module implements ModuleInterface
 			unset($_SESSION['msgs']);
 			$_SESSION['msgs'] = null;
 		}
+	}
+
+	/**
+	 * Add note to the container
+	 * 
+	 * @param array $note 
+	 * @param int $key
+	 */
+	protected function addNote(array $note, int $key = null) :?int
+	{
+		if ($key) self::$notes[$key] = $note;
+		else self::$notes[] = $note;
+
+		return ($key) ? $key : count(self::$notes)-1;
+	}
+
+	public function getNote(int $key) :?array
+	{
+		return self::$notes[$key] ?? null;
+	}
+
+	public function getNotes() :array
+	{
+		return self::$notes;
 	}
 	
 	public function getProperty(string $name) :mixed

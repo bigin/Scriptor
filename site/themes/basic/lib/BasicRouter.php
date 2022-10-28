@@ -30,7 +30,7 @@ class BasicRouter
 	{
 		$this->actions();
 
-		$articles = $this->site->getPage((int) $this->site->getTCP('articles_page_id'));
+		$articles = $this->site->pages->getPage((int) $this->site->getTCP('articles_page_id'));
 		
 		if ($articles && $articles->slug != $this->site->segments->getlast()) {
 			$this->site->execute();

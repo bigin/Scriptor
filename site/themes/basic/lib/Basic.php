@@ -35,7 +35,7 @@ class BasicTheme extends Site
 		parent::init();
 		$this->config['theme'] = Scriptor::load(__DIR__.'/../_configs.php');
 		$this->tpls = Scriptor::load(__DIR__.'/_tpls.php');
-		$this->articles = $this->getPage($this->getTCP('articles_page_id'));
+		$this->articles = $this->pages->getPage($this->getTCP('articles_page_id'));
 	}
 
 	/**
@@ -134,7 +134,7 @@ class BasicTheme extends Site
 	{
 		$perpage = $this->getTCP('articles_per_page');
 
-		$articles = $this->getPages('parent='.(int) $this->articles->id, [
+		$articles = $this->pages->getPages('parent='.(int) $this->articles->id, [
 			'sortBy' => 'created',
 			'order' => 'desc',
 			'length' => $perpage
@@ -202,7 +202,7 @@ class BasicTheme extends Site
 	private function archiveNavPages() :array
 	{
 		$rows = [];
-		$articles = $this->getPages('parent=2', ['sortBy' => 'created', 'order' => 'DESC']);
+		$articles = $this->pages->getPages('parent=2', ['sortBy' => 'created', 'order' => 'DESC']);
 		if($articles) {
 			foreach($articles['pages'] as $article) {
 				$dtz = $this->getTCP('datetime_zone');
@@ -386,7 +386,7 @@ class BasicTheme extends Site
 	 */
 	private function renderFooterNav() :string
 	{
-		$container = $this->getPage($this->getTCP('footer_container_id'));
+		$container = $this->pages->getPage($this->getTCP('footer_container_id'));
 		if ($container) {
 			return $this->templateParser->render($this->tpls['footer_nav'], [
 				'MENU_TITLE' => $container->menu_title,
@@ -417,7 +417,7 @@ class BasicTheme extends Site
 			'icon' => ''
 		], $options);
 
-		$data = $this->getPageLevels($setup);
+		$data = $this->pages->getPageLevels($setup);
 
 		if(empty($data[$setup['parent']])) return '';
 
@@ -684,18 +684,18 @@ class BasicTheme extends Site
 	public function getArticlesWithin(int $start, int $end) :?array
 	{
 		$contId = $this->getTCP('articles_page_id');
-		$levels = $this->getPageLevels(['parent' => $contId]);
+		$levels = $this->pages->getPageLevels(['parent' => $contId]);
 
 		if (!isset($levels[$contId]) || empty($levels[$contId])) return null;
 
-		$articles = $this->getPages("created >= $start", [
+		$articles = $this->pages->getPages("created >= $start", [
 			'items' => $levels[$contId],
 			'length' => 0
 		]);
 
 		if (!$articles || empty($articles['pages']) ) return null;
 		
-		$period = $this->getPages("created < $end", [
+		$period = $this->pages->getPages("created < $end", [
 			'items' => $articles['pages'],
 			'sortBy' => 'created',
 			'order' => 'desc',

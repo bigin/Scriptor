@@ -35,11 +35,11 @@ if ($output = $site->imanager->sectionCache->get(
 }
 
 /* 
-UPGRADE SCRIPTOR V. 1.4.16 > 1.4.17
+UPDATE SCRIPTOR V. 1.4.16 > 1.4.17
 
 // Note: Your existing pages can get menu_title 
-automatically, but the pages must be overwritten manually.
-
+// automatically, but the pages must be overwritten manually.
+//
 // If you have custom page fields, populate the array with 
 // the field names. If not, leave it as it is:
 
