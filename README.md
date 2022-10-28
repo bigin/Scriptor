@@ -65,44 +65,9 @@ git clone git@github.com:bigin/Scriptor.git
 2. Unpack the archive and rename the folder as you like.
 3. Upload the contents of Scriptor folder to root on the server, or upload it in the folder if you want to run the CMS in a subfolder.
 
-  
----
-### Use Scriptor as a library
-
-To make the Scriptor library available in your own project, simply include the `boot.php` file:
-
-  
-
-```php
-require  './your-scriptor-project/boot.php';
-```
-
-  
-
-or use composer autoload:
-
-```php
-require  '../vendor/autoload.php';
-```
-
-  
-
-Now you can just add Scriptor in your own code:
-
-```php
-<?php  // /public/index.php
-
-use Scriptor\Core\Scriptor;
-
-require  dirname(__DIR__) .  '/vendor/autoload.php';
-
-$site  =  Scriptor::getSite();
-$page  =  $site->getPage('slug=scriptors-demo-page');
-```
-
----
-  
-### Use Scriptor as your website platform
+   
+   
+## Use Scriptor as your website platform
 In that case, Scriptor would have to be in the root of your domain.
 
 ### Admin panel
@@ -126,6 +91,35 @@ https://your-website.com/subdirectory/editor/
 > User: `admin`   
 > Password: `gT5nLazzyBob`
 
+
+## Use Scriptor as a library
+
+To make the Scriptor library available in your own project, simply include the `boot.php` file:  
+
+```php
+require  './your-scriptor-project/boot.php';
+```
+
+
+or use composer autoload:
+
+```php
+require  '../vendor/autoload.php';
+```
+ 
+
+Now you can just add Scriptor in your own code:
+
+```php
+<?php  // /public/index.php
+
+use Scriptor\Core\Scriptor;
+
+require  dirname(__DIR__) .  '/vendor/autoload.php';
+
+$site  =  Scriptor::getSite();
+$page  =  $site->getPage('slug=scriptors-demo-page');
+```
   
 
 ### Links
