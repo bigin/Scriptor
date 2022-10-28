@@ -17,7 +17,9 @@
     "require": {
         "php": ">=8.1.0",
         "ext-gd": "*",
-        "ext-mbstring": "*"
+        "ext-mbstring": "*",
+    	"ext-dom": "*",
+    	"ext-json": "*"
     },
 	"autoload": {
 		"files": ["boot.php"]
