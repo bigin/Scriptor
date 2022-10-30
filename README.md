@@ -62,8 +62,8 @@ git clone git@github.com:bigin/Scriptor.git
 #### Installing from zip
 
 1. Click [download](https://scriptor-cms.info).
-2. Unpack the archive and rename the folder as you like.
-3. Upload the contents of Scriptor folder to root on the server, or upload it in the folder if you want to run the CMS in a subfolder.
+2. Unpack the archive.
+3. Upload the contents of Scriptor folder to root on the server, or upload it in the folder if you want to run the CMS in a subfolder. If you only want to interact programmatically with Scriptor, then place the lib outside the root directory, more on this below under: Using Scriptor as a library.
 
    
    
@@ -99,8 +99,6 @@ To make the Scriptor library available in your own project, simply include the `
 ```php
 require  './your-scriptor-project/boot.php';
 ```
-
-
 or use composer autoload:
 
 ```php
@@ -124,15 +122,11 @@ $page  =  Scriptor::getSite()->pages()->getPage('slug=scriptors-demo-page');
 
 ### Links
 
-- Official website: https://scriptor-cms.info
-
 - Documentation: https://scriptor-cms.info/documentation/
 
-- Module extensions: https://scriptor-cms.info/extensions/extensions-modules/
+- Module/Extensions: https://scriptor-cms.info/extensions/extensions-modules/
 
-- Demo: https://demos.scriptor-cms.info
-
-- Showcase: https://github.com/bigin/Scriptor/discussions/15
+- A demo of the default blog theme: https://demos.scriptor-cms.info
 
   
 
