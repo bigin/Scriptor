@@ -115,7 +115,6 @@ use Scriptor\Core\Scriptor;
 
 require  dirname(__DIR__) .  '/vendor/autoload.php';
 
-
 $page  =  Scriptor::getSite()->pages()->getPage('slug=scriptors-demo-page');
 ```
   

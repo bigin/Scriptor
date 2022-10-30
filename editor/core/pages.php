@@ -201,6 +201,39 @@ class Pages extends Module
 	}
 
 	/**
+	 * Retrieves child pages of a given page.
+	 * 
+	 * @param Page $page
+	 * @param array $options
+	 * @param array $idBuffer
+	 */
+	public function getPageChildren(
+		Page $page, 
+		array $options = [], 
+		array $pageBuffer = []) :array 
+	{
+
+		$configs = array_merge([
+			'all' => false,
+			'sortBy' => 'position',
+			'order' => 'asc',
+			'offset' => 0,
+			'length' => 0,
+			'items' => []
+		], $options);
+
+		$childs = $this->getPages("parent=$page->id", $configs);
+		if ($childs) {
+			foreach ($childs['pages'] as $p) {
+				$pageBuffer[] = $p;
+				$pageBuffer = $this->getPageChildren($p, $configs, $pageBuffer);
+			}
+		}
+		return $pageBuffer;
+	}
+	
+
+	/**
 	 * Delete a page.
 	 * 
 	 * You can pass a number of parameters to specify how the 

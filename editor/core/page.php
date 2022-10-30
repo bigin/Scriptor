@@ -24,6 +24,17 @@ class Page extends Item
 	}
 
 	/**
+	 * Retrieves child pages of the page.
+	 * 
+	 * @return array
+	 */
+	public function children(array $options = []) :array
+	{
+		return Scriptor::getSite()->pages()->getPageChildren($this, $options);
+	}
+
+
+	/**
 	 * Tries to save item, with a previous check and 
 	 * adjustment of particular parameters.
 	 * 
