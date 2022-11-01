@@ -126,9 +126,6 @@ class Site extends Module
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
 		$this->urlSegments = $this->urlSegments();
-		//$this->urlSegments = $this->input->urlSegments;
-		//$this->pages = new Pages();
-		//$this->users = $this->imanager->getCategory('name=Users');
 		$this->firstSegment = $this->urlSegments->get(0);
 		$this->lastSegment = $this->urlSegments->getLast();
 		$this->parsedown = $this->loadModule('parsedown', ['namespace' => __NAMESPACE__.'\Modules\\']);
