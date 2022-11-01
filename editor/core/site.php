@@ -34,9 +34,9 @@ class Site extends Module
 	public $input;
 
 	/**
-	 * @var object $segments - Segments object instance
+	 * @var object $urlSegments - urlSegments object instance
 	 */
-	public $segments;
+	public $urlSegments;
 
 	/**
 	 * @var string $firstSegment - Buffered first url segment
@@ -111,25 +111,26 @@ class Site extends Module
 	public function __construct() 
 	{
 		$this->config = Scriptor::getProperty('config');
-		$this->templateParser = new TemplateParser();
 	}
 
 	/**
 	 * Init Site class
-	 * Prepares some variables for local use and executes actions
+	 * Loads some stuff, prepares variables for local use
 	 *
 	 */
 	public function init()
 	{
 		if (isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
 		parent::init();
+		$this->templateParser = new TemplateParser();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
 		$this->input = $this->imanager->input;
-		$this->segments = $this->input->urlSegments;
-		$this->pages = new Pages();
-		$this->users = $this->imanager->getCategory('name=Users');
-		$this->firstSegment = $this->segments->get(0);
-		$this->lastSegment = $this->segments->getLast();
+		$this->urlSegments = $this->urlSegments();
+		//$this->urlSegments = $this->input->urlSegments;
+		//$this->pages = new Pages();
+		//$this->users = $this->imanager->getCategory('name=Users');
+		$this->firstSegment = $this->urlSegments->get(0);
+		$this->lastSegment = $this->urlSegments->getLast();
 		$this->parsedown = $this->loadModule('parsedown', ['namespace' => __NAMESPACE__.'\Modules\\']);
 		$this->version = Scriptor::VERSION;
 	}
@@ -153,12 +154,12 @@ class Site extends Module
 			}
 		// other pages
 		} else {
-			$total = $this->segments->total - 1;
-			$this->page = $this->pages->getPageBySegment($this->segments->segment, $total);
+			$total = $this->urlSegments->total - 1;
+			$this->page = $this->pages->getPageBySegment($this->urlSegments->segment, $total);
 			if(!$this->page || !$this->page->active) {
 				$this->throw404();
 			}
-			$curentUrl = $this->segments->getUrl();
+			$curentUrl = $this->urlSegments->getUrl();
 			$pageUrl = self::getPageUrl($this->page, $this->pages);
 			if(strpos($curentUrl, $pageUrl) === false) {
 				$this->throw404();
@@ -166,14 +167,29 @@ class Site extends Module
 		}
 	}
 
+	public function urlSegments()
+	{
+		return ($this->urlSegments) ?? $this->input->urlSegments;
+	}
+
 	public function pages()
 	{
 		return ($this->pages) ?? new Pages();
 	}
 
+	public function users()
+	{
+		return ($this->users) ?? new Users();
+	}
+
+	/**
+	 * NOTE: "segment" is used only for compatibility reasons.
+	 */
 	public function __get($arg)
 	{
 		if ($arg == 'pages') return $this->pages();
+		elseif ($arg == 'segments' || $arg == 'urlSegments') return $this->urlSegments();
+		elseif ($arg == 'users') return $this->users();
 	}
 
 	public static function getPageUrl($item, $pages)

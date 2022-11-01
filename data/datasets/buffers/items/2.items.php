@@ -1,14 +1,14 @@
 <?php return array (
   1 => 
-  Imanager\Item::__set_state(array(
+  Scriptor\Core\User::__set_state(array(
      'categoryid' => 2,
      'id' => 1,
      'name' => 'admin',
-     'label' => NULL,
+     'label' => '',
      'position' => 1,
-     'active' => false,
+     'active' => true,
      'created' => 1519050932,
-     'updated' => 1666424311,
+     'updated' => 1667306443,
      'email' => 'gmail@chuck.norris.com',
      'role' => 'siteadmin',
      'password' => 

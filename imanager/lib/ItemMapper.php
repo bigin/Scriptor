@@ -178,7 +178,7 @@ class ItemMapper extends Mapper
 		if(false !== strpos($key, ' ')) return null;
 		// Searching for entered value
 		foreach($this->items as $itemkey => $item) {
-			if(!$pat && strtolower($item->{$key}) == strtolower($val)) return $item;
+			if(!$pat && $item->$key && strtolower($item->$key) == strtolower($val)) return $item;
 			elseif($pat && preg_match($pat, strtolower($item->{$key}))) return $item;
 		}
 		return null;

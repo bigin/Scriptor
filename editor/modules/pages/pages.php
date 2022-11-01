@@ -438,26 +438,13 @@ class Pages extends Module
 				'type' => 'error',
 				'value' => $this->i18n['error_page_title']
 			);
+			return false;
 		}
-		// Check if the name already exists
-		$exists = $this->pages->getItem("name=$name");
-		if ($exists && $exists->id != $this->page->id) {
-			$this->msgs[] = array(
-				'type' => 'error',
-				'value' => $this->i18n['error_page_title_exists']
-			);
-		}
+
 		$this->page->set('name', $name);
 
-		if ($this->input->post->menu_title) {
-			$menuTitle = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->menu_title));
-		} else {
-			$menuTitle = $name;
-		}
-		$this->page->set('menu_title', $menuTitle);
-
 		$url = trim($name, '-');
-		if($this->input->post->slug) {
+		if ($this->input->post->slug) {
 			$slug = preg_replace("/(-)\\1+/", "$1",
 				$this->imanager->sanitizer->pageName($this->input->post->slug));
 		} else {
@@ -470,18 +457,48 @@ class Pages extends Module
 				'type' => 'error',
 				'value' => $this->i18n['error_slug_reserved']
 			);
-			return false;
 		}
-		// Invalid News name
+		// Invalid name
 		if($name && !$slug) {
 			$this->msgs[] = array(
 				'type' => 'error',
 				'value' => $this->i18n['error_page_name']
 			);
-			return false;
 		}
 
 		$this->page->set('slug', $slug);
+
+		$parentid = (int) $this->input->post->parent;
+		if ($this->page->id && $parentid == $this->page->id) {
+			$parentid = 0;
+		} else if ($parentid) {
+			$parent = $this->pages->getItem($parentid);
+			if (!$parent) {
+				$parentid = 0;
+			}
+		}
+		// Check if the slug already exists
+		$exists = $this->pages->getItems("slug=$slug");
+		if ($exists) {
+			foreach ($exists as $page) {
+				if ($page->id == $this->page->id) continue;
+				if ($page->parent === $parentid) {
+					$this->msgs[] = array(
+						'type' => 'error',
+						'value' => $this->i18n['error_page_title_exists']
+					);
+				}
+			}
+		}
+
+		$this->page->set('parent', $parentid, false);
+
+		if ($this->input->post->menu_title) {
+			$menuTitle = $this->imanager->sanitizer->text(str_replace('"', '', $this->input->post->menu_title));
+		} else {
+			$menuTitle = $name;
+		}
+		$this->page->set('menu_title', $menuTitle);
 
 		$content = htmlentities($this->input->post->content);
 		if(!$content) {
@@ -495,23 +512,12 @@ class Pages extends Module
 		$template = $this->imanager->sanitizer->templateName($this->input->post->template);
 		$this->page->set('template', $template);
 
-		$parentid = (int) $this->input->post->parent;
-		if($this->page->id && $parentid == $this->page->id) {
-			$parentid = null;
-		} else if($parentid) {
-			$parent = $this->pages->getItem($parentid);
-			if(!$parent) {
-				$parentid = null;
-			}
-		}
-		$this->page->set('parent', $parentid, false);
-
 		$this->page->active = false;
 		if($this->input->post->published) {
 			$this->page->active = true;
 		}
 
-		if(!empty($this->msgs)) { return false; }
+		if (!empty($this->msgs)) { return false; }
 
 		$this->page->set('pagetype', 1, false);
 

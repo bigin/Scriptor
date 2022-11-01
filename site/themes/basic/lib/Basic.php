@@ -141,10 +141,10 @@ class BasicTheme extends Site
 		]);
 
 		$this->articles->pagination = '';
-		if($articles && $articles['total'] > $perpage) {
+		if($articles && $this->pages->total > $perpage) {
 			$this->articles->pagination = $this->imanager->paginate($articles, [
 				'limit' => $perpage, 
-				'count' => (isset($articles['total']) ? $articles['total'] : 0)
+				'count' => (isset($this->pages->total) ? $this->pages->total : 0)
 				], [
 				'wrapper' => $this->tpls['pagination_wrapper'],
 				'central_inactive' => $this->tpls['pagination_inactive'],
@@ -204,7 +204,7 @@ class BasicTheme extends Site
 		$rows = [];
 		$articles = $this->pages->getPages('parent=2', ['sortBy' => 'created', 'order' => 'DESC']);
 		if($articles) {
-			foreach($articles['pages'] as $article) {
+			foreach($articles as $article) {
 				$dtz = $this->getTCP('datetime_zone');
 				if($dtz) {
 					$date = new \DateTime('now', new \DateTimeZone($dtz));
@@ -233,14 +233,14 @@ class BasicTheme extends Site
 	 */
 	private function renderArticlesContent(array $articles = []) :string
 	{
-		if (!isset($articles['pages']) || empty($articles['pages'])) {
+		if (!$articles) {
 			return $this->templateParser->render($this->tpls['empty_article_row'], [
 				'TEXT' => $this->getTCP('msgs')['no_articles_found']
 			]);
 		}
 	
 		$list = '';
-		foreach ($articles['pages'] as $article) {
+		foreach ($articles as $article) {
 			isset($i) OR $i = 0; $i++;
 
 			$date = $this->getFormatedPageDate($article->created);
@@ -693,10 +693,10 @@ class BasicTheme extends Site
 			'length' => 0
 		]);
 
-		if (!$articles || empty($articles['pages']) ) return null;
+		if (!$articles) return null;
 		
 		$period = $this->pages->getPages("created < $end", [
-			'items' => $articles['pages'],
+			'items' => $articles,
 			'sortBy' => 'created',
 			'order' => 'desc',
 			'length' => 0

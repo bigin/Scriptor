@@ -107,6 +107,13 @@ $config = [
 	'accessLockoutDuration' => 5,
 
 	/**
+	 * Minimum password length 
+	 * 
+	 * @var integer
+	 */
+	'minPasswordLength' => 6,
+
+	/**
 	 * Enable HTML tags in page content output
 	 * 
 	 * @var bool

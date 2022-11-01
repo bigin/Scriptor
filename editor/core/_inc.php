@@ -19,6 +19,8 @@ require __DIR__.'/moduleInterface.php';
 require __DIR__.'/module.php';
 require __DIR__.'/page.php';
 require __DIR__.'/pages.php';
+require __DIR__.'/user.php';
+require __DIR__.'/users.php';
 require __DIR__.'/editor.php';
 require __DIR__.'/csrf.php';
 

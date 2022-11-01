@@ -14,6 +14,8 @@ require $corePath.'moduleInterface.php';
 require $corePath.'module.php';
 require $corePath.'page.php';
 require $corePath.'pages.php';
+require $corePath.'user.php';
+require $corePath.'users.php';
 require $corePath.'site.php';
 require $corePath.'csrf.php';
 

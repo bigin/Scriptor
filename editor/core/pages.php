@@ -7,6 +7,8 @@ class Pages extends Module
 
 	public $category;
 
+	public $total;
+
 	public function __construct()
 	{
 		parent::init();
@@ -35,7 +37,7 @@ class Pages extends Module
 	public function getPages(string $selector = '', array $conds = []) :?array
 	{
 		$setup = array_merge( [
-			'all' => false,
+			'all' => true,
 			'sortBy' => 'position',
 			'order' => 'asc',
 			'offset' => 0,
@@ -51,7 +53,7 @@ class Pages extends Module
 			if(!$active) return null;
 			$pages = $active;
 		}
-		$total = count($pages);
+		$this->total = count($pages);
 		if($setup['sortBy'] != 'position' || strtolower($setup['order']) != 'asc') {
 			$pages = $this->category->sort($setup['sortBy'], $setup['order'], 0, 0, $pages);
 		}
@@ -59,7 +61,7 @@ class Pages extends Module
 			$pages = $this->category->getItems('', $setup['offset'], $setup['length'], $pages);
 		}
 
-		return ['pages' => $pages, 'total' => $total];
+		return $pages;
 	}
 
 	/**
@@ -171,7 +173,7 @@ class Pages extends Module
 
 		$childs = $this->getPages("parent=$page->id", $configs);
 		if ($childs) {
-			foreach ($childs['pages'] as $p) {
+			foreach ($childs as $p) {
 				$idBuffer[] = $p->id;
 				$idBuffer = $this->getPageChildrenIds($p, $configs, $idBuffer);
 			}
@@ -224,7 +226,7 @@ class Pages extends Module
 
 		$childs = $this->getPages("parent=$page->id", $configs);
 		if ($childs) {
-			foreach ($childs['pages'] as $p) {
+			foreach ($childs as $p) {
 				$pageBuffer[] = $p;
 				$pageBuffer = $this->getPageChildren($p, $configs, $pageBuffer);
 			}

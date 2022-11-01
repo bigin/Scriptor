@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.8.1';
+	const VERSION = '1.8.2';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -52,7 +52,7 @@ class Scriptor
 	/**
 	 * @var array $headerResources - An array of header resources
 	 * 
-	 * TODO: Is it currently in use?
+	 * TODO: currently in use?
 	 */
 	private static $headerResources = [];
 
