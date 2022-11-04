@@ -2,7 +2,7 @@
 
 defined('IS_IM') or die('You cannot access this page directly');
 
-/**
+/*
  * The _ext.php file is loaded before the template.php file.
  * This file includes all dynamic template components and 
  * calls some functions. 
@@ -14,15 +14,14 @@ use Scriptor\Core\Scriptor;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-/* BasicTheme extends default Site class */
+// BasicTheme extends default Site class 
 Scriptor::setSite('BasicTheme', true, 'Themes\Basic');
 $site = Scriptor::getSite();
 
-/* Routing instance and pass $site */
+// Crete router instance
 $router = new BasicRouter($site);
-$router->execute();
 
-/** 
+/* 
  * SuperCache 
  * Check if there's a cached version of that page.
  */
@@ -30,24 +29,30 @@ if ($output = $site->imanager->sectionCache->get(
     md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), 
     $site->getTCP('markup_cache_time'))
     ) {
+	$router->actions();
     echo $output;
     exit;
 }
 
+
+
+
+// Execute
+$router->execute();
+
 /* 
 UPDATE SCRIPTOR V. 1.4.16 > 1.4.17
 
-// Note: Your existing pages can get menu_title 
-// automatically, but the pages must be overwritten manually.
+// New pages will get a new "menu_title" field after the update, but the pages 
+// that are already created will have to be overwritten manually.
 //
-// If you have custom page fields, populate the array with 
-// the field names. If not, leave it as it is:
+// If you have other custom page fields, fill in the array with their field names:
 
 $YOUR_FIELD_NAMES = [
 	'slug',
 	'parent',
 	'pagetype',
-	'menu_title', // New field, since Scriptor v. 1.4.17
+	'menu_title',
 	'content',
 	'template',
 	'images'

@@ -124,7 +124,7 @@ class Site extends Module
 		parent::init();
 		$this->templateParser = new TemplateParser();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
-		$this->input = $this->imanager->input;
+		$this->input = $this->input();//imanager->input;
 		$this->urlSegments = $this->urlSegments();
 		$this->firstSegment = $this->urlSegments->get(0);
 		$this->lastSegment = $this->urlSegments->getLast();
@@ -162,6 +162,11 @@ class Site extends Module
 				$this->throw404();
 			}
 		}
+	}
+
+	public function input()
+	{
+		return ($this->input) ?? $this->imanager->input;
 	}
 
 	public function urlSegments()

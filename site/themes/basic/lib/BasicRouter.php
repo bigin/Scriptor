@@ -52,7 +52,7 @@ class BasicRouter
 	/**
 	 * Check user actions
 	 */
-	private function actions() :void
+	public function actions() :void
 	{
 		$post = $this->site->input->post;
 		if ($post->action && in_array($post->action, $this->site->getTCP('allowed_actions'))) {
