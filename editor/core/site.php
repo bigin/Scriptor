@@ -2,9 +2,13 @@
 
 namespace Scriptor\Core;
 
+use Imanager\Input;
 use Imanager\Item;
+use Imanager\SectionCache;
 use Imanager\TemplateParser;
+use Imanager\UrlSegments;
 use Imanager\Util;
+use Scriptor\Core\Modules\Parsedown;
 
 class Site extends Module
 {
@@ -94,11 +98,6 @@ class Site extends Module
 	public $version;
 
 	/**
-	 * @var object - ParseDown instance
-	 */
-	public $parsedown;
-
-	/**
 	 * @var object - ItemManager's TemplateParser instance
 	 */
 	public $templateParser;
@@ -124,11 +123,10 @@ class Site extends Module
 		parent::init();
 		$this->templateParser = new TemplateParser();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
-		$this->input = $this->input();//imanager->input;
+		$this->input = $this->input();
 		$this->urlSegments = $this->urlSegments();
-		$this->firstSegment = $this->urlSegments->get(0);
-		$this->lastSegment = $this->urlSegments->getLast();
-		$this->parsedown = $this->loadModule('parsedown', ['namespace' => __NAMESPACE__.'\Modules\\']);
+		$this->firstSegment = $this->urlSegments->get(0);   // Kick it out
+		$this->lastSegment = $this->urlSegments->getLast(); // same here
 		$this->version = Scriptor::VERSION;
 	}
 
@@ -164,34 +162,59 @@ class Site extends Module
 		}
 	}
 
-	public function input()
+	public function input() : Input
 	{
 		return ($this->input) ?? $this->imanager->input;
 	}
 
-	public function urlSegments()
+	public function urlSegments() : UrlSegments
 	{
 		return ($this->urlSegments) ?? $this->input->urlSegments;
 	}
 
-	public function pages()
+	public function sectionCache() : SectionCache
+	{
+		return $this->imanager->sectionCache;
+	}
+
+	public function pages() : Pages
 	{
 		return ($this->pages) ?? new Pages();
 	}
 
-	public function users()
+	public function users() : Users
 	{
 		return ($this->users) ?? new Users();
 	}
 
+	public function parsedown() : Parsedown
+	{
+		if (!isset($this->parsedown)) {
+			$this->parsedown = $this->loadModule('parsedown', ['namespace' => __NAMESPACE__.'\Modules\\']);
+		}
+		return $this->parsedown;
+	}
+
 	/**
-	 * NOTE: "segment" is used only for compatibility reasons.
+	 * NOTE: "segments" is used only for compatibility reasons.
 	 */
 	public function __get($arg)
 	{
-		if ($arg == 'pages') return $this->pages();
-		elseif ($arg == 'segments' || $arg == 'urlSegments') return $this->urlSegments();
-		elseif ($arg == 'users') return $this->users();
+		switch ($arg) {
+			case 'pages':
+				return $this->pages();
+				break;
+			case 'segments':
+			case 'urlSegments': 
+				return $this->urlSegments();
+				break;
+			case 'users':
+				return $this->users();
+				break;
+			case 'parsedown':
+				return $this->parsedown();
+				break;
+		}
 	}
 
 	public static function getPageUrl($item, $pages)

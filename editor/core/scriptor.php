@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.9.0';
+	const VERSION = '1.9.2';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -137,6 +137,30 @@ class Scriptor
 	}
 
 	/**
+	 * Injects the Site object
+	 * 
+	 * @return void
+	 */
+	public static function setSite($site, bool $init = false)
+	{
+		self::$site = new $site(); 
+		if ($init) self::$site->init();
+	}
+
+	/**
+	 * 
+	 * @return object|null
+	 */
+	public static function getSite($init = true)
+	{
+		if (self::$site === null) { 
+			self::$site = new Site(); 
+			if ($init) self::$site->init();
+		}
+		return self::$site;
+	}
+
+	/**
 	 * Executes Hook
 	 *
 	 * @since 1.4.6 
@@ -217,37 +241,6 @@ class Scriptor
 		//return $result;
 		return $return;
 	}
-
-	/**
-	 * Injects the Site object
-	 * 
-	 * @return void
-	 */
-	public static function setSite($site, bool $init = false, string $namespace = '')
-	{
-		if (!empty($namespace)) {
-			$class = "$namespace\\$site";
-			self::$site = new $class();
-		} else {
-			self::$site = new $site(); 
-		}
-
-		if ($init) self::$site->init();
-	}
-
-	/**
-	 * 
-	 * @return object|null
-	 */
-	public static function getSite($init = true)
-	{
-		if (self::$site === null) { 
-			self::$site = new Site(); 
-			if ($init) self::$site->init();
-		}
-		return self::$site;
-	}
-
 
 	/**
 	 * 

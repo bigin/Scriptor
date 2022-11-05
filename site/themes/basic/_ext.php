@@ -15,15 +15,23 @@ use Scriptor\Core\Scriptor;
 require_once __DIR__ . '/vendor/autoload.php';
 
 // BasicTheme extends default Site class 
-Scriptor::setSite('BasicTheme', true, 'Themes\Basic');
+Scriptor::setSite('Themes\Basic\BasicTheme', true);
 $site = Scriptor::getSite();
 
 // Crete router instance
 $router = new BasicRouter($site);
 
 /* 
- * SuperCache 
- * Check if there's a cached version of that page.
+ * ~ SuperCache
+ *  
+ * Looks to determine if there is a cached version of the page, 
+ * and if so, retrieves it, outputs it, and interrupts further 
+ * script execution. 
+ * 
+ * NOTE: The user actions are still performed if they have been 
+ * executed, e.g. contact form has been sent, subscriber form 
+ * has been sent, tags, etc. 
+ * 
  */
 if ($output = $site->imanager->sectionCache->get(
     md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), 
@@ -39,48 +47,3 @@ if ($output = $site->imanager->sectionCache->get(
 
 // Execute
 $router->execute();
-
-/* 
-UPDATE SCRIPTOR V. 1.4.16 > 1.4.17
-
-// New pages will get a new "menu_title" field after the update, but the pages 
-// that are already created will have to be overwritten manually.
-//
-// If you have other custom page fields, fill in the array with their field names:
-
-$YOUR_FIELD_NAMES = [
-	'slug',
-	'parent',
-	'pagetype',
-	'menu_title',
-	'content',
-	'template',
-	'images'
-];
-
-$pages = $imanager->getCategory('name=Pages');
-
-// Create new field 'menu_title' of type 'text'
-
-$newField = new \Imanager\Field($pages->id);
-
-$newField->set('type', 'text')
-	->set('name', 'menu_title')
-	->set('label', 'Enter menu title')
-	->save();
-
-// Adjust the field positions
-
-foreach($YOUR_FIELD_NAMES as $key => $name) {
-	$field = $pages->getField("name=$name");
-	$field->set('position', ++$key);
-	$field->save();
-}
-
-echo count($YOUR_FIELD_NAMES).' fields have been updated.';
-
-exit; */
-
-//include __DIR__.'/_configs.php';
-//include __DIR__.'/_functions.php';
-//checkActions();

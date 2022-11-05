@@ -3,6 +3,7 @@
 $tplName = $site->sanitizer->templateName($site->page->template);
 $tplFile = __DIR__."/$tplName.php";
 
+ob_start();
 if(file_exists($tplFile)) {
 	include $tplFile;
 } else {

@@ -31,7 +31,6 @@ class BasicTheme extends Site
 	 */
 	public function init()
 	{
-		ob_start();
 		parent::init();
 		$this->config['theme'] = Scriptor::load(__DIR__.'/../_configs.php');
 		$this->tpls = Scriptor::load(__DIR__.'/_tpls.php');
@@ -253,7 +252,7 @@ class BasicTheme extends Site
 				$info = '';
 				if($article->images[0]->title) {
 					$info = $this->templateParser->render($this->tpls['art_list_image_caption'], [
-						'TEXT' => $this->parsedown->text($article->images[0]->title)
+						'TEXT' => $this->parsedown()->text($article->images[0]->title)
 					]);
 				}
 				
@@ -265,13 +264,13 @@ class BasicTheme extends Site
 				]);
 			}
 
-			$this->parsedown->setSafeMode(true);
+			$this->parsedown()->setSafeMode(true);
 
 			if (mb_strlen($article->content) > $this->getTCP('summary_character_len')) {
-				$content = $this->parsedown->text(mb_substr(htmlspecialchars_decode($article->content), 0, 
+				$content = $this->parsedown()->text(mb_substr(htmlspecialchars_decode($article->content), 0, 
 					$this->getTCP('summary_character_len')).' ...');
 			} else {
-				$content = $this->parsedown->text(htmlspecialchars_decode($article->content));
+				$content = $this->parsedown()->text(htmlspecialchars_decode($article->content));
 			}
 		
 			$list .= $this->templateParser->render($this->tpls['article_row'], [
@@ -325,7 +324,7 @@ class BasicTheme extends Site
 			$imageUrl = $this->getBasePath().$this->page->images[0]->resize(1200, 0);
 			$hero = $this->templateParser->render($this->tpls['hero'], [
 				'SRC' => $imageUrl,
-				'INFO' => $this->parsedown->text($this->page->images[0]->title)
+				'INFO' => $this->parsedown()->text($this->page->images[0]->title)
 			]);
 		}
 		return $hero;
@@ -767,7 +766,10 @@ class BasicTheme extends Site
 	public function cache() :string
 	{
 		$output = ob_get_clean();
-		if ($this->page && in_array($this->page->template, $this->getTCP('cacheable_templates'))) {
+		if ($this->page && 
+		    $this->getTCP('markup_cache_time') && 
+		    in_array($this->page->template, $this->getTCP('cacheable_templates'))) 
+		{
 			$this->imanager->sectionCache->save($output);
 		}
 		return $output;
