@@ -32,25 +32,20 @@ class User extends Item
 	 * @param $value - Value of the field
 	 * @param bool $sanitize - option
 	 */
-	public function set($name, $value, $sanitize = true) :?object
+	public function set($name, mixed $value, $sanitize = true) :?object
 	{
-		if ($name != 'password' && $name != 'password_confirmation') {
+		if ($name != 'password') {
 			return parent::set($name, $value, $sanitize);
+			//if (!is_string($value)) throw new \ErrorException('The value of password/password_confirmation must be of type string.');
 		}
-		if (!is_string($value)) throw new \ErrorException('The value of password/password_confirmation must be of type string.');
 
 		if ($name == 'password') {
 			// let's first layer check
-			if (!parent::set($name, ['password' => $value,
-				// Take the password, since password_confirmation may not be available yet
-				'confirm_password' => $value
-			])) {
-				return null;	
-			}
+			is_array($value) OR throw new \ErrorException('The value of password/password_confirmation must be of type string.');
+			parent::set($name, $value) OR throw new \ErrorException('Setting the password is not possible.');
 		}
 
 		$this->$name = $value;
-
 		return $this;
 	}
 
@@ -85,14 +80,11 @@ class User extends Item
 		// check username exists
 		if ($this->userNameExists()) throw new \ErrorException('The name is already taken.');
 
-		if ($this->password && !$this->password instanceof \Imanager\PasswordFieldValue) {
-			if (mb_strlen($this->password) < Scriptor::getProperty('config')['minPasswordLength']) {
+		if ($this->password && is_array($this->password)) {
+			if (mb_strlen($this->password['password']) < Scriptor::getProperty('config')['minPasswordLength']) {
 				throw new \ErrorException('The value of the password field is too short.');
 			}		
-			if (!parent::set('password', [
-				'password' => $this->password,
-				'confirm_password' => $this->password_confirmation] 
-			)) {
+			if (!parent::set('password', ['password' => $this->password['password'], 'confirm_password' => $this->password['confirm_password']])) {
 				throw new \ErrorException('The values of password and password_confirmation do not match');
 			}
 		}

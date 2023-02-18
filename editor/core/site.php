@@ -103,6 +103,11 @@ class Site extends Module
 	public $templateParser;
 
 	/**
+	 * @var Scriptor\Core\Modules\Parsedown
+	 */
+	public $parsedown;
+
+	/**
 	 * Site constructor.
 	 *
 	 * @param $config
@@ -230,49 +235,76 @@ class Site extends Module
 		return  $return;
 	}
 
+	/**
+	 * Site::___render() is a public hookable method that takes a string as an 
+	 * argument and renders the appropriate page element. It has a return type 
+	 * of ?string, meaning it may return a string or null. It renders a 
+	 * navigation, content, or other elements depending on the argument given.
+	 * 
+	 * @param string $element
+	 */
 	public function ___render(string $element) :?string
 	{
-		$name = ($this->lastSegment) ? "$this->lastSegment-$element" : $element;
-
-		if($element == 'navigation') {
-			$navi = $this->buildNavi();
-			return $navi;
-		} elseif($element == 'content') {
-			$imgPath = '';
-			$field = $this->pages->category->getField('name=images');
-			$pageId = isset($this->page->id) ? $this->page->id : null;
-			if($pageId && $field && $this->pages) {
-				$imgPath = $this->pages->category->id.".$pageId.$field->id/";
-			} else {
-				$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->category->id}.$field->id/";
-			}
-			$content = $this->templateParser->render($this->page->content, [
-				'BASE_URL' => $this->siteUrl,
-				'UPLOADS_URL' => $this->siteUrl.'/data/uploads/',
-				'IMAGES_URL' => $this->siteUrl."/data/uploads/$imgPath"
-			]);
-			if(true !== $this->config['allowHtmlOutput']) {
-				$this->parsedown->setSafeMode(true);
-				$content = $this->parsedown->text(htmlspecialchars_decode($content));
-			} else {
-				$content = $this->parsedown->text(htmlspecialchars_decode($content));
-			}
-			
-			return $content;
+		switch ($element) {
+			case 'navigation':
+				return $this->buildNavi();
+				break;
+			case 'content':
+				return $this->buildContent();
+				break;
+			case 'messages':
+				return $this->messages;
+				break;
 		}
-
 		return null;
 	}
 
-	protected function buildNavi()
+	/**
+	 * It takes the content of the page, renders it with given parameters, 
+	 * and then parses it according to the allowHtmlOutput configuration.
+	 */
+	protected function buildContent() :string
+	{
+		//$name = ($this->lastSegment) ? "$this->lastSegment-content" : 'content';
+		$imgPath = '';
+		$field = $this->pages->category->getField('name=images');
+		$pageId = isset($this->page->id) ? $this->page->id : null;
+
+		if ($pageId && $field && $this->pages) {
+			$imgPath = $this->pages->category->id.".$pageId.$field->id/";
+		} else {
+			$imgPath = ".tmp_{$this->input->post->timestamp_images}_{$this->category->id}.$field->id/";
+		}
+
+		$content = $this->templateParser->render($this->page->content, [
+			'BASE_URL' => $this->siteUrl,
+			'UPLOADS_URL' => $this->siteUrl.'/data/uploads/',
+			'IMAGES_URL' => $this->siteUrl."/data/uploads/$imgPath"
+		]);
+
+		if ($this->config['allowHtmlOutput'] !== true) {
+			$this->parsedown->setSafeMode(true);
+			$content = $this->parsedown->text(htmlspecialchars_decode($content));
+		} else {
+			$content = $this->parsedown->text(htmlspecialchars_decode($content));
+		}
+		
+		return $content;
+	}
+
+	/**
+	 * It takes all the pages, sorts them according to position, and then builds 
+	 * a navigation tree with the getNaviChildren() method.
+	 */
+	protected function buildNavi() :string
 	{
 		$navi = '';
 		$topl = $this->pages->category->getItems('parent=0');
-		// Todo: check if topl exists if 0 pages created
+		// TODO: check if topl exists if 0 pages created
 		$topl = $this->pages->category->getItems('active=1', 0, 0, $topl);
 		$topl = $this->pages->category->sort('position', 'asc', 0, 0, $topl);
 		if (!$topl) return $navi;
-		foreach($topl as $item) {
+		foreach ($topl as $item) {
 			$all_pages = $this->pages->category->getItems("active=1");
 			$all_pages = $this->pages->category->sort('position', 'asc', 0, 0, $all_pages);
 			$navi .= $this->getNaviChildren($item, $all_pages, rtrim($this->siteUrl, '/') . '/');
@@ -304,22 +336,30 @@ class Site extends Module
 		return  $children;
 	}
 
-
-	protected function parrentOf(& $item, $current)
+	/**
+	 * Recursive Method that checks if a page is the parent of another page. 
+	 * It takes a page and the current page being checked for parentage and 
+	 * recursively checks the parent of the current page until it finds the 
+	 * parent, or if the current page has no parent.
+	 * 
+	 * @param object $item
+	 * @param object $current
+	 */
+	protected function parrentOf(& $item, $current) :bool
 	{
-		if(!$current->parent) {
+		if (!$current->parent) {
 			return false;
 		}
-		else if($item->id == $current->parent) {
+		else if ($item->id == $current->parent) {
 			return true;
 		}
-		else {
-			$parent = $this->pages->category->getItem((int)$current->parent);
-			if($parent) {
-				return $this->parrentOf($item, $parent);
-			}
-			return false;
+		//else {
+		$parent = $this->pages->category->getItem((int)$current->parent);
+		if ($parent) {
+			return $this->parrentOf($item, $parent);
 		}
+		return false;
+		//}
 	}
 
 	/**
@@ -348,29 +388,27 @@ class Site extends Module
 	}
 	
 	/**
-	 * It checks if the value of the config 
-	 * variable sessionAllow is set to false, 
-	 * if so session and cookies should not 
-	 * be used.
+	 * It checks if the value of the config variable sessionAllow is set to false, 
+	 * if so session and cookies should not be used.
 	 * 
 	 */
 	protected function checkCookieAllowed(): void
 	{
-		if($this->config['sessionAllow'] instanceof \Closure) {
+		if ($this->config['sessionAllow'] instanceof \Closure) {
 			$allowed = $this->config['sessionAllow']();
 		} else { 
 			$allowed = $this->config['sessionAllow']; 
 		}
 
-		if($allowed) {
-			if(! isset($_SESSION)) { 
+		if ($allowed) {
+			if (! isset($_SESSION)) { 
 				session_name('IMSESSID');
 				session_start(); 
 			}
 			return;
 		}
 
-		if(ini_get('session.use_cookies')) {
+		if (ini_get('session.use_cookies')) {
 			$params = session_get_cookie_params();
 			setcookie(session_name('IMSESSID'), '', time() - 42000, $params['path'],
 				$params['domain'], $params['secure'], $params['httponly']

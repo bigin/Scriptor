@@ -7,7 +7,11 @@ use Scriptor\Core\Scriptor;
 
 class Profile extends Module
 {
+	private $users;
+
 	private $user;
+
+	private $csrf;
 
 	 public function init()
 	 {
@@ -66,6 +70,14 @@ class Profile extends Module
 					'type' => 'error',
 					'value' => $this->i18n['short_password']
 				);
+			}
+			if (!$this->msgs) {
+				if ($this->input->post->password !== $this->input->post->password_confirm) {
+					$this->msgs[] = array(
+						'type' => 'error',
+						'value' => $this->i18n['error_password_comparison']
+					);
+				}
 			}
 			if(!$this->msgs) {
 				if(!$this->user->set('password', [

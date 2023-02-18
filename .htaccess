@@ -7,6 +7,10 @@ Options +SymLinksIfOwnerMatch
 
 #RewriteBase /
 
+# Redirecting HTTP to HTTPS
+#RewriteCond %{SERVER_PORT} 80
+#RewriteRule ^(.*)$ https://your-website.com/$1 [R,L]
+
 # Allow harmless files
 RewriteCond %{REQUEST_URI} !\.(?:css|js|map|jpe?g|gif|png|svg|webp)$
 # Allow file upoad handler

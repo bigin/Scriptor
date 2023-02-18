@@ -45,7 +45,7 @@ return [
 
 	/**
 	 * See /data/settings/scriptor-config.php resp. custom.scriptor-config.php
-	 * or change to a static value: 262974383
+	 * or change to a static value e.g. 262974383
 	 */
 	'markup_cache_time' => \Scriptor\Core\Scriptor::getProperty('config')['markup_cache_time'],
 

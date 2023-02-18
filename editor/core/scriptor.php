@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.9.2';
+	const VERSION = '1.10.0';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -50,6 +50,11 @@ class Scriptor
 	private static $hooked = [];
 
 	/**
+	 * @var array $modulesLoaded - An array of already loaded modules.
+	 */
+	private static $modulesLoaded = [];
+
+	/**
 	 * @var array $headerResources - An array of header resources
 	 * 
 	 * TODO: currently in use?
@@ -63,7 +68,7 @@ class Scriptor
 	{
 		self::$startTime = microtime(true);
 		self::load (__DIR__ . '/helper.php');
-		uasort($config['modules'], ['Scriptor\Core\Helper', 'order']);
+		\uasort($config['modules'], ['Scriptor\Core\Helper', 'order']);
 		self::$config = $config;
 		self::$imanager = \imanager();
 		include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
@@ -158,6 +163,29 @@ class Scriptor
 			if ($init) self::$site->init();
 		}
 		return self::$site;
+	}
+
+	/**
+	 * Puts the module into the modulesLoaded buffer
+	 * 
+	 * @param string $name - Module name
+	 * @param mixed $instance - Module instance
+	 * @return object|null
+	 */
+	public static function putModule(string $name, mixed $instance) :void
+	{
+		self::$modulesLoaded[$name] = $instance;
+	}
+
+	/**
+	 * Loads the module from modulesLoaded buffer
+	 * 
+	 * @param string $name - Module name
+	 * @return mixed
+	 */
+	public static function loadModule(string $name)
+	{
+		return isset(self::$modulesLoaded[$name]) ? self::$modulesLoaded[$name] : null;
 	}
 
 	/**

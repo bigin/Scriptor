@@ -22,6 +22,8 @@ class Module implements ModuleInterface
 	 */
 	public $config;
 
+	public $site;
+
 	/**
 	 * @var sting $pageTitle - Meta page title
 	 */
@@ -71,6 +73,11 @@ class Module implements ModuleInterface
 	 * @var string $breadcrumbs - Breadcrumbs markup
 	 */
 	public $breadcrumbs;
+
+	/**
+	 * @var string $siteUrl - Website URL subdirectories included
+	 */
+	public $siteUrl;
 
 	/**
 	 * @var bool $auth - Module authorization needed?
@@ -156,7 +163,8 @@ class Module implements ModuleInterface
 				'namespace' => 'Scriptor\Modules\\',
 				'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
 			], 
-			$options);
+			$options
+		);
 
 		// Module paths (Core & Site)
 		$coreModulePath = dirname(__DIR__)."/$module[path].php";
@@ -170,12 +178,11 @@ class Module implements ModuleInterface
 		if (!class_exists($class)) {
 			$class = 'Scriptor\Modules\\'.$module['class'];
 		}
-		if($config['autoinit']) {
-			$currentModule = new $class();
-			if($currentModule) $currentModule->init();
-			return $currentModule;
-		}
-		return new $class();
+		$currentModule = Scriptor::loadModule($class);
+		if (!$currentModule) $currentModule = new $class();
+		if ($config['autoinit']) $currentModule->init();
+		Scriptor::putModule($class, $currentModule);
+		return $currentModule;
 	}
 	
 	/**
