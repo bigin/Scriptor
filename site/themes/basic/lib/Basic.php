@@ -32,8 +32,8 @@ class BasicTheme extends Site
 	public function init()
 	{
 		parent::init();
-		$this->config['theme'] = Scriptor::load(__DIR__.'/../_configs.php');
-		$this->tpls = Scriptor::load(__DIR__.'/_tpls.php');
+		$this->config['theme'] = Scriptor::load(dirname(__DIR__).'/configs/_theme-configs.php');
+		$this->tpls = Scriptor::load(dirname(__DIR__).'/resources/_tpls.php');
 		$this->articles = $this->pages->getPage($this->getTCP('articles_page_id'));
 	}
 

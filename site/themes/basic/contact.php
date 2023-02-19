@@ -1,8 +1,8 @@
 <?php defined('IS_IM') or die('You cannot access this page directly'); ?>
-<?php include 'chunks/_head.php' ?>
+<?php include 'resources/chunks/_head.php' ?>
 <body>
 <main role="main" class="default">
-	<?php include 'chunks/_header.php'; ?>
+	<?php include 'resources/chunks/_header.php'; ?>
 	<div class="uk-container">
 		<?php echo $site->render('hero') ?>
 		<div>
@@ -46,11 +46,11 @@
 	<!-- /PAGE CONTENT -->
 
 	<!-- FOOTER -->
-	<?php include 'chunks/_footer.php'; ?>
+	<?php include 'resources/chunks/_footer.php'; ?>
 	<!-- /FOOTER -->
 
 	<!-- OFFCANVAS -->
-	<?php include 'chunks/_offcanvas.php'; ?>
+	<?php include 'resources/chunks/_offcanvas.php'; ?>
 	<!-- /OFFCANVAS -->
 </main>
 <script async src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>

@@ -7,7 +7,7 @@ use Scriptor\Core\Module;
 class BasicRouter
 {
 	/**
-	 * Site instance
+	 * @var Scriptor\Core\Module $site instance
 	 */
 	private $site;
 
@@ -30,9 +30,9 @@ class BasicRouter
 	{
 		$this->actions();
 
-		$articles = $this->site->pages->getPage((int) $this->site->getTCP('articles_page_id'));
+		$articles = $this->site->pages()->getPage((int) $this->site->getTCP('articles_page_id'));
 		
-		if ($articles && $articles->slug != $this->site->segments->getlast()) {
+		if ($articles && $articles->slug != $this->site->urlSegments->getlast()) {
 			$this->site->execute();
 			if ($this->site->page->parent == $articles->id) {
 				$this->site->page->template = 'blog-post';
@@ -42,7 +42,7 @@ class BasicRouter
 				$this->site->throw404();
 			}
 			$pageUrl = $this->site->getPageUrl($articles, $articles->pages);
-			if (strpos($this->site->segments->getUrl(), $pageUrl) === false) {
+			if (strpos($this->site->urlSegments->getUrl(), $pageUrl) === false) {
 				$this->site->throw404();
 			}
 			$this->site->page = $articles;

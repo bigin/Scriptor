@@ -78,10 +78,10 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
      'position' => 2,
      'active' => true,
      'created' => 1625453680,
-     'updated' => 1641910742,
+     'updated' => 1676797558,
      'slug' => 'articles',
      'content' => '&lt;!--
-This page acts as a container for blog articles. All pages that are in this container are recognized as blog articles and used by the base template.
+This page functions as a container for blog posts. Any page within this container is identified as a blog post and utilized by the base template. The base template uses these pages to display blog content in a consistent and efficient manner.
 --&gt;',
      'template' => 'blog',
      'parent' => 0,

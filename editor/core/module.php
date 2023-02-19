@@ -80,6 +80,11 @@ class Module implements ModuleInterface
 	public $siteUrl;
 
 	/**
+	 * @var string $csrf instance
+	 */
+	public $csrf;
+
+	/**
 	 * @var bool $auth - Module authorization needed?
 	 */
 	protected $auth = true;

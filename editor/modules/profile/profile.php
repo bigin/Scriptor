@@ -11,8 +11,6 @@ class Profile extends Module
 
 	private $user;
 
-	private $csrf;
-
 	 public function init()
 	 {
 		parent::init();

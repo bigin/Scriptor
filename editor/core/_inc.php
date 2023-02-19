@@ -2,7 +2,7 @@
 
 use Scriptor\Core\Scriptor;
 
-if(! isset($_SESSION)) { 
+if (! isset($_SESSION)) { 
 	session_name('IMSESSID');
 	session_start(); 
 }
@@ -10,7 +10,7 @@ if(! isset($_SESSION)) {
 $base = dirname(dirname(__DIR__));
 require "$base/imanager.php";
 require "$base/data/settings/scriptor-config.php";
-if(file_exists("$base/data/settings/custom.scriptor-config.php")) { 
+if (file_exists("$base/data/settings/custom.scriptor-config.php")) { 
 	include "$base/data/settings/custom.scriptor-config.php";
 }
 
@@ -29,10 +29,10 @@ Scriptor::build($config);
 $editor = Scriptor::getEditor();
 $editor->execute();
 
-if(file_exists("$base/$config[editor_template].php")) {
-	include "$base/$config[editor_template].php";
-} elseif(file_exists("$base/$config[admin_path]$config[editor_template].php")) {
-	include "$base/$config[admin_path]$config[editor_template].php";
+if (file_exists("$base/$config[editor_template].php")) {
+	include_once "$base/$config[editor_template].php";
+} elseif (file_exists("$base/$config[admin_path]$config[editor_template].php")) {
+	include_once "$base/$config[admin_path]$config[editor_template].php";
 } else {
-	include "$base/$config[admin_path]theme/template.php";
+	include_once "$base/$config[admin_path]theme/template.php";
 }

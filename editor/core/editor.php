@@ -19,6 +19,10 @@ class Editor extends Module
 
 	public function execute()
 	{
+		if (Scriptor::execHook($this, 'execute', [], 'before') && 
+			$this->event->replace
+		) return;
+
 		// Set default start segment & redirect
 		if (!$this->segments->get(0)) {
 			$fstKey = array_key_first($this->config['modules']);

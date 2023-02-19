@@ -149,19 +149,19 @@ class Site extends Module
 		// Home
 		if (!$this->lastSegment) {
 			$this->page = $this->pages->getPage(1);
-			if(!$this->page || !$this->page->active) { 
+			if (!$this->page || !$this->page->active) { 
 				$this->throw404(); 
 			}
 		// other pages
 		} else {
 			$total = $this->urlSegments->total - 1;
 			$this->page = $this->pages->getPageBySegment($this->urlSegments->segment, $total);
-			if(!$this->page || !$this->page->active) {
+			if (!$this->page || !$this->page->active) {
 				$this->throw404();
 			}
 			$curentUrl = $this->urlSegments->getUrl();
 			$pageUrl = self::getPageUrl($this->page, $this->pages);
-			if(strpos($curentUrl, $pageUrl) === false) {
+			if (strpos($curentUrl, $pageUrl) === false) {
 				$this->throw404();
 			}
 		}
@@ -222,12 +222,25 @@ class Site extends Module
 		}
 	}
 
-	public static function getPageUrl($item, $pages)
+	/**
+	 * This Method can be used to generate URLs for pages 
+	 * that have a hierarchical structure, like a nested 
+	 * category or section system.
+	 * 
+	 * This method takes in two parameters, $item and $pages, 
+	 * and returns a string that represents the URL of a page.
+	 * 
+	 * @param object $item
+	 * @param null|object $pages
+	 * @return string
+	 * 
+	 */
+	public static function getPageUrl($item, $pages) :string
 	{
 		$return = '';
-		if($item->parent) {
+		if ($item->parent) {
 			$parent = $pages->category->items[$item->parent];
-			if($parent) {
+			if ($parent) {
 				$return .= self::getPageUrl($parent, $pages);
 			}
 		}
@@ -242,6 +255,7 @@ class Site extends Module
 	 * navigation, content, or other elements depending on the argument given.
 	 * 
 	 * @param string $element
+	 * @return null|string
 	 */
 	public function ___render(string $element) :?string
 	{
@@ -283,10 +297,10 @@ class Site extends Module
 		]);
 
 		if ($this->config['allowHtmlOutput'] !== true) {
-			$this->parsedown->setSafeMode(true);
-			$content = $this->parsedown->text(htmlspecialchars_decode($content));
+			$this->parsedown()->setSafeMode(true);
+			$content = $this->parsedown()->text(htmlspecialchars_decode($content));
 		} else {
-			$content = $this->parsedown->text(htmlspecialchars_decode($content));
+			$content = $this->parsedown()->text(htmlspecialchars_decode($content));
 		}
 		
 		return $content;
