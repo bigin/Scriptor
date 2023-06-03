@@ -140,7 +140,7 @@ class BasicTheme extends Site
 		]);
 
 		$this->articles->pagination = '';
-		if($articles && $this->pages->total > $perpage) {
+		if ($articles && $this->pages->total > $perpage) {
 			$this->articles->pagination = $this->imanager->paginate($articles, [
 				'limit' => $perpage, 
 				'count' => (isset($this->pages->total) ? $this->pages->total : 0)
@@ -264,7 +264,9 @@ class BasicTheme extends Site
 				]);
 			}
 
-			$this->parsedown()->setSafeMode(true);
+			if ($this->config['allowHtmlOutput'] !== true) {
+				$this->parsedown()->setSafeMode(true);
+			}
 
 			if (mb_strlen($article->content) > $this->getTCP('summary_character_len')) {
 				$content = $this->parsedown()->text(mb_substr(htmlspecialchars_decode($article->content), 0, 

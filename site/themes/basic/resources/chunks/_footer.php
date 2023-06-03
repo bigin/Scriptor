@@ -16,8 +16,8 @@
 				<div>
 					<form class="scriptor-forms" id="subscribe-form" method="post" action="">
 						<div class="uk-inline uk-width-1-1">
-							<label class="bot-reader-text" for="se-mail">Enter email</label>
-							<input class="uk-input" type="email" id="s-email" placeholder="Enter email" name="email">
+							<label class="bot-reader-text" for="s-email">Enter email</label>
+							<input class="uk-input" type="email" id="s-email" placeholder="Enter email" name="email" autocomplete="off">
 							<div class="token-loader">
 								<?php echo $site->render('emptyCsrfFields') ?>
 							</div>
