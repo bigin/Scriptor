@@ -115,9 +115,7 @@ $page = Scriptor::getSite()->pages()->getPage('slug=scriptors-demo-page');
 
 ### Header image by
 
-[Freepik](https://www.freepik.com/free-vector/flat-cms-content-landing-page-style_11817459.htm#
-
-query=website%20cms%20content&position=3&from_view=search&track=sph#position=3&query=website%20cms%20content)
+[Freepik](https://www.freepik.com/free-vector/flat-cms-content-landing-page-style_11817459.htm#query=website%20cms%20content&position=3&from_view=search&track=sph#position=3&query=website%20cms%20content)
 
 ### License
 
