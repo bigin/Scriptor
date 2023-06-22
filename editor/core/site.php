@@ -124,7 +124,9 @@ class Site extends Module
 	 */
 	public function init()
 	{
-		if (isset($this->config['sessionAllow'])) $this->checkCookieAllowed();
+		if (!defined('IS_EDITOR') && isset($this->config['sessionAllow'])) {
+			$this->checkCookieAllowed();
+		}
 		parent::init();
 		$this->templateParser = new TemplateParser();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
@@ -414,21 +416,15 @@ class Site extends Module
 			$allowed = $this->config['sessionAllow']; 
 		}
 
-		if ($allowed) {
-			if (! isset($_SESSION)) { 
-				session_name('IMSESSID');
-				session_start(); 
-			}
-			return;
-		}
+		if ($allowed) return;
 
 		if (ini_get('session.use_cookies')) {
+			! isset($_SESSION) OR session_destroy();
+
 			$params = session_get_cookie_params();
 			setcookie(session_name('IMSESSID'), '', time() - 42000, $params['path'],
 				$params['domain'], $params['secure'], $params['httponly']
 			);
 		}
-		
-		! isset($_SESSION) OR session_destroy();
 	}
 }

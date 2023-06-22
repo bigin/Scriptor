@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.10.0';
+	const VERSION = '1.11.0';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -25,6 +25,8 @@ class Scriptor
 	 * @var array $i18n - Language variables
 	 */
 	private static $i18n = [];
+
+	public static $msgs = [];
 
 	/**
 	 * @var float $startTime - Unix timestamp with microseconds
@@ -73,6 +75,12 @@ class Scriptor
 		self::$imanager = \imanager();
 		include dirname(__DIR__).'/lang/'.self::$config['lang'].'.php';
 		self::$i18n = $i18n;
+		if (! isset($_SESSION)) { 
+			session_name('IMSESSID');
+			session_start(); 
+		}
+		if (!isset($_SESSION['msgs'])) $_SESSION['msgs'] = [];
+		self::$msgs = & $_SESSION['msgs'];
 	}
 
 	/**
@@ -92,9 +100,8 @@ class Scriptor
 	public static function & getProperty($property)
 	{
 		$return = null;
-		if(property_exists('Scriptor\Core\Scriptor', $property)) { 
-			 $return = self::${$property}; 
-			 return $return;
+		if (property_exists('Scriptor\Core\Scriptor', $property)) { 
+			return self::${$property};
 		}
 		return $return;
 	}
@@ -237,7 +244,7 @@ class Scriptor
 				$class = Helper::rawClassName(get_class(self::$hooked[$hookName]));
 			}
 
-			if(isset(self::$hooked[$hookName]) && $class == $hook['module']) {
+			if(isset($hook['module']) && isset(self::$hooked[$hookName]) && $class == $hook['module']) {
 				$result = self::$hooked[$hookName]->{$hook['method']}($event);
 				$return = true;
 			} else {
@@ -272,12 +279,22 @@ class Scriptor
 
 	/**
 	 * 
-	 * @return object|null
+	 * @return null|object
 	 */
 	public static function getCSRF()
 	{
-		if(self::$csrf === null) { self::$csrf = new CSRF(); }
+		if (self::$csrf === null) { self::$csrf = new CSRF(); }
 		return self::$csrf;
+	}
+
+	/**
+	 * Returns the Config object used by the application.
+	 * 
+	 * @return array
+	 */
+	public static function getConfig()
+	{
+		return self::$config;
 	}
 
 	public static function logRunTime($designation = 'Operation time:')

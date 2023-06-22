@@ -13,6 +13,8 @@ class Auth extends Module
 
 	private $templateParser;
 
+	private $users;
+
 	public function init() {
 		parent::init();
 		$this->users = $this->imanager->getCategory('name=Users');

@@ -22,7 +22,12 @@ class Module implements ModuleInterface
 	 */
 	public $config;
 
-	public $site;
+	/**
+	 * @var Site $site - The variable holds an instance of the Site class, 
+	 * which is used to manage the website's configuration, pages, users, 
+	 * and other related functionality.
+	 */
+	public Site $site;
 
 	/**
 	 * @var sting $pageTitle - Meta page title
@@ -80,7 +85,7 @@ class Module implements ModuleInterface
 	public $siteUrl;
 
 	/**
-	 * @var string $csrf instance
+	 * @var object $csrf instance
 	 */
 	public $csrf;
 
@@ -100,9 +105,48 @@ class Module implements ModuleInterface
 	 */
 	protected static $notes = [];
 
+	/**
+	 *
+	 * Returns information about the module.
+	 *
+	 * @return array An array with the following keys: 
+	 * name, version, author, author_website, author_email_address, and description.
+	 */
+	public static function moduleInfo() : array
+	{
+		return [
+			'name' => '',
+			'menu' => '',
+			'position' => 0,
+			'active' => true,
+			'auth' => true,
+			'autoinit' => true,
+			'path' => '',
+			'display_type' => [],
+			'icon' => null,
+			'version' => '',
+			'author' => '',
+			'author_website' => '',
+			'author_email_address' => '',
+			'description' => ''
+		];
+	}
 
+	/**
+	 * Returns an empty array, which represents the hooks that this module defines.
+	 * @return array An empty array.
+	 */
+	public static function moduleHooks() : array
+	{
+		return [];
+	}
+
+	/**
+	 * An empty function that does not perform any actions.
+	 */
 	public function execute(){}
 
+	private static $initialized = false;
 	/**
 	 * Check if this is really needed, if not remove it completely.
 	 * NOTE: that this method is also commented out in ModuleInterface.
@@ -118,17 +162,14 @@ class Module implements ModuleInterface
 	public function init()
 	{
 		$this->config = & Scriptor::getProperty('config');
-		$this->imanager = Scriptor::getProperty('imanager');
-		$this->i18n = Scriptor::getProperty('i18n');
-		$this->msgs = Scriptor::getProperty('msgs');
+		$this->imanager = & Scriptor::getProperty('imanager');
+		$this->i18n = & Scriptor::getProperty('i18n');
+		$this->msgs = & Scriptor::getProperty('msgs');
 		$this->siteUrl = $this->imanager->config->getUrl();
 		$this->input = $this->imanager->input;
 		$this->sanitizer = $this->imanager->sanitizer;
 		$this->segments = $this->input->urlSegments;
-		$this->event = $this->createEvent();
-
-		if(!isset($_SESSION['msgs'])) $_SESSION['msgs'] = [];
-		$this->msgs = & $_SESSION['msgs'];
+		$this->event = $this->createEvent();		
 	}
 	
 	/**
@@ -181,7 +222,8 @@ class Module implements ModuleInterface
 		$class = $config['namespace'].$module['class'];
 		// e.g. using user module: inside editor
 		if (!class_exists($class)) {
-			$class = 'Scriptor\Modules\\'.$module['class'];
+			//$class = 'Scriptor\Modules\\'.$module['class'];
+			$class = $module['class'];
 		}
 		$currentModule = Scriptor::loadModule($class);
 		if (!$currentModule) $currentModule = new $class();
@@ -391,6 +433,17 @@ class Module implements ModuleInterface
 
 	public function setProperty($name, $value) :void
 	{
-		if(property_exists($this, $name)) $this->$name = $value;
+		if (property_exists($this, $name)) $this->$name = $value;
 	}
+
+	public function install() : bool
+	{
+		return true;
+	}
+
+	public function uninstall() : bool
+	{ 
+		return true;
+	}
+
 }

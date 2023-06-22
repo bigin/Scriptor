@@ -98,7 +98,7 @@ This page functions as a container for blog posts. Any page within this containe
      'position' => 8,
      'active' => true,
      'created' => 1638895123,
-     'updated' => 1644860779,
+     'updated' => 1687259424,
      'slug' => 'get-started-with-scriptor',
      'content' => 'Vigil, Evangelina. &ldquo;Es todo&rdquo; en Thirty an&rsquo; Seen a Lot. Houston, Arte P&uacute;blico Press. 1985. 51
 

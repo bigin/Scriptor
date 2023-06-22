@@ -50,4 +50,27 @@ class Helper
 		}
 		exit;
 	}
+
+	/**
+     * Extracts the namespace defined in a PHP file.
+     *
+     * @param string $file The path to the PHP file.
+     * @return string|null The namespace defined in the file, or null if no namespace is defined.
+     */
+	public static function extractNamespace($file) 
+	{
+		$ns = null;
+		$handle = fopen($file, "r");
+		if ($handle) {
+			while (($line = fgets($handle)) !== false) {
+				if (strpos($line, 'namespace') === 0) {
+					$parts = explode(' ', $line);
+					$ns = rtrim(trim($parts[1]), ';');
+					break;
+				}
+			}
+			fclose($handle);
+		}
+		return $ns;
+	}
 }

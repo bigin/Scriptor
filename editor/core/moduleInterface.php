@@ -7,7 +7,15 @@ namespace Scriptor\Core;
  */
 interface ModuleInterface
 { 
-	public function loadModule($moduleName);
+	public static function moduleInfo() : array;
+
+	public static function moduleHooks() : array;
+
+	public function loadModule(string $moduleName);
 	
 	public function execute();
+
+	public function install() : bool;
+
+	public function uninstall() : bool;
 }

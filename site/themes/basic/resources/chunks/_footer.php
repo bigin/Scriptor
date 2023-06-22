@@ -14,11 +14,11 @@
 				<h3>Get news</h3>
 				<p>Subscribe to our email newsletter.</p>
 				<div>
-					<form class="scriptor-forms" id="subscribe-form" method="post" action="">
+					<form class="scriptor-forms" id="subscribe-form" method="post" action="<?php echo $site->siteUrl.'/' ?>">
 						<div class="uk-inline uk-width-1-1">
 							<label class="bot-reader-text" for="s-email">Enter email</label>
 							<input class="uk-input" type="email" id="s-email" placeholder="Enter email" name="email" autocomplete="off">
-							<div class="token-loader">
+							<div class="token-loader" token-loader-url="<?php echo $site->siteUrl.'/' ?>">
 								<?php echo $site->render('emptyCsrfFields') ?>
 							</div>
 							<input type="hidden" name="actionName" value="subscribe">

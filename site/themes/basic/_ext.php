@@ -1,5 +1,4 @@
 <?php
-
 defined('IS_IM') or die('You cannot access this page directly');
 
 /*

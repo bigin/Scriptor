@@ -18,20 +18,29 @@ use Scriptor\Core\Scriptor;
  */
 class Pages extends Module
 {
+	public $pages;
+
 	public $page;
 
 	private $reservedSlugs;
 
 	public $jsConfig;
 
+	public $csrf;
+
+	private static $initialized = false;
+
 	public function init()
 	{
-		parent::init();
-		$this->csrf = Scriptor::getCSRF();
-		$this->pages = $this->imanager->getCategory('name=Pages');
-		$this->imanager->fieldMapper->init($this->pages->id, true);
-		$this->reservedSlugs = $this->config['reservedSlugs'];
-		if (Scriptor::execHook($this) && $this->event->replace) return;
+		if (!self::$initialized) {
+			parent::init();
+			$this->csrf = Scriptor::getCSRF();
+			$this->pages = $this->imanager->getCategory('name=Pages');
+			$this->imanager->fieldMapper->init($this->pages->id, true);
+			$this->reservedSlugs = $this->config['reservedSlugs'];
+			self::$initialized = true;
+			if (Scriptor::execHook($this) && $this->event->replace) return;
+		}
 	}
 
 	public function execute()

@@ -4,6 +4,9 @@ namespace Scriptor\Core;
 
 use Imanager\TemplateParser;
 use Imanager\Util;
+use Scriptor\Core\Module;
+
+defined('IS_EDITOR') OR define('IS_EDITOR', true);
 
 /**
  * Scriptor's Editor module
@@ -40,10 +43,11 @@ class Editor extends Module
 				// Todo: That should to be more dynamic
 				Util::redirect($this->siteUrl.'/auth/login/');
 			}
+
 			$this->module = $this->loadModule(
-				$this->imanager->sanitizer->pageName($this->segments->get(0)),
+				$this->imanager->sanitizer->name($this->segments->get(0)),
 				[
-					'namespace' => __NAMESPACE__.'\Modules\\',
+					//'namespace' => __NAMESPACE__.'\Modules\\',
 					'autoinit' => isset($module['autoinit']) ? $module['autoinit'] : true
 				]
 			);

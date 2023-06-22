@@ -10,8 +10,10 @@ if (! isset($_SESSION)) {
 $base = dirname(dirname(__DIR__));
 require "$base/imanager.php";
 require "$base/data/settings/scriptor-config.php";
-if (file_exists("$base/data/settings/custom.scriptor-config.php")) { 
-	include "$base/data/settings/custom.scriptor-config.php";
+if (file_exists("$base/data/settings/custom.scriptor-config.php")) {
+	$config = array_replace_recursive(
+		$config, include "$base/data/settings/custom.scriptor-config.php"
+	);
 }
 
 require __DIR__.'/scriptor.php';

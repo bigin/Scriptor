@@ -150,9 +150,9 @@
 	});
 
 	// Fixed Width Sortable Tables Row with jQueryUI
-	$('table tbody').sortable({
+	/* $('table tbody').sortable({
 		helper: fixWidthHelper
-	}).disableSelection();
+	}).disableSelection(); */
 	function fixWidthHelper(e, ui) {
 		ui.children().each(function() {
 			$(this).width($(this).width());

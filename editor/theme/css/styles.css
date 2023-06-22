@@ -548,6 +548,8 @@ label.required:after {
 	font-weight: 200;
 }
 
+/* Sortable page list */
+
 #page-list-table {
 	width: 100%;
 	border-collapse: collapse;
@@ -569,6 +571,10 @@ label.required:after {
 	margin: 0;
 	border-bottom: 1px solid rgb(236, 236, 236);
 	padding: 0.5em;
+}
+
+#page-list-table th.text-center, #page-list-table td.text-center {
+	text-align: center;
 }
 
 #page-list-table th {
@@ -595,9 +601,65 @@ label.required:after {
 #page-list-table tr:nth-child(even) {
 	background-color: #f8f8fb;
 }
+
 .sortable {
 	cursor: all-scroll;
 }
+
+/* Item list not sortable */
+
+.item-table {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	display: table;
+	border-color: rgb(236, 236, 236);
+	margin: 20px 0;
+}
+
+.item-table thead {
+	display: table-header-group;
+	border-color: inherit;
+}
+.item-table thead tr {
+	border-top: 1px solid rgb(236, 236, 236);
+}
+
+.item-table th, .item-table td {
+	margin: 0;
+	border-bottom: 1px solid rgb(236, 236, 236);
+	padding: 0.5em;
+}
+
+.item-table th.text-center, .item-table td.text-center {
+	text-align: center;
+}
+
+.item-table th {
+	text-align: left;
+	background-color: #f8f8fb;
+}
+
+.item-table th:first-child, .item-table td:first-child {
+	border-left: none;
+}
+
+.item-table td:last-child {
+	padding-left: 10px;
+}
+
+.item-table tr:hover td, .item-table tr.open td {
+	background: #ffd;
+}
+
+.item-table td {
+	border-bottom: 1px solid rgb(236, 236, 236);
+}
+
+.item-table tr:nth-child(even) {
+	background-color: #f8f8fb;
+}
+
 /* Modal Content/Box */
 
 .modal {
@@ -736,6 +798,31 @@ button, .button {
     bottom: 3px;
 }
 
+.button-badge {
+	text-decoration: none;
+    display: flex;
+    align-items: center;
+	align-items: center;
+  	justify-content: center;
+	text-align: center;
+    padding: 3px 13px;
+	border: 1px solid #b7d7f1;
+    background-color: #ffd;
+    border-radius: 15px;
+    text-decoration: none;
+    font-size: 11px;
+	font-weight: 700;
+}
+.button-badge:hover {
+	text-decoration: none;
+	background-color: #1e4f9b;
+	border-color: #1e4f9b;
+	color: #fff
+}
+
+.button-badge .gg-import, .button-badge .gg-export {
+	transform: scale(var(--ggs,0.5));
+}
 
 .ui-button-text {
 	display: flex;
@@ -879,4 +966,8 @@ button, .button {
 	color: #31695a;
 	border: solid 1px #e7f3e3;
 	border-radius: 6px;
+}
+
+.inactive {
+	color: #999999;
 }

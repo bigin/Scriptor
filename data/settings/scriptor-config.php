@@ -114,6 +114,13 @@ $config = [
 	'minPasswordLength' => 6,
 
 	/**
+	 * A maximum number of configuration files to be saved as backup
+	 * 
+	 * @var integer
+	 */
+	'maxConfigBackupFiles' => 5,
+
+	/**
 	 * Enable HTML tags in page content output
 	 * 
 	 * @var bool
@@ -145,7 +152,7 @@ $config = [
 	 *     'auth' => true,                                // Enables or disables module authorization
 	 *     'autoinit' => true,                            // Emables/disables auto initialization (bool) 
 	 *     'path' => 'modules/your-dir/file',             // Path and file name without extension like '.php' (string)
-	 *     'class' => 'Pages',                            // The class to be called (string)
+	 *     'class' => 'Namespace\Class',                  // The full namespace and class to be called (string)
 	 *     'display_type' => [                            // Module display options (array)
 	 *         'sidebar'                                  // Show in 'sidebar' and/or 'profile' menu (string)
 	 *     ],
@@ -162,7 +169,7 @@ $config = [
 			'auth' => true,
 			'autoinit' => true,
 			'path' =>  'modules/pages/pages',
-			'class' => 'Pages',
+			'class' => 'Scriptor\Core\Modules\Pages',
 			'display_type' => [
 				'sidebar'
 			],
@@ -176,7 +183,7 @@ $config = [
 			'auth' => true,
 			'autoinit' => true,
 			'path' => 'modules/profile/profile',
-			'class' => 'Profile',
+			'class' => 'Scriptor\Core\Modules\Profile',
 			'display_type' => [
 				'profile'
 			],
@@ -190,7 +197,7 @@ $config = [
 			'auth' => false, // Authorization will performed by module itself
 			'autoinit' => true,
 			'path' => 'modules/auth/auth',
-			'class' => 'Auth',
+			'class' => 'Scriptor\Core\Modules\Auth',
 			'display_type' => [
 				'profile'
 			],
@@ -204,11 +211,25 @@ $config = [
 			'auth' => true,
 			'autoinit' => true,
 			'path' => 'modules/settings/settings',
-			'class' => 'Settings',
+			'class' => 'Scriptor\Core\Modules\Settings',
 			'display_type' => [
 				'sidebar'
 			],
 			'icon' => 'gg-components',
+			'description' => 'A default module for showing settings menu'
+		],
+		'install' => [
+			'menu' => 'install_menu',
+			'position' => 3,
+			'active' => true,
+			'auth' => true,
+			'autoinit' => true,
+			'path' => 'modules/install/install',
+			'class' => 'Scriptor\Core\Modules\Install',
+			'display_type' => [
+				'sidebar'
+			],
+			'icon' => 'gg-plug',
 			'description' => 'A default module for showing settings menu'
 		],
 		'parsedown' => [
@@ -218,7 +239,7 @@ $config = [
 			'auth' => false,
 			'autoinit' => true,
 			'path' => 'modules/parsedown/Parsedown',
-			'class' => 'Parsedown',
+			'class' => 'Scriptor\Core\Modules\Parsedown',
 			'display_type' => [
 			],
 			'description' => 'A default module for parsing markdown'
@@ -228,7 +249,7 @@ $config = [
 	/**
 	 * Installed Scriptor hooks
 	 * 
-	 * Also note the correct syntax, more info in: 
+	 * Also note the correct syntax, more in: 
 	 *  /data/settings/custom.scriptor-config.php
 	 * 
 	 * @var array

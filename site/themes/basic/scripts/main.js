@@ -109,7 +109,7 @@ const basicMethods = {
 	const token_loader = [].slice.call(document.querySelectorAll(".token-loader"));
 	token_loader.forEach(item => {
 		let fData = new FormData();
-		fData.append("formAction", "./");
+		fData.append("formAction", item.getAttribute("token-loader-url"));
 		fData.append("formMethod", "post");
 		fData.append("action", "loadToken");
 		submit(fData, 'placeToken');

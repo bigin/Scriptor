@@ -17,7 +17,7 @@
 					<?php echo $site->render('content') ?>
 				</div>
 				<section class="uk-section uk-padding-remove-top">
-					<form class="scriptor-forms" id="contact-form" action="" method="POST">
+					<form class="scriptor-forms" id="contact-form" action="<?php echo $site->siteUrl.'/' ?>" method="POST">
 						<div class="uk-margin">
 							<label class="uk-form-label bot-reader-text" for="form-name">Your Name</label>
 							<input class="uk-input" id="form-name" type="text" name="name" placeholder="Name" required>
@@ -31,7 +31,7 @@
 							<textarea class="uk-textarea" id="form-text" name="text" rows="10" placeholder="Message" required></textarea>
 						</div>
 						<div class="form-group">
-							<div class="token-loader">
+							<div class="token-loader" token-loader-url="<?php echo $site->siteUrl.'/' ?>">
 								<?php echo $site->render('emptyCsrfFields') ?>
 							</div>
 							<input type="hidden" name="actionName" value="contact">

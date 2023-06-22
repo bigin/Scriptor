@@ -6,14 +6,32 @@ $i18n = [
 	'pages_edit_menu' => 'Edit',
 	'pages_create_menu' => 'New',
 	'settings_menu' => 'Settings',
+	'install_info_text' => 'During installation, the manager modifies your <mark class="nowrap">custom.scriptor-config.php</mark> file. However, it typically does not overwrite your configurations. A backup of your current 
+	  file will be automatically created for safety. Please follow the installation instructions carefully. If any conflicts occur, you can restore your previous configurations using the backup file.',
+	'install_menu' => 'Modules',
+	'install_module_list_header' => 'Module Manager',
+	'install_no_modules_found' => 'No modules available for installation. Currently, there are no modules available for installation. If you wish to add new modules, you can explore our <a href="https://scriptor-cms.info.local/extensions/extensions-modules/">Module Repository</a> to discover a selection of available modules. Alternatively, you can also develop your own modules and install them here.',
+	'install_backup_message' => 'The <strong>[[module_name]]</strong> module has been installed, and modifications have been made to the <strong>[[custom_config_path]]</strong> configuration file.',
+	'install_backup_copy_message' => 'A backup copy of the configuration file in the <strong>[[backup_dir]]</strong> directory has been created.',
+	'install_module_name_not_found' => 'The entered module name was not found.',
+	'install_module_error' => 'The <strong>[[module_name]]</strong> module could not be installed.',
+	'uninstall_module_error' => 'The <strong>[[module_name]]</strong> module could not be uninstalled.',
+	'uninstall_module_successful' => 'The <strong>[[module_name]]</strong> module was successfully uninstalled.',
+	'install_table_column_name' => 'Name',
+	'install_table_column_description' => 'Description',
+	'install_table_column_action' => 'Action',
+	'install_button' => 'Install',
+	'uninstall_button' => 'Uninstall',
 	'page_successful_removed' => 'The page was successfully deleted.',
 	'error_deleting_page' => 'Error deleting the page.',
 	'no_page' => 'No page found.',
 	'settings_page_header' => 'System Settings',
-	'settings_page_text' => 'Scriptor takes a different approach to settings than you might be used to:
-	  The default settings can be found under <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark>.<br><br>
-	  NOTE: If you want to keep the configuration permanently, you can modify the <mark class="uk-text-nowrap">_custom.scriptor-config.php</mark> 
-	  file located in the same directory. Rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without <mark>_</mark> prefix/underscore) before use.',
+	'settings_page_text' => 'Scriptor adopts a unique approach to settings that may differ from what you\'re accustomed to:
+	  The default settings are stored in the <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> file.<br><br>
+	  IMPORTANT: If you wish to retain your configuration permanently, you can make modifications to the <mark 
+	  class="uk-text-nowrap">custom.scriptor-config.php</mark> file, which is also located in the same directory. Prior to use, 
+	  please remember to rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without the <mark></mark> 
+	  prefix/underscore).',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 

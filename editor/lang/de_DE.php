@@ -6,15 +6,33 @@ $i18n = [
 	'pages_edit_menu' => 'Bearbeiten',
 	'pages_create_menu' => 'Estellen',
 	'settings_menu' => 'Einstellungen',
+	'install_info_text' => 'Während der Installation ändert der Manager Ihre Datei <mark class="nowrap">custom.scriptor-config.php</mark>. In der Regel werden dabei Ihre Konfigurationen nicht überschrieben. 
+	  Es wird automatisch eine Sicherungskopie Ihrer aktuellen Datei erstellt. Bitte folgen Sie den Installationsanweisungen sorgfältig. Bei Konflikten können Sie Ihre vorherigen Konfigurationen mithilfe 
+	  der Sicherungskopie wiederherstellen.',
+	'install_menu' => 'Module',
+	'install_module_list_header' => 'Module Verwaltung',
+	'install_no_modules_found' => 'Keine Module für die Installation verfügbar. Derzeit stehen keine Module zur Installation bereit. Wenn Sie neue Module hinzufügen möchten, können Sie unser <a href="<a href="https://scriptor-cms.info.local/extensions/extensions-modules/">Modul-Verzeichnis</a> erkunden, um eine Auswahl an verfügbaren Modulen zu entdecken. Alternativ können Sie auch Ihre eigenen Module entwickeln und diese hier installieren.',
+	'install_backup_message' => 'Das Modul <strong>[[module_name]]</strong> wurde installiert und Änderungen wurden in der Konfigurationsdatei <strong>[[custom_config_path]]</strong> vorgenommen.',
+	'install_backup_copy_message' => 'Eine Sicherungskopie der Konfigurationsdatei im Verzeichnis <strong>[[backup_dir]]</strong> wurde erstellt.',
+	'install_module_name_not_found' => 'Der eingegebene Modulname wurde nicht gefunden.',
+	'install_module_error' => 'Das Modul <strong>[[module_name]]</strong> konnte nicht installiert werden.',
+	'uninstall_module_error' => 'Das Modul <strong>[[module_name]]</strong> konnte nicht deinstalliert werden.',
+	'uninstall_module_successful' => 'Das Modul <strong>[[module_name]]</strong> wurde erfolgreich deinstalliert.',
+	'install_table_column_name' => 'Name',
+	'install_table_column_description' => 'Beschreibung',
+	'install_table_column_action' => 'Aktion',
+	'install_button' => 'Installieren',
+	'uninstall_button' => 'Deinstallieren',
 	'page_successful_removed' => 'Die Seite wurde erfolgreich gelöscht.',
 	'error_deleting_page' => 'Fehler beim Löschen der Seite.',
 	'no_page' => 'Es wurde keine Seite gefunden.',
 	'settings_page_header' => 'Systemeinstellungen',
-	'settings_page_text' => 'Scriptor verfolgt eine andere Vorgehensweise bei den Einstellungen, als Sie es vielleicht gewohnt sind: 
-	   Die Standardeinstellungen sind in der Datei <mark>data/settings/scriptor-config.php</mark> zu finden.<br><br>
-	   HINWEIS: Wenn Sie die Konfigurationseinstellungen dauerhaft beibehalten wollen, verwenden Sie bitte die <mark>_custom.scriptor-config.php</mark> Datei, 
-	   die sich im gleichen Verzeichnis befindet.<br><br>Beachten Sie auch, dass Sie die Datei vor der Verwendung in 
-	   <mark>custom.scriptor-config.php</mark> umbenennen müssen (ohne den Unterstrich <mark>_</mark> Präfix).',
+	'settings_page_text' => 'Scriptor verwendet einen einzigartigen Ansatz für Einstellungen, der möglicherweise von dem abweicht, was Sie gewohnt sind:
+	  Die Standard-Einstellungen werden in der Datei <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> gespeichert.<br><br>
+	  WICHTIG: Wenn Sie Ihre Konfiguration dauerhaft beibehalten möchten, können Sie Änderungen an der Datei <mark 
+	  class="uk-text-nowrap">custom.scriptor-config.php</mark> vornehmen, die sich ebenfalls im selben Verzeichnis befindet. Vor der 
+	  Verwendung sollten Sie jedoch daran denken, die Datei in <mark class="nowrap">custom.scriptor-config.php</mark> umzubenennen (ohne das <mark></mark> 
+	  Präfix/Unterstrich).',
 	'profile_menu' => 'Profil',
 	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche.',
 	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
