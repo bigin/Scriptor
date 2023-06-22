@@ -91,7 +91,8 @@ class Auth extends Module
 			}
 
 			$name = $this->imanager->sanitizer->text($this->input->post->username);
-			$user = $this->users->getItem("name=$name");
+			$user = $name ? $this->users->getItem("name=$name") : null;
+			
 			if(!$user || !$user->password->compare($this->input->post->password)) {
 				$this->increaseAttempts($this->userIP);
 				$attempts = $this->config['maxFailedAccessAttempts'] - 
