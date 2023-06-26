@@ -12,14 +12,28 @@ use Brick\VarExporter\VarExporter;
 use Brick\VarExporter\ExportException;
 use Imanager\TemplateParser;
 
+/**
+ * This class handles the installation, uninstallation, and configuration of modules in Scriptor.
+ * It provides methods for installing, uninstalling, and configuring modules, as well as retrieving a list of installed modules.
+ * 
+ * @package Scriptor
+ */
 class Install extends Module
 {
 
+	/**
+	 * Default configuration for the module manager.
+	 * @var array
+	 */
 	private static array $defaultConfig = [
 		'modules' => [],
 		'hooks'   => []
 	];
 
+	/**
+	 * Keys that are common to all module entries.
+	 * @var array
+	 */
 	private static array $genericEntryKeys = [
 		'name',
 		'position',
@@ -36,10 +50,22 @@ class Install extends Module
 		'author_email_address'
 	];
 
+	/**
+	 * Target modules for the module manager.
+	 * @var array
+	 */
 	private $targetModules = [];
 
+	/**
+	 * Template parser for the module manager.
+	 * @var object
+	 */
 	private $templateParser;
 
+	/**
+	 * Custom configuration path for the module manager.
+	 * @var string
+	 */
 	private $customConfigPath;
 
 	/**

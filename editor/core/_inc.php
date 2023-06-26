@@ -24,6 +24,7 @@ require __DIR__.'/pages.php';
 require __DIR__.'/user.php';
 require __DIR__.'/users.php';
 require __DIR__.'/editor.php';
+require __DIR__.'/site.php';
 require __DIR__.'/csrf.php';
 
 Scriptor::build($config);

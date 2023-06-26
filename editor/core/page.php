@@ -3,10 +3,23 @@
 namespace Scriptor\Core;
 
 use Imanager\Item;
-use Imanager\Util;
 
 class Page extends Item
 {
+	public string $menu_title = '';
+
+	public string $slug = '';
+
+	public string $template = '';
+
+	public string $page_type = '';
+
+	public int $parent = 0;
+
+	public string $pagetype = '';
+
+	public string $content = '';
+
 	/**
 	 * Auto set id of Scriptor's Pages category if the $category_id isn't specified.
 	 * 
@@ -85,7 +98,7 @@ class Page extends Item
 			$this->parent = 0;
 		}
 
-		$this->pagetype = (int) $this->pagetype ?? 1;
+		$this->pagetype = $this->pagetype ?? '1';
 		$this->content  = (string) $this->content ?? '';
 		$this->template = (string) $this->template ?? '';
 		$this->active = (bool) $this->active ?? false;

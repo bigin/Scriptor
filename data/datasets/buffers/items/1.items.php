@@ -8,7 +8,12 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1666960297,
+     'updated' => 1687756148,
+     'menu_title' => 'Home',
+     'slug' => 'scriptors-demo-page',
+     'template' => 'default',
+     'parent' => 0,
+     'pagetype' => '1',
      'content' => 'Lorem markdownum notam sibila Argolicis habet, manibus illa, et. Fera vestigia
 metuunt annos ignibus *commota quippe*. Graiumque tua vix volanti Diomedeos
 lacrimis.
@@ -53,10 +58,6 @@ desierant umerique, suo cum in nymphae signa praetemptatque suorum genetrici?
 Fieres sequitur quaeris Diana una parens, *te origo*; quid. Capherea liquitur
 mediis deerat facies agat quercu donavi Clara: Erinys Dies.   
 ...',
-     'pagetype' => 1,
-     'slug' => 'scriptors-demo-page',
-     'parent' => 0,
-     'template' => 'default',
      'images' => 
     array (
       0 => 
@@ -67,7 +68,6 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
          'position' => 0,
       )),
     ),
-     'menu_title' => 'Home',
   )),
   2 => 
   Scriptor\Core\Page::__set_state(array(
@@ -79,15 +79,15 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
      'active' => true,
      'created' => 1625453680,
      'updated' => 1676797558,
+     'menu_title' => 'Articles',
      'slug' => 'articles',
+     'template' => 'blog',
+     'parent' => 0,
+     'pagetype' => '1',
      'content' => '&lt;!--
 This page functions as a container for blog posts. Any page within this container is identified as a blog post and utilized by the base template. The base template uses these pages to display blog content in a consistent and efficient manner.
 --&gt;',
-     'template' => 'blog',
-     'parent' => 0,
-     'pagetype' => 1,
      'images' => NULL,
-     'menu_title' => 'Articles',
   )),
   3 => 
   Scriptor\Core\Page::__set_state(array(
@@ -99,7 +99,11 @@ This page functions as a container for blog posts. Any page within this containe
      'active' => true,
      'created' => 1638895123,
      'updated' => 1687259424,
+     'menu_title' => 'Get started with Scriptor',
      'slug' => 'get-started-with-scriptor',
+     'template' => 'default',
+     'parent' => 2,
+     'pagetype' => '1',
      'content' => 'Vigil, Evangelina. &ldquo;Es todo&rdquo; en Thirty an&rsquo; Seen a Lot. Houston, Arte P&uacute;blico Press. 1985. 51
 
 ### Primero t&uacute;
@@ -120,9 +124,6 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
 
 
 &iexcl;Buena suerte!',
-     'template' => 'default',
-     'parent' => 2,
-     'pagetype' => 1,
      'images' => 
     array (
       0 => 
@@ -133,7 +134,6 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
          'position' => 0,
       )),
     ),
-     'menu_title' => 'Get started with Scriptor',
   )),
   6 => 
   Scriptor\Core\Page::__set_state(array(
@@ -147,10 +147,10 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'updated' => 1644754916,
      'menu_title' => 'Contact',
      'slug' => 'contact',
-     'content' => 'The basic theme comes with a built-in contact form, so that your site visitors can make all sorts of queries and contact. The contact form does not support SMTP by default, but you may easily extend it with e.g. Scriptor\'s SMailer module, which does.',
      'template' => 'contact',
      'parent' => 0,
-     'pagetype' => 1,
+     'pagetype' => '1',
+     'content' => 'The basic theme comes with a built-in contact form, so that your site visitors can make all sorts of queries and contact. The contact form does not support SMTP by default, but you may easily extend it with e.g. Scriptor\'s SMailer module, which does.',
      'images' => 
     array (
       0 => 
@@ -174,10 +174,10 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'updated' => 1641128527,
      'menu_title' => 'Legal notice',
      'slug' => 'legal-notice',
-     'content' => '...',
      'template' => '',
      'parent' => 8,
-     'pagetype' => 1,
+     'pagetype' => '1',
+     'content' => '...',
      'images' => NULL,
   )),
   8 => 
@@ -192,10 +192,10 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'updated' => 1644755265,
      'menu_title' => 'Footer Pages',
      'slug' => 'some-pages',
-     'content' => 'This page is a container for all pages that should appear in the footer navigation.',
      'template' => '',
      'parent' => 0,
-     'pagetype' => 1,
+     'pagetype' => '1',
+     'content' => 'This page is a container for all pages that should appear in the footer navigation.',
      'images' => NULL,
   )),
   9 => 
@@ -210,10 +210,10 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'updated' => 1641501213,
      'menu_title' => 'Privacy statement',
      'slug' => 'privacy-statement',
-     'content' => '...',
      'template' => '',
      'parent' => 8,
-     'pagetype' => 1,
+     'pagetype' => '1',
+     'content' => '...',
      'images' => NULL,
   )),
   10 => 
@@ -228,10 +228,10 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'updated' => 1641907652,
      'menu_title' => 'Help',
      'slug' => 'help',
-     'content' => '...',
      'template' => '',
      'parent' => 8,
-     'pagetype' => 1,
+     'pagetype' => '1',
+     'content' => '...',
      'images' => NULL,
   )),
 ); ?>

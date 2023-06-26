@@ -4,12 +4,32 @@ namespace Scriptor\Core;
 
 use Imanager\Item;
 
+/**
+ * Namespace: Scriptor\Core
+ * Class: User
+ * Represents a user item in the Scriptor CMS.
+ */
 class User extends Item
 {
+	/**
+	 * @var string $email - Represents an email address
+	 */
+	public string $email = '';
+
+	/**
+	 * @var string $role - Represents a role or permission level
+	 */
+	public string $role = '';
+
+	/**
+	 * @var array $fields - Can contain any number of fields or attributes related to the class
+	 */
 	public $fields = [];
 
 	/**
-	 * Auto set id of Scriptor's Pages category if the $category_id isn't specified.
+	 * Constructor for the User class.
+	 * 
+	  * Auto set id of Scriptor's users category if the $category_id isn't specified.
 	 * 
 	 * @param null|int $category_id - Optional
 	 */
@@ -25,18 +45,17 @@ class User extends Item
 
 
 	/**
-	 * Intercept the setting of the 'password' and 'password_confirmation' 
-	 * values, because we define our own setting for these values here
+	 * Intercepts the setting of the 'password' and 'password_confirmation' values, 
+	 * because we define our own setting for these values here.
 	 * 
 	 * @param $name - Name of the fild
 	 * @param $value - Value of the field
-	 * @param bool $sanitize - option
+	 * @param bool $sanitize - (Optional)
 	 */
 	public function set($name, mixed $value, $sanitize = true) :?object
 	{
 		if ($name != 'password') {
 			return parent::set($name, $value, $sanitize);
-			//if (!is_string($value)) throw new \ErrorException('The value of password/password_confirmation must be of type string.');
 		}
 
 		if ($name == 'password') {
@@ -50,10 +69,9 @@ class User extends Item
 	}
 
 	/**
-	 * Tries to save item, with a previous check and adjustment of particular parameters.
-	 * 
-	 * The name, password, password_confirmation attributes are required.
-	 * 
+	 * Tries to save user, with a previous check and adjustment of particular 
+	 * parameters.
+	 * Required: name, password, password_confirmation attributes.
 	 * 
 	 * @throws ErrorException
 	 * @return bool
@@ -98,6 +116,10 @@ class User extends Item
 		return parent::save();
 	}
 
+	/**
+	 * Checks if the username already exists.
+	 * @return bool
+	 */
 	private function userNameExists() :bool
 	{
 		$users = (new Users())->getUsers("name=$this->name");
