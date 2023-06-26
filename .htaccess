@@ -1,31 +1,32 @@
-RewriteEngine On
-AddDefaultCharset UTF-8
+<IfModule mod_rewrite.c>
+    RewriteEngine On
 
-Options -Indexes
-Options +SymLinksIfOwnerMatch
-# Options +SymLinksifOwnerMatch
+    AddDefaultCharset UTF-8
 
-#RewriteBase /
+    Options -Indexes
+    Options +SymLinksIfOwnerMatch
+	# Options +SymLinksifOwnerMatch
 
-# Redirecting HTTP to HTTPS
-#RewriteCond %{SERVER_PORT} 80
-#RewriteRule ^(.*)$ https://your-website.com/$1 [R,L]
+	# RewriteBase /
 
-# Allow harmless files
-RewriteCond %{REQUEST_URI} !\.(?:css|js|map|jpe?g|gif|png|svg|webp)$
-# Allow file upoad handler
-RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$
-# Block access to any htaccess files
-RewriteCond %{REQUEST_URI} (^|/)\.htaccess$ [NC,OR]
-# Block access to imanager & editor's directories
-RewriteCond %{REQUEST_URI} (^|/)(data|imanager|modules|core|lang|boot.php|themes.*_.*)($|/.*$)
-# If any conditions above match, issue a 403 forbidden
-RewriteRule ^.*$ - [F,L]
+    # Redirecting HTTP to HTTPS
+    # RewriteCond %{SERVER_PORT} 80
+    # RewriteRule ^(.*)$ https://your-website.com/$1 [R,L]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^editor/(.*)$ editor/index.php?id=$2 [L,QSA]
+    # Allow harmless files
+    RewriteCond %{REQUEST_URI} !\.(?:css|js|map|jpe?g|gif|png|svg|webp)$ [NC]
+    # Allow file upload handler
+    RewriteCond %{REQUEST_URI} !^(^|/)imanager/upload/server/php($|/.*$)$ [NC]
+    # Block access to any htaccess files
+    RewriteCond %{REQUEST_URI} ^(.*/)?\.(htaccess|data|imanager|modules|core|lang|boot.php|themes.*_.*)($|/.*$) [NC]
+    # If any conditions above match, issue a 403 forbidden
+    RewriteRule ^.*$ - [F,L]
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?id=$1 [L,QSA]
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^editor/(.*)$ editor/index.php?id=$1 [L,QSA]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?id=$1 [L,QSA]
+</IfModule>
