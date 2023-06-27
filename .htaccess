@@ -5,9 +5,9 @@
 
     Options -Indexes
     Options +SymLinksIfOwnerMatch
-	# Options +SymLinksifOwnerMatch
+    # Options +SymLinksifOwnerMatch
 
-	# RewriteBase /
+    # RewriteBase /
 
     # Redirecting HTTP to HTTPS
     # RewriteCond %{SERVER_PORT} 80
