@@ -2,7 +2,7 @@
 <header class="uk-container">
 	<nav class="uk-navbar uk-navbar-container uk-margin uk-navbar-transparent">
 		<div class="uk-navbar-left brand-wrapper">
-			<a class="uk-navbar-item uk-logo" href="<?php echo $site->siteUrl; ?>/">SCRIPTOR</a>
+			<a class="uk-navbar-item uk-logo" href="<?php echo $site->siteUrl; ?>/"><?php echo $site->getTCP('site_name'); ?></a>
 		</div>
 		<div class="uk-navbar-right">
 			<ul class="uk-navbar-nav uk-visible@s">

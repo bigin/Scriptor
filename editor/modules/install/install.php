@@ -135,15 +135,26 @@ class Install extends Module
 					<td'.$class.'>'.$data['name'].' ('.$data['version'].')</td>
 					<td'.$class.'>'.$data['description'].'</td>
 					<td'.$class.'>'.
-						(empty($config['modules'][$data['name']]) ? '<a href="'.$this->siteUrl.'/install/'.$data['name'].
-						'?action=install'.$token.'" class="button-badge"><i class="gg-import"></i> '.$this->i18n['install_button'].'</a>' : '<a href="'.
-						$this->siteUrl.'/install/'.$data['name'].'?action=uninstall'.$token.'" class="button-badge"><i class="gg-export"></i> '.
+						(empty($config['modules'][$data['name']]) ? '<a href="'.$this->siteUrl.'/install/'.$data['name'].'?action=install'.
+						$token.'" class="remove button-badge"  rel="'.$this->i18n['pre_module_install_msg'].'"><i class="gg-import"></i> '.
+						$this->i18n['install_button'].'</a>' : '<a href="'.$this->siteUrl.'/install/'.$data['name'].'?action=uninstall'.
+						$token.'" class="remove button-badge" rel="'.$this->i18n['pre_module_uninstall_msg'].'"><i class="gg-export"></i> '.
 						$this->i18n['uninstall_button'].'</a>').'
 					</td>
 				</tr>';
 			}
 		}
 		ob_start(); ?>
+		<dialog id="fav-dialog">
+			<h3 class="dialog-header text-center"><?php echo $this->i18n['confirmation_dialog_header']; ?></h3>
+			<div class="dialog-body">
+				<div id="dialog-content"></div>
+				<div class="form-control text-center">
+					<button class="margin-small" id="cancel-btn" value="cancel" formmethod="dialog"><i class="gg-unavailable"></i> &nbsp;<?php echo $this->i18n['cancel_dialog_button']; ?></button>
+					<button class="margin-small" id="confirm-btn" value="default"><i class="gg-check-o"></i> &nbsp;<?php echo $this->i18n['confirm_dialog_button']; ?></button>
+				</div>
+			</div>
+		</dialog>
 		<h1><?php echo $this->i18n['install_module_list_header']; ?></h1>
 		<p>
 			<?php if (!empty($modules)) {
@@ -371,13 +382,28 @@ class Install extends Module
 				if (class_exists("$ns\\$file")) {
 					$moduleInfo = array_merge(Module::moduleInfo(), "$ns\\$file"::moduleInfo());
 
+					$namespace = 
+						!empty($moduleInfo['namespace']) ? 
+						$moduleInfo['namespace'] : 
+						$ns;
+
+					$moduleClass = 
+						!empty($moduleInfo['class']) ? 
+						(!empty($namespace) ? $namespace.'\\' : '').$moduleInfo['class'] : 
+						(!empty($namespace) ? $namespace.'\\' : '').$moduleInfo['name'];
+
+					$modulePath = 
+						!empty($moduleInfo['path']) ? 
+						"$moduleInfo[path]/$moduleInfo[name]" : 
+						"$path/$moduleInfo[name]";
+
 					$moduleEntry = [
 						//'full_path' => $path,
 						'name' => $moduleInfo['name'],
-						'file_name' => "$file.php",
-						'path' => $this->extractRelativeModulePath("$path/$moduleInfo[name]"),
-						'namespace' => $ns,
-						'class' => (!empty($ns) ? $ns.'\\' : '').$moduleInfo['name'],
+						'file_name' => basename($modulePath).'.php',
+						'path' => $this->extractRelativeModulePath($modulePath),
+						'namespace' => $namespace,
+						'class' => $moduleClass,
 						'position' => $moduleInfo['position'],
 						'menu' => $moduleInfo['menu'],
 						'display_type' => $moduleInfo['display_type'],

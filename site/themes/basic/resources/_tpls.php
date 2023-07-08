@@ -25,7 +25,9 @@ EOD,
 	</header>
 	[[FIGURE]]
 	[[CONTENT]]
-	<a href="[[URL]]" title="Read More" class="uk-button uk-button-default uk-button-small">READ MORE</a>
+	<div>
+		<a href="[[URL]]" title="Read More" class="uk-button uk-button-default uk-button-small">READ MORE</a>
+	</div>
 </article>
 EOD,
 

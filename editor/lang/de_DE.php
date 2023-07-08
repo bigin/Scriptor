@@ -6,9 +6,7 @@ $i18n = [
 	'pages_edit_menu' => 'Bearbeiten',
 	'pages_create_menu' => 'Estellen',
 	'settings_menu' => 'Einstellungen',
-	'install_info_text' => 'Während der Installation ändert der Manager Ihre Datei <mark class="nowrap">custom.scriptor-config.php</mark>. In der Regel werden dabei Ihre Konfigurationen nicht überschrieben. 
-	  Es wird automatisch eine Sicherungskopie Ihrer aktuellen Datei erstellt. Bitte folgen Sie den Installationsanweisungen sorgfältig. Bei Konflikten können Sie Ihre vorherigen Konfigurationen mithilfe 
-	  der Sicherungskopie wiederherstellen.',
+	'install_info_text' => 'Während der Installation ändert der Manager Ihre Datei <mark class="nowrap">custom.scriptor-config.php</mark>. In der Regel werden dabei Ihre Konfigurationen nicht überschrieben. Es wird automatisch eine Sicherungskopie Ihrer aktuellen Datei erstellt. Bitte folgen Sie den Installationsanweisungen sorgfältig. Bei Konflikten können Sie Ihre vorherigen Konfigurationen mithilfe der Sicherungskopie wiederherstellen.',
 	'install_menu' => 'Module',
 	'install_module_list_header' => 'Module Verwaltung',
 	'install_no_modules_found' => 'Keine Module für die Installation verfügbar. Derzeit stehen keine Module zur Installation bereit. Wenn Sie neue Module hinzufügen möchten, können Sie unser <a href="<a href="https://scriptor-cms.info.local/extensions/extensions-modules/">Modul-Verzeichnis</a> erkunden, um eine Auswahl an verfügbaren Modulen zu entdecken. Alternativ können Sie auch Ihre eigenen Module entwickeln und diese hier installieren.',
@@ -27,16 +25,10 @@ $i18n = [
 	'error_deleting_page' => 'Fehler beim Löschen der Seite.',
 	'no_page' => 'Es wurde keine Seite gefunden.',
 	'settings_page_header' => 'Systemeinstellungen',
-	'settings_page_text' => 'Scriptor verwendet einen einzigartigen Ansatz für Einstellungen, der möglicherweise von dem abweicht, was Sie gewohnt sind:
-	  Die Standard-Einstellungen werden in der Datei <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> gespeichert.<br><br>
-	  WICHTIG: Wenn Sie Ihre Konfiguration dauerhaft beibehalten möchten, können Sie Änderungen an der Datei <mark 
-	  class="uk-text-nowrap">custom.scriptor-config.php</mark> vornehmen, die sich ebenfalls im selben Verzeichnis befindet. Vor der 
-	  Verwendung sollten Sie jedoch daran denken, die Datei in <mark class="nowrap">custom.scriptor-config.php</mark> umzubenennen (ohne das <mark></mark> 
-	  Präfix/Unterstrich).',
+	'settings_page_text' => 'Scriptor verwendet einen einzigartigen Ansatz für Einstellungen, der möglicherweise von dem abweicht, was Sie gewohnt sind: Die Standard-Einstellungen werden in der Datei <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> gespeichert.<br><br>WICHTIG: Wenn Sie Ihre Konfiguration dauerhaft beibehalten möchten, können Sie Änderungen an der Datei <mark class="uk-text-nowrap">custom.scriptor-config.php</mark> vornehmen, die sich ebenfalls im selben Verzeichnis befindet. Vor der Verwendung sollten Sie jedoch daran denken, die Datei in <mark class="nowrap">custom.scriptor-config.php</mark> umzubenennen (ohne das <mark></mark> Präfix/Unterstrich).',
 	'profile_menu' => 'Profil',
 	'error_login' => 'Die von Ihnen angegebenen Zugangsdaten waren nicht korrekt. Sie haben noch [[count]] Versuche.',
-	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und 
-	versuchen Sie es erneut oder versuchen Sie es in [[count]] Minuten wieder.',
+	'error_max_login_attempts' => 'Sie haben die maximale Anzahl der Login-Versuche erreicht. Beenden Sie Ihren Browser und versuchen Sie es erneut oder versuchen Sie es in [[count]] Minuten wieder.',
 	'error_cookie' => 'Die Verwendung von Session-Cookie ist zwingend erforderlich.',
 	'error_module_not_found' => 'Fehler: Modul <mark>[[module]]</mark> wurde nicht gefunden.',
 	'error_module' => 'Module-Error',
@@ -76,7 +68,6 @@ $i18n = [
 	'published_label' => 'Veröffentlicht',
 	'page_edit_header' => 'Seite bearbeiten',
 	'page_create_header' => 'Neue Seite',
-
 	'header_image_label' => 'Bilder',
 	'header_image_infotext' => 'Laden Sie ein Bild hoch (nur Bilder mit den Endungen jpg, gif oder png sind erlaubt).',
 	'upload_add_files' => 'Bild auswählen',
@@ -99,5 +90,10 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Fehler: CSRF-Token ist ungültig – Versuchen Sie es erneut.</a>',
 	'error_saving_page' => 'Die Seite konnte nicht gespeichert werden. Ein unbekannter Fehler ist aufgetreten.',
 	'contact_developer' => 'Entwickler kontaktieren',
-	'error_operation_failed' => 'Der Vorgang war nicht erfolgreich, weitere Informationen finden Sie im Log.'
+	'error_operation_failed' => 'Der Vorgang war nicht erfolgreich, weitere Informationen finden Sie im Log.',
+	'confirmation_dialog_header' => 'Bestätigung',
+	'cancel_dialog_button' => 'Abbrechen',
+	'confirm_dialog_button' => 'Bestätigen',
+	'pre_module_install_msg' => 'Die Installation dieses Moduls kann sich auf Ihr System auswirken. Gehen Sie vorsichtig vor, während Sie es installieren und konfigurieren. Es wird empfohlen, ein Backup durchzuführen.',
+	'pre_module_uninstall_msg' => 'Das Deinstallieren dieses Moduls kann seine Funktionalität und zugehörige Daten entfernen. Gehen Sie vorsichtig vor, während Sie es deinstallieren. Es wird empfohlen, ein Backup durchzuführen.'
 ];

@@ -111,14 +111,40 @@
 		$(".summary-wrapper").removeClass("down");
 	});
 	var mdf = document.getElementById("markdown");
-	if(mdf) { 
+	if (mdf) { 
 		auto_grow(mdf); 
 		mdf.onkeyup = function() { auto_grow(this); };
 	}
 
-	$(".remove").click(function() {
-		return confirm($(this).attr("rel"));
-	});
+	const favDialog = document.getElementById("fav-dialog");
+	const removeButtons = document.querySelectorAll(".remove");
+	if (favDialog) {
+		const confirmBtn = favDialog.querySelector("#confirm-btn");
+		const cancelmBtn = favDialog.querySelector("#cancel-btn");
+		const dialogContent = document.getElementById("dialog-content");
+
+		removeButtons.forEach(function (button) {
+			button.addEventListener('click', function (e) {
+				e.preventDefault();
+				const relValue = button.getAttribute('rel');
+				dialogContent.innerText = relValue;
+				favDialog.showModal();
+				confirmBtn.setAttribute("data-href", button.getAttribute("href"));
+			});
+
+			cancelmBtn.addEventListener("click", () => {
+				favDialog.close();
+			});
+		});
+
+		confirmBtn.addEventListener("click", () => {
+			const href = confirmBtn.getAttribute("data-href");
+			favDialog.close();
+			if (href) {
+			document.location.href = href;
+			}
+		});
+	}
 
 	$("#trigger").click(function(e) {
 		e.preventDefault();

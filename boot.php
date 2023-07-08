@@ -21,4 +21,13 @@ require $corePath.'users.php';
 require $corePath.'site.php';
 require $corePath.'csrf.php';
 
+spl_autoload_register(function ($pClassName) {
+    $basePath = 'Scriptor\Modules\\';
+    $pClassName = str_replace('\\', '/', str_replace($basePath, '', $pClassName));
+    $inclClass = __DIR__ . "/site/modules/$pClassName.php";
+    if (file_exists($inclClass)) {
+        include_once $inclClass;
+    }
+});
+
 Scriptor::build($config);

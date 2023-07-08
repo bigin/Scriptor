@@ -109,6 +109,23 @@ hr {
 .arounder {
     box-shadow: 0 1px 2px rgba(0,0,0,0.12);
 }
+.center {
+	border: 5px solid;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	padding: 10px;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.margin-small {
+	margin: 5px;
+}
+
 .breadcrumbs {
 	width: inherit;
 	list-style: none;
@@ -400,6 +417,7 @@ select {
 }
 
 input[type="text"],input[type="password"],input[type="email"],select,textarea,input[type="number"],input[type="url"] {
+	font-family: Poppins,ProximaNova,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 	width: 100%;
 	border: 1px solid rgba(0,0,0,.15);
 	padding: 5px 15px;
@@ -714,6 +732,45 @@ label.required:after {
 	.summary-wrapper .close {
 		display: none;
 	}
+}
+
+/* Modal Dialog (Prompt) */
+
+#fav-dialog {
+	max-width: 700px;
+	border: solid 1px #efefef;
+	border-radius: 6px;
+	box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+	padding: 0;
+}
+
+#fav-dialog .dialog-header {
+	font-size: 2.1rem;
+	text-transform: uppercase;
+	border-bottom: solid 1px rgba(0,0,0,0.12);
+	padding: 15px 10px 10px 10px;
+	margin: 0;
+}
+
+#fav-dialog .dialog-body {
+	text-align: center;
+	padding: 10px 20px;
+}
+
+#fav-dialog .dialog-body .form-control {
+	margin: 10px 15px;
+}
+
+#fav-dialog::backdrop {
+	background: rgba(0, 0, 0, 0.3);
+}
+
+#fav-dialog #dialog-content {
+	padding: 20px;
+}
+
+#fav-dialog .gg-check-o {
+	transform: scale(var(--ggs,0.8)) !important;
 }
 
 /* Upload @since 2020-07 */

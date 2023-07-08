@@ -6,8 +6,7 @@ $i18n = [
 	'pages_edit_menu' => 'Edit',
 	'pages_create_menu' => 'New',
 	'settings_menu' => 'Settings',
-	'install_info_text' => 'During installation, the manager modifies your <mark class="nowrap">custom.scriptor-config.php</mark> file. However, it typically does not overwrite your configurations. A backup of your current 
-	  file will be automatically created for safety. Please follow the installation instructions carefully. If any conflicts occur, you can restore your previous configurations using the backup file.',
+	'install_info_text' => 'During installation, the manager modifies your <mark class="nowrap">custom.scriptor-config.php</mark> file. However, it typically does not overwrite your configurations. A backup of your current file will be automatically created for safety. Please follow the installation instructions carefully. If any conflicts occur, you can restore your previous configurations using the backup file.',
 	'install_menu' => 'Modules',
 	'install_module_list_header' => 'Module Manager',
 	'install_no_modules_found' => 'No modules available for installation. Currently, there are no modules available for installation. If you wish to add new modules, you can explore our <a href="https://scriptor-cms.info.local/extensions/extensions-modules/">Module Repository</a> to discover a selection of available modules. Alternatively, you can also develop your own modules and install them here.',
@@ -26,16 +25,10 @@ $i18n = [
 	'error_deleting_page' => 'Error deleting the page.',
 	'no_page' => 'No page found.',
 	'settings_page_header' => 'System Settings',
-	'settings_page_text' => 'Scriptor adopts a unique approach to settings that may differ from what you\'re accustomed to:
-	  The default settings are stored in the <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> file.<br><br>
-	  IMPORTANT: If you wish to retain your configuration permanently, you can make modifications to the <mark 
-	  class="uk-text-nowrap">custom.scriptor-config.php</mark> file, which is also located in the same directory. Prior to use, 
-	  please remember to rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without the <mark></mark> 
-	  prefix/underscore).',
+	'settings_page_text' => 'Scriptor adopts a unique approach to settings that may differ from what you\'re accustomed to: The default settings are stored in the <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> file.<br><br>IMPORTANT: If you wish to retain your configuration permanently, you can make modifications to the <mark class="uk-text-nowrap">custom.scriptor-config.php</mark> file, which is also located in the same directory. Prior to use, please remember to rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without the <mark></mark> prefix/underscore).',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
-	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again 
-	or try again in [[count]] minutes.",
+	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again or try again in [[count]] minutes.",
 	'error_cookie' => 'The use of session cookie is mandatory.',
 	'error_module_not_found' => 'Error: Module <mark>[[module]]</mark> was not found.',
 	'error_module' => 'Module-Error',
@@ -97,5 +90,10 @@ $i18n = [
 	'error_csrf_token_mismatch' => 'Error: CSRF token mismatch – Try again.',
 	'error_saving_page' => 'The page could not be saved. An unknown error has occurred.',
 	'contact_developer' => 'Contact developer',
-	'error_operation_failed' => 'The operation was not successful, see the log for more information.'
+	'error_operation_failed' => 'The operation was not successful, see the log for more information.',
+	'confirmation_dialog_header' => 'Confirmation',
+	'cancel_dialog_button' => 'Cancel',
+	'confirm_dialog_button' => 'Confirm',
+	'pre_module_install_msg' => 'Installing this module may impact your system. Proceed with caution during installation and configuration. Backup recommended.',
+	'pre_module_uninstall_msg' => 'Uninstalling this module may remove its functionality and associated data. Proceed with caution during uninstallation. Backup recommended.',
 ];

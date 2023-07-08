@@ -190,6 +190,10 @@ footer a:hover {
 	color: var(--light-active-text-color);
 }
 
+footer a.decent {
+	text-decoration: none;
+}
+
 footer .uk-input {
 	min-width: 100%;
 }

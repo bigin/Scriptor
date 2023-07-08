@@ -27,6 +27,15 @@ require __DIR__.'/editor.php';
 require __DIR__.'/site.php';
 require __DIR__.'/csrf.php';
 
+spl_autoload_register(function ($pClassName) {
+    $basePath = 'Scriptor\Modules\\';
+    $pClassName = str_replace('\\', '/', str_replace($basePath, '', $pClassName));
+    $inclClass = IM_ROOTPATH . "site/modules/$pClassName.php";
+    if (file_exists($inclClass)) {
+        include_once $inclClass;
+    }
+});
+
 Scriptor::build($config);
 
 $editor = Scriptor::getEditor();

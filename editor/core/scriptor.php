@@ -9,7 +9,7 @@ class Scriptor
 	/**
 	 * Application version
 	 */
-	const VERSION = '1.11.2';
+	const VERSION = '1.11.3';
 
 	/**
 	 * @var array $config - Configuration parameter
@@ -292,9 +292,9 @@ class Scriptor
 	 * 
 	 * @return array
 	 */
-	public static function getConfig()
+	public static function getConfig(mixed $property = null)
 	{
-		return self::$config;
+		return ($property) ? self::$config[$property] : self::$config;
 	}
 
 	public static function logRunTime($designation = 'Operation time:')

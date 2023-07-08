@@ -3,6 +3,8 @@
 
 class FieldConfigs
 {
+	public $accept_types;
+
 	/**
 	 *
 	 * @param $an_array
@@ -12,8 +14,8 @@ class FieldConfigs
 	public static function __set_state($an_array)
 	{
 		$_instance = new FieldConfigs();
-		foreach($an_array as $key => $val) {
-			if(is_array($val)) $_instance->{$key} = $val;
+		foreach ($an_array as $key => $val) {
+			if (is_array($val)) $_instance->{$key} = $val;
 			else $_instance->{$key} = $val;
 		}
 		return $_instance;

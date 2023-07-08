@@ -9,6 +9,12 @@ use Themes\Basic\Subscriber\MailChimp;
 
 class BasicTheme extends Site
 {
+
+	/**
+	 * This theme version
+	 */
+	const VERSION = '1.1.2';
+
 	/**
 	 * Template pieces 
 	 */
@@ -26,13 +32,13 @@ class BasicTheme extends Site
 	private $articles;
 
 	/**
-	 * Init Basic theme module and make the theme configuration (site/themes/basic/_configs.php) 
+	 * Init Basic theme module and make the theme configuration (data/settings/theme-config.php) 
 	 * available inside the class.
 	 */
 	public function init()
 	{
 		parent::init();
-		$this->config['theme'] = Scriptor::load(dirname(__DIR__).'/configs/_theme-configs.php');
+		$this->config['theme'] = Scriptor::load(IM_DATAPATH.'/settings/basic-theme-config.php');
 		$this->tpls = Scriptor::load(dirname(__DIR__).'/resources/_tpls.php');
 		$this->articles = $this->pages->getPage($this->getTCP('articles_page_id'));
 	}
@@ -456,7 +462,7 @@ class BasicTheme extends Site
 	private function renderSocIcons() :string
 	{
 		$icons = '';
-		foreach ($this->getTCP('soc') as $name => $ref) {
+		foreach ($this->getTCP('social_media') as $name => $ref) {
 			$icons .= $this->templateParser->render($this->tpls['icon_nav_row'], [
 				'URL' => $ref['href'],
 				'ICON_NAME' => $name

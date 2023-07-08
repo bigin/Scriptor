@@ -288,6 +288,16 @@ class Pages extends Module
 		}
 		ob_start(); ?>
 		<div id="page-list-wrapper">
+			<dialog id="fav-dialog">
+				<h3 class="dialog-header text-center"><?php echo $this->i18n['confirmation_dialog_header']; ?></h3>
+				<div class="dialog-body">
+					<div id="dialog-content"></div>
+					<div class="form-control text-center">
+						<button class="margin-small" id="cancel-btn" value="cancel" formmethod="dialog"><i class="gg-unavailable"></i> &nbsp;<?php echo $this->i18n['cancel_dialog_button']; ?></button>
+						<button class="margin-small" id="confirm-btn" value="default"><i class="gg-check-o"></i> &nbsp;<?php echo $this->i18n['confirm_dialog_button']; ?></button>
+					</div>
+				</div>
+			</dialog>
 			<h1><?php echo $this->i18n['pages_header'] ?></h1>
 			<form id="page-list-form" action="./" method="post">
 				<table id="page-list-table">
