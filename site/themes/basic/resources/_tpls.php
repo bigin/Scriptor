@@ -69,7 +69,7 @@ EOD,
 <section class="uk-section uk-padding-remove-vertical">
 	<div class="uk-container">
 		<div class="uk-height-large uk-cover-container uk-border-rounded">
-			<img src="[[SRC]]" alt="" data-uk-cover="" class="uk-cover" style="height: 462px; width: 1200px;">
+			<img src="[[SRC]]" alt="" data-uk-cover="" class="uk-cover" style="height: 462px; width: 1200px;" uk-cover>
 			<div class="info-layer">
 				[[INFO]]
 			</div>

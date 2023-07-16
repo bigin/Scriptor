@@ -211,8 +211,8 @@ class Item extends FieldMapper
 		$fields = $this->fields;
 		$attributes = $this->getAttributes();
 		// Remove any other item attributes
-		foreach($this as $key => $value) {
-			if(!in_array($key, $attributes) && !array_key_exists($key, $fields)) {
+		foreach ($this as $key => $value) {
+			if (!in_array($key, $attributes) && (empty($fields) || !array_key_exists($key, $fields))) {
 				unset($this->$key);
 			}
 		}
@@ -242,8 +242,10 @@ class Item extends FieldMapper
 		if(true !== $this->checkRequired()) { return false; }
 
 		// Set empty values to default defined field value
-		foreach($this->fields as $key => $field) {
-			if(!isset($this->{$field->name}) || !isset($this->{$field->name})) { $this->{$field->name} = $field->default; }
+		if (is_array($this->fields)) {
+			foreach($this->fields as $key => $field) {
+				if(!isset($this->{$field->name}) || !isset($this->{$field->name})) { $this->{$field->name} = $field->default; }
+			}
 		}
 
 		$im = imanager()->itemMapper;

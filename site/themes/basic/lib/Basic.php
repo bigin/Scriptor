@@ -81,6 +81,8 @@ class BasicTheme extends Site
 	}
 
 	/**
+	 * Renders the archive or article content
+	 * 
 	 * @return string
 	 */
 	private function renderContent() :string
@@ -302,7 +304,7 @@ class BasicTheme extends Site
 	private function renderArticleDate() :string
 	{
 		$modified = '';
-		if($this->page->created != $this->page->updated) {
+		if ($this->page->created != $this->page->updated) {
 			$modified .= $this->templateParser->render($this->tpls['modified_date'], [
 				'DATE' => $this->getFormatedPageDate($this->page->updated)
 			]);
@@ -328,7 +330,7 @@ class BasicTheme extends Site
 	private function renderHero() :string
 	{
 		$hero = '';
-		if(isset($this->page->images[0])) {
+		if (isset($this->page->images[0])) {
 			$imageUrl = $this->getBasePath().$this->page->images[0]->resize(1200, 0);
 			$hero = $this->templateParser->render($this->tpls['hero'], [
 				'SRC' => $imageUrl,

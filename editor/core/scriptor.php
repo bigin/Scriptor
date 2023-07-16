@@ -58,10 +58,13 @@ class Scriptor
 
 	/**
 	 * @var array $headerResources - An array of header resources
-	 * 
-	 * TODO: currently in use?
 	 */
 	private static $headerResources = [];
+
+	/**
+	 * @var array $boddyResources - An array of boddy resources
+	 */
+	private static $boddyResources = [];
 
 	/**
 	 * Build Scriptor class

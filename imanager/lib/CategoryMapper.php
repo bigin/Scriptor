@@ -372,10 +372,18 @@ class CategoryMapper extends Mapper
 
 		// Create a backup
 		$itemsFile = IM_BUFFERPATH.'items/'.$category->id.'.items.php';
-		if($this->imanager->config->backupItems) {
+		if ($this->imanager->config->backupItems) {
 			Util::createBackup(dirname($itemsFile).'/', basename($itemsFile, '.php'),'.php');
 		}
-		if(file_exists($itemsFile)) { @unlink($itemsFile); }
+		if (file_exists($itemsFile)) { 
+			// Delete assets
+			if (file_exists(IM_UPLOADPATH)) {
+				foreach (glob(IM_UPLOADPATH."$category->id.*.*") as $file) {
+					if (file_exists($file)) { Util::delTree($file); }
+				}
+			}
+			@unlink($itemsFile); 
+		}
 
 		/* Delete field file */
 

@@ -5,6 +5,8 @@ class FieldConfigs
 {
 	public $accept_types;
 
+	public $max_number_of_files;
+
 	/**
 	 *
 	 * @param $an_array

@@ -105,7 +105,10 @@
 			</span>
 		</td>
 		<td>
-			<p class="name"><span class="heading">[[name_heading]] </span>
+			{% if (file.error) { %}
+				<div><span class="label label-danger">Error:</span> {%=file.error%}</div>
+			{% } else { %}
+				<p class="name"><span class="heading">[[name_heading]] </span>
 				{% if (file.url) { %}
 					<a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a> 
 					<a class="copy i-wrapp-inline" title="Copy to clipboard" href="#" rel="![]([[IMAGES_URL]]{%=file.name%})"><i class="gg-copy"></i></a>
@@ -114,10 +117,9 @@
 				{% } %}
 				<br />
 				<input class="tit" type="text" placeholder="[[imagetitle_placeholder]]" name="title_[[id]][{%=file.position%}]" value="{%=file.title%}">
-			</p>
-			{% if (file.error) { %}
-				<div><span class="label label-danger">Error:</span> {%=file.error%}</div>
+				</p>
 	        {% } %}
+
             <br>
             <p class="name"><span class="heading size">[[size_heading]] {%=o.formatFileSize(file.size)%}</span></p>
             <p class="name">
@@ -126,10 +128,10 @@
 					data-url="{%=file.deleteUrl%}[[deleteurl]]"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
 					<i class="gg-trash"></i> <span>&nbsp;[[delete_upload]]</span>
 				</button>
-				<input type="checkbox" name="delete" value="1" class="toggle">
 			{% } else { %}
 				<button class="btn btn-warning cancel">
-					<i class="fa fa-times"></i>
+					<i class="gg-close"></i> 
+					<span>&nbsp;[[cancel_upload]]</span>
 				</button>
 			{% } %}
             </p>

@@ -5,6 +5,8 @@ class Config
 	public $scriptUrl;
 
 	public $url;
+
+	public $thumbSize;
 	/**
 	 * Provides direct reference access to set values in the $data array
 	 *
