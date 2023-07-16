@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-	AddDefaultCharset UTF-8
+    AddDefaultCharset UTF-8
 
     Options -Indexes
     Options +SymLinksIfOwnerMatch
@@ -18,14 +18,14 @@
     # Allow file upload handler
     RewriteCond %{REQUEST_URI} !(^|/)imanager/upload/server/php($|/.*$)$
 
-	# Block some directories and files
-	RewriteCond %{REQUEST_URI} (^|/)(boot|imanager)(.php$) [NC,OR]
-	RewriteCond %{REQUEST_URI} (^|/)(.htaccess|data|imanager|modules|core|lang|_.*)($|/.*$) [NC]
+    # Block some directories and files
+    RewriteCond %{REQUEST_URI} (^|/)(boot|imanager)(.php$) [NC,OR]
+    RewriteCond %{REQUEST_URI} (^|/)(.htaccess|data|imanager|modules|core|lang|_.*)($|/.*$) [NC]
     RewriteRule ^ - [F,L]
 
-	# Block access to .zip, .pdf, and .tar files under "/data/uploads/"
-	#RewriteCond %{REQUEST_URI} /data/uploads/.*\.(zip|pdf|tar)$ [NC]
-	#RewriteRule ^ - [F,L]
+    # Block access to .zip, .pdf, and .tar files under "/data/uploads/"
+    #RewriteCond %{REQUEST_URI} /data/uploads/.*\.(zip|pdf|tar)$ [NC]
+    #RewriteRule ^ - [F,L]
 
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
