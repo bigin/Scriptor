@@ -18,6 +18,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
@@ -41,6 +42,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
@@ -64,6 +66,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
@@ -87,6 +90,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1639155123,
      'updated' => 1639155123,
@@ -110,6 +114,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
@@ -133,6 +138,7 @@
      'cssclass' => NULL,
      'configs' => 
     Imanager\FieldConfigs::__set_state(array(
+       'accept_types' => NULL,
     )),
      'created' => 1581357741,
      'updated' => 1639155123,

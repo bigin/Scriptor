@@ -53,7 +53,7 @@ class Page extends Item
 	 * 
 	 * @return bool
 	 */
-	public function save() 
+	public function save() : bool
 	{
 		$sanitizer = imanager('sanitizer');
 

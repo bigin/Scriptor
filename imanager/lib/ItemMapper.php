@@ -23,9 +23,9 @@ class ItemMapper extends Mapper
 	public $path = null;
 
 	/**
-	 * @var - An array of the Item objects
+	 * @var array - An array of the Item objects
 	 */
-	public $items = array();
+	public $items = [];
 
 	/**
 	 * @var bool - An initialize flag for intern use

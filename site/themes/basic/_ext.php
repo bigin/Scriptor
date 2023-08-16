@@ -1,5 +1,4 @@
 <?php
-defined('IS_IM') or die('You cannot access this page directly');
 
 /*
  * The _ext.php file is loaded before the template.php file.
@@ -7,29 +6,28 @@ defined('IS_IM') or die('You cannot access this page directly');
  * calls some functions. 
  * 
  */
-
 use Themes\Basic\BasicRouter;
 use Scriptor\Core\Scriptor;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// BasicTheme extends default Site class 
+// Set the BasicTheme as the active theme for the site
+// BasicTheme extends the default Site class
 Scriptor::setSite('Themes\Basic\BasicTheme', true);
 $site = Scriptor::getSite();
 
-// Crete router instance
+// Create a router instance for handling site routing
 $router = new BasicRouter($site);
 
 /* 
- * ~ SuperCache
- *  
- * Looks to determine if there is a cached version of the page, 
- * and if so, retrieves it, outputs it, and interrupts further 
- * script execution. 
+ * SuperCache
  * 
- * NOTE: The user actions are still performed if they have been 
- * executed, e.g. contact form has been sent, subscriber form 
- * has been sent, tags, etc. 
+ * Check if a cached version of the page exists. If so, retrieve 
+ * and output it, then interrupt further script execution.
+ * 
+ * NOTE: User actions such as contact form submissions or subscriber 
+ * form submissions are still processed if they have been executed. 
+ * Tags and other user-specific data are also processed.
  * 
  */
 if ($output = $site->imanager->sectionCache->get(
