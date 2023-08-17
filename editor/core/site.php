@@ -130,6 +130,7 @@ class Site extends Module
 		parent::init();
 		$this->templateParser = new TemplateParser();
 		$this->themeUrl = $this->siteUrl.'/site/themes/'.$this->config['theme_path'];
+		$this->imanager->fieldMapper->init($this->pages->category->id, true);
 		$this->input = $this->input();
 		$this->urlSegments = $this->urlSegments();
 		$this->firstSegment = $this->urlSegments->get(0);   // Kick it out

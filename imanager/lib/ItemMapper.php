@@ -108,6 +108,7 @@ class ItemMapper extends Mapper
 		if($this->imanager->config->backupItems){
 			Util::createBackup(dirname($this->path).'/', basename($this->path, '.php'), '.php');
 		}
+		if (is_array($this->items)) foreach ($this->items as $elem) $elem->declutter();
 		$export = var_export($this->items, true);
 		if(false !== file_put_contents($this->path, '<?php return ' . $export . '; ?>')) {
 			@chmod($this->path, $this->imanager->config->chmodFile);
@@ -408,6 +409,7 @@ class ItemMapper extends Mapper
 				if($this->imanager->config->backupItems) {
 					Util::createBackup(dirname($this->path).'/', basename($this->path, '.php'), '.php');
 				}
+				if (is_array($items)) foreach ($items as $elem) $elem->declutter();
 				$export = var_export($items, true);
 				file_put_contents($this->path, '<?php return ' . $export . '; ?>');
 				@chmod($this->path, $this->imanager->config->chmodFile);

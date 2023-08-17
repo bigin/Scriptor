@@ -66,12 +66,12 @@ class Item extends FieldMapper
 		settype($this->active, 'boolean');
 		settype($this->created, 'integer');
 		settype($this->updated, 'integer'); */
-		unset($this->errorCode);
-		unset($this->fields);
-		unset($this->total);
-		unset($this->path);
-		unset($this->imanager);
-		//parent::init($this->categoryid);
+		//unset($this->errorCode);
+		//unset($this->fields);
+		//unset($this->total);
+		//unset($this->path);
+		//unset($this->imanager);
+		parent::init($this->categoryid, true);
 	}
 
 	/**
@@ -227,7 +227,7 @@ class Item extends FieldMapper
 		// Set empty values to default defined field value
 		if (is_array($this->fields)) {
 			foreach ($this->fields as $key => $field) {
-				if (!isset($this->{$field->name}) && !empty($field->default)) { 
+				if (!isset($this->{$field->name}) || !empty($field->default)) { 
 					$this->{$field->name} = $field->default; 
 				}
 			}
@@ -237,6 +237,7 @@ class Item extends FieldMapper
 		$this->declutter();
 		if (is_array($im->items)) foreach($im->items as $item) { $item->declutter(); }
 		$im->items[$this->id] = $this;	
+		//$im->init($this->categoryid, true);
 
 		// Create a backup if necessary
 		if($config->backupItems) {
@@ -299,7 +300,8 @@ class Item extends FieldMapper
 	 */
 	private function lockFile(string $path)
 	{
-		$lockFile = fopen(pathinfo($path, PATHINFO_FILENAME) . '.lock', 'w');
+		$parts = pathinfo($path);
+		$lockFile = fopen("$parts[dirname]/$parts[filename].lock", 'w');
 		if (!$lockFile) {
 			Util::logException(new \ErrorException('Failed to open lock file'));
         	return false;

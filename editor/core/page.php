@@ -12,12 +12,10 @@ class Page extends Item
 
 	public string $template = '';
 
-	public string $page_type = '';
-
 	public int $parent = 0;
 
 	public string $pagetype = '';
-
+	
 	public string $content = '';
 
 	/**
