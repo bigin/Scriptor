@@ -112,7 +112,7 @@ class Pages extends Module
 			</div>
 		</div>
 		<h1><?php echo $this->i18n['page_edit_header']; ?></h1>
-		<form id="page-form" action="./<?php echo isset($this->input->get->page) ? 
+		<form id="page-form" action="./<?php echo ($this->input->get->page) ? 
 			'?page='.(int)$this->input->get->page : ''; ?>" method="post">
 			<?php 
 			echo $this->renderEditorTitleField($page);
@@ -390,8 +390,8 @@ class Pages extends Module
 		foreach($this->input->post->position as $pos => $pageid) {
 			$page = $this->pages->getItem((int)$pageid, $pages);
 			$page->position = ((int) $pos + 1);
+			$page->save();
 		}
-		$page->save();
 		$this->imanager->sectionCache->expire();
 		return true;
 	}

@@ -125,7 +125,7 @@ class Pages extends Module
 	{
 		$return = [];
 		$defaults = [
-			'page' => $this->page->id, // Page id
+			'page' => 1,               // Default page id
 			'maxLevel' => 0,           // Zero means unlimited
 			'active' => true           // Active pages only
 		];

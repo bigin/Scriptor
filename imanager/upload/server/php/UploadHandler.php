@@ -40,6 +40,7 @@ class UploadHandler
 	protected $image_objects = array();
 	protected $positions = array();
 	protected $titles = array();
+	protected $response;
 
 	protected $imanager = null;
 
@@ -77,14 +78,14 @@ class UploadHandler
             }
 			$siteurl = rawurldecode($this->imanager->input->get->siteurl);
 			$upload_dir = IM_UPLOADPATH.'.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/';
-			$upload_url = $siteurl.IM_SITEROOT.'uploads/.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/';
+			$upload_url = $siteurl.IM_DATADIR.'uploads/.tmp_'.$timestamp.'_'.$categoryid.'.'.$fieldid.'/';
 
 		// Item exists, an upload directory has already been created
 		} else {
 			$itemid = (int) $this->imanager->input->get->itemid;
 			$siteurl = rawurldecode($this->imanager->input->get->siteurl);
 			$upload_dir = IM_UPLOADPATH.$categoryid.'.'.$itemid.'.'.$fieldid.'/';
-			$upload_url = $siteurl.IM_SITEROOT.'uploads/'.$categoryid.'.'.$itemid.'.'.$fieldid.'/';
+			$upload_url = $siteurl.IM_DATADIR.'uploads/'.$categoryid.'.'.$itemid.'.'.$fieldid.'/';
 		}
 
 		$item = null;

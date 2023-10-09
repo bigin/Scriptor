@@ -1,4 +1,6 @@
-<?php namespace Imanager;
+<?php 
+declare(strict_types=1);
+namespace Imanager;
 
 class CategoryMapper extends Mapper
 {
@@ -17,6 +19,11 @@ class CategoryMapper extends Mapper
 	 * @var null|string - Category file path
 	 */
 	public $path = null;
+
+	/**
+	 * @var array $categories - Array of IM categories
+	 */
+	public array $categories = [];
 
 	/**
 	 * @var bool - An initialize flag for intern use
@@ -38,17 +45,17 @@ class CategoryMapper extends Mapper
 	 */
 	public function init($force = false)
 	{
-		if(self::$initialized && !$force) return true;
+		if (self::$initialized && !$force) return true;
 
 		parent::___init();
 		$this->path = IM_BUFFERPATH.'categories/categories.php';
-		if(!file_exists(dirname($this->path))) {
+		if (!file_exists(dirname($this->path))) {
 			Util::install($this->path);
 		}
-		if(file_exists($this->path)) {
+		if (file_exists($this->path)) {
 			(!Util::isOpCacheEnabled()) or Util::clearOpCache($this->path);
 			$this->categories = include $this->path;
-			if(is_array($this->categories)) {
+			if (is_array($this->categories)) {
 				$this->total = count($this->categories);
 			} else {
 				$this->categories = array();
@@ -91,7 +98,7 @@ class CategoryMapper extends Mapper
 	 * You can search for category by ID: ImCategory::getCategory(2) or similar to ImCategory::getCategory('id=2')
 	 * or by category name ImCategory::getCategory('name=My category name')
 	 *
-	 * @param string/integer $selector
+	 * @param string|integer $selector
 	 * @param array|input $categories
 	 * @return boolean|object of the type Category
 	 */

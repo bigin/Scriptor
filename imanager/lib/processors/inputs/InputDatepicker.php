@@ -5,7 +5,7 @@ class InputDatepicker implements InputInterface
 	/**
 	 * @var stdClass - The vield value object
 	 */
-	protected $value;
+	protected $values;
 
 	/**
 	 * @var Field object
@@ -31,6 +31,11 @@ class InputDatepicker implements InputInterface
 	 * @var null int
 	 */
 	public $errorCode = null;
+
+	/**
+	 * @var ?int $itemid
+	 */
+	public ?int $itemid = null;
 
 	public function __construct(Field $field)
 	{

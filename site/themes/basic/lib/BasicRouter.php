@@ -4,6 +4,10 @@ namespace Themes\Basic;
 
 use Scriptor\Core\Module;
 
+/**
+ * This class handles the routing for the basic theme.
+ *
+ */
 class BasicRouter
 {
 	/**
@@ -20,11 +24,10 @@ class BasicRouter
 	}
 
 	/**
-	 * This should only affect the blog page, everything else 
-	 * goes to the default site::execute(). 
+	 * It only affects the blog page, everything else goes to the default site::execute(). 
+	 * The pages inside your container are automatically assigned template 'blog-post'.
 	 * 
-	 * The pages inside your container are automatically 
-	 * assigned template 'blog-post'.
+	 * @return void
 	 */
 	public function execute() :void
 	{
@@ -51,6 +54,8 @@ class BasicRouter
 
 	/**
 	 * Check user actions
+	 * 
+	 * @return void
 	 */
 	public function actions() :void
 	{

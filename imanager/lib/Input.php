@@ -1,4 +1,6 @@
-<?php namespace Imanager;
+<?php 
+declare(strict_types=1);
+namespace Imanager;
 
 class Input
 {
@@ -8,6 +10,7 @@ class Input
 	public $get;
 	public $put;
 	public $patch;
+	public $whitelist;
 	public $pageNumber = 0;
 	public $urlSegments;
 
@@ -63,15 +66,15 @@ class Input
 	}
 
 	private function buildSubmitedData() {
-		foreach($_POST as $key => $value) { $this->post->{$key} = $value; }
-		foreach($_GET as $key => $value) { $this->get->{$key} = $value; }
+		foreach($_POST as $key => $value) { $this->post->$key = $value; }
+		foreach($_GET as $key => $value) { $this->get->$key = $value; }
 		if($_SERVER['REQUEST_METHOD'] == 'PATCH') {
 			parse_str($this->requestBody, $_PATCH);
-			foreach($_PATCH as $key => $value) { $this->patch->{$key} = $value; }
+			foreach($_PATCH as $key => $value) { $this->patch->$key = $value; }
 		}
 		elseif($_SERVER['REQUEST_METHOD'] == 'PUT') {
 			parse_str($this->requestBody, $_PUT);
-			foreach($_PUT as $key => $value) { $this->put->{$key} = $value; }
+			foreach($_PUT as $key => $value) { $this->put->$key = $value; }
 		}
 		//foreach($_PATCH as $key => $value) { $this->post->{$key} = $value; }
 		if(!$this->pageNumber && isset($_GET[$this->config->pageNumbersUrlSegment]) &&
@@ -84,7 +87,11 @@ class Input
 
 class UrlSegments
 {
+	private $sanitizer;
+	
 	public $total = 0;
+
+	public $segment = [];
 
 	public function __construct($sanitizer) { $this->sanitizer = $sanitizer; }
 
@@ -128,8 +135,17 @@ class Post
 	 * return $this
 	 *
 	 */
-	public function __set($key, $value) { $this->{$key} = $value;}
-	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null;}
+	private array $props = [];
+
+	public function __set($key, $value) 
+	{ 
+		$this->props[$key] = $value;
+	}
+
+	public function __get($name) 
+	{ 
+		return isset($this->props[$name]) ? $this->props[$name] : null;
+	}
 }
 
 class Get
@@ -142,8 +158,17 @@ class Get
 	 * return $this
 	 *
 	 */
-	public function __set($key, $value) { $this->{$key} = $value; }
-	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+	private array $props = [];
+
+	public function __set($key, $value) 
+	{ 
+		$this->props[$key] = $value; 
+	}
+
+	public function __get($name) 
+	{ 
+		return isset($this->props[$name]) ? $this->props[$name] : null; 
+	}
 }
 
 class Patch
@@ -156,8 +181,17 @@ class Patch
 	 * return $this
 	 *
 	 */
-	public function __set($key, $value) { $this->{$key} = $value; }
-	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+	private array $props = [];
+
+	public function __set($key, $value) 
+	{ 
+		$this->props[$key] = $value;
+	}
+
+	public function __get($name) 
+	{ 
+		return isset($this->props[$name]) ? $this->props[$name] : null; 
+	}
 }
 
 class Put
@@ -170,8 +204,17 @@ class Put
 	 * return $this
 	 *
 	 */
-	public function __set($key, $value) { $this->{$key} = $value; }
-	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+	private array $props = [];
+
+	public function __set($key, $value) 
+	{ 
+		$this->props[$key] = $value;
+	}
+
+	public function __get($name) 
+	{ 
+		return isset($this->props[$name]) ? $this->props[$name] : null; 
+	}
 }
 
 class Whitelist
@@ -184,6 +227,15 @@ class Whitelist
 	 * return $this
 	 *
 	 */
-	public function __set($key, $value) { $this->{$key} = $value; }
-	public function __get($name) { return isset($this->{$name}) ? $this->{$name} : null; }
+	private array $props = [];
+
+	public function __set($key, $value) 
+	{ 
+		$this->props[$key] = $value;
+	}
+
+	public function __get($name) 
+	{ 
+		return isset($this->props[$name]) ? $this->props[$name] : null; 
+	}
 }

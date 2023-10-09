@@ -135,3 +135,15 @@ $config->thumbSize = array(
  * @var integer
  */
 $config->tmpFilesCleanPeriod = 1;
+
+/**
+ * Currently not used and can be removed later.
+ * 
+ * @var array
+ */
+$config->storage = [
+	'type' => 'file-system', // mysql, file-system
+	'dbname' => 'imanager',
+	'dbuser' => 'root',
+	'dbpass' => 'root'
+];

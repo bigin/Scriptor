@@ -21,6 +21,9 @@ class User extends Item
 	 */
 	public string $role = '';
 
+	
+	public $password;
+
 	/**
 	 * @var array $fields - Can contain any number of fields or attributes related to the class
 	 */

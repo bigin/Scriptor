@@ -37,6 +37,8 @@ class InputPassword implements InputInterface
 	 */
 	public $salt = null;
 
+	public ?int $itemid = null;
+
 	/**
 	 * @var null
 	 */

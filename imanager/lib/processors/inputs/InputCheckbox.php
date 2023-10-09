@@ -8,6 +8,11 @@ class InputCheckbox implements InputInterface
 
 	public $errorCode = null;
 
+	/**
+	 * @var ?int $itemid
+	 */
+	public ?int $itemid = null;
+
 	public function __construct(Field $field)
 	{
 		$this->field = $field;
