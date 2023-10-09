@@ -64,7 +64,7 @@ class InputFileupload implements InputInterface
 			if($itemid) {
 				if(file_exists(IM_UPLOADPATH."$categoryid.$itemid.{$this->field->id}/$file")) {
 					$this->value[$pos]->set('name', $file);
-					$this->value[$pos]->set('path', IM_SITEROOT."uploads/$categoryid.$itemid.{$this->field->id}/");
+					$this->value[$pos]->set('path', IM_DATADIR."uploads/$categoryid.$itemid.{$this->field->id}/");
 					$this->value[$pos]->set('title', isset($value['title'][$pos]) ?
 						(($sanitize) ? $this->sanitize($value['title'][$pos]) : $value['title'][$pos]) : '');
 					$this->value[$pos]->set('position', $pos);

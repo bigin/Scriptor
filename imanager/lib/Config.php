@@ -1,4 +1,6 @@
-<?php namespace Imanager;
+<?php 
+declare(strict_types=1);
+namespace Imanager;
 
 class Config
 {
@@ -7,6 +9,44 @@ class Config
 	public $url;
 
 	public $thumbSize;
+
+	public $debug;
+
+	public $imErrorHandler;
+
+	public $maxFieldNameLength;
+
+	public $maxItemNameLength;
+
+	public $maxItemsPerPage;
+
+	public $backupCategories;
+
+	public $backupFields;
+
+	public $backupItems;
+
+	public $minBackupTimePeriod;
+
+	public $filterByCategories;
+
+	public $filterByFields;
+
+	public $filterByItems;
+
+	public $chmodDir;
+
+	public $chmodFile;
+
+	public $pageNumbersUrlSegment;
+
+	public $systemDateFormat;
+
+	public $tmpFilesCleanPeriod;
+
+	public $storage;
+
+
 	/**
 	 * Provides direct reference access to set values in the $data array
 	 *

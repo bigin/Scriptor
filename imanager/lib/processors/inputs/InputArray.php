@@ -37,6 +37,11 @@ class InputArray implements InputInterface
 	public $errorCode = null;
 
 	/**
+	 * @var ?int $itemid
+	 */
+	public ?int $itemid = null;
+
+	/**
 	 * InputText constructor.
 	 *
 	 * @param Field $field

@@ -3,8 +3,8 @@
 define('IS_IM', true);
 define('IM_ROOTPATH', $basedir.'/');
 define('IM_SOURCEPATH', IM_ROOTPATH.'imanager/lib/');
-define('IM_SITEROOT', 'data/');
-define('IM_DATAPATH', IM_ROOTPATH.IM_SITEROOT);
+define('IM_DATADIR', 'data/');
+define('IM_DATAPATH', IM_ROOTPATH.IM_DATADIR);
 define('IM_UPLOADHANDLERPATH', IM_ROOTPATH.'imanager/upload/server/php/');
 define('IM_CATEGORYPATH', IM_DATAPATH.'categories/');
 define('IM_FIELDSPATH', IM_DATAPATH.'fields/');
@@ -19,5 +19,5 @@ define('IM_UPLOADPATH', IM_DATAPATH.'uploads/');
 define('IM_TEMPLATEPATH', IM_ROOTPATH.'imanager/tpls/');
 define('IM_BACKUPPATH', IM_DATAPATH.'backups/');
 define('IM_TEMPLATE_SUFFIX', '.tpl');
-define('IM_VERSION', 327);
-define('IM_VERSION_HUMAN', '3.2.7');
+define('IM_VERSION', 330);
+define('IM_VERSION_HUMAN', '3.3.0');

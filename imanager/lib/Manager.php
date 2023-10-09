@@ -1,4 +1,6 @@
-<?php namespace Imanager;
+<?php 
+declare(strict_types=1);
+namespace Imanager;
 
 class Manager
 {
@@ -21,8 +23,15 @@ class Manager
 	public $input = null;
 
 	/**
+	 * An array of dynamic properties that are created on-the-fly using a getter method.
+	 * @var array private array $dynamicProps = [];
+	 */
+	private array $dynamicProps = [];
+
+	/**
+	 * Constructor for the Manager class.
+	 * 
 	 * @since v 3.0
-	 * Manager constructor.
 	 */
 	public function __construct()
 	{
@@ -36,19 +45,22 @@ class Manager
 	}
 
 	/**
-	 * @return null
+	 * Magic method to handle dynamic property retrieval.
+	 *
+	 * @param string $name The name of the property to retrieve.
+	 * @return mixed|null The value of the property, or null if it doesn't exist.
 	 */
 	public function __get($name)
 	{
-		if(!isset($this->$name)) {
+		if (!isset($this->dynamicProps[$name])) {
 			$funcName = '_im' . ucfirst($name);
-			if(method_exists($this, $funcName)) {
-				$this->$name = $this->$funcName();
-				return $this->$name;
+			if (method_exists($this, $funcName)) {
+				$this->dynamicProps[$name] = $this->$funcName();
+				return $this->dynamicProps[$name];
 			}
 			return null;
 		} else {
-			return $this->$name;
+			return $this->dynamicProps[$name];
 		}
 	}
 
@@ -102,9 +114,9 @@ class Manager
 	 */
 	protected function _imTemplateParser()
 	{
-		$this->templateParser = new TemplateParser();
-		$this->templateParser->init();
-		return $this->templateParser;
+		$this->dynamicProps['templateParser'] = new TemplateParser();
+		$this->dynamicProps['templateParser']->init();
+		return $this->dynamicProps['templateParser'];
 	}
 
 	/**

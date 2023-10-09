@@ -1,6 +1,6 @@
 <?php return array (
   1 => 
-  Imanager\Category::__set_state(array(
+  \Imanager\Category::__set_state(array(
      'id' => 1,
      'position' => 1,
      'name' => 'Pages',
@@ -9,7 +9,7 @@
      'updated' => 1518943944,
   )),
   2 => 
-  Imanager\Category::__set_state(array(
+  \Imanager\Category::__set_state(array(
      'id' => 2,
      'position' => 2,
      'name' => 'Users',

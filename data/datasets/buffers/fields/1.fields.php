@@ -1,6 +1,6 @@
 <?php return array (
   'slug' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 1,
      'name' => 'slug',
@@ -17,14 +17,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
   )),
   'parent' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 2,
      'name' => 'parent',
@@ -41,14 +42,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
   )),
   'pagetype' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 3,
      'name' => 'pagetype',
@@ -65,14 +67,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
   )),
   'menu_title' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 7,
      'name' => 'menu_title',
@@ -89,14 +92,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1639155123,
      'updated' => 1639155123,
   )),
   'content' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 4,
      'name' => 'content',
@@ -113,14 +117,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1518943944,
      'updated' => 1639155123,
   )),
   'template' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 5,
      'name' => 'template',
@@ -137,14 +142,15 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => NULL,
+       'max_number_of_files' => NULL,
     )),
      'created' => 1581357741,
      'updated' => 1639155123,
   )),
   'images' => 
-  Imanager\Field::__set_state(array(
+  \Imanager\Field::__set_state(array(
      'categoryid' => 1,
      'id' => 6,
      'name' => 'images',
@@ -161,8 +167,9 @@
      'maximum' => 0,
      'cssclass' => NULL,
      'configs' => 
-    Imanager\FieldConfigs::__set_state(array(
+    \Imanager\FieldConfigs::__set_state(array(
        'accept_types' => 'gif|jpe?g|png',
+       'max_number_of_files' => NULL,
     )),
      'created' => 1595519012,
      'updated' => 1639155123,

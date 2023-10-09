@@ -2,9 +2,19 @@
 
 class FileuploadFieldValue
 {
+	public $name;
 
-	public function __get($name) {
-		if($name == 'url') {
+	public $url;
+
+	public $path;
+
+	public $title;
+
+	public $position;
+
+	public function __get($name) 
+	{
+		if ($name == 'url') {
 			return isset($this->path) ? $this->path.$this->name : null;
 		}
 	}

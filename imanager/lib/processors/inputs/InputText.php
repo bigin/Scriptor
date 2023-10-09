@@ -36,6 +36,8 @@ class InputText implements InputInterface
 	 */
 	public $errorCode = null;
 
+	public ?int $itemid = null;
+
 	/**
 	 * InputText constructor.
 	 *

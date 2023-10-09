@@ -25,7 +25,7 @@ $i18n = [
 	'error_deleting_page' => 'Error deleting the page.',
 	'no_page' => 'No page found.',
 	'settings_page_header' => 'System Settings',
-	'settings_page_text' => 'Scriptor adopts a unique approach to settings that may differ from what you\'re accustomed to: The default settings are stored in the <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> file.<br><br>IMPORTANT: If you wish to retain your configuration permanently, you can make modifications to the <mark class="uk-text-nowrap">custom.scriptor-config.php</mark> file, which is also located in the same directory. Prior to use, please remember to rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without the <mark></mark> prefix/underscore).',
+	'settings_page_text' => 'The default settings are stored in the <mark class="uk-text-nowrap">data/settings/scriptor-config.php</mark> file.<br><br>IMPORTANT: If you wish to retain your configuration permanently, you can make modifications to the <mark class="uk-text-nowrap">custom.scriptor-config.php</mark> file, which is also located in the same directory. Prior to use, please remember to rename the file to <mark class="nowrap">custom.scriptor-config.php</mark> (without the <mark></mark> prefix/underscore).',
 	'profile_menu' => 'Profile',
 	'error_login' => 'The username or password you entered is incorrect. You have [[count]] more attempts.',
 	'error_max_login_attempts' => "You've reached the maximum login attempts. Exit your browser and try again or try again in [[count]] minutes.",

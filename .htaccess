@@ -20,7 +20,11 @@
 
     # Block some directories and files
     RewriteCond %{REQUEST_URI} (^|/)(boot|imanager)(.php$) [NC,OR]
-    RewriteCond %{REQUEST_URI} (^|/)(.htaccess|data|imanager|modules|core|lang|_.*)($|/.*$) [NC]
+    # Block access to certain native Scriptor files.
+    RewriteCond %{REQUEST_URI} (^|/)(.htaccess|data|imanager|modules|core|lang|_.*)($|/.*$) [NC,OR]
+    # Forbid access to all directories and files that start with a dot
+    RewriteCond %{REQUEST_URI} (^|/)\.[^/]*($|/.*$)
+
     RewriteRule ^ - [F,L]
 
     # Block access to .zip, .pdf, and .tar files under "/data/uploads/"

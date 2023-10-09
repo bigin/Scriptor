@@ -1,6 +1,6 @@
 <?php return array (
   1 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 1,
      'name' => 'Scriptor\'s Demo Page',
@@ -8,7 +8,7 @@
      'position' => 1,
      'active' => true,
      'created' => 1519052101,
-     'updated' => 1687756148,
+     'updated' => 1696768396,
      'menu_title' => 'Home',
      'slug' => 'scriptors-demo-page',
      'template' => 'default',
@@ -61,16 +61,17 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
      'images' => 
     array (
       0 => 
-      Imanager\FileuploadFieldValue::__set_state(array(
+      \Imanager\FileuploadFieldValue::__set_state(array(
          'name' => 'myxa69-UvZqemnwH4c-unsplash.jpeg',
+         'url' => NULL,
          'path' => 'data/uploads/1.1.6/',
-         'title' => 'Photo by [Мария Травина](https://unsplash.com/@myxa69?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@myxa69?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)',
+         'title' => 'Photo by [Maria Travina](https://unsplash.com/@myxa69?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/@myxa69?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)',
          'position' => 0,
       )),
     ),
   )),
   2 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 2,
      'name' => 'Articles',
@@ -78,7 +79,7 @@ mediis deerat facies agat quercu donavi Clara: Erinys Dies.
      'position' => 2,
      'active' => true,
      'created' => 1625453680,
-     'updated' => 1676797558,
+     'updated' => 1696773152,
      'menu_title' => 'Articles',
      'slug' => 'articles',
      'template' => 'blog',
@@ -90,15 +91,15 @@ This page functions as a container for blog posts. Any page within this containe
      'images' => NULL,
   )),
   3 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 3,
      'name' => 'Get started with Scriptor',
      'label' => NULL,
-     'position' => 8,
+     'position' => 3,
      'active' => true,
      'created' => 1638895123,
-     'updated' => 1687259424,
+     'updated' => 1696746230,
      'menu_title' => 'Get started with Scriptor',
      'slug' => 'get-started-with-scriptor',
      'template' => 'default',
@@ -127,8 +128,9 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => 
     array (
       0 => 
-      Imanager\FileuploadFieldValue::__set_state(array(
+      \Imanager\FileuploadFieldValue::__set_state(array(
          'name' => 'aydin-hassan-NZrg1OCPneM-unsplash.jpeg',
+         'url' => NULL,
          'path' => 'data/uploads/1.3.6/',
          'title' => 'Photo by [Aydin Hassan](https://unsplash.com/@aydinhassan?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)',
          'position' => 0,
@@ -136,26 +138,27 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
     ),
   )),
   6 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 6,
      'name' => 'Contact',
      'label' => NULL,
-     'position' => 3,
+     'position' => 4,
      'active' => true,
      'created' => 1639166163,
-     'updated' => 1644754916,
+     'updated' => 1696769806,
      'menu_title' => 'Contact',
      'slug' => 'contact',
      'template' => 'contact',
      'parent' => 0,
      'pagetype' => '1',
-     'content' => 'The basic theme comes with a built-in contact form, so that your site visitors can make all sorts of queries and contact. The contact form does not support SMTP by default, but you may easily extend it with e.g. Scriptor\'s SMailer module, which does.',
+     'content' => 'The basic theme comes with a built-in contact form, so that your site visitors can make all sorts of queries and contact. The contact form does not support SMTP by default, but you may easily extend it with e.g. Scriptor&#039;s SMailer module, which does.',
      'images' => 
     array (
       0 => 
-      Imanager\FileuploadFieldValue::__set_state(array(
+      \Imanager\FileuploadFieldValue::__set_state(array(
          'name' => 'simon-berger-SD68VmEjzdA-unsplash.jpeg',
+         'url' => NULL,
          'path' => 'data/uploads/1.6.6/',
          'title' => 'Photo by [Simon Berger](https://unsplash.com/@8moments?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)',
          'position' => 0,
@@ -163,15 +166,15 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
     ),
   )),
   7 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 7,
      'name' => 'Legal notice',
      'label' => NULL,
-     'position' => 5,
+     'position' => 6,
      'active' => true,
      'created' => 1641119858,
-     'updated' => 1641128527,
+     'updated' => 1696746230,
      'menu_title' => 'Legal notice',
      'slug' => 'legal-notice',
      'template' => '',
@@ -181,15 +184,15 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   8 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 8,
      'name' => 'Footer Pages',
      'label' => NULL,
-     'position' => 4,
+     'position' => 5,
      'active' => true,
      'created' => 1641128288,
-     'updated' => 1644755265,
+     'updated' => 1696746230,
      'menu_title' => 'Footer Pages',
      'slug' => 'some-pages',
      'template' => '',
@@ -199,15 +202,15 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   9 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 9,
      'name' => 'Privacy statement',
      'label' => NULL,
-     'position' => 6,
+     'position' => 7,
      'active' => true,
      'created' => 1641501213,
-     'updated' => 1641501213,
+     'updated' => 1696746230,
      'menu_title' => 'Privacy statement',
      'slug' => 'privacy-statement',
      'template' => '',
@@ -217,15 +220,15 @@ En el poema, hay un enfoque en algunos accesorios femeninos. &iquest;Qu&eacute; 
      'images' => NULL,
   )),
   10 => 
-  Scriptor\Core\Page::__set_state(array(
+  \Scriptor\Core\Page::__set_state(array(
      'categoryid' => 1,
      'id' => 10,
      'name' => 'Getting Help',
      'label' => NULL,
-     'position' => 7,
+     'position' => 8,
      'active' => true,
      'created' => 1641818049,
-     'updated' => 1641907652,
+     'updated' => 1696747112,
      'menu_title' => 'Help',
      'slug' => 'help',
      'template' => '',
