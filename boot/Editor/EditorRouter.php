@@ -11,6 +11,7 @@ use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
 use Scriptor\Boot\Editor\Pages\PagesModule;
 use Scriptor\Boot\Editor\Profile\ProfileModule;
+use Scriptor\Boot\Editor\Settings\SettingsModule;
 use Scriptor\Boot\Frontend\PageRepository;
 
 /**
@@ -33,7 +34,6 @@ use Scriptor\Boot\Frontend\PageRepository;
 final class EditorRouter
 {
     private const PLACEHOLDER_MODULES = [
-        'settings' => '14c-4',
         'install'  => '14c-5',
     ];
 
@@ -67,6 +67,11 @@ final class EditorRouter
 
         if ($first === 'profile') {
             $this->dispatchProfile();
+            return;
+        }
+
+        if ($first === 'settings') {
+            (new SettingsModule($this->editor))->execute();
             return;
         }
 
