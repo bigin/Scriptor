@@ -16,9 +16,12 @@ use Scriptor\Boot\Frontend\PageRepository;
  * Pages module — list / edit / create / delete / renumber / Markdown
  * preview, all on the iManager 2.0 stack.
  *
- * Image management on the edit form is read-only for 14c-2: existing
- * images are listed with their title + delete checkbox, but the upload
- * widget itself ships with 14d (FilePond + UploadHandler endpoint).
+ * The edit form's image section combines two sources: a FilePond
+ * widget (14d-2) that uploads through `/editor/api/upload` and lists
+ * the resulting FileRepository rows, plus a collapsible block with
+ * the migrated 1.x `Item.data.images` entries rendered as inline
+ * thumbnail previews. The frontend prefers the FileRepository upload
+ * over the legacy entry once one exists (14d-3, BasicTheme::headlineImage).
  *
  * Side effects (DB writes, redirects, JSON responses) happen inside
  * the action handlers; render output lands on `$editor->pageContent`
@@ -347,23 +350,16 @@ final class PagesModule
             if (! \is_array($img)) {
                 continue;
             }
-            $name  = (string) ($img['name']  ?? '');
-            $title = (string) ($img['title'] ?? '');
-            if ($name === '') {
-                continue;
-            }
-            $legacyRows .= sprintf(
-                '<li><code>%s</code>%s <em>(legacy 1.x — display-only until 14d-3)</em></li>',
-                htmlspecialchars($name, \ENT_QUOTES),
-                $title !== '' ? ' — ' . htmlspecialchars($title, \ENT_QUOTES) : '',
-            );
+            $legacyRows .= $this->renderLegacyImageRow($img);
         }
 
         $existingBlock = $existingRows !== ''
             ? '<ul class="image-list image-list--uploaded">' . $existingRows . '</ul>'
             : '';
+        $legacyCount = substr_count($legacyRows, '<li ');
         $legacyBlock = $legacyRows !== ''
-            ? '<details><summary>Legacy 1.x images on this page (' . substr_count($legacyRows, '<li>') . ')</summary>'
+            ? '<details><summary>Migrated 1.x images on this page (' . $legacyCount . ')'
+                . ' — uploads above replace them on the frontend</summary>'
                 . '<ul class="image-list image-list--legacy">' . $legacyRows . '</ul></details>'
             : '';
 
@@ -389,6 +385,52 @@ final class PagesModule
             . $widget
             . $legacyBlock
             . '</div>';
+    }
+
+    /**
+     * Renders a row for a migrated 1.x image entry (lives inside the
+     * item's `data.images` JSON array, not in the files table). The
+     * legacy `path` field points at `data/uploads/<itemDir>/`; the
+     * migrator copied the assets to `data/uploads-2.0/<itemDir>/`,
+     * so we rewrite the prefix here so the inline preview resolves.
+     *
+     * Display-only: editing/deleting these entries belongs to a
+     * follow-up sub-phase. Uploads above replace the legacy entry on
+     * the public site (BasicTheme::headlineImage).
+     *
+     * @param array<string, mixed> $img
+     */
+    private function renderLegacyImageRow(array $img): string
+    {
+        $name  = (string) ($img['name']  ?? '');
+        $title = (string) ($img['title'] ?? '');
+        $path  = (string) ($img['path']  ?? '');
+        if ($name === '' || $path === '') {
+            return '';
+        }
+
+        // Map legacy `data/uploads/...` prefix onto the post-migration
+        // root; foreign / already-modern paths pass through untouched.
+        $clean = '/' . ltrim($path, '/');
+        $clean = preg_replace('#^/data/uploads/#', '/data/uploads-2.0/', $clean) ?? $clean;
+        if (! str_ends_with($clean, '/')) {
+            $clean .= '/';
+        }
+        $assetUrl = $clean . $name;
+
+        $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
+        $titleHtml = $title !== '' ? ' <span class="muted">— ' . $i($title) . '</span>' : '';
+
+        return sprintf(
+            '<li class="image-list__item image-list__item--legacy">'
+                . '<a href="%s" target="_blank"><img src="%1$s" alt="%s" loading="lazy" width="120" height="120"></a>'
+                . ' <code>%s</code>%s'
+                . '</li>',
+            $i($assetUrl),
+            $i($name),
+            $i($name),
+            $titleHtml,
+        );
     }
 
     private function renderUploadedFileRow(File $file): string
