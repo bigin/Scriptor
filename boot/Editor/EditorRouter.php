@@ -10,6 +10,7 @@ use League\Container\Container;
 use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
 use Scriptor\Boot\Editor\Pages\PagesModule;
+use Scriptor\Boot\Editor\Profile\ProfileModule;
 use Scriptor\Boot\Frontend\PageRepository;
 
 /**
@@ -32,10 +33,8 @@ use Scriptor\Boot\Frontend\PageRepository;
 final class EditorRouter
 {
     private const PLACEHOLDER_MODULES = [
-        'profile'  => '14c-6',
         'settings' => '14c-4',
         'install'  => '14c-5',
-        'users'    => '14c-3',
     ];
 
     public function __construct(
@@ -66,6 +65,11 @@ final class EditorRouter
             return;
         }
 
+        if ($first === 'profile') {
+            $this->dispatchProfile();
+            return;
+        }
+
         if (isset(self::PLACEHOLDER_MODULES[$first])) {
             $this->renderPlaceholder($first, self::PLACEHOLDER_MODULES[$first]);
             return;
@@ -79,6 +83,18 @@ final class EditorRouter
         $module = new PagesModule(
             $this->editor,
             new PageRepository(
+                $this->container->get(CategoryRepository::class),
+                $this->container->get(ItemRepository::class),
+            ),
+        );
+        $module->execute();
+    }
+
+    private function dispatchProfile(): void
+    {
+        $module = new ProfileModule(
+            $this->editor,
+            new UserRepository(
                 $this->container->get(CategoryRepository::class),
                 $this->container->get(ItemRepository::class),
             ),

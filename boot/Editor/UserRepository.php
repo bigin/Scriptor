@@ -52,4 +52,25 @@ final readonly class UserRepository
         }
         return null;
     }
+
+    public function nameTaken(string $name, ?int $exceptId = null): bool
+    {
+        $existing = $this->findByName($name);
+        if ($existing === null) {
+            return false;
+        }
+        return $exceptId === null || $existing->id !== $exceptId;
+    }
+
+    public function save(Item $user): Item
+    {
+        if ($user->categoryId !== $this->categoryId) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Item belongs to category %d, expected %d (Users)',
+                $user->categoryId,
+                $this->categoryId,
+            ));
+        }
+        return $this->items->save($user);
+    }
 }
