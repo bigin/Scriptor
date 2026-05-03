@@ -16,8 +16,7 @@ use Themes\Basic\Subscriber\MailChimp;
  *
  * Renders the public site (default page, blog list, single article, contact)
  * by extending {@see Site} and overriding the theme-specific render hooks.
- * All data access goes through the iManager 2.0 container — no calls into
- * the legacy `imanager()` function or `editor/core/*` classes survive.
+ * All data access goes through the iManager 2.0 container.
  */
 class BasicTheme extends Site
 {

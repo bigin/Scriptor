@@ -10,17 +10,17 @@ use Scriptor\Boot\Editor\UserRepository;
 
 /**
  * Profile module — the logged-in user edits their own name, email, and
- * (optionally) password. Mirrors the legacy editor/modules/profile/profile.php
- * shape but on the iManager 2.0 stack with Csrf + Sanitizer + Request.
+ * (optionally) password.
  *
- * /editor/profile/         redirect to /edit/?profile=<currentUserId>
- * /editor/profile/edit/    render the form
- * POST action=save-profile validate + persist + redirect
+ *   /editor/profile/         redirect to /edit/?profile=<currentUserId>
+ *   /editor/profile/edit/    render the form
+ *   POST action=save-profile validate + persist + redirect
  *
  * Password handling preserves the migrated 1.x `PasswordFieldValue`
- * wrapper shape (`{__class, password, salt}`) — Auth still recognises
- * both shapes, so a password change written here keeps the old wrapper
- * intact and stays compatible with any unmigrated tooling.
+ * wrapper shape (`{__class, password, salt}`) when present — Auth
+ * recognises both that shape and a plain bcrypt hash, so a password
+ * change written here stays compatible with rows that have already
+ * been re-saved as plain hashes alongside ones that haven't.
  */
 final class ProfileModule
 {
