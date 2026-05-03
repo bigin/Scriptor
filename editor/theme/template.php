@@ -15,6 +15,8 @@ isset($editor) or die('You cannot access this page directly');
 	<link href="<?php echo $editor->siteUrl; ?>/theme/css/css-gg.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.min.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-image-preview.css">
 	<?php echo $editor->getResources('link'); ?>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery.min.js"></script>
 	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery-ui.min.js"></script>
@@ -43,6 +45,11 @@ isset($editor) or die('You cannot access this page directly');
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/remarkable/remarkable.min.js"></script>
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/prism.js"></script>
 <script src="<?php echo $editor->siteUrl; ?>/theme/scripts/editor.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-image-preview.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-file-validate-type.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-file-validate-size.js"></script>
+<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond-init.js"></script>
 <?php echo $editor->getResources('script', 'boddy'); ?>
 </body>
 </html>

@@ -7,6 +7,7 @@ namespace Scriptor\Boot\Editor;
 use Imanager\Files\FileStorage;
 use Imanager\Files\ImageProcessor;
 use Imanager\Storage\CategoryRepository;
+use Imanager\Storage\FieldRepository;
 use Imanager\Storage\FileRepository;
 use Imanager\Storage\ItemRepository;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
@@ -111,6 +112,8 @@ final class EditorRouter
                 $this->container->get(CategoryRepository::class),
                 $this->container->get(ItemRepository::class),
             ),
+            $this->container->get(FieldRepository::class),
+            $this->container->get(FileRepository::class),
         );
         $module->execute();
     }

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Scriptor\Boot\Editor\Pages;
 
+use Imanager\Domain\File;
 use Imanager\Domain\Item;
+use Imanager\Storage\FieldRepository;
+use Imanager\Storage\FileRepository;
 use Scriptor\Boot\Editor\Editor;
 use Scriptor\Boot\Frontend\Page;
 use Scriptor\Boot\Frontend\PageRepository;
@@ -29,6 +32,8 @@ final class PagesModule
     public function __construct(
         private readonly Editor $editor,
         private readonly PageRepository $pages,
+        private readonly FieldRepository $fields,
+        private readonly FileRepository $files,
     ) {
         $reserved = (array) ($this->editor->config['reservedSlugs'] ?? []);
         /** @var list<int> $reserved */
@@ -308,27 +313,113 @@ final class PagesModule
 
     private function renderImagesSection(?Page $page): string
     {
-        $images = $page?->images ?? [];
-        if ($images === []) {
-            return '<div class="form-control"><label>' . htmlspecialchars($this->t('header_image_label'), \ENT_QUOTES) . '</label>'
-                . '<p class="info-text"><em>Image upload reattaches in phase 14d (FilePond + UploadHandler). Existing images render here when present.</em></p></div>';
+        $label = htmlspecialchars($this->t('header_image_label') ?: 'Images', \ENT_QUOTES);
+        $info  = htmlspecialchars($this->t('header_image_infotext') ?: '', \ENT_QUOTES);
+        $infoBlock = $info !== ''
+            ? '<p class="info-text i-wrapp"><i class="gg-danger"></i>' . $info . '</p>'
+            : '';
+
+        // Edit existing page → wire FilePond against the upload endpoint.
+        // New page → can't wire an upload (UploadHandler requires itemId>=1).
+        if ($page === null || $page->id() === null) {
+            return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
+                . '<p class="info-text"><em>Save the page first to enable image upload.</em></p></div>';
         }
-        $rows = '';
-        foreach ($images as $img) {
+
+        $itemId  = (int) $page->id();
+        $field   = $this->fields->findByName($this->pages->categoryId, 'images');
+        if ($field === null || $field->id === null) {
+            return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
+                . '<p class="info-text"><em>The Pages category has no <code>images</code> field — nothing to render.</em></p></div>';
+        }
+        $fieldId = (int) $field->id;
+        $token   = $this->editor->csrf->token('pages');
+
+        $files = $this->files->findByItemAndField($itemId, $fieldId);
+        $legacy = $page->images;
+
+        $existingRows = '';
+        foreach ($files as $file) {
+            $existingRows .= $this->renderUploadedFileRow($file);
+        }
+        $legacyRows = '';
+        foreach ($legacy as $img) {
             if (! \is_array($img)) {
                 continue;
             }
-            $name = (string) ($img['name'] ?? '');
+            $name  = (string) ($img['name']  ?? '');
             $title = (string) ($img['title'] ?? '');
-            $rows .= sprintf(
-                '<li><code>%s</code>%s</li>',
+            if ($name === '') {
+                continue;
+            }
+            $legacyRows .= sprintf(
+                '<li><code>%s</code>%s <em>(legacy 1.x — display-only until 14d-3)</em></li>',
                 htmlspecialchars($name, \ENT_QUOTES),
                 $title !== '' ? ' — ' . htmlspecialchars($title, \ENT_QUOTES) : '',
             );
         }
-        return '<div class="form-control"><label>' . htmlspecialchars($this->t('header_image_label'), \ENT_QUOTES) . '</label>'
-            . '<p class="info-text"><em>Read-only until phase 14d wires uploads.</em></p>'
-            . '<ul class="image-list">' . $rows . '</ul></div>';
+
+        $existingBlock = $existingRows !== ''
+            ? '<ul class="image-list image-list--uploaded">' . $existingRows . '</ul>'
+            : '';
+        $legacyBlock = $legacyRows !== ''
+            ? '<details><summary>Legacy 1.x images on this page (' . substr_count($legacyRows, '<li>') . ')</summary>'
+                . '<ul class="image-list image-list--legacy">' . $legacyRows . '</ul></details>'
+            : '';
+
+        // FilePond container + the metadata bag the init script needs.
+        // The script reads `data-*` attributes off this element, posts
+        // multipart uploads to the API, and stuffs the new fileId into a
+        // hidden input so the page form can render the up-to-date set
+        // after a redirect.
+        $pondId = 'filepond-images-' . $itemId;
+        $widget = sprintf(
+            '<input type="file" id="%s" class="filepond" data-itemid="%d" data-fieldid="%d" data-csrf-name="pages" data-csrf-value="%s" data-upload-url="%s" multiple>',
+            htmlspecialchars($pondId, \ENT_QUOTES),
+            $itemId,
+            $fieldId,
+            htmlspecialchars($token, \ENT_QUOTES),
+            htmlspecialchars($this->editor->siteUrl . '/api/upload', \ENT_QUOTES),
+        );
+
+        return '<div class="form-control image-section">'
+            . '<label>' . $label . '</label>'
+            . $infoBlock
+            . $existingBlock
+            . $widget
+            . $legacyBlock
+            . '</div>';
+    }
+
+    private function renderUploadedFileRow(File $file): string
+    {
+        $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
+        $thumbName = \sprintf('300x300_%s', $file->name);
+        // Public-URL convention from FileStorage::url() — the storage is
+        // wired with /data/uploads-2.0 as its public base in the bootstrap.
+        $base = '/data/uploads-2.0';
+        $assetUrl = \sprintf('%s/%s', $base, $file->path);
+        $thumbUrl = \sprintf('%s/%s/thumbnail/%s', $base, \dirname($file->path), $thumbName);
+        $token = $this->editor->csrf->token('pages');
+
+        return sprintf(
+            '<li class="image-list__item" data-file-id="%d">'
+                . '<a href="%s" target="_blank"><img src="%s" alt="%s" loading="lazy" width="120" height="120"></a>'
+                . ' <code>%s</code> <span class="muted">(%dx%d, %d bytes)</span>'
+                . ' <button type="button" class="image-list__remove" data-file-id="%1$d" data-csrf-name="pages" data-csrf-value="%s" data-delete-url="%s">'
+                . '<i class="gg-trash"></i> remove</button>'
+                . '</li>',
+            (int) $file->id,
+            $i($assetUrl),
+            $i($thumbUrl),
+            $i($file->name),
+            $i($file->name),
+            $file->width,
+            $file->height,
+            $file->size,
+            $i($token),
+            $i($this->editor->siteUrl . '/api/upload'),
+        );
     }
 
     private function fieldText(string $id, string $name, string $label, string $value, bool $required = false, string $infoText = ''): string
