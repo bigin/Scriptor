@@ -6,6 +6,8 @@ namespace Scriptor\Boot;
 
 use Imanager\Bootstrap;
 use Imanager\Cache\FilesystemCache;
+use Imanager\Events\SubscriberListenerProvider;
+use Imanager\Events\SyncEventDispatcher;
 use Imanager\Field\FieldTypeRegistry;
 use Imanager\Field\Types\ArrayListFieldType;
 use Imanager\Field\Types\CheckboxFieldType;
@@ -41,6 +43,10 @@ use Imanager\Storage\Sqlite\SqliteStorage;
 use Imanager\Storage\Storage;
 use Imanager\Validation\Sanitizer;
 use League\Container\Container;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
+use Scriptor\Boot\Events\ItemFileCleanupListener;
+use Scriptor\Boot\Events\PageCacheInvalidationListener;
 
 /**
  * Wires the iManager 2.0 service graph for use inside Scriptor.
@@ -81,8 +87,22 @@ final class ImanagerBootstrap
 
         $container->addShared(Sanitizer::class, static fn(): Sanitizer => new Sanitizer());
 
+        // 14e: PSR-14 dispatcher + listener provider. The same provider
+        // instance is reachable via both interfaces so listeners can
+        // subscribe through the typed bind, while storage and other
+        // dispatch sites use the dispatcher.
+        $container->addShared(SubscriberListenerProvider::class, static fn(): SubscriberListenerProvider
+            => new SubscriberListenerProvider());
+        $container->addShared(ListenerProviderInterface::class, static fn(): ListenerProviderInterface
+            => $container->get(SubscriberListenerProvider::class));
+        $container->addShared(EventDispatcherInterface::class, static fn(): EventDispatcherInterface
+            => new SyncEventDispatcher($container->get(ListenerProviderInterface::class)));
+
         $container->addShared(SqliteStorage::class, static fn(): SqliteStorage
-            => new SqliteStorage($container->get(\PDO::class)));
+            => new SqliteStorage(
+                $container->get(\PDO::class),
+                $container->get(EventDispatcherInterface::class),
+            ));
         $container->addShared(Storage::class, static fn(): Storage
             => $container->get(SqliteStorage::class));
 
@@ -114,6 +134,10 @@ final class ImanagerBootstrap
         $container->addShared(Csrf::class, static fn(): Csrf
             => new Csrf($container->get(SessionStore::class), maxTokens: 10));
 
+        // 14e domain-event listeners. Side effects fire in-process from
+        // SqliteStorage save/delete (synchronous PSR-14 dispatch).
+        self::wireDomainEventListeners($container);
+
         $container->addShared(FieldTypeRegistry::class, static function () use ($container): FieldTypeRegistry {
             $registry = new FieldTypeRegistry();
             $sanitizer = $container->get(Sanitizer::class);
@@ -141,5 +165,55 @@ final class ImanagerBootstrap
 
     private function __construct()
     {
+    }
+
+    /**
+     * Subscribes Phase 14e listeners on the container's
+     * {@see SubscriberListenerProvider}. Listener instantiation is
+     * deferred until the first matching event fires, so a request
+     * that doesn't touch any item never even constructs the listeners.
+     */
+    private static function wireDomainEventListeners(Container $container): void
+    {
+        /** @var SubscriberListenerProvider $provider */
+        $provider = $container->get(SubscriberListenerProvider::class);
+
+        $provider->subscribe(
+            \Imanager\Domain\Event\ItemDeleted::class,
+            static function (\Imanager\Domain\Event\ItemDeleted $event) use ($container): void {
+                /** @var ItemFileCleanupListener $listener */
+                static $listener = null;
+                if ($listener === null) {
+                    $listener = new ItemFileCleanupListener(
+                        $container->get(FileRepository::class),
+                        $container->get(FileStorage::class),
+                    );
+                }
+                $listener($event);
+            },
+        );
+
+        // Cache-invalidation: only when a Pages-category item mutates.
+        // Resolve the watched id lazily so the listener factory doesn't
+        // hit the DB on every request — we resolve once and then keep
+        // the same listener instance.
+        $cacheInvalidator = static function (object $event) use ($container): void {
+            /** @var PageCacheInvalidationListener|null $listener */
+            static $listener = null;
+            if ($listener === null) {
+                $pages = $container->get(CategoryRepository::class)->findBySlug('pages');
+                if ($pages === null || $pages->id === null) {
+                    return; // no Pages category — nothing to invalidate
+                }
+                $listener = new PageCacheInvalidationListener(
+                    $container->get(FilesystemCache::class),
+                    $pages->id,
+                );
+            }
+            $listener($event);
+        };
+        $provider->subscribe(\Imanager\Domain\Event\ItemCreated::class, $cacheInvalidator);
+        $provider->subscribe(\Imanager\Domain\Event\ItemUpdated::class, $cacheInvalidator);
+        $provider->subscribe(\Imanager\Domain\Event\ItemDeleted::class, $cacheInvalidator);
     }
 }
