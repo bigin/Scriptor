@@ -277,7 +277,7 @@ class BasicTheme extends Site
         if (! \is_array($first) || ! isset($first['name'], $first['path'])) {
             return '';
         }
-        $imageUrl = $this->getBasePath() . self::imagePath($first);
+        $imageUrl = $this->getBasePath() . ltrim($this->images->url($first, width: 800, height: 350), '/');
         $info = '';
         if (! empty($first['title'])) {
             $info = $this->templateParser->render($this->tpls['art_list_image_caption'], [
@@ -379,7 +379,7 @@ class BasicTheme extends Site
         if (! \is_array($first) || ! isset($first['name'], $first['path'])) {
             return '';
         }
-        $imageUrl = $this->getBasePath() . self::imagePath($first);
+        $imageUrl = $this->getBasePath() . ltrim($this->images->url($first, width: 1200), '/');
         return $this->templateParser->render($this->tpls['hero'], [
             'SRC'  => $imageUrl,
             'INFO' => $this->sanitizer->markdown((string) ($first['title'] ?? '')),
@@ -582,23 +582,6 @@ class BasicTheme extends Site
     {
         $format = (string) ($this->themeConfig['datetime_format'] ?? 'd F Y');
         return $this->dateTime($timestamp)->format($format);
-    }
-
-    /**
-     * @param array<string, mixed> $image
-     */
-    private static function imagePath(array $image): string
-    {
-        $path = (string) ($image['path'] ?? '');
-        $name = (string) ($image['name'] ?? '');
-        if ($path === '' || $name === '') {
-            return '';
-        }
-        $clean = '/' . ltrim($path, '/');
-        if (! str_ends_with($clean, '/')) {
-            $clean .= '/';
-        }
-        return $clean . $name;
     }
 
     /**

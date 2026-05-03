@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Frontend;
 
 use Imanager\Cache\FilesystemCache;
+use Imanager\Files\ImageProcessor;
 use Imanager\Http\Request;
 use Imanager\Http\UrlSegments;
 use Imanager\Templating\TemplateRenderer;
@@ -40,6 +41,7 @@ class Site
     public PageRepository $pages;
     public TemplateRenderer $templateParser;
     public FilesystemCache $cache;
+    public ImageUrlBuilder $images;
 
     /** @var array<string, mixed> */
     public array $config;
@@ -87,6 +89,10 @@ class Site
             $container->get(\Imanager\Storage\ItemRepository::class),
         );
         $this->cache = $container->get(FilesystemCache::class);
+        $this->images = new ImageUrlBuilder(
+            $container->get(ImageProcessor::class),
+            $scriptorRoot,
+        );
         $this->templateParser = new TemplateRenderer();
         $this->input = Request::fromGlobals();
         $this->siteUrl  = self::detectSiteUrl();
@@ -229,9 +235,20 @@ class Site
     {
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         $path = explode('?', $uri, 2)[0];
-        $segmentsPath = $this->urlSegments->path(trailingSlash: true);
-        if ($segmentsPath !== '' && str_ends_with($path, $segmentsPath)) {
-            $path = substr($path, 0, -\strlen($segmentsPath));
+        // Strip the segments path off the request URI in either form
+        // (with or without trailing slash) so the base path always ends
+        // with a single `/`.
+        foreach ([
+            $this->urlSegments->path(trailingSlash: true),
+            $this->urlSegments->path(trailingSlash: false),
+        ] as $segmentsPath) {
+            if ($segmentsPath !== '' && str_ends_with($path, $segmentsPath)) {
+                $path = substr($path, 0, -\strlen($segmentsPath));
+                break;
+            }
+        }
+        if ($path === '' || ! str_ends_with($path, '/')) {
+            $path .= '/';
         }
         return $path === '' ? '/' : $path;
     }
