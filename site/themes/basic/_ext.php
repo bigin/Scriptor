@@ -1,46 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 /*
- * The _ext.php file is loaded before the template.php file.
- * This file includes all dynamic template components and 
- * calls some functions. 
- * 
+ * Theme bootstrap. Loaded by `index.php` when the active theme has an
+ * `_ext.php` so the theme can install its own renderer and router.
+ *
+ * Phase 14b-2 wires the iManager-2.0-based BasicTheme + BasicRouter on
+ * top of the container exposed via `Scriptor\Boot\App`.
  */
+
+use Scriptor\Boot\App;
 use Themes\Basic\BasicRouter;
-use Scriptor\Core\Scriptor;
+use Themes\Basic\BasicTheme;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-// Set the BasicTheme as the active theme for the site
-// BasicTheme extends the default Site class
-Scriptor::setSite('Themes\Basic\BasicTheme', true);
-$site = Scriptor::getSite();
+/** @var array<string, mixed> $config */
+$site = new BasicTheme(App::container(), $config, dirname(__DIR__, 3));
 
-// Create a router instance for handling site routing
-$router = new BasicRouter($site);
-
-/* 
- * SuperCache
- * 
- * Check if a cached version of the page exists. If so, retrieve 
- * and output it, then interrupt further script execution.
- * 
- * NOTE: User actions such as contact form submissions or subscriber 
- * form submissions are still processed if they have been executed. 
- * Tags and other user-specific data are also processed.
- * 
- */
-if ($output = $site->imanager->sectionCache->get(
-    md5($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']), 
-    $site->getTCP('markup_cache_time'))
-    ) {
-	$router->actions();
-    echo $output;
-    exit;
+// SuperCache: short-circuit the request when a cached body is available.
+$cached = $site->hitCache();
+if ($cached !== null) {
+    // User actions still run so a fresh subscribe/contact submission is
+    // processed even when the page itself comes from cache.
+    $router = new BasicRouter($site);
+    $router->actions();
+    echo $cached;
+    return;
 }
 
-
-
-
-// Execute
+$router = new BasicRouter($site);
 $router->execute();

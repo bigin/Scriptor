@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Frontend;
 
 use Imanager\Domain\Item;
+use Imanager\Query\Direction;
 use Imanager\Query\Operator;
 use Imanager\Query\Query;
 use Imanager\Storage\CategoryRepository;
@@ -12,11 +13,12 @@ use Imanager\Storage\ItemRepository;
 
 /**
  * Read access to the Pages category as a thin wrapper over the iManager 2.0
- * `ItemRepository` + `Query` AST. Returns Frontend\Page DTOs so themes can
- * keep using `$page->slug`, `$page->template`, etc.
+ * `ItemRepository` + `Query` AST. Returns `Page` DTOs so themes can keep
+ * using `$page->slug`, `$page->template`, etc.
  *
- * Phase 14b-1 only needs lookup + parent/children traversal. Sorting,
- * pagination and richer filters land with BasicTheme in 14b-2.
+ * The query helpers below replace the legacy `getItems('parent=N')` selector
+ * strings with typed parameters; they're enough to drive the bundled basic
+ * theme (article list, archive, navigation, footer container).
  */
 final readonly class PageRepository
 {
@@ -79,28 +81,170 @@ final readonly class PageRepository
     }
 
     /**
+     * Children of a parent page in the configured order.
+     *
      * @return list<Page>
      */
-    public function findByParent(int $parentId): array
-    {
+    public function findByParent(
+        int $parentId,
+        string $orderBy = 'position',
+        Direction $direction = Direction::Asc,
+        bool $activeOnly = false,
+        int $offset = 0,
+        int $limit = 0,
+    ): array {
         $query = (new Query($this->categoryId))
             ->where('parent', Operator::Eq, $parentId)
-            ->orderBy('position');
+            ->orderBy($orderBy, $direction);
+        if ($activeOnly) {
+            $query = $query->where('active', Operator::Eq, true);
+        }
+        if ($offset > 0) {
+            $query = $query->offset($offset);
+        }
+        if ($limit > 0) {
+            $query = $query->limit($limit);
+        }
         return self::wrap($this->items->query($query));
     }
 
     /**
+     * Convenience for templates that just want the active children in
+     * position order without thinking about defaults.
+     *
      * @return list<Page>
      */
     public function findActiveByParent(int $parentId): array
     {
-        $pages = [];
-        foreach ($this->findByParent($parentId) as $page) {
-            if ($page->active()) {
-                $pages[] = $page;
-            }
+        return $this->findByParent($parentId, activeOnly: true);
+    }
+
+    /**
+     * Active pages whose `created` timestamp falls within `[$start, $end)`,
+     * scoped to a parent container (typically the blog `articles_page_id`).
+     *
+     * @return list<Page>
+     */
+    public function findInTimeRange(
+        int $start,
+        int $end,
+        int $parentId,
+        string $orderBy = 'created',
+        Direction $direction = Direction::Desc,
+    ): array {
+        $query = (new Query($this->categoryId))
+            ->where('parent', Operator::Eq, $parentId)
+            ->where('active', Operator::Eq, true)
+            ->where('created', Operator::Gte, $start)
+            ->where('created', Operator::Lt, $end)
+            ->orderBy($orderBy, $direction);
+        return self::wrap($this->items->query($query));
+    }
+
+    public function countByParent(int $parentId, bool $activeOnly = false): int
+    {
+        $query = (new Query($this->categoryId))
+            ->where('parent', Operator::Eq, $parentId);
+        if ($activeOnly) {
+            $query = $query->where('active', Operator::Eq, true);
         }
-        return $pages;
+        return \count($this->items->query($query));
+    }
+
+    /**
+     * Recursive walk that materialises a tree of pages keyed by parent id.
+     * Replaces 1.x `Pages::getPageLevels()` for nav-style traversals.
+     *
+     * @param list<int> $excludeIds
+     * @return array<int, list<Page>>
+     */
+    public function levels(
+        int $rootParent = 0,
+        int $maxDepth = 0,
+        bool $activeOnly = true,
+        array $excludeIds = [],
+    ): array {
+        $tree = [];
+        $this->walkLevels($rootParent, 1, $maxDepth, $activeOnly, $excludeIds, $tree);
+        return $tree;
+    }
+
+    /**
+     * Flat list of every descendant page beneath `$parent`, parents-first.
+     *
+     * @return list<Page>
+     */
+    public function descendants(Page $parent): array
+    {
+        $out = [];
+        $this->collectDescendants($parent, $out, [$parent->id() ?? 0 => true]);
+        return $out;
+    }
+
+    /**
+     * @param list<Page>       $out
+     * @param array<int, true> $visited
+     */
+    private function collectDescendants(Page $parent, array &$out, array $visited): void
+    {
+        $parentId = $parent->id() ?? 0;
+        foreach ($this->findActiveByParent($parentId) as $child) {
+            $childId = $child->id() ?? 0;
+            if ($childId === $parentId || isset($visited[$childId])) {
+                continue;
+            }
+            $visited[$childId] = true;
+            $out[] = $child;
+            $this->collectDescendants($child, $out, $visited);
+        }
+    }
+
+    /**
+     * @param list<int>            $excludeIds
+     * @param array<int, list<Page>> $tree
+     * @param array<int, true>     $visited cycle-detection accumulator
+     */
+    private function walkLevels(
+        int $parent,
+        int $depth,
+        int $maxDepth,
+        bool $activeOnly,
+        array $excludeIds,
+        array &$tree,
+        array $visited = [],
+    ): void {
+        if (isset($visited[$parent])) {
+            return; // self- or cross-cycle in the parent chain — bail out
+        }
+        $visited[$parent] = true;
+
+        $children = $this->findByParent($parent, activeOnly: $activeOnly);
+        // Filter the parent itself out (page-with-parent=self bug guard) plus
+        // any caller-supplied exclude ids.
+        $children = array_values(array_filter(
+            $children,
+            static fn(Page $p): bool => ($p->id() ?? 0) !== $parent
+                && ! \in_array($p->id() ?? 0, $excludeIds, true)
+                && ! \in_array($p->parent, $excludeIds, true),
+        ));
+        if ($children === []) {
+            return;
+        }
+        $tree[$parent] = $children;
+        if ($maxDepth > 0 && $depth >= $maxDepth) {
+            return;
+        }
+        foreach ($children as $child) {
+            $this->walkLevels(
+                $child->id() ?? 0,
+                $depth + 1,
+                $maxDepth,
+                $activeOnly,
+                $excludeIds,
+                $tree,
+                $visited,
+            );
+        }
     }
 
     /**

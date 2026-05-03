@@ -1,6 +1,6 @@
 <?php defined('IS_IM') or die('You cannot access this page directly'); 
 
-$tplName = $site->sanitizer->templateName($site->page->template);
+$tplName = $site->sanitizer->templateName($site->currentTemplate());
 $tplFile = __DIR__."/$tplName.php";
 
 ob_start();

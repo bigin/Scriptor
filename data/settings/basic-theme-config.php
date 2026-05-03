@@ -12,13 +12,14 @@ return [
 
 	/**
 	 * The name of the website used throughout the Basic theme.
+	 * Overridden by BasicTheme::init() with $site->config['site_name'].
 	 */
-	'site_name' => \Scriptor\Core\Scriptor::getConfig('site_name'),
+	'site_name' => 'Scriptor',
 
 	/**
 	 * The version of the Basic theme being used.
 	 */
-	'theme_version' => Themes\Basic\BasicTheme::VERSION,
+	'theme_version' => '2.0.0',
 
 	/**
 	 * The copyright information for your website.
@@ -159,7 +160,7 @@ return [
 	 * See /data/settings/scriptor-config.php resp. custom.scriptor-config.php
 	 * or change to a static value e.g. 262974383
 	 */
-	'markup_cache_time' => \Scriptor\Core\Scriptor::getProperty('config')['markup_cache_time'],
+	'markup_cache_time' => 0, // overridden by BasicTheme::init() with $site->config['markup_cache_time']
 
 	/**
 	 * Enter the templates of the pages where you want the output to be cached.

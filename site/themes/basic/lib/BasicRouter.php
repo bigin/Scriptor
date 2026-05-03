@@ -1,69 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Themes\Basic;
 
-use Scriptor\Core\Module;
-
 /**
- * This class handles the routing for the basic theme.
+ * Routing for the Basic theme.
  *
+ * Thin wrapper around `BasicTheme` that
+ *   1. dispatches user-action POSTs (contact, subscribe, loadToken),
+ *   2. resolves the page using the blog-aware route helper.
+ *
+ * Replaces the legacy 1.x router that took a `Scriptor\Core\Module`.
  */
-class BasicRouter
+final class BasicRouter
 {
-	/**
-	 * @var Scriptor\Core\Module $site instance
-	 */
-	private $site;
+    public function __construct(private readonly BasicTheme $site) {}
 
-	/**
-	 * Init Basic theme module
-	 */
-	public function __construct(Module $site)
-	{
-		$this->site = $site;
-	}
+    public function execute(): void
+    {
+        $this->actions();
+        $this->site->routeArticles();
+    }
 
-	/**
-	 * It only affects the blog page, everything else goes to the default site::execute(). 
-	 * The pages inside your container are automatically assigned template 'blog-post'.
-	 * 
-	 * @return void
-	 */
-	public function execute() :void
-	{
-		$this->actions();
-
-		$articles = $this->site->pages()->getPage((int) $this->site->getTCP('articles_page_id'));
-		
-		if ($articles && $articles->slug != $this->site->urlSegments->getlast()) {
-			$this->site->execute();
-			if ($this->site->page->parent == $articles->id) {
-				$this->site->page->template = 'blog-post';
-			}
-		} else {
-			if (!$articles || !$articles->active) {
-				$this->site->throw404();
-			}
-			$pageUrl = $this->site->getPageUrl($articles, $articles->pages);
-			if (strpos($this->site->urlSegments->getUrl(), $pageUrl) === false) {
-				$this->site->throw404();
-			}
-			$this->site->page = $articles;
-		}
-	}
-
-	/**
-	 * Check user actions
-	 * 
-	 * @return void
-	 */
-	public function actions() :void
-	{
-		$post = $this->site->input->post;
-		if ($post->action && in_array($post->action, $this->site->getTCP('allowed_actions'))) {
-			$name = $post->action;
-			$func = $name.'Action';
-			$this->site->$func();
-		}
-	}
+    public function actions(): void
+    {
+        $this->site->actions();
+    }
 }
