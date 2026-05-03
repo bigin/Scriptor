@@ -1,27 +1,47 @@
 {
     "name": "bigins/scriptor",
-    "type": "library",
+    "type": "project",
     "description": "Scriptor CMS/CMF",
-    "keywords": [ "scriptor", "cms", "cmf", "flat file" ],
+    "keywords": ["scriptor", "cms", "cmf", "flat file"],
     "license": "MIT",
     "homepage": "https://scriptor-cms.info",
     "authors": [
-    {
-        "name": "bigin",
-        "email": "juri.ehret@gmail.com",
-        "homepage": "https://ehret-studio.com",
-        "role": "Developer"
-    }
+        {
+            "name": "bigin",
+            "email": "juri.ehret@gmail.com",
+            "homepage": "https://ehret-studio.com",
+            "role": "Developer"
+        }
     ],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
-        "php": ">=8.1.0",
+        "php": "^8.2",
         "ext-gd": "*",
         "ext-mbstring": "*",
-    	"ext-dom": "*",
-    	"ext-json": "*"
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-pdo_sqlite": "*",
+        "bigins/imanager": "2.0.x-dev"
     },
-	"autoload": {
-		"files": ["boot.php"]
-	}
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../imanager",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Scriptor\\Boot\\": "boot/"
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.0"
+        }
+    }
 }
