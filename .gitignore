@@ -1,0 +1,12 @@
+# Composer
+/vendor/
+
+# iManager 2.0 runtime artefacts
+/data/imanager.db
+/data/imanager.db-wal
+/data/imanager.db-shm
+/data/uploads-2.0/
+/data/cache/sections/
+
+# Phase 14 migration backups
+/data.bak.*
