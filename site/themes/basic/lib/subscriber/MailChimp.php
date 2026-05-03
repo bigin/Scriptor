@@ -2,33 +2,30 @@
 
 namespace Themes\Basic\Subscriber;
 
-use Imanager\Util;
-
 /**
  * MailChimp Class
- * 
- * Can be used to add new subscribers to the subscriber list 
- * or modify existing ones. 
- * 
+ *
+ * Can be used to add new subscribers to the subscriber list
+ * or modify existing ones.
  */
 class MailChimp
 {
-	private $username;
-	
-	private $api_key;
+	private string $username;
+	private string $api_key;
+	private string $dc;
+	private string $list_id;
 
-	private $dc;
+	public ?int $code = null;
 
-	private $list_id;
-
-	public $code;
-
+	/**
+	 * @param array<string, mixed> $params
+	 */
 	public function __construct(array $params)
 	{
-		$this->username = $params['username'];
-		$this->api_key = $params['api_key'];
-		$this->dc = $params['dc'];
-		$this->list_id = $params['list_id'];
+		$this->username = (string) ($params['username'] ?? '');
+		$this->api_key  = (string) ($params['api_key']  ?? '');
+		$this->dc       = (string) ($params['dc']       ?? '');
+		$this->list_id  = (string) ($params['list_id']  ?? '');
 	}
 
 	public function getRequest() : Request
