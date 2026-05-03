@@ -273,15 +273,15 @@ class BasicTheme extends Site
 
     private function renderArticleFigure(Page $article, string $articleUrl): string
     {
-        $first = $article->images[0] ?? null;
-        if (! \is_array($first) || ! isset($first['name'], $first['path'])) {
+        $image = $this->headlineImage($article);
+        if ($image === null) {
             return '';
         }
-        $imageUrl = $this->getBasePath() . ltrim($this->images->url($first, width: 800, height: 350), '/');
+        $imageUrl = $this->getBasePath() . ltrim($this->images->url($image, width: 800, height: 350), '/');
         $info = '';
-        if (! empty($first['title'])) {
+        if (! empty($image['title'])) {
             $info = $this->templateParser->render($this->tpls['art_list_image_caption'], [
-                'TEXT' => $this->sanitizer->markdown((string) $first['title']),
+                'TEXT' => $this->sanitizer->markdown((string) $image['title']),
             ]);
         }
         return $this->templateParser->render($this->tpls['art_list_figure'], [
@@ -375,15 +375,76 @@ class BasicTheme extends Site
         if ($this->page === null) {
             return '';
         }
-        $first = $this->page->images[0] ?? null;
-        if (! \is_array($first) || ! isset($first['name'], $first['path'])) {
+        $image = $this->headlineImage($this->page);
+        if ($image === null) {
             return '';
         }
-        $imageUrl = $this->getBasePath() . ltrim($this->images->url($first, width: 1200), '/');
+        $imageUrl = $this->getBasePath() . ltrim($this->images->url($image, width: 1200), '/');
         return $this->templateParser->render($this->tpls['hero'], [
             'SRC'  => $imageUrl,
-            'INFO' => $this->sanitizer->markdown((string) ($first['title'] ?? '')),
+            'INFO' => $this->sanitizer->markdown((string) ($image['title'] ?? '')),
         ]);
+    }
+
+    /**
+     * Picks the first image for a page, preferring a 14d-1+ FileRepository
+     * upload over the migrated 1.x `images[]` data array. The returned
+     * shape is the 1.x-style `{name, path, title, position}` dict the
+     * Frontend\ImageUrlBuilder consumes — `path` is normalised to point
+     * at `data/uploads-2.0/...` so URL rewriting doesn't double-prefix.
+     *
+     * @return array{name: string, path: string, title: string, position: int}|null
+     */
+    private function headlineImage(Page $page): ?array
+    {
+        $itemId = $page->id();
+        if ($itemId !== null) {
+            $field = $this->resolveImagesField();
+            if ($field !== null) {
+                $files = $this->files->findByItemAndField($itemId, $field);
+                if ($files !== []) {
+                    $first = $files[0];
+                    return [
+                        'name'     => $first->name,
+                        // FileStorage paths are <itemId>/<fieldId>/<file>; the
+                        // ImageUrlBuilder rewrites `data/uploads/` legacy
+                        // prefixes only, so prepend the 2.0 root explicitly.
+                        'path'     => 'data/uploads-2.0/' . \dirname($first->path) . '/',
+                        'title'    => '',
+                        'position' => $first->position,
+                    ];
+                }
+            }
+        }
+
+        // Fallback: migrated 1.x image entries embedded in item.data.
+        $legacy = $page->images[0] ?? null;
+        if (! \is_array($legacy) || ! isset($legacy['name'], $legacy['path'])) {
+            return null;
+        }
+        return [
+            'name'     => (string) $legacy['name'],
+            'path'     => (string) $legacy['path'],
+            'title'    => (string) ($legacy['title'] ?? ''),
+            'position' => (int) ($legacy['position'] ?? 0),
+        ];
+    }
+
+    /**
+     * Field id for the Pages.images upload field, or null when the
+     * Pages category has no `images` field configured (in which case
+     * we fall straight back to the legacy data array).
+     */
+    private function resolveImagesField(): ?int
+    {
+        static $cached;
+        if ($cached !== null) {
+            return $cached === 0 ? null : $cached;
+        }
+        $field = $this->container->get(\Imanager\Storage\FieldRepository::class)
+            ->findByName($this->pages->categoryId, 'images');
+        $cached = $field?->id ?? 0;
+        return $cached === 0 ? null : $cached;
     }
 
     private function renderFooterNav(): string
