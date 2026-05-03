@@ -143,6 +143,24 @@ final class PagesModule
         $data['template']   = $template;
         $data['pagetype']   = $data['pagetype'] ?? '1';
 
+        // Legacy image titles: PagesModule::renderLegacyImageRow emits an
+        // input named `legacy_image_titles[<index>]` per migrated image
+        // entry. Splice each posted value back into the matching slot in
+        // data.images so the page-save persists caption edits without
+        // touching anything else on the entry.
+        $rawTitles = $this->editor->input->post('legacy_image_titles');
+        if (\is_array($rawTitles) && isset($data['images']) && \is_array($data['images'])) {
+            $images = $data['images'];
+            foreach ($rawTitles as $index => $title) {
+                $idx = (int) $index;
+                if (! isset($images[$idx]) || ! \is_array($images[$idx])) {
+                    continue;
+                }
+                $images[$idx]['title'] = (string) $title;
+            }
+            $data['images'] = $images;
+        }
+
         $now = time();
         $item = new Item(
             id:         $existing?->id(),
@@ -346,11 +364,11 @@ final class PagesModule
             $existingRows .= $this->renderUploadedFileRow($file);
         }
         $legacyRows = '';
-        foreach ($legacy as $img) {
+        foreach ($legacy as $index => $img) {
             if (! \is_array($img)) {
                 continue;
             }
-            $legacyRows .= $this->renderLegacyImageRow($img);
+            $legacyRows .= $this->renderLegacyImageRow($img, (int) $index);
         }
 
         $existingBlock = $existingRows !== ''
@@ -400,7 +418,7 @@ final class PagesModule
      *
      * @param array<string, mixed> $img
      */
-    private function renderLegacyImageRow(array $img): string
+    private function renderLegacyImageRow(array $img, int $index): string
     {
         $name  = (string) ($img['name']  ?? '');
         $title = (string) ($img['title'] ?? '');
@@ -419,18 +437,26 @@ final class PagesModule
         $assetUrl = $clean . $name;
 
         $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
-        $titleHtml = $title !== '' ? ' <span class="muted">— ' . $i($title) . '</span>' : '';
 
-        return sprintf(
-            '<li class="image-list__item image-list__item--legacy">'
-                . '<a href="%s" target="_blank"><img src="%1$s" alt="%s" loading="lazy" width="120" height="120"></a>'
-                . ' <code>%s</code>%s'
-                . '</li>',
-            $i($assetUrl),
-            $i($name),
-            $i($name),
-            $titleHtml,
-        );
+        // Legacy titles persist back via the form's save-page action:
+        // the input's name encodes the array index so saveAction() can
+        // splice the new value into Item.data.images[$index].title.
+        $inputName = 'legacy_image_titles[' . $index . ']';
+
+        return '<li class="image-list__item image-list__item--legacy">'
+            . '<a href="' . $i($assetUrl) . '" target="_blank">'
+            . '<img src="' . $i($assetUrl) . '" alt="' . $i($name) . '" loading="lazy" width="120" height="120">'
+            . '</a>'
+            . ' <div class="image-list__meta">'
+                . '<code>' . $i($name) . '</code>'
+                . '<div class="image-list__title-edit">'
+                    . '<input type="text" name="' . $i($inputName) . '"'
+                        . ' value="' . $i($title) . '"'
+                        . ' placeholder="Caption / alt text">'
+                    . '<span class="muted">saves with the page</span>'
+                . '</div>'
+            . '</div>'
+            . '</li>';
     }
 
     private function renderUploadedFileRow(File $file): string
@@ -440,28 +466,39 @@ final class PagesModule
         // Public-URL convention from FileStorage::url() — the storage is
         // wired with /data/uploads-2.0 as its public base in the bootstrap.
         $base = '/data/uploads-2.0';
-        $assetUrl = \sprintf('%s/%s', $base, $file->path);
-        $thumbUrl = \sprintf('%s/%s/thumbnail/%s', $base, \dirname($file->path), $thumbName);
-        $token = $this->editor->csrf->token('pages');
+        $assetUrl = $base . '/' . $file->path;
+        $thumbUrl = $base . '/' . \dirname($file->path) . '/thumbnail/' . $thumbName;
+        $token  = $this->editor->csrf->token('pages');
+        $apiUrl = $this->editor->siteUrl . '/api/upload';
+        $id     = (int) $file->id;
 
-        return sprintf(
-            '<li class="image-list__item" data-file-id="%d">'
-                . '<a href="%s" target="_blank"><img src="%s" alt="%s" loading="lazy" width="120" height="120"></a>'
-                . ' <code>%s</code> <span class="muted">(%dx%d, %d bytes)</span>'
-                . ' <button type="button" class="image-list__remove" data-file-id="%1$d" data-csrf-name="pages" data-csrf-value="%s" data-delete-url="%s">'
-                . '<i class="gg-trash"></i> remove</button>'
-                . '</li>',
-            (int) $file->id,
-            $i($assetUrl),
-            $i($thumbUrl),
-            $i($file->name),
-            $i($file->name),
-            $file->width,
-            $file->height,
-            $file->size,
-            $i($token),
-            $i($this->editor->siteUrl . '/api/upload'),
-        );
+        return '<li class="image-list__item" data-file-id="' . $id . '">'
+            . '<a href="' . $i($assetUrl) . '" target="_blank">'
+            . '<img src="' . $i($thumbUrl) . '" alt="' . $i($file->name) . '" loading="lazy" width="120" height="120">'
+            . '</a>'
+            . ' <div class="image-list__meta">'
+                . '<code>' . $i($file->name) . '</code> '
+                . '<span class="muted">(' . $file->width . 'x' . $file->height . ', ' . $file->size . ' bytes)</span>'
+                . '<div class="image-list__title-edit">'
+                    . '<input type="text" class="image-list__title-input"'
+                        . ' placeholder="Caption / alt text"'
+                        . ' value="' . $i($file->title) . '"'
+                        . ' data-file-id="' . $id . '"'
+                        . ' data-csrf-name="pages"'
+                        . ' data-csrf-value="' . $i($token) . '"'
+                        . ' data-patch-url="' . $i($apiUrl) . '">'
+                    . '<button type="button" class="image-list__title-save" data-file-id="' . $id . '">save title</button>'
+                    . '<span class="image-list__title-status muted" data-file-id="' . $id . '"></span>'
+                . '</div>'
+            . '</div>'
+            . ' <button type="button" class="image-list__remove"'
+                . ' data-file-id="' . $id . '"'
+                . ' data-csrf-name="pages"'
+                . ' data-csrf-value="' . $i($token) . '"'
+                . ' data-delete-url="' . $i($apiUrl) . '">'
+                . '<i class="gg-trash"></i> remove'
+            . '</button>'
+            . '</li>';
     }
 
     private function fieldText(string $id, string $name, string $label, string $value, bool $required = false, string $infoText = ''): string
