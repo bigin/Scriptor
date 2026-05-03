@@ -51,6 +51,10 @@
       }
 
       FilePond.create(input, {
+        // Form field name used for the uploaded blob in the multipart
+        // request. Default is "filepond"; we use "file" so the upload
+        // endpoint stays aligned with the cURL smoke fixtures.
+        name: 'file',
         allowMultiple: true,
         acceptedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
         maxFileSize: '8MB',
