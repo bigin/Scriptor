@@ -1,28 +1,32 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); ?>
+<?php declare(strict_types=1); ?>
 <div class="summary-wrapper">
 	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
-			<a href="<?php echo $editor->siteUrl; ?>"><img alt="logo" width="200" src="<?php echo $editor->siteUrl; ?>/theme/images/logo.svg"></a>
+			<a href="<?php echo htmlspecialchars($editor->siteUrl, ENT_QUOTES); ?>"><img alt="logo" width="200" src="<?php echo htmlspecialchars($editor->siteUrl, ENT_QUOTES); ?>/theme/images/logo.svg"></a>
 		</div>
-		<?php if(isset($_SESSION['loggedin'])) { ?>
+<?php if ($editor->isLoggedIn()): ?>
 		<ul class="summary">
-			<?php if($editor->config['modules']) {
-				foreach($editor->config['modules'] as $slug => $module) {
-					if($module['active'] && in_array('sidebar', $module['display_type'])) {
-						?>
-						<li class="chapter<?php echo(($imanager->input->urlSegments->get(0) == $slug) ? ' active' : ''); ?>"
-							data-level="1.1" data-path="./">
-							<a href="<?php echo $editor->siteUrl.'/'.$slug; ?>/"><?php echo (isset($module['icon']) && !empty($module['icon'])) ? 
-								'<i class="'.$module['icon'].'"></i>' : ''; ?><span><?php echo (isset($editor->i18n[$module['menu']])) ? 
-								$editor->i18n[$module['menu']] : $module['menu']; ?></span></a>
-						</li>
-						<?php
-					}
-				}
-			?>
-			<?php } ?>
+<?php
+$activeSlug = $editor->urlSegments->first() ?? '';
+foreach ((array) ($editor->config['modules'] ?? []) as $slug => $module) {
+    if (
+        empty($module['active'])
+        || ! \is_array($module['display_type'] ?? null)
+        || ! \in_array('sidebar', $module['display_type'], true)
+    ) {
+        continue;
+    }
+    $href  = $editor->siteUrl . '/' . $slug . '/';
+    $label = $editor->i18n[$module['menu']] ?? (string) $module['menu'];
+    $icon  = (string) ($module['icon'] ?? '');
+    $cls   = 'chapter' . ($activeSlug === $slug ? ' active' : '');
+?>
+			<li class="<?= htmlspecialchars($cls, ENT_QUOTES) ?>" data-level="1.1" data-path="./">
+				<a href="<?= htmlspecialchars($href, ENT_QUOTES) ?>"><?= $icon !== '' ? '<i class="' . htmlspecialchars($icon, ENT_QUOTES) . '"></i>' : '' ?><span><?= htmlspecialchars($label, ENT_QUOTES) ?></span></a>
+			</li>
+<?php } ?>
 		</ul>
-		<?php } ?>
+<?php endif; ?>
 	</nav>
 </div>

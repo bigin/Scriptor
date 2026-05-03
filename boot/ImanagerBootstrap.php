@@ -26,6 +26,9 @@ use Imanager\Field\Types\TextFieldType;
 use Imanager\Files\FileStorage;
 use Imanager\Files\ImageProcessor;
 use Imanager\Files\LocalFileStorage;
+use Imanager\Http\Csrf;
+use Imanager\Http\NativeSessionStore;
+use Imanager\Http\SessionStore;
 use Imanager\Search\FullTextSearch;
 use Imanager\Storage\CategoryRepository;
 use Imanager\Storage\FieldRepository;
@@ -105,6 +108,11 @@ final class ImanagerBootstrap
 
         $container->addShared(ImageProcessor::class, static fn(): ImageProcessor
             => ImageProcessor::default());
+
+        $container->addShared(SessionStore::class, static fn(): SessionStore
+            => new NativeSessionStore('scriptor'));
+        $container->addShared(Csrf::class, static fn(): Csrf
+            => new Csrf($container->get(SessionStore::class), maxTokens: 10));
 
         $container->addShared(FieldTypeRegistry::class, static function () use ($container): FieldTypeRegistry {
             $registry = new FieldTypeRegistry();
