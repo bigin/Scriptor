@@ -151,6 +151,96 @@ final readonly class PageRepository
         return \count($this->items->query($query));
     }
 
+    /* ---------------------------------------------------------------- *
+     * Write operations
+     * ---------------------------------------------------------------- */
+
+    public function save(Item $item): Page
+    {
+        if ($item->categoryId !== $this->categoryId) {
+            throw new \InvalidArgumentException(\sprintf(
+                'Item belongs to category %d, expected %d (Pages)',
+                $item->categoryId,
+                $this->categoryId,
+            ));
+        }
+        return new Page($this->items->save($item));
+    }
+
+    public function delete(int $id): void
+    {
+        $page = $this->find($id);
+        if ($page === null) {
+            return; // already gone — idempotent
+        }
+        $this->items->delete($id);
+    }
+
+    /**
+     * Bulk-renumber pages in the given order. Each id's `position`
+     * becomes its (1-indexed) slot in the array. Pages absent from the
+     * id list keep their current position.
+     *
+     * @param list<int> $idsInOrder
+     */
+    public function renumber(array $idsInOrder): void
+    {
+        $position = 1;
+        foreach ($idsInOrder as $id) {
+            $item = $this->items->find($id);
+            if ($item === null || $item->categoryId !== $this->categoryId) {
+                continue;
+            }
+            if ($item->position === $position) {
+                $position++;
+                continue;
+            }
+            $this->items->save(new Item(
+                id:         $item->id,
+                categoryId: $item->categoryId,
+                name:       $item->name,
+                label:      $item->label,
+                position:   $position,
+                active:     $item->active,
+                data:       $item->data,
+                created:    $item->created,
+                updated:    $item->updated,
+            ));
+            $position++;
+        }
+    }
+
+    /**
+     * Returns true when another page already uses `$slug` under the same
+     * `$parentId`, ignoring `$exceptId` (so a page can keep its own slug
+     * on update). Lets PagesModule preflight a save before committing.
+     */
+    public function slugTaken(string $slug, int $parentId, ?int $exceptId = null): bool
+    {
+        $query = (new Query($this->categoryId))
+            ->where('slug', Operator::Eq, $slug)
+            ->where('parent', Operator::Eq, $parentId);
+        foreach ($this->items->query($query) as $item) {
+            if ($exceptId !== null && $item->id === $exceptId) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public function nextPosition(): int
+    {
+        $items = $this->items->findByCategory($this->categoryId);
+        $max = 0;
+        foreach ($items as $item) {
+            if ($item->position > $max) {
+                $max = $item->position;
+            }
+        }
+        return $max + 1;
+    }
+
     /**
      * Recursive walk that materialises a tree of pages keyed by parent id.
      * Replaces 1.x `Pages::getPageLevels()` for nav-style traversals.

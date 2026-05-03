@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Scriptor\Boot\Editor;
 
+use Imanager\Storage\CategoryRepository;
+use Imanager\Storage\ItemRepository;
 use League\Container\Container;
 use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
+use Scriptor\Boot\Editor\Pages\PagesModule;
+use Scriptor\Boot\Frontend\PageRepository;
 
 /**
  * Phase 14c-1 router: dispatches the editor URL to the right module.
@@ -28,7 +32,6 @@ use Scriptor\Boot\Editor\Auth\LoginAttempts;
 final class EditorRouter
 {
     private const PLACEHOLDER_MODULES = [
-        'pages'    => '14c-2',
         'profile'  => '14c-6',
         'settings' => '14c-4',
         'install'  => '14c-5',
@@ -58,6 +61,11 @@ final class EditorRouter
             return;
         }
 
+        if ($first === 'pages') {
+            $this->dispatchPages();
+            return;
+        }
+
         if (isset(self::PLACEHOLDER_MODULES[$first])) {
             $this->renderPlaceholder($first, self::PLACEHOLDER_MODULES[$first]);
             return;
@@ -66,13 +74,25 @@ final class EditorRouter
         $this->renderUnknownModule($first);
     }
 
+    private function dispatchPages(): void
+    {
+        $module = new PagesModule(
+            $this->editor,
+            new PageRepository(
+                $this->container->get(CategoryRepository::class),
+                $this->container->get(ItemRepository::class),
+            ),
+        );
+        $module->execute();
+    }
+
     private function dispatchAuth(): void
     {
         $auth = new AuthModule(
             $this->editor,
             new UserRepository(
-                $this->container->get(\Imanager\Storage\CategoryRepository::class),
-                $this->container->get(\Imanager\Storage\ItemRepository::class),
+                $this->container->get(CategoryRepository::class),
+                $this->container->get(ItemRepository::class),
             ),
             new LoginAttempts(
                 $this->editor->session,
