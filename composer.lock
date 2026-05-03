@@ -12,7 +12,7 @@
             "dist": {
                 "type": "path",
                 "url": "../imanager",
-                "reference": "1c28b7e0bd68be277c5e87f8bad61d67a0c10c96"
+                "reference": "d88b1e9d29c6995aedbf0eb52af0640e22521f2b"
             },
             "require": {
                 "erusev/parsedown": "^1.7",

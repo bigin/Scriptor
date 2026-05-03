@@ -131,5 +131,54 @@
         });
       });
     });
+
+    // Title-save buttons next to each modern file row: PATCHes the
+    // upload endpoint with the new caption. Status text appears
+    // briefly next to the input on success / failure.
+    document.querySelectorAll('.image-list__title-save').forEach(function (btn) {
+      btn.addEventListener('click', function (event) {
+        event.preventDefault();
+        var fileId = btn.dataset.fileId;
+        if (!fileId) { return; }
+
+        var item = btn.closest('.image-list__item');
+        if (!item) { return; }
+        var input = item.querySelector('.image-list__title-input');
+        var status = item.querySelector('.image-list__title-status');
+        if (!input) { return; }
+
+        var url      = input.dataset.patchUrl;
+        var csrfName = input.dataset.csrfName;
+        var csrfVal  = input.dataset.csrfValue;
+        if (!url) { return; }
+
+        var body = new URLSearchParams({
+          fileId: fileId,
+          title: input.value,
+          tokenName: csrfName || '',
+          tokenValue: csrfVal || ''
+        });
+        if (status) { status.textContent = 'saving…'; }
+
+        fetch(url, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          credentials: 'same-origin',
+          body: body.toString()
+        }).then(function (res) {
+          if (res.ok) {
+            if (status) {
+              status.textContent = 'saved';
+              setTimeout(function () { status.textContent = ''; }, 1500);
+            }
+          } else {
+            res.text().then(function (text) {
+              if (status) { status.textContent = 'failed'; }
+              console.error('Title save failed:', text);
+            });
+          }
+        });
+      });
+    });
   });
 })();

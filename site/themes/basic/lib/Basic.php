@@ -410,7 +410,7 @@ class BasicTheme extends Site
                         // ImageUrlBuilder rewrites `data/uploads/` legacy
                         // prefixes only, so prepend the 2.0 root explicitly.
                         'path'     => 'data/uploads-2.0/' . \dirname($first->path) . '/',
-                        'title'    => '',
+                        'title'    => $first->title,
                         'position' => $first->position,
                     ];
                 }
