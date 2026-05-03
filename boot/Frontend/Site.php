@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Frontend;
 
 use Imanager\Cache\FilesystemCache;
+use Imanager\Files\FileStorage;
 use Imanager\Files\ImageProcessor;
 use Imanager\Http\Request;
 use Imanager\Http\UrlSegments;
+use Imanager\Storage\FileRepository;
 use Imanager\Templating\TemplateRenderer;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
@@ -42,6 +44,8 @@ class Site
     public TemplateRenderer $templateParser;
     public FilesystemCache $cache;
     public ImageUrlBuilder $images;
+    public FileRepository $files;
+    public FileStorage $fileStorage;
 
     /** @var array<string, mixed> */
     public array $config;
@@ -89,6 +93,8 @@ class Site
             $container->get(\Imanager\Storage\ItemRepository::class),
         );
         $this->cache = $container->get(FilesystemCache::class);
+        $this->files = $container->get(FileRepository::class);
+        $this->fileStorage = $container->get(FileStorage::class);
         $this->images = new ImageUrlBuilder(
             $container->get(ImageProcessor::class),
             $scriptorRoot,
