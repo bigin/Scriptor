@@ -22,27 +22,25 @@ use Scriptor\Boot\Editor\Settings\SettingsModule;
 use Scriptor\Boot\Frontend\PageRepository;
 
 /**
- * Phase 14c-1 router: dispatches the editor URL to the right module.
+ * Editor URL router — dispatches to the right module.
  *
- * Active modules:
- *   - auth (login/logout) — built on iManager 2.0 Csrf + Request +
- *     SessionStore + PasswordFieldType-hashed credentials.
- *
- * Anything else (pages/users/settings/install/profile) returns a
- * placeholder page until its sub-phase ships. The placeholder is
- * intentional: the editor stays reachable end-to-end on this branch
- * for smoke-testing the auth flow without 1.x fallbacks.
+ * Modules:
+ *   - auth      login / logout (CSRF + bcrypt password verification)
+ *   - pages     page list + edit (FilePond uploads, Markdown preview)
+ *   - profile   logged-in user edits their own record
+ *   - settings  read-only "edit data/settings/*.php manually" page
+ *   - install   discover / install / uninstall site/modules/* plugins
+ *   - api       JSON endpoints (/editor/api/upload — POST/PATCH/DELETE)
  *
  * Auth gating:
- *   - the auth module itself is always reachable (anonymous login form);
- *   - everything else requires `$editor->isLoggedIn()` and 302's to
- *     /editor/auth/ otherwise.
+ *   - `auth/*` is always reachable (anonymous login form);
+ *   - `api/*` returns 401 JSON for anonymous callers;
+ *   - everything else 302's to `/editor/auth/` until logged in.
+ *
+ * Unknown module slugs return a 404 page through {@see renderUnknownModule()}.
  */
 final class EditorRouter
 {
-    /** @var array<string, string> Module slug → "phase pending" placeholder map. */
-    private const PLACEHOLDER_MODULES = [];
-
     public function __construct(
         private readonly Editor $editor,
         private readonly Container $container,
@@ -93,11 +91,6 @@ final class EditorRouter
 
         if ($first === 'install') {
             (new InstallModule($this->editor, dirname(__DIR__, 2)))->execute();
-            return;
-        }
-
-        if (isset(self::PLACEHOLDER_MODULES[$first])) {
-            $this->renderPlaceholder($first, self::PLACEHOLDER_MODULES[$first]);
             return;
         }
 
@@ -176,17 +169,7 @@ final class EditorRouter
         $this->editor->pageTitle = 'Dashboard - Scriptor';
         $this->editor->pageContent =
             '<h1>' . htmlspecialchars($this->editor->i18n['dashboard_menu'] ?? 'Dashboard', \ENT_QUOTES) . '</h1>'
-            . '<p>iManager 2.0 editor — pick a module from the sidebar.</p>'
-            . $this->placeholderModuleList();
-    }
-
-    private function renderPlaceholder(string $module, string $phase): void
-    {
-        $this->editor->pageTitle = ucfirst($module) . ' (coming soon) - Scriptor';
-        $this->editor->pageContent =
-            '<h1>' . htmlspecialchars(ucfirst($module), \ENT_QUOTES) . '</h1>'
-            . '<p>The <strong>' . htmlspecialchars($module, \ENT_QUOTES) . '</strong> module '
-            . 'will be reattached in phase <code>' . htmlspecialchars($phase, \ENT_QUOTES) . '</code>.</p>';
+            . '<p>Pick a module from the sidebar to start editing.</p>';
     }
 
     private function renderUnknownModule(string $module): void
@@ -196,22 +179,6 @@ final class EditorRouter
         $this->editor->pageContent =
             '<h1>404</h1>'
             . '<p>Module <code>' . htmlspecialchars($module, \ENT_QUOTES) . '</code> is not available.</p>';
-    }
-
-    private function placeholderModuleList(): string
-    {
-        if (self::PLACEHOLDER_MODULES === []) {
-            return '';
-        }
-        $items = '';
-        foreach (self::PLACEHOLDER_MODULES as $slug => $phase) {
-            $items .= \sprintf(
-                '<li><code>%s</code> — %s</li>',
-                htmlspecialchars($slug, \ENT_QUOTES),
-                htmlspecialchars($phase, \ENT_QUOTES),
-            );
-        }
-        return '<h2>Pending sub-phases</h2><ul>' . $items . '</ul>';
     }
 
     private function redirect(string $url): never
