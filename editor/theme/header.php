@@ -1,6 +1,9 @@
-<?php defined('IS_IM') or die('You cannot access this page directly');
+<?php declare(strict_types=1);
 
-if(isset($_SESSION['loggedin'])) { ?>
+if (! $editor->isLoggedIn()) {
+    return;
+}
+?>
 <header class="arounder">
 	<ul class="guillotine">
 		<li><a id="trigger" href="#"><span class="gg-menu"></span></a></li>
@@ -9,18 +12,23 @@ if(isset($_SESSION['loggedin'])) { ?>
 		<?php echo $editor->getProperty('breadcrumbs'); ?>
 	</ul>
 	<ul class="profile">
-	<?php if($editor->config['modules']) {
-		foreach($editor->config['modules'] as $slug => $module) {
-			if($module['active'] && in_array('profile', $module['display_type'])) { ?><li<?php 
-			echo(($imanager->input->urlSegments->get(0) == $slug) ? ' class="active" ' : '');
-				?>><a href="<?php echo $editor->siteUrl.'/'.$slug.'/'.(($module['menu'] == 'logout_menu') ?
-					'logout/'.$editor->csrf->renderUrl() : ''); ?>"><i class="<?php echo $module['icon'] ?>"></i><span><?php
-						echo (isset($editor->i18n[$module['menu']])) ? $editor->i18n[$module['menu']] : $module['menu'];
-						?></span></a></li>
-		<?php	}
-			}
-		}
-		?>
+<?php
+$activeSlug = $editor->urlSegments->first() ?? '';
+foreach ((array) ($editor->config['modules'] ?? []) as $slug => $module) {
+    if (
+        empty($module['active'])
+        || ! \is_array($module['display_type'] ?? null)
+        || ! \in_array('profile', $module['display_type'], true)
+    ) {
+        continue;
+    }
+    $isLogout = ($module['menu'] ?? '') === 'logout_menu';
+    $href = $editor->siteUrl . '/' . $slug . '/' . ($isLogout ? 'logout/' . $editor->csrfQueryString() : '');
+    $label = $editor->i18n[$module['menu']] ?? (string) $module['menu'];
+    $icon  = (string) ($module['icon'] ?? '');
+    $cls   = $activeSlug === $slug ? ' class="active"' : '';
+?>
+		<li<?= $cls ?>><a href="<?= htmlspecialchars($href, ENT_QUOTES) ?>"><i class="<?= htmlspecialchars($icon, ENT_QUOTES) ?>"></i><span><?= htmlspecialchars($label, ENT_QUOTES) ?></span></a></li>
+<?php } ?>
 	</ul>
 </header>
-<?php } ?>

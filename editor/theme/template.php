@@ -1,4 +1,7 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); ?>
+<?php
+declare(strict_types=1);
+isset($editor) or die('You cannot access this page directly');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,8 +35,7 @@
 	</div>
 	<footer role="contentinfo">
 		<div>
-			<a href="https://scriptor-cms.info">Scriptor</a> <?php echo
-				Scriptor\Core\Scriptor::VERSION; ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
+			<a href="https://scriptor-cms.info">Scriptor</a> <?php echo htmlspecialchars($editor->version, ENT_QUOTES); ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 		</div>
 	</footer>
 </main>
