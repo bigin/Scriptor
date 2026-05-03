@@ -9,6 +9,7 @@ use Imanager\Storage\ItemRepository;
 use League\Container\Container;
 use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
+use Scriptor\Boot\Editor\Install\InstallModule;
 use Scriptor\Boot\Editor\Pages\PagesModule;
 use Scriptor\Boot\Editor\Profile\ProfileModule;
 use Scriptor\Boot\Editor\Settings\SettingsModule;
@@ -33,9 +34,8 @@ use Scriptor\Boot\Frontend\PageRepository;
  */
 final class EditorRouter
 {
-    private const PLACEHOLDER_MODULES = [
-        'install'  => '14c-5',
-    ];
+    /** @var array<string, string> Module slug → "phase pending" placeholder map. */
+    private const PLACEHOLDER_MODULES = [];
 
     public function __construct(
         private readonly Editor $editor,
@@ -72,6 +72,11 @@ final class EditorRouter
 
         if ($first === 'settings') {
             (new SettingsModule($this->editor))->execute();
+            return;
+        }
+
+        if ($first === 'install') {
+            (new InstallModule($this->editor, dirname(__DIR__, 2)))->execute();
             return;
         }
 
@@ -129,8 +134,7 @@ final class EditorRouter
         $this->editor->pageTitle = 'Dashboard - Scriptor';
         $this->editor->pageContent =
             '<h1>' . htmlspecialchars($this->editor->i18n['dashboard_menu'] ?? 'Dashboard', \ENT_QUOTES) . '</h1>'
-            . '<p>iManager 2.0 editor — Phase 14c-1 (auth) is live. '
-            . 'Other admin modules come back online with their own sub-phase.</p>'
+            . '<p>iManager 2.0 editor — pick a module from the sidebar.</p>'
             . $this->placeholderModuleList();
     }
 
@@ -140,8 +144,7 @@ final class EditorRouter
         $this->editor->pageContent =
             '<h1>' . htmlspecialchars(ucfirst($module), \ENT_QUOTES) . '</h1>'
             . '<p>The <strong>' . htmlspecialchars($module, \ENT_QUOTES) . '</strong> module '
-            . 'will be reattached in phase <code>' . htmlspecialchars($phase, \ENT_QUOTES) . '</code>.</p>'
-            . $this->placeholderModuleList();
+            . 'will be reattached in phase <code>' . htmlspecialchars($phase, \ENT_QUOTES) . '</code>.</p>';
     }
 
     private function renderUnknownModule(string $module): void
@@ -155,6 +158,9 @@ final class EditorRouter
 
     private function placeholderModuleList(): string
     {
+        if (self::PLACEHOLDER_MODULES === []) {
+            return '';
+        }
         $items = '';
         foreach (self::PLACEHOLDER_MODULES as $slug => $phase) {
             $items .= \sprintf(
@@ -163,7 +169,7 @@ final class EditorRouter
                 htmlspecialchars($phase, \ENT_QUOTES),
             );
         }
-        return '<h2>Phase 14c roadmap</h2><ul>' . $items . '</ul>';
+        return '<h2>Pending sub-phases</h2><ul>' . $items . '</ul>';
     }
 
     private function redirect(string $url): never
