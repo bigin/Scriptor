@@ -72,9 +72,12 @@ final class UploadEndpoint
             $this->error(400, 'itemId and fieldId are required (>= 1)');
         }
 
-        $entry = $this->editor->input->file('file');
+        // Accept either the explicit `file` field we tell FilePond to use
+        // or its default `filepond` field name, so cURL smokes and other
+        // multipart clients keep working without configuration.
+        $entry = $this->editor->input->file('file') ?? $this->editor->input->file('filepond');
         if ($entry === null) {
-            $this->error(400, 'No `file` field on the upload');
+            $this->error(400, 'Upload missing `file` (or `filepond`) field');
         }
 
         try {
