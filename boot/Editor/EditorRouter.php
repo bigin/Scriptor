@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace Scriptor\Boot\Editor;
 
+use Imanager\Files\FileStorage;
+use Imanager\Files\ImageProcessor;
 use Imanager\Storage\CategoryRepository;
+use Imanager\Storage\FileRepository;
 use Imanager\Storage\ItemRepository;
+use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
+use Scriptor\Boot\Editor\Api\UploadEndpoint;
 use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
 use Scriptor\Boot\Editor\Install\InstallModule;
@@ -52,7 +57,17 @@ final class EditorRouter
         }
 
         if (! $this->editor->isLoggedIn()) {
+            // JSON endpoints get a 401 instead of a 302 so XHR callers
+            // (FilePond, future SPA bits) can react to it cleanly.
+            if ($first === 'api') {
+                $this->jsonError(401, 'Authentication required');
+            }
             $this->redirect($this->editor->siteUrl . '/auth/');
+        }
+
+        if ($first === 'api') {
+            $this->dispatchApi();
+            return;
         }
 
         if ($first === null) {
@@ -110,6 +125,30 @@ final class EditorRouter
             ),
         );
         $module->execute();
+    }
+
+    private function dispatchApi(): void
+    {
+        $resource = $this->editor->urlSegments->get(1);
+        if ($resource !== 'upload') {
+            $this->jsonError(404, 'Unknown api resource');
+        }
+        $endpoint = new UploadEndpoint(
+            $this->editor,
+            $this->container->get(FileRepository::class),
+            $this->container->get(FileStorage::class),
+            $this->container->get(ImanagerSanitizer::class),
+            $this->container->get(ImageProcessor::class),
+        );
+        $endpoint->handle($_SERVER['REQUEST_METHOD'] ?? 'GET');
+    }
+
+    private function jsonError(int $status, string $message): never
+    {
+        http_response_code($status);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['error' => $message]);
+        exit;
     }
 
     private function dispatchAuth(): void
