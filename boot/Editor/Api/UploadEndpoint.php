@@ -14,6 +14,7 @@ use Imanager\Files\UploadHandler;
 use Imanager\Storage\FileRepository;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Files\DirectoryCleanup;
 
 /**
  * Phase 14d-1 upload endpoint — JSON API mounted at `/editor/api/upload`,
@@ -166,18 +167,7 @@ final class UploadEndpoint
             $this->json(200, ['status' => 'gone']);
         }
 
-        // Best-effort cleanup of the matching thumbnail next door.
-        $thumbDir = \dirname($file->path) . '/thumbnail';
-        if ($this->storage->exists($thumbDir)) {
-            // No bulk-delete on FileStorage; tolerate missing matches.
-            foreach (['300x300', '600x600', '1200x0', '800x350'] as $size) {
-                $thumb = $thumbDir . '/' . $size . '_' . $file->name;
-                if ($this->storage->exists($thumb)) {
-                    $this->storage->delete($thumb);
-                }
-            }
-        }
-        $this->storage->delete($file->path);
+        DirectoryCleanup::purge($this->storage, $file->path);
         $this->files->delete($fileId);
         $this->json(200, ['status' => 'ok']);
     }
