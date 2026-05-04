@@ -76,6 +76,11 @@
         name: 'file',
         allowMultiple: true,
         instantUpload: !deferred,
+        // In deferred mode the per-file process button would post the
+        // upload against itemId=0 and the server would 400 — kill it.
+        // The X (remove-from-staging) button stays so users can take a
+        // file back out before submitting the form.
+        allowProcess: !deferred,
         acceptedFileTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
         maxFileSize: '8MB',
         labelIdle: 'Drop images here or <span class="filepond--label-action">Browse</span>',
