@@ -120,13 +120,6 @@ $config = [
 	'maxConfigBackupFiles' => 5,
 
 	/**
-	 * Enable HTML tags in page content output.
-	 * 
-	 * @var bool
-	 */
-	'allowHtmlOutput' => false,
-
-	/**
 	 * Array with reserved slugs.
 	 * 
 	 * @var array 

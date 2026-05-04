@@ -123,12 +123,11 @@ final class PagesModule
             ? $this->editor->sanitizer->text(str_replace('"', '', $menuTitleRaw))
             : $name;
 
-        $contentRaw = $this->editor->input->postString('content');
-        if ($contentRaw === '') {
+        $content = $this->editor->input->postString('content');
+        if ($content === '') {
             $this->editor->addMsg('error', $this->t('error_page_content') ?: 'Page content is required.');
             return;
         }
-        $content = htmlentities($contentRaw);
 
         $template = $this->editor->sanitizer->templateName($this->editor->input->postString('template'));
         $active   = $this->editor->input->postString('published') !== '';
@@ -233,7 +232,7 @@ final class PagesModule
     private function markdownPreviewAction(): void
     {
         $rendered = $this->editor->sanitizer->markdown(
-            htmlspecialchars_decode($this->editor->input->postString('content')),
+            $this->editor->input->postString('content'),
         );
         $this->jsonResponse(['status' => 1, 'text' => $rendered]);
     }

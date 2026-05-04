@@ -316,16 +316,12 @@ class Site
         if ($this->page === null) {
             return '';
         }
-        $content = $this->page->content;
-        $allowHtml = (bool) ($this->config['allowHtmlOutput'] ?? false);
-        // Markdown rendering through iManager's Sanitizer (Parsedown +
-        // optional HTMLPurifier). When allowHtmlOutput is true the input
-        // may already contain raw HTML; either way Parsedown runs and
-        // safe-mode strips dangerous tags on entry when html is disabled.
-        $rendered = $this->sanitizer->markdown(
-            $allowHtml ? $content : htmlspecialchars_decode($content),
-        );
-        return $rendered;
+        // Page content is stored as raw Markdown. Parsedown safe-mode
+        // escapes embedded HTML and rewrites non-whitelisted URL schemes
+        // (no `javascript:` etc.). A future plugin that introduces an
+        // alternative content format should dispatch on a per-page
+        // marker rather than reinstating a global flag here.
+        return $this->sanitizer->markdown($this->page->content);
     }
 
     protected function renderNavigation(): string
