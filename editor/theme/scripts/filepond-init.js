@@ -61,6 +61,12 @@
         return;
       }
 
+      // Capture the parent <form> *before* FilePond.create() runs.
+      // FilePond replaces the original <input> with its own root element
+      // and detaches the input node, which would make a later
+      // `input.closest('form')` return null.
+      var form = input.closest('form');
+
       var deferred = (widget.itemId === '0');
 
       var pond = FilePond.create(input, {
@@ -114,8 +120,8 @@
         }
       });
 
-      if (deferred) {
-        attachDeferredSubmit(input, pond, widget);
+      if (deferred && form) {
+        attachDeferredSubmit(form, pond, widget);
       }
     });
 
@@ -160,15 +166,18 @@
    * If FilePond has no files staged we fall through to the normal
    * synchronous form submit — there is nothing to coordinate.
    */
-  function attachDeferredSubmit(input, pond, widget) {
-    var form = input.closest('form');
-    if (!form) { return; }
-
+  function attachDeferredSubmit(form, pond, widget) {
     form.addEventListener('submit', function (event) {
       if (pond.getFiles().length === 0) { return; }
       event.preventDefault();
 
+      // FilePond's internal `<input class="filepond--browser" name="file">`
+      // is inside the form, so a naive `new FormData(form)` would attach
+      // the staged file under `file` and resend it with every retry. We
+      // upload via processFiles() afterwards, so strip the field here.
       var formData = new FormData(form);
+      formData.delete('file');
+
       var redirect = null;
 
       fetch(form.action || window.location.href, {
