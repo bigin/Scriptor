@@ -14,6 +14,7 @@ use Imanager\Files\UploadHandler;
 use Imanager\Storage\FileRepository;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Files\DirectoryCleanup;
 
 /**
  * Phase 14d-1 upload endpoint — JSON API mounted at `/editor/api/upload`,
@@ -38,6 +39,9 @@ use Scriptor\Boot\Editor\Editor;
  *            tokenName, tokenValue
  *          Response 200: {"status": "ok"}
  *
+ * Captions / titles do not have an endpoint here: they live on the
+ * page form and travel with the page-save POST as `image_titles[<id>]`.
+ *
  * Auth gate sits one level up in EditorRouter (anonymous requests get
  * 302'd to /editor/auth/ before reaching here). CSRF is enforced
  * locally for both verbs because FilePond posts JSON-friendly form
@@ -57,7 +61,6 @@ final class UploadEndpoint
     {
         match (strtoupper($method)) {
             'POST'   => $this->handlePost(),
-            'PATCH'  => $this->handlePatch(),
             'DELETE' => $this->handleDelete(),
             default  => $this->error(405, 'Method not allowed'),
         };
@@ -137,40 +140,6 @@ final class UploadEndpoint
         return $thumbRel;
     }
 
-    /**
-     * Update the title (caption / alt text) of an existing file row.
-     * Body fields (form-urlencoded; PHP doesn't populate `$_POST` for
-     * PATCH so the body is parsed via {@see parseBody()}):
-     *
-     *   fileId      file id to update
-     *   title       new title; empty string clears the caption
-     *   tokenName, tokenValue
-     *
-     * Returns 200 `{"status":"ok","title":"..."}` on success,
-     * 404 when the file id is unknown, 400 on bad input.
-     */
-    private function handlePatch(): never
-    {
-        $body = self::parseBody();
-        $token  = (string) ($body['tokenName']  ?? $this->editor->input->getString('tokenName'));
-        $tokenV = (string) ($body['tokenValue'] ?? $this->editor->input->getString('tokenValue'));
-        $this->assertCsrf($token, $tokenV);
-
-        $fileId = isset($body['fileId']) ? (int) $body['fileId'] : 0;
-        if ($fileId < 1) {
-            $this->error(400, 'fileId is required');
-        }
-        $title = isset($body['title']) ? (string) $body['title'] : '';
-
-        $file = $this->files->find($fileId);
-        if ($file === null) {
-            $this->error(404, 'File not found');
-        }
-
-        $updated = $this->files->save($file->withTitle($title));
-        $this->json(200, ['status' => 'ok', 'title' => $updated->title]);
-    }
-
     private function handleDelete(): never
     {
         // PHP doesn't populate $_POST for DELETE bodies, so parse the
@@ -198,18 +167,7 @@ final class UploadEndpoint
             $this->json(200, ['status' => 'gone']);
         }
 
-        // Best-effort cleanup of the matching thumbnail next door.
-        $thumbDir = \dirname($file->path) . '/thumbnail';
-        if ($this->storage->exists($thumbDir)) {
-            // No bulk-delete on FileStorage; tolerate missing matches.
-            foreach (['300x300', '600x600', '1200x0', '800x350'] as $size) {
-                $thumb = $thumbDir . '/' . $size . '_' . $file->name;
-                if ($this->storage->exists($thumb)) {
-                    $this->storage->delete($thumb);
-                }
-            }
-        }
-        $this->storage->delete($file->path);
+        DirectoryCleanup::purge($this->storage, $file->path);
         $this->files->delete($fileId);
         $this->json(200, ['status' => 'ok']);
     }

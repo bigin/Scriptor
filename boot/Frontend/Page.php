@@ -26,8 +26,6 @@ final readonly class Page
     public string $menu_title;
     public string $content;
     public int $parent;
-    /** @var list<array<string, mixed>> */
-    public array $images;
 
     public function __construct(
         public Item $item,
@@ -40,9 +38,6 @@ final readonly class Page
         $this->menu_title = self::str($data->get('menu_title'));
         $this->content    = self::str($data->get('content'));
         $this->parent     = (int) ($data->get('parent') ?? 0);
-
-        $rawImages = $data->get('images');
-        $this->images = \is_array($rawImages) ? array_values($rawImages) : [];
     }
 
     public function id(): ?int

@@ -80,14 +80,20 @@ final class PagesModule
 
     private function saveAction(): void
     {
+        // The new-page flow JS sets X-Requested-With when it has FilePond
+        // files staged: it needs the new page id back as JSON so it can
+        // upload each staged file against /editor/api/upload before
+        // navigating to the redirect URL.
+        $isXhr = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest';
+
         if (! $this->csrfPasses($this->editor->input->postString('tokenName'), $this->editor->input->postString('tokenValue'))) {
-            $this->editor->addMsg('error', $this->t('error_csrf_token_mismatch'));
+            $this->saveError($isXhr, $this->t('error_csrf_token_mismatch'));
             return;
         }
 
         $name = $this->editor->sanitizer->text(str_replace('"', '', $this->editor->input->postString('name')));
         if ($name === '') {
-            $this->editor->addMsg('error', $this->t('error_page_title') ?: 'A page name is required.');
+            $this->saveError($isXhr, $this->t('error_page_title') ?: 'A page name is required.');
             return;
         }
 
@@ -95,11 +101,11 @@ final class PagesModule
         $slugSource = $rawSlug !== '' ? $rawSlug : $name;
         $slug = preg_replace('/(-)\1+/', '$1', $this->editor->sanitizer->slug($slugSource)) ?? '';
         if ($slug === '') {
-            $this->editor->addMsg('error', $this->t('error_page_name') ?: 'Page slug could not be derived.');
+            $this->saveError($isXhr, $this->t('error_page_name') ?: 'Page slug could not be derived.');
             return;
         }
         if (\in_array($slug, $this->reservedSlugs, true)) {
-            $this->editor->addMsg('error', $this->t('error_slug_reserved') ?: 'Slug is reserved.');
+            $this->saveError($isXhr, $this->t('error_slug_reserved') ?: 'Slug is reserved.');
             return;
         }
 
@@ -114,7 +120,7 @@ final class PagesModule
         }
 
         if ($this->pages->slugTaken($slug, $parentId, $existing?->id())) {
-            $this->editor->addMsg('error', $this->t('error_page_title_exists') ?: 'A page with that slug already exists under this parent.');
+            $this->saveError($isXhr, $this->t('error_page_title_exists') ?: 'A page with that slug already exists under this parent.');
             return;
         }
 
@@ -125,15 +131,13 @@ final class PagesModule
 
         $content = $this->editor->input->postString('content');
         if ($content === '') {
-            $this->editor->addMsg('error', $this->t('error_page_content') ?: 'Page content is required.');
+            $this->saveError($isXhr, $this->t('error_page_content') ?: 'Page content is required.');
             return;
         }
 
         $template = $this->editor->sanitizer->templateName($this->editor->input->postString('template'));
         $active   = $this->editor->input->postString('published') !== '';
 
-        // Rebuild the data bag from the existing page so we don't drop
-        // image entries the legacy widget previously stored.
         $data = $existing !== null ? $this->existingDataMap($existing) : [];
         $data['slug']       = $slug;
         $data['parent']     = $parentId;
@@ -141,24 +145,6 @@ final class PagesModule
         $data['content']    = $content;
         $data['template']   = $template;
         $data['pagetype']   = $data['pagetype'] ?? '1';
-
-        // Legacy image titles: PagesModule::renderLegacyImageRow emits an
-        // input named `legacy_image_titles[<index>]` per migrated image
-        // entry. Splice each posted value back into the matching slot in
-        // data.images so the page-save persists caption edits without
-        // touching anything else on the entry.
-        $rawTitles = $this->editor->input->post('legacy_image_titles');
-        if (\is_array($rawTitles) && isset($data['images']) && \is_array($data['images'])) {
-            $images = $data['images'];
-            foreach ($rawTitles as $index => $title) {
-                $idx = (int) $index;
-                if (! isset($images[$idx]) || ! \is_array($images[$idx])) {
-                    continue;
-                }
-                $images[$idx]['title'] = (string) $title;
-            }
-            $data['images'] = $images;
-        }
 
         $now = time();
         $item = new Item(
@@ -176,12 +162,99 @@ final class PagesModule
         try {
             $saved = $this->pages->save($item);
         } catch (\Throwable $e) {
-            $this->editor->addMsg('error', $this->t('error_saving_page') ?: 'Saving failed: ' . $e->getMessage());
+            $this->saveError($isXhr, $this->t('error_saving_page') ?: 'Saving failed: ' . $e->getMessage());
             return;
         }
 
+        // Image titles travel with the page form (one input per file row,
+        // name="image_titles[<fileId>]"). Apply each title onto the
+        // matching FileRepository row, scoped to this page's files so a
+        // tampered POST can't relabel files of another item.
+        $this->applyImageMetadata((int) $saved->id());
+
+        $redirect = $this->editor->siteUrl . '/pages/edit/?page=' . $saved->id();
+
+        if ($isXhr) {
+            // Skip flash so the JSON consumer doesn't strand a leftover
+            // success message on the next non-XHR navigation.
+            $this->jsonResponse([
+                'status'   => 'ok',
+                'pageId'   => (int) $saved->id(),
+                'redirect' => $redirect,
+            ]);
+        }
+
         $this->editor->flashMsg('success', $this->t('successful_saved_page') ?: 'Page saved.');
-        $this->redirect($this->editor->siteUrl . '/pages/edit/?page=' . $saved->id());
+        $this->redirect($redirect);
+    }
+
+    /**
+     * Persist `image_titles[<fileId>]` and `image_positions[<fileId>]`
+     * posted alongside the page form. Only files owned by `$pageId`
+     * are eligible — defensive scoping against forged ids.
+     */
+    private function applyImageMetadata(int $pageId): void
+    {
+        if ($pageId < 1) {
+            return;
+        }
+        $titles    = $this->editor->input->post('image_titles');
+        $positions = $this->editor->input->post('image_positions');
+        $hasTitles    = \is_array($titles) && $titles !== [];
+        $hasPositions = \is_array($positions) && $positions !== [];
+        if (! $hasTitles && ! $hasPositions) {
+            return;
+        }
+
+        $field = $this->fields->findByName($this->pages->categoryId, 'images');
+        if ($field === null || $field->id === null) {
+            return;
+        }
+
+        $owned = [];
+        foreach ($this->files->findByItemAndField($pageId, (int) $field->id) as $file) {
+            if ($file->id !== null) {
+                $owned[$file->id] = $file;
+            }
+        }
+
+        if ($hasTitles) {
+            foreach ($titles as $rawId => $rawTitle) {
+                $fileId = (int) $rawId;
+                $file   = $owned[$fileId] ?? null;
+                if ($file === null) {
+                    continue;
+                }
+                $title = (string) $rawTitle;
+                if ($file->title === $title) {
+                    continue;
+                }
+                $owned[$fileId] = $this->files->save($file->withTitle($title));
+            }
+        }
+
+        if ($hasPositions) {
+            foreach ($positions as $rawId => $rawPos) {
+                $fileId = (int) $rawId;
+                $file   = $owned[$fileId] ?? null;
+                if ($file === null) {
+                    continue;
+                }
+                $position = (int) $rawPos;
+                if ($file->position === $position) {
+                    continue;
+                }
+                $owned[$fileId] = $this->files->save($file->withPosition($position));
+            }
+        }
+    }
+
+    private function saveError(bool $isXhr, string $message): void
+    {
+        if ($isXhr) {
+            $this->jsonResponse(['status' => 'error', 'error' => $message], 400);
+        }
+        $this->editor->addMsg('error', $message);
     }
 
     private function deleteAction(): void
@@ -339,15 +412,7 @@ final class PagesModule
             ? '<p class="info-text i-wrapp"><i class="gg-danger"></i>' . $info . '</p>'
             : '';
 
-        // Edit existing page → wire FilePond against the upload endpoint.
-        // New page → can't wire an upload (UploadHandler requires itemId>=1).
-        if ($page === null || $page->id() === null) {
-            return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
-                . '<p class="info-text"><em>Save the page first to enable image upload.</em></p></div>';
-        }
-
-        $itemId  = (int) $page->id();
-        $field   = $this->fields->findByName($this->pages->categoryId, 'images');
+        $field = $this->fields->findByName($this->pages->categoryId, 'images');
         if ($field === null || $field->id === null) {
             return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
                 . '<p class="info-text"><em>The Pages category has no <code>images</code> field — nothing to render.</em></p></div>';
@@ -355,36 +420,22 @@ final class PagesModule
         $fieldId = (int) $field->id;
         $token   = $this->editor->csrf->token('pages');
 
-        $files = $this->files->findByItemAndField($itemId, $fieldId);
-        $legacy = $page->images;
-
+        // itemId 0 = new page; the JS picks deferred mode and uploads
+        // each staged file only after the page-save XHR returns the
+        // fresh page id.
+        $itemId = $page?->id() ?? 0;
         $existingRows = '';
-        foreach ($files as $file) {
-            $existingRows .= $this->renderUploadedFileRow($file);
-        }
-        $legacyRows = '';
-        foreach ($legacy as $index => $img) {
-            if (! \is_array($img)) {
-                continue;
+        if ($itemId > 0) {
+            $rowIndex = 0;
+            foreach ($this->files->findByItemAndField($itemId, $fieldId) as $file) {
+                $existingRows .= $this->renderUploadedFileRow($file, $rowIndex);
+                $rowIndex++;
             }
-            $legacyRows .= $this->renderLegacyImageRow($img, (int) $index);
         }
-
         $existingBlock = $existingRows !== ''
             ? '<ul class="image-list image-list--uploaded">' . $existingRows . '</ul>'
             : '';
-        $legacyCount = substr_count($legacyRows, '<li ');
-        $legacyBlock = $legacyRows !== ''
-            ? '<details><summary>Migrated 1.x images on this page (' . $legacyCount . ')'
-                . ' — uploads above replace them on the frontend</summary>'
-                . '<ul class="image-list image-list--legacy">' . $legacyRows . '</ul></details>'
-            : '';
 
-        // FilePond container + the metadata bag the init script needs.
-        // The script reads `data-*` attributes off this element, posts
-        // multipart uploads to the API, and stuffs the new fileId into a
-        // hidden input so the page form can render the up-to-date set
-        // after a redirect.
         $pondId = 'filepond-images-' . $itemId;
         $widget = sprintf(
             '<input type="file" id="%s" class="filepond" data-itemid="%d" data-fieldid="%d" data-csrf-name="pages" data-csrf-value="%s" data-upload-url="%s" multiple>',
@@ -400,65 +451,10 @@ final class PagesModule
             . $infoBlock
             . $existingBlock
             . $widget
-            . $legacyBlock
             . '</div>';
     }
 
-    /**
-     * Renders a row for a migrated 1.x image entry (lives inside the
-     * item's `data.images` JSON array, not in the files table). The
-     * legacy `path` field points at `data/uploads/<itemDir>/`; the
-     * migrator copied the assets to `data/uploads-2.0/<itemDir>/`,
-     * so we rewrite the prefix here so the inline preview resolves.
-     *
-     * Display-only: editing/deleting these entries belongs to a
-     * follow-up sub-phase. Uploads above replace the legacy entry on
-     * the public site (BasicTheme::headlineImage).
-     *
-     * @param array<string, mixed> $img
-     */
-    private function renderLegacyImageRow(array $img, int $index): string
-    {
-        $name  = (string) ($img['name']  ?? '');
-        $title = (string) ($img['title'] ?? '');
-        $path  = (string) ($img['path']  ?? '');
-        if ($name === '' || $path === '') {
-            return '';
-        }
-
-        // Map legacy `data/uploads/...` prefix onto the post-migration
-        // root; foreign / already-modern paths pass through untouched.
-        $clean = '/' . ltrim($path, '/');
-        $clean = preg_replace('#^/data/uploads/#', '/data/uploads-2.0/', $clean) ?? $clean;
-        if (! str_ends_with($clean, '/')) {
-            $clean .= '/';
-        }
-        $assetUrl = $clean . $name;
-
-        $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
-
-        // Legacy titles persist back via the form's save-page action:
-        // the input's name encodes the array index so saveAction() can
-        // splice the new value into Item.data.images[$index].title.
-        $inputName = 'legacy_image_titles[' . $index . ']';
-
-        return '<li class="image-list__item image-list__item--legacy">'
-            . '<a href="' . $i($assetUrl) . '" target="_blank">'
-            . '<img src="' . $i($assetUrl) . '" alt="' . $i($name) . '" loading="lazy" width="120" height="120">'
-            . '</a>'
-            . ' <div class="image-list__meta">'
-                . '<code>' . $i($name) . '</code>'
-                . '<div class="image-list__title-edit">'
-                    . '<input type="text" name="' . $i($inputName) . '"'
-                        . ' value="' . $i($title) . '"'
-                        . ' placeholder="Caption / alt text">'
-                    . '<span class="muted">saves with the page</span>'
-                . '</div>'
-            . '</div>'
-            . '</li>';
-    }
-
-    private function renderUploadedFileRow(File $file): string
+    private function renderUploadedFileRow(File $file, int $rowIndex): string
     {
         $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
         $thumbName = \sprintf('300x300_%s', $file->name);
@@ -470,6 +466,8 @@ final class PagesModule
         $token  = $this->editor->csrf->token('pages');
         $apiUrl = $this->editor->siteUrl . '/api/upload';
         $id     = (int) $file->id;
+        $titleField    = 'image_titles[' . $id . ']';
+        $positionField = 'image_positions[' . $id . ']';
 
         return '<li class="image-list__item" data-file-id="' . $id . '">'
             . '<a href="' . $i($assetUrl) . '" target="_blank">'
@@ -480,14 +478,9 @@ final class PagesModule
                 . '<span class="muted">(' . $file->width . 'x' . $file->height . ', ' . $file->size . ' bytes)</span>'
                 . '<div class="image-list__title-edit">'
                     . '<input type="text" class="image-list__title-input"'
+                        . ' name="' . $i($titleField) . '"'
                         . ' placeholder="Caption / alt text"'
-                        . ' value="' . $i($file->title) . '"'
-                        . ' data-file-id="' . $id . '"'
-                        . ' data-csrf-name="pages"'
-                        . ' data-csrf-value="' . $i($token) . '"'
-                        . ' data-patch-url="' . $i($apiUrl) . '">'
-                    . '<button type="button" class="image-list__title-save" data-file-id="' . $id . '">save title</button>'
-                    . '<span class="image-list__title-status muted" data-file-id="' . $id . '"></span>'
+                        . ' value="' . $i($file->title) . '">'
                 . '</div>'
             . '</div>'
             . ' <button type="button" class="image-list__remove"'
@@ -497,6 +490,9 @@ final class PagesModule
                 . ' data-delete-url="' . $i($apiUrl) . '">'
                 . '<i class="gg-trash"></i> remove'
             . '</button>'
+            // Order field — JS-sortable updates the value on drag-end so the
+            // next page-save persists the new order onto the matching File rows.
+            . '<input type="hidden" class="image-list__position" name="' . $i($positionField) . '" value="' . $rowIndex . '">'
             . '</li>';
     }
 
@@ -587,7 +583,7 @@ final class PagesModule
     private function existingDataMap(Page $page): array
     {
         $out = [];
-        foreach (['slug', 'parent', 'pagetype', 'menu_title', 'content', 'template', 'images'] as $key) {
+        foreach (['slug', 'parent', 'pagetype', 'menu_title', 'content', 'template'] as $key) {
             if ($page->item->data->has($key)) {
                 $out[$key] = $page->item->data->get($key);
             }
@@ -629,8 +625,9 @@ final class PagesModule
     /**
      * @param array<string, mixed> $payload
      */
-    private function jsonResponse(array $payload): never
+    private function jsonResponse(array $payload, int $status = 200): never
     {
+        http_response_code($status);
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($payload, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
         exit;
