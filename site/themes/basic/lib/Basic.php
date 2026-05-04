@@ -397,35 +397,26 @@ class BasicTheme extends Site
     private function headlineImage(Page $page): ?array
     {
         $itemId = $page->id();
-        if ($itemId !== null) {
-            $field = $this->resolveImagesField();
-            if ($field !== null) {
-                $files = $this->files->findByItemAndField($itemId, $field);
-                if ($files !== []) {
-                    $first = $files[0];
-                    return [
-                        'name'     => $first->name,
-                        // FileStorage paths are <itemId>/<fieldId>/<file>; the
-                        // ImageUrlBuilder rewrites `data/uploads/` legacy
-                        // prefixes only, so prepend the 2.0 root explicitly.
-                        'path'     => 'data/uploads-2.0/' . \dirname($first->path) . '/',
-                        'title'    => $first->title,
-                        'position' => $first->position,
-                    ];
-                }
-            }
-        }
-
-        // Fallback: migrated 1.x image entries embedded in item.data.
-        $legacy = $page->images[0] ?? null;
-        if (! \is_array($legacy) || ! isset($legacy['name'], $legacy['path'])) {
+        if ($itemId === null) {
             return null;
         }
+        $field = $this->resolveImagesField();
+        if ($field === null) {
+            return null;
+        }
+        $files = $this->files->findByItemAndField($itemId, $field);
+        if ($files === []) {
+            return null;
+        }
+        $first = $files[0];
         return [
-            'name'     => (string) $legacy['name'],
-            'path'     => (string) $legacy['path'],
-            'title'    => (string) ($legacy['title'] ?? ''),
-            'position' => (int) ($legacy['position'] ?? 0),
+            'name'     => $first->name,
+            // FileStorage paths are storage-root-relative; the
+            // ImageUrlBuilder rewrites `data/uploads/` legacy prefixes
+            // only, so prepend the 2.0 root explicitly.
+            'path'     => 'data/uploads-2.0/' . \dirname($first->path) . '/',
+            'title'    => $first->title,
+            'position' => $first->position,
         ];
     }
 

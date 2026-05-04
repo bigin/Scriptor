@@ -132,8 +132,6 @@ final class PagesModule
         $template = $this->editor->sanitizer->templateName($this->editor->input->postString('template'));
         $active   = $this->editor->input->postString('published') !== '';
 
-        // Rebuild the data bag from the existing page so we don't drop
-        // image entries the legacy widget previously stored.
         $data = $existing !== null ? $this->existingDataMap($existing) : [];
         $data['slug']       = $slug;
         $data['parent']     = $parentId;
@@ -141,24 +139,6 @@ final class PagesModule
         $data['content']    = $content;
         $data['template']   = $template;
         $data['pagetype']   = $data['pagetype'] ?? '1';
-
-        // Legacy image titles: PagesModule::renderLegacyImageRow emits an
-        // input named `legacy_image_titles[<index>]` per migrated image
-        // entry. Splice each posted value back into the matching slot in
-        // data.images so the page-save persists caption edits without
-        // touching anything else on the entry.
-        $rawTitles = $this->editor->input->post('legacy_image_titles');
-        if (\is_array($rawTitles) && isset($data['images']) && \is_array($data['images'])) {
-            $images = $data['images'];
-            foreach ($rawTitles as $index => $title) {
-                $idx = (int) $index;
-                if (! isset($images[$idx]) || ! \is_array($images[$idx])) {
-                    continue;
-                }
-                $images[$idx]['title'] = (string) $title;
-            }
-            $data['images'] = $images;
-        }
 
         $now = time();
         $item = new Item(
@@ -355,29 +335,12 @@ final class PagesModule
         $fieldId = (int) $field->id;
         $token   = $this->editor->csrf->token('pages');
 
-        $files = $this->files->findByItemAndField($itemId, $fieldId);
-        $legacy = $page->images;
-
         $existingRows = '';
-        foreach ($files as $file) {
+        foreach ($this->files->findByItemAndField($itemId, $fieldId) as $file) {
             $existingRows .= $this->renderUploadedFileRow($file);
         }
-        $legacyRows = '';
-        foreach ($legacy as $index => $img) {
-            if (! \is_array($img)) {
-                continue;
-            }
-            $legacyRows .= $this->renderLegacyImageRow($img, (int) $index);
-        }
-
         $existingBlock = $existingRows !== ''
             ? '<ul class="image-list image-list--uploaded">' . $existingRows . '</ul>'
-            : '';
-        $legacyCount = substr_count($legacyRows, '<li ');
-        $legacyBlock = $legacyRows !== ''
-            ? '<details><summary>Migrated 1.x images on this page (' . $legacyCount . ')'
-                . ' — uploads above replace them on the frontend</summary>'
-                . '<ul class="image-list image-list--legacy">' . $legacyRows . '</ul></details>'
             : '';
 
         // FilePond container + the metadata bag the init script needs.
@@ -400,62 +363,7 @@ final class PagesModule
             . $infoBlock
             . $existingBlock
             . $widget
-            . $legacyBlock
             . '</div>';
-    }
-
-    /**
-     * Renders a row for a migrated 1.x image entry (lives inside the
-     * item's `data.images` JSON array, not in the files table). The
-     * legacy `path` field points at `data/uploads/<itemDir>/`; the
-     * migrator copied the assets to `data/uploads-2.0/<itemDir>/`,
-     * so we rewrite the prefix here so the inline preview resolves.
-     *
-     * Display-only: editing/deleting these entries belongs to a
-     * follow-up sub-phase. Uploads above replace the legacy entry on
-     * the public site (BasicTheme::headlineImage).
-     *
-     * @param array<string, mixed> $img
-     */
-    private function renderLegacyImageRow(array $img, int $index): string
-    {
-        $name  = (string) ($img['name']  ?? '');
-        $title = (string) ($img['title'] ?? '');
-        $path  = (string) ($img['path']  ?? '');
-        if ($name === '' || $path === '') {
-            return '';
-        }
-
-        // Map legacy `data/uploads/...` prefix onto the post-migration
-        // root; foreign / already-modern paths pass through untouched.
-        $clean = '/' . ltrim($path, '/');
-        $clean = preg_replace('#^/data/uploads/#', '/data/uploads-2.0/', $clean) ?? $clean;
-        if (! str_ends_with($clean, '/')) {
-            $clean .= '/';
-        }
-        $assetUrl = $clean . $name;
-
-        $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
-
-        // Legacy titles persist back via the form's save-page action:
-        // the input's name encodes the array index so saveAction() can
-        // splice the new value into Item.data.images[$index].title.
-        $inputName = 'legacy_image_titles[' . $index . ']';
-
-        return '<li class="image-list__item image-list__item--legacy">'
-            . '<a href="' . $i($assetUrl) . '" target="_blank">'
-            . '<img src="' . $i($assetUrl) . '" alt="' . $i($name) . '" loading="lazy" width="120" height="120">'
-            . '</a>'
-            . ' <div class="image-list__meta">'
-                . '<code>' . $i($name) . '</code>'
-                . '<div class="image-list__title-edit">'
-                    . '<input type="text" name="' . $i($inputName) . '"'
-                        . ' value="' . $i($title) . '"'
-                        . ' placeholder="Caption / alt text">'
-                    . '<span class="muted">saves with the page</span>'
-                . '</div>'
-            . '</div>'
-            . '</li>';
     }
 
     private function renderUploadedFileRow(File $file): string
@@ -587,7 +495,7 @@ final class PagesModule
     private function existingDataMap(Page $page): array
     {
         $out = [];
-        foreach (['slug', 'parent', 'pagetype', 'menu_title', 'content', 'template', 'images'] as $key) {
+        foreach (['slug', 'parent', 'pagetype', 'menu_title', 'content', 'template'] as $key) {
             if ($page->item->data->has($key)) {
                 $out[$key] = $page->item->data->get($key);
             }
