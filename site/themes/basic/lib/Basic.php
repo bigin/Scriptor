@@ -294,7 +294,7 @@ class BasicTheme extends Site
     private function renderArticleSummary(Page $article): string
     {
         $limit = (int) ($this->themeConfig['summary_character_len'] ?? 400);
-        $text  = htmlspecialchars_decode($article->content);
+        $text  = $article->content;
         if ($limit > 0 && mb_strlen($text) > $limit) {
             $text = mb_substr($text, 0, $limit) . ' …';
         }
