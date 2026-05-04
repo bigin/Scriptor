@@ -1,8 +1,9 @@
 (function() {
 	// https://highlightjs.org/
 	var md = new Remarkable('full', {
-		// Enable HTML tags in source
-		html: (typeof editConf !== 'undefined') ? editConf.allowHtmlOutput : false,
+		// Page content is Markdown. Parsedown safe-mode is the authority on
+		// the server side; the preview matches by disabling raw-HTML passthrough.
+		html: false,
 		xhtmlOut:     false,        // Use '/' to close single tags (<br />)
 		breaks:       false,        // Convert '\n' in paragraphs into <br>
 		langPrefix:   'language-',  // CSS language prefix for fenced blocks

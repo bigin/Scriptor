@@ -317,9 +317,10 @@ class Site
             return '';
         }
         // Page content is stored as raw Markdown. Parsedown safe-mode
-        // escapes any embedded HTML; when allowHtmlOutput is true the
-        // input may also contain author-supplied HTML and Parsedown
-        // passes it through.
+        // escapes embedded HTML and rewrites non-whitelisted URL schemes
+        // (no `javascript:` etc.). A future plugin that introduces an
+        // alternative content format should dispatch on a per-page
+        // marker rather than reinstating a global flag here.
         return $this->sanitizer->markdown($this->page->content);
     }
 
