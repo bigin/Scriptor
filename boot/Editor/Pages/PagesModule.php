@@ -80,14 +80,20 @@ final class PagesModule
 
     private function saveAction(): void
     {
+        // The new-page flow JS sets X-Requested-With when it has FilePond
+        // files staged: it needs the new page id back as JSON so it can
+        // upload each staged file against /editor/api/upload before
+        // navigating to the redirect URL.
+        $isXhr = ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest';
+
         if (! $this->csrfPasses($this->editor->input->postString('tokenName'), $this->editor->input->postString('tokenValue'))) {
-            $this->editor->addMsg('error', $this->t('error_csrf_token_mismatch'));
+            $this->saveError($isXhr, $this->t('error_csrf_token_mismatch'));
             return;
         }
 
         $name = $this->editor->sanitizer->text(str_replace('"', '', $this->editor->input->postString('name')));
         if ($name === '') {
-            $this->editor->addMsg('error', $this->t('error_page_title') ?: 'A page name is required.');
+            $this->saveError($isXhr, $this->t('error_page_title') ?: 'A page name is required.');
             return;
         }
 
@@ -95,11 +101,11 @@ final class PagesModule
         $slugSource = $rawSlug !== '' ? $rawSlug : $name;
         $slug = preg_replace('/(-)\1+/', '$1', $this->editor->sanitizer->slug($slugSource)) ?? '';
         if ($slug === '') {
-            $this->editor->addMsg('error', $this->t('error_page_name') ?: 'Page slug could not be derived.');
+            $this->saveError($isXhr, $this->t('error_page_name') ?: 'Page slug could not be derived.');
             return;
         }
         if (\in_array($slug, $this->reservedSlugs, true)) {
-            $this->editor->addMsg('error', $this->t('error_slug_reserved') ?: 'Slug is reserved.');
+            $this->saveError($isXhr, $this->t('error_slug_reserved') ?: 'Slug is reserved.');
             return;
         }
 
@@ -114,7 +120,7 @@ final class PagesModule
         }
 
         if ($this->pages->slugTaken($slug, $parentId, $existing?->id())) {
-            $this->editor->addMsg('error', $this->t('error_page_title_exists') ?: 'A page with that slug already exists under this parent.');
+            $this->saveError($isXhr, $this->t('error_page_title_exists') ?: 'A page with that slug already exists under this parent.');
             return;
         }
 
@@ -125,7 +131,7 @@ final class PagesModule
 
         $content = $this->editor->input->postString('content');
         if ($content === '') {
-            $this->editor->addMsg('error', $this->t('error_page_content') ?: 'Page content is required.');
+            $this->saveError($isXhr, $this->t('error_page_content') ?: 'Page content is required.');
             return;
         }
 
@@ -156,12 +162,76 @@ final class PagesModule
         try {
             $saved = $this->pages->save($item);
         } catch (\Throwable $e) {
-            $this->editor->addMsg('error', $this->t('error_saving_page') ?: 'Saving failed: ' . $e->getMessage());
+            $this->saveError($isXhr, $this->t('error_saving_page') ?: 'Saving failed: ' . $e->getMessage());
             return;
         }
 
+        // Image titles travel with the page form (one input per file row,
+        // name="image_titles[<fileId>]"). Apply each title onto the
+        // matching FileRepository row, scoped to this page's files so a
+        // tampered POST can't relabel files of another item.
+        $this->applyImageTitles((int) $saved->id());
+
+        $redirect = $this->editor->siteUrl . '/pages/edit/?page=' . $saved->id();
+
+        if ($isXhr) {
+            // Skip flash so the JSON consumer doesn't strand a leftover
+            // success message on the next non-XHR navigation.
+            $this->jsonResponse([
+                'status'   => 'ok',
+                'pageId'   => (int) $saved->id(),
+                'redirect' => $redirect,
+            ]);
+        }
+
         $this->editor->flashMsg('success', $this->t('successful_saved_page') ?: 'Page saved.');
-        $this->redirect($this->editor->siteUrl . '/pages/edit/?page=' . $saved->id());
+        $this->redirect($redirect);
+    }
+
+    /**
+     * Persist `image_titles[<fileId>] = <title>` posted alongside the
+     * page form. Only files owned by `$pageId` are eligible — defensive
+     * scoping against forged ids.
+     */
+    private function applyImageTitles(int $pageId): void
+    {
+        if ($pageId < 1) {
+            return;
+        }
+        $titles = $this->editor->input->post('image_titles');
+        if (! \is_array($titles) || $titles === []) {
+            return;
+        }
+        $field = $this->fields->findByName($this->pages->categoryId, 'images');
+        if ($field === null || $field->id === null) {
+            return;
+        }
+        $owned = [];
+        foreach ($this->files->findByItemAndField($pageId, (int) $field->id) as $file) {
+            if ($file->id !== null) {
+                $owned[$file->id] = $file;
+            }
+        }
+        foreach ($titles as $rawId => $rawTitle) {
+            $fileId = (int) $rawId;
+            $file   = $owned[$fileId] ?? null;
+            if ($file === null) {
+                continue;
+            }
+            $title = (string) $rawTitle;
+            if ($file->title === $title) {
+                continue;
+            }
+            $this->files->save($file->withTitle($title));
+        }
+    }
+
+    private function saveError(bool $isXhr, string $message): void
+    {
+        if ($isXhr) {
+            $this->jsonResponse(['status' => 'error', 'error' => $message], 400);
+        }
+        $this->editor->addMsg('error', $message);
     }
 
     private function deleteAction(): void
@@ -319,15 +389,7 @@ final class PagesModule
             ? '<p class="info-text i-wrapp"><i class="gg-danger"></i>' . $info . '</p>'
             : '';
 
-        // Edit existing page → wire FilePond against the upload endpoint.
-        // New page → can't wire an upload (UploadHandler requires itemId>=1).
-        if ($page === null || $page->id() === null) {
-            return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
-                . '<p class="info-text"><em>Save the page first to enable image upload.</em></p></div>';
-        }
-
-        $itemId  = (int) $page->id();
-        $field   = $this->fields->findByName($this->pages->categoryId, 'images');
+        $field = $this->fields->findByName($this->pages->categoryId, 'images');
         if ($field === null || $field->id === null) {
             return '<div class="form-control"><label>' . $label . '</label>' . $infoBlock
                 . '<p class="info-text"><em>The Pages category has no <code>images</code> field — nothing to render.</em></p></div>';
@@ -335,19 +397,20 @@ final class PagesModule
         $fieldId = (int) $field->id;
         $token   = $this->editor->csrf->token('pages');
 
+        // itemId 0 = new page; the JS picks deferred mode and uploads
+        // each staged file only after the page-save XHR returns the
+        // fresh page id.
+        $itemId = $page?->id() ?? 0;
         $existingRows = '';
-        foreach ($this->files->findByItemAndField($itemId, $fieldId) as $file) {
-            $existingRows .= $this->renderUploadedFileRow($file);
+        if ($itemId > 0) {
+            foreach ($this->files->findByItemAndField($itemId, $fieldId) as $file) {
+                $existingRows .= $this->renderUploadedFileRow($file);
+            }
         }
         $existingBlock = $existingRows !== ''
             ? '<ul class="image-list image-list--uploaded">' . $existingRows . '</ul>'
             : '';
 
-        // FilePond container + the metadata bag the init script needs.
-        // The script reads `data-*` attributes off this element, posts
-        // multipart uploads to the API, and stuffs the new fileId into a
-        // hidden input so the page form can render the up-to-date set
-        // after a redirect.
         $pondId = 'filepond-images-' . $itemId;
         $widget = sprintf(
             '<input type="file" id="%s" class="filepond" data-itemid="%d" data-fieldid="%d" data-csrf-name="pages" data-csrf-value="%s" data-upload-url="%s" multiple>',
@@ -378,6 +441,7 @@ final class PagesModule
         $token  = $this->editor->csrf->token('pages');
         $apiUrl = $this->editor->siteUrl . '/api/upload';
         $id     = (int) $file->id;
+        $titleField = 'image_titles[' . $id . ']';
 
         return '<li class="image-list__item" data-file-id="' . $id . '">'
             . '<a href="' . $i($assetUrl) . '" target="_blank">'
@@ -388,14 +452,9 @@ final class PagesModule
                 . '<span class="muted">(' . $file->width . 'x' . $file->height . ', ' . $file->size . ' bytes)</span>'
                 . '<div class="image-list__title-edit">'
                     . '<input type="text" class="image-list__title-input"'
+                        . ' name="' . $i($titleField) . '"'
                         . ' placeholder="Caption / alt text"'
-                        . ' value="' . $i($file->title) . '"'
-                        . ' data-file-id="' . $id . '"'
-                        . ' data-csrf-name="pages"'
-                        . ' data-csrf-value="' . $i($token) . '"'
-                        . ' data-patch-url="' . $i($apiUrl) . '">'
-                    . '<button type="button" class="image-list__title-save" data-file-id="' . $id . '">save title</button>'
-                    . '<span class="image-list__title-status muted" data-file-id="' . $id . '"></span>'
+                        . ' value="' . $i($file->title) . '">'
                 . '</div>'
             . '</div>'
             . ' <button type="button" class="image-list__remove"'
@@ -537,8 +596,9 @@ final class PagesModule
     /**
      * @param array<string, mixed> $payload
      */
-    private function jsonResponse(array $payload): never
+    private function jsonResponse(array $payload, int $status = 200): never
     {
+        http_response_code($status);
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode($payload, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
         exit;
