@@ -170,7 +170,7 @@ final class PagesModule
         // name="image_titles[<fileId>]"). Apply each title onto the
         // matching FileRepository row, scoped to this page's files so a
         // tampered POST can't relabel files of another item.
-        $this->applyImageTitles((int) $saved->id());
+        $this->applyImageMetadata((int) $saved->id());
 
         $redirect = $this->editor->siteUrl . '/pages/edit/?page=' . $saved->id();
 
@@ -189,40 +189,63 @@ final class PagesModule
     }
 
     /**
-     * Persist `image_titles[<fileId>] = <title>` posted alongside the
-     * page form. Only files owned by `$pageId` are eligible — defensive
-     * scoping against forged ids.
+     * Persist `image_titles[<fileId>]` and `image_positions[<fileId>]`
+     * posted alongside the page form. Only files owned by `$pageId`
+     * are eligible — defensive scoping against forged ids.
      */
-    private function applyImageTitles(int $pageId): void
+    private function applyImageMetadata(int $pageId): void
     {
         if ($pageId < 1) {
             return;
         }
-        $titles = $this->editor->input->post('image_titles');
-        if (! \is_array($titles) || $titles === []) {
+        $titles    = $this->editor->input->post('image_titles');
+        $positions = $this->editor->input->post('image_positions');
+        $hasTitles    = \is_array($titles) && $titles !== [];
+        $hasPositions = \is_array($positions) && $positions !== [];
+        if (! $hasTitles && ! $hasPositions) {
             return;
         }
+
         $field = $this->fields->findByName($this->pages->categoryId, 'images');
         if ($field === null || $field->id === null) {
             return;
         }
+
         $owned = [];
         foreach ($this->files->findByItemAndField($pageId, (int) $field->id) as $file) {
             if ($file->id !== null) {
                 $owned[$file->id] = $file;
             }
         }
-        foreach ($titles as $rawId => $rawTitle) {
-            $fileId = (int) $rawId;
-            $file   = $owned[$fileId] ?? null;
-            if ($file === null) {
-                continue;
+
+        if ($hasTitles) {
+            foreach ($titles as $rawId => $rawTitle) {
+                $fileId = (int) $rawId;
+                $file   = $owned[$fileId] ?? null;
+                if ($file === null) {
+                    continue;
+                }
+                $title = (string) $rawTitle;
+                if ($file->title === $title) {
+                    continue;
+                }
+                $owned[$fileId] = $this->files->save($file->withTitle($title));
             }
-            $title = (string) $rawTitle;
-            if ($file->title === $title) {
-                continue;
+        }
+
+        if ($hasPositions) {
+            foreach ($positions as $rawId => $rawPos) {
+                $fileId = (int) $rawId;
+                $file   = $owned[$fileId] ?? null;
+                if ($file === null) {
+                    continue;
+                }
+                $position = (int) $rawPos;
+                if ($file->position === $position) {
+                    continue;
+                }
+                $owned[$fileId] = $this->files->save($file->withPosition($position));
             }
-            $this->files->save($file->withTitle($title));
         }
     }
 
@@ -403,8 +426,10 @@ final class PagesModule
         $itemId = $page?->id() ?? 0;
         $existingRows = '';
         if ($itemId > 0) {
+            $rowIndex = 0;
             foreach ($this->files->findByItemAndField($itemId, $fieldId) as $file) {
-                $existingRows .= $this->renderUploadedFileRow($file);
+                $existingRows .= $this->renderUploadedFileRow($file, $rowIndex);
+                $rowIndex++;
             }
         }
         $existingBlock = $existingRows !== ''
@@ -429,7 +454,7 @@ final class PagesModule
             . '</div>';
     }
 
-    private function renderUploadedFileRow(File $file): string
+    private function renderUploadedFileRow(File $file, int $rowIndex): string
     {
         $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
         $thumbName = \sprintf('300x300_%s', $file->name);
@@ -441,7 +466,8 @@ final class PagesModule
         $token  = $this->editor->csrf->token('pages');
         $apiUrl = $this->editor->siteUrl . '/api/upload';
         $id     = (int) $file->id;
-        $titleField = 'image_titles[' . $id . ']';
+        $titleField    = 'image_titles[' . $id . ']';
+        $positionField = 'image_positions[' . $id . ']';
 
         return '<li class="image-list__item" data-file-id="' . $id . '">'
             . '<a href="' . $i($assetUrl) . '" target="_blank">'
@@ -464,6 +490,9 @@ final class PagesModule
                 . ' data-delete-url="' . $i($apiUrl) . '">'
                 . '<i class="gg-trash"></i> remove'
             . '</button>'
+            // Order field — JS-sortable updates the value on drag-end so the
+            // next page-save persists the new order onto the matching File rows.
+            . '<input type="hidden" class="image-list__position" name="' . $i($positionField) . '" value="' . $rowIndex . '">'
             . '</li>';
     }
 

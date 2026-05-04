@@ -130,6 +130,24 @@
       }
     });
 
+    // jQuery-UI sortable on the existing-image list. On drag-end we
+    // renumber every `.image-list__position` hidden input to the row's
+    // new index — the next page-save persists the order onto the
+    // matching File.position fields. jQuery-UI is already loaded by
+    // editor.js for the page-list reorder, we just bind it here.
+    if (typeof window.jQuery !== 'undefined' && typeof window.jQuery.fn.sortable === 'function') {
+      var $ = window.jQuery;
+      $('.image-list--uploaded').sortable({
+        items: '.image-list__item',
+        cursor: 'move',
+        update: function () {
+          $(this).children('.image-list__item').each(function (index) {
+            $(this).find('.image-list__position').val(index);
+          });
+        }
+      }).disableSelection();
+    }
+
     // Existing-file remove buttons: server-rendered. POST a DELETE to the
     // upload endpoint with CSRF, then drop the row from the DOM.
     document.querySelectorAll('.image-list__remove').forEach(function (btn) {
