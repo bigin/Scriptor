@@ -1117,6 +1117,13 @@ button, .button {
 	align-self: flex-start;
 	cursor: pointer;
 }
+/* Mirror `.button .gg-trash` so the trash icon sits at the same
+ * size and offset as in the standard buttons (Save / Add). */
+.image-list__remove .gg-trash {
+	height: 14px;
+	margin-right: 4px;
+	margin-bottom: 4px;
+}
 .image-list__item.ui-sortable-helper {
 	background: #f5f5f5;
 }

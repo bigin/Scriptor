@@ -488,7 +488,7 @@ final class PagesModule
                 . ' data-csrf-name="pages"'
                 . ' data-csrf-value="' . $i($token) . '"'
                 . ' data-delete-url="' . $i($apiUrl) . '">'
-                . '<i class="gg-trash"></i> remove'
+                . '<i class="gg-trash"></i><span>&nbsp;remove</span>'
             . '</button>'
             // Order field — JS-sortable updates the value on drag-end so the
             // next page-save persists the new order onto the matching File rows.
