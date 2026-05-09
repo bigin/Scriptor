@@ -140,7 +140,7 @@ final class AuthModule
         $html .= '<input type="hidden" name="action" value="login">';
         $html .= '<input type="hidden" name="tokenName" value="' . htmlspecialchars($tokenName, \ENT_QUOTES) . '">';
         $html .= '<input type="hidden" name="tokenValue" value="' . htmlspecialchars($tokenValue, \ENT_QUOTES) . '">';
-        $html .= '<button class="icons button" type="submit" name="submit">';
+        $html .= '<button class="icons button primary" type="submit" name="submit">';
         $html .= '<i class="gg-log-in"></i><span>' . htmlspecialchars($this->t('login_button'), \ENT_QUOTES) . '</span>';
         $html .= '</button>';
         $html .= '</form>';

@@ -10,6 +10,7 @@
 :root {
 	/* Brand */
 	--color-brand:            #1e4f9b;     /* headings, labels, button text, logo */
+	--color-brand-hover:      #163d7a;     /* primary button hover */
 	--color-brand-ink:        #1e4f9b;     /* alias for text on white */
 
 	/* Link / action */

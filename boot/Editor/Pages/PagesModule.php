@@ -381,7 +381,7 @@ final class PagesModule
         $html .= '<input type="hidden" name="action" value="save-page">';
         $html .= sprintf('<input type="hidden" name="tokenName" value="%s">', htmlspecialchars('pages', \ENT_QUOTES));
         $html .= sprintf('<input type="hidden" name="tokenValue" value="%s">', htmlspecialchars($token, \ENT_QUOTES));
-        $html .= '<button class="icons" type="submit" id="save" name="save" value="1"><i class="gg-drive"></i><span>&nbsp;' . htmlspecialchars($this->t('save_button'), \ENT_QUOTES) . '</span></button>';
+        $html .= '<button class="icons primary" type="submit" id="save" name="save" value="1"><i class="gg-drive"></i><span>&nbsp;' . htmlspecialchars($this->t('save_button'), \ENT_QUOTES) . '</span></button>';
         $html .= '</form>';
         $this->editor->pageContent = $html;
     }
@@ -569,7 +569,7 @@ final class PagesModule
             . sprintf('<input type="hidden" name="tokenName" value="%s">', $i('pages'))
             . sprintf('<input type="hidden" name="tokenValue" value="%s">', $i($token))
             . '</form></div>'
-            . '<a class="btn" href="./edit/"><button class="icons button" type="button"><i class="gg-math-plus"></i>&nbsp;'
+            . '<a class="btn" href="./edit/"><button class="icons button primary" type="button"><i class="gg-math-plus"></i>&nbsp;'
             . $i($this->t('create_button')) . '</button></a>';
     }
 

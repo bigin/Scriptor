@@ -873,8 +873,21 @@ button, .button {
 	cursor: default;
 }
 
-.button:hover {
+.button:hover, button:hover {
     background-color: var(--color-surface-hover);
+}
+
+/* Primary button — solid navy, white text. Used on the dominant action
+ * of a form (Save, Login, Create page). Overrides the global
+ * `h1,…,button,…{color:var(--color-brand)!important}` rule and the
+ * global `.button{border:…!important}` with `!important`. */
+.button.primary, button.primary {
+    background-color: var(--color-brand);
+    color: var(--color-surface) !important;
+    border-color: var(--color-brand) !important;
+}
+.button.primary:hover, button.primary:hover {
+    background-color: var(--color-brand-hover);
 }
 
 .button .gg-math-plus {
