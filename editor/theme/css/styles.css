@@ -1088,6 +1088,9 @@ button, .button {
 .image-list__item:last-child {
 	border-bottom: none;
 }
+.image-list__item:hover {
+	background-color: #fafafa;
+}
 .image-list__item > a {
 	flex: 0 0 auto;
 }
