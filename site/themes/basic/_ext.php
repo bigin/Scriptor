@@ -27,6 +27,11 @@ if ($cached !== null) {
     $router = new BasicRouter($site);
     $router->actions();
     echo $cached;
+    // Signal `index.php` that there is nothing left to render — without
+    // this, the parent's `include $themeDir/template.php` line would run
+    // template.php a second time on top of the cached body. The check at
+    // the include site is `! $site instanceof Site`.
+    $site = null;
     return;
 }
 
