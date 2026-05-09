@@ -1048,20 +1048,33 @@ button, .button {
 	right: 0;
 }
 
-.message .error {
+/* Editor flash + inline messages.
+ * `Editor::renderMessages()` emits
+ *   <ul class="messages"><li class="msg msg-{success|error}">…</li></ul>
+ * The earlier `.message .error / .message .success` rules below
+ * matched a 1.x markup that never landed in 2.0. */
+ul.messages {
+	list-style: none;
+	margin: 1em 0;
+	padding: 0;
+}
+.messages .msg {
 	padding: 15px;
+	border-radius: 6px;
+	margin-bottom: 8px;
+}
+.messages .msg:last-child {
+	margin-bottom: 0;
+}
+.msg-error {
 	background-color: #fff2f3;
 	color: #da0000;
 	border: solid 1px #f3e3e4;
-	border-radius: 6px;
 }
-
-.message .success {
-	padding: 15px;
+.msg-success {
 	background-color: #e3feda85;
 	color: #31695a;
 	border: solid 1px #e7f3e3;
-	border-radius: 6px;
 }
 
 .inactive {
