@@ -284,31 +284,34 @@ hr {
 	-o-transition: left 250ms ease;
 	transition: left 250ms ease;
 }
+/* Sidebar nav — borderless, 8px outer gutter so each item gets a 8px-radius
+ * pill of breathing room. Active state is a solid navy fill with white text
+ * (per Scriptor Design System sidebar.html); hover is a faint sky tint. */
 .summary-wrapper nav ul {
 	list-style: none;
 	margin: 0;
-	padding: 0;
+	padding: 6px 8px;
 	-webkit-transition: top .5s ease;
 	-moz-transition: top .5s ease;
 	-o-transition: top .5s ease;
 	transition: top .5s ease;
 }
 .summary-wrapper nav ul li {
-	border-bottom: 1px solid var(--color-border-faint);
+	border-radius: 8px;
 }
 .summary-wrapper nav ul li:hover {
-	background-color: var(--color-bg);
+	background-color: var(--color-surface-nav-hot);
 }
 .summary-wrapper nav ul li.active {
-	background-color: var(--color-bg);
+	background-color: var(--color-brand);
 }
 .summary-wrapper nav ul li ul {
 	padding-left: 20px;
 }
 .summary-wrapper ul li>a, .summary-wrapper ul li>span {
 	display: block;
-	padding: 12px 20px;
-	min-height: 44px;
+	padding: 10px 14px;
+	min-height: 40px;
 	border-bottom: none;
 	color: inherit;
 	background: 0 0;
@@ -328,7 +331,7 @@ hr {
 	color: var(--color-link);
 }
 .summary-wrapper ul li.active a {
-	color: var(--color-fg);
+	color: var(--color-surface);
 	text-decoration: none;
 }
 .summary-wrapper .brand-wrapper {

@@ -32,6 +32,7 @@
 	--color-surface-mark:     #f4f4f4;     /* <mark> highlight */
 	--color-surface-hover:    #f0f0f0;     /* button hover */
 	--color-surface-row-hot:  #ffd;        /* table row hover (pale cream) */
+	--color-surface-nav-hot:  #f0f4fa;     /* sidebar nav item hover (faint sky tint) */
 
 	/* Borders */
 	--color-border-faint:     rgba(0, 0, 0, 0.05);
