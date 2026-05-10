@@ -323,8 +323,25 @@ final class PagesModule
         );
 
         $token = $this->editor->csrf->token('pages');
+        $byId = [];
+        foreach ($pages as $p) {
+            $byId[$p->id()] = $p;
+        }
         $rows = '';
         foreach ($pages as $page) {
+            $parentCell = '';
+            if ($page->parent !== 0) {
+                if (isset($byId[$page->parent])) {
+                    $parent = $byId[$page->parent];
+                    $parentCell = sprintf(
+                        '<a href="edit/?page=%1$d">%2$s</a> (%1$d)',
+                        $page->parent,
+                        htmlspecialchars($this->truncate($parent->name, 60), \ENT_QUOTES),
+                    );
+                } else {
+                    $parentCell = sprintf('(%d)', $page->parent);
+                }
+            }
             $rows .= sprintf(
                 '<tr class="sortable">'
                 . '<td><i class="gg-swap-vertical"></i><input type="hidden" name="position[]" value="%d"></td>'
@@ -334,7 +351,7 @@ final class PagesModule
                 . '</tr>',
                 $page->id(),
                 $page->id(),
-                $page->parent !== 0 ? (string) $page->parent : '',
+                $parentCell,
                 htmlspecialchars($this->truncate($page->name, 80), \ENT_QUOTES),
                 htmlspecialchars($this->t('pre_delete_msg'), \ENT_QUOTES),
                 rawurlencode($token),
