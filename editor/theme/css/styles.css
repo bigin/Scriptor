@@ -628,9 +628,6 @@ label.required:after {
 	display: table-header-group;
 	border-color: inherit;
 }
-#page-list-table thead tr {
-	border-top: 1px solid rgb(236, 236, 236);
-}
 
 #page-list-table th, #page-list-table td {
 	margin: 0;
@@ -644,7 +641,12 @@ label.required:after {
 
 #page-list-table th {
 	text-align: left;
-	background-color: var(--color-surface-alt);
+	color: var(--color-brand);
+	font-weight: var(--font-weight-semibold);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	letter-spacing: var(--letter-spacing-normal);
+	border-bottom: 2px solid var(--color-border-divider);
 }
 
 #page-list-table th:first-child, #page-list-table td:first-child {
@@ -686,9 +688,6 @@ label.required:after {
 	display: table-header-group;
 	border-color: inherit;
 }
-.item-table thead tr {
-	border-top: 1px solid rgb(236, 236, 236);
-}
 
 .item-table th, .item-table td {
 	margin: 0;
@@ -702,7 +701,12 @@ label.required:after {
 
 .item-table th {
 	text-align: left;
-	background-color: var(--color-surface-alt);
+	color: var(--color-brand);
+	font-weight: var(--font-weight-semibold);
+	font-size: var(--font-size-sm);
+	text-transform: uppercase;
+	letter-spacing: var(--letter-spacing-normal);
+	border-bottom: 2px solid var(--color-border-divider);
 }
 
 .item-table th:first-child, .item-table td:first-child {
