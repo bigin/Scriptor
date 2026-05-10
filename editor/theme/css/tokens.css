@@ -1,0 +1,115 @@
+/* ==========================================================================
+   Scriptor Design System — Tokens
+   Single source of truth for the editor (admin) visual language. All admin
+   styles in styles.css consume these custom properties; change a value
+   here to retheme the whole editor without touching component rules.
+
+   Distilled from styles.css via the Scriptor Design System skill — values
+   reflect the existing Scriptor 2.0 admin look 1:1.
+   ========================================================================== */
+:root {
+	/* Brand */
+	--color-brand:            #1e4f9b;     /* headings, labels, button text, logo */
+	--color-brand-hover:      #163d7a;     /* primary button hover */
+	--color-brand-ink:        #1e4f9b;     /* alias for text on white */
+
+	/* Link / action */
+	--color-link:             #008cff;     /* anchors, sidebar nav */
+	--color-link-hover:       #006fcc;
+
+	/* Text */
+	--color-fg:               #555;        /* body */
+	--color-fg-strong:        #364149;     /* sidebar text, dense UI */
+	--color-fg-muted:         #818181;     /* blockquote, secondary */
+	--color-fg-subtle:        #888eaf;     /* info-text, captions */
+	--color-fg-disabled:      #999;        /* .inactive */
+
+	/* Surfaces */
+	--color-bg:               #f9fafb;     /* page-wrapper background */
+	--color-surface:          #ffffff;     /* cards / page-inner */
+	--color-surface-alt:      #f8f8fb;     /* table headers, info-text */
+	--color-surface-code:     #f5f5f5;     /* inline code */
+	--color-surface-pre:      #f7f7f7;     /* code blocks */
+	--color-surface-mark:     #f4f4f4;     /* <mark> highlight */
+	--color-surface-hover:    #f0f0f0;     /* button hover */
+	--color-surface-row-hot:  #ffd;        /* table row hover (pale cream) */
+	--color-surface-nav-hot:  #f0f4fa;     /* sidebar nav item hover (faint sky tint) */
+
+	/* Borders */
+	--color-border-faint:     rgba(0, 0, 0, 0.05);
+	--color-border-soft:      rgba(0, 0, 0, 0.07);
+	--color-border:           rgba(0, 0, 0, 0.12);
+	--color-border-strong:    rgba(0, 0, 0, 0.15);
+	--color-border-row:       #ececec;
+	--color-border-divider:   #e7e7e7;
+	--color-border-quote:     #dbdbdb;
+
+	/* State */
+	--color-danger:           #da0000;
+	--color-danger-bg:        #fff2f3;
+	--color-danger-border:    #f3e3e4;
+	--color-success:          #31695a;
+	--color-success-bg:       #e3feda85;
+	--color-success-border:   #e7f3e3;
+	--color-badge-bg:         #ffd;
+	--color-badge-border:     #b7d7f1;
+
+	/* Overlays */
+	--color-overlay:          rgba(0, 0, 0, 0.6);
+	--color-overlay-dialog:   rgba(0, 0, 0, 0.3);
+
+	/* Type */
+	--font-sans:    Poppins, ProximaNova, -apple-system, BlinkMacSystemFont,
+	                "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	--font-mono:    'Source Code Pro', monospace;
+
+	--font-size-xs:           1.1rem;
+	--font-size-sm:           1.3rem;
+	--font-size-base:         1.6rem;
+	--font-size-md:           1.7rem;
+	--font-size-lg:           2.1rem;
+	--font-size-xl:           2.6rem;
+	--font-size-2xl:          3.2rem;
+
+	--font-weight-regular:    400;
+	--font-weight-medium:     500;
+	--font-weight-semibold:   600;
+	--font-weight-bold:       700;
+
+	--line-height-snug:       1.5;
+	--line-height-normal:     1.6;
+	--line-height-loose:      1.7;
+	--letter-spacing-normal:  0.2px;
+
+	/* Radii / elevation */
+	--radius-sm:              4px;
+	--radius:                 6px;
+	--radius-pill:            80px;
+	--radius-badge:           15px;
+	--shadow-card:            0 1px 2px rgba(0, 0, 0, 0.12);
+
+	/* Spacing */
+	--space-1:                4px;
+	--space-2:                8px;
+	--space-3:                12px;
+	--space-4:                16px;
+	--space-5:                20px;
+	--space-6:                24px;
+	--space-7:                30px;
+	--space-8:                40px;
+
+	/* Layout */
+	--layout-sidebar-width:   300px;
+	--layout-content-max:     850px;
+	--layout-prose-max:       770px;
+	--layout-breakpoint-lg:   1100px;
+	--control-height:         40px;
+	--control-padding-x:      22px;
+
+	/* Motion */
+	--ease-default:           ease;
+	--ease-emphasized:        cubic-bezier(0.645, 0.045, 0.355, 1);
+	--duration-fast:          150ms;
+	--duration-default:       250ms;
+	--duration-slow:          500ms;
+}

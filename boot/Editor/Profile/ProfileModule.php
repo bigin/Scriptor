@@ -178,7 +178,7 @@ final class ProfileModule
         $html .= '<input type="hidden" name="action" value="save-profile">';
         $html .= '<input type="hidden" name="tokenName" value="profile">';
         $html .= '<input type="hidden" name="tokenValue" value="' . $i($token) . '">';
-        $html .= '<button class="icons" type="submit" id="save" name="save" value="1">'
+        $html .= '<button class="icons primary" type="submit" id="save" name="save" value="1">'
               . '<i class="gg-drive"></i><span>&nbsp;' . $i($this->t('save_button')) . '</span>'
               . '</button>';
         $html .= '</form>';

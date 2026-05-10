@@ -38,10 +38,16 @@ class BasicTheme extends Site
      */
     protected function init(): void
     {
+        // Override pattern: `scriptor-config.php` carries the system-wide
+        // defaults; the theme file may override any of them by declaring
+        // the same key. A key omitted from the theme file falls through
+        // to the scriptor-config value, then to a hard-coded default.
+        // This lets a new theme tailor only what it needs without
+        // duplicating every default.
         $themeConfigFile = $this->scriptorRoot . '/data/settings/basic-theme-config.php';
         $themeConfig = is_file($themeConfigFile) ? (require $themeConfigFile) : [];
-        $themeConfig['site_name']         = $this->config['site_name']         ?? $themeConfig['site_name']         ?? 'Scriptor';
-        $themeConfig['markup_cache_time'] = $this->config['markup_cache_time'] ?? $themeConfig['markup_cache_time'] ?? 0;
+        $themeConfig['site_name']         = $themeConfig['site_name']         ?? $this->config['site_name']         ?? 'Scriptor';
+        $themeConfig['markup_cache_time'] = $themeConfig['markup_cache_time'] ?? $this->config['markup_cache_time'] ?? 0;
         $this->themeConfig = $themeConfig;
 
         $tpls = require dirname(__DIR__) . '/resources/_tpls.php';

@@ -11,8 +11,12 @@ defined('IS_IM') or die('You cannot access this page directly');
 return [
 
 	/**
-	 * The name of the website used throughout the Basic theme.
-	 * Overridden by BasicTheme::init() with $site->config['site_name'].
+	 * The name of the website used throughout the Basic theme. When
+	 * present, this overrides `site_name` from scriptor-config.php for
+	 * code paths that read $site->themeConfig. Note: the <title> chunks
+	 * (_head.php, _sidebar-right.php) read $site->config['site_name']
+	 * directly, so set the value in scriptor-config too if you want the
+	 * <title> to follow.
 	 */
 	'site_name' => 'Scriptor',
 
@@ -160,7 +164,9 @@ return [
 	 * See /data/settings/scriptor-config.php resp. custom.scriptor-config.php
 	 * or change to a static value e.g. 262974383
 	 */
-	'markup_cache_time' => 0, // overridden by BasicTheme::init() with $site->config['markup_cache_time']
+	// Seconds; 0 disables markup caching. When present, overrides
+	// `markup_cache_time` from scriptor-config.php.
+	'markup_cache_time' => 0,
 
 	/**
 	 * Enter the templates of the pages where you want the output to be cached.

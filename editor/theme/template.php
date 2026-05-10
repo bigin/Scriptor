@@ -14,7 +14,8 @@ isset($editor) or die('You cannot access this page directly');
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/prism.css">
 	<link href="<?php echo $editor->siteUrl; ?>/theme/css/css-gg.min.css" rel="stylesheet">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.min.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/tokens.css">
+	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.css">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond.css">
 	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-image-preview.css">
 	<?php echo $editor->getResources('link'); ?>
