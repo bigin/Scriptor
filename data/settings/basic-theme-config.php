@@ -148,6 +148,7 @@ return [
 	 * Enter IDs of the pages you want to exclude
 	 */
 	'main_nav_exclude_ids' => [
+		6,
 		8
 	],
 
