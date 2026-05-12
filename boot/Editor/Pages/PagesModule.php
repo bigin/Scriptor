@@ -334,9 +334,9 @@ final class PagesModule
                 if (isset($byId[$page->parent])) {
                     $parent = $byId[$page->parent];
                     $parentCell = sprintf(
-                        '<a href="edit/?page=%1$d">%2$s</a> (%1$d)',
-                        $page->parent,
+                        '%1$s (<a href="edit/?page=%2$d">%2$d</a>)',
                         htmlspecialchars($this->truncate($parent->name, 60), \ENT_QUOTES),
+                        $page->parent,
                     );
                 } else {
                     $parentCell = sprintf('(%d)', $page->parent);
