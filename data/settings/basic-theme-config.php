@@ -136,7 +136,7 @@ return [
 	/**
 	 * A page that represents a container for pages to display in the footer menu.
 	 */
-	'footer_container_id' => 8,
+	'footer_container_id' => 6,
 
 	/**
 	 * The number of articles to be displayed on a page before pagination.
@@ -148,8 +148,7 @@ return [
 	 * Enter IDs of the pages you want to exclude
 	 */
 	'main_nav_exclude_ids' => [
-		6,
-		8
+		6
 	],
 
 	/**
