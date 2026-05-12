@@ -48,12 +48,73 @@ iManager-side companions on `main`: `phase-14e1-events`,
 
 ## Pre-cutover acceptance issues
 
-> 🟡 Bigin will populate this list in the next conversation turn.
-> Add an entry per issue with: shape of the bug, repro steps, where
-> in the code I think the fix lives, and which sub-PR pattern fits
-> (`fix/<slug>` off `imanager-2.0`).
+Issues surfaced during the pre-cutover testing window. Resolved
+entries have landed on `imanager-2.0` via the listed branches.
 
-(Section deliberately empty — fill in as Bigin reports.)
+### ✅ Resolved on `imanager-2.0`
+
+1. **v1→v2 parent ID mapping (data + theme config).**
+   The `migrate:from-v1` CLI re-numbered page IDs but kept the
+   literal v1 `parent` values inside JSON `items.data`. On this
+   install three Footer-Pages children carried `parent=8` (v1 id
+   of "Footer Pages"); v2 id 8 is "Getting Help", v2 id 6 is the
+   actual "Footer Pages" — leaving page 8 as a self-parent. Same
+   class of mismapping hit the theme config (`footer_container_id`,
+   `main_nav_exclude_ids`).
+   - Data fix: manual `UPDATE items SET data = json_set(data,
+     '$.parent', 6) WHERE id IN (5,7,8)`; snapshot in
+     `data/imanager.db.pre-parent-mapping-fix`.
+   - Config fix: `fix/post-migration-config` (`footer_container_id`
+     8→6, drop obsolete `8` from `main_nav_exclude_ids`).
+   - The mapping bug itself **still lives in iManager's
+     `migrate:from-v1` CLI** and will hit any other 1.x install —
+     see Deferred §1.
+
+2. **Editor UI refresh (Design System + Pages styling + theme fixes).**
+   Adopted Scriptor Design System tokens (`tokens.css`), redesigned
+   the editor sidebar nav, primary-button variant. Pages-edit image
+   section: horizontal layout, button-spacing, hover highlight.
+   Editor messages list got success/error styling. Build chore:
+   served `styles.css` directly (dropped `styles.min.css`). Theme
+   bugfixes: cache no longer double-renders on hit; theme-config
+   correctly overrides scriptor-config (precedence was reversed).
+   - Branch: `feat/editor-ui-refresh`.
+
+3. **Page-list table header readability.**
+   `<th>` used `--color-surface-alt`, identical to the zebra-stripe
+   even-row background — header visually merged with rows. Switched
+   to `--color-brand` semibold uppercase label on transparent ground,
+   2 px brand-divider bottom-border; removed the redundant `thead tr`
+   top-border.
+   - Branch: `feat/editor-table-header`.
+
+4. **Pages-list parent column showed bare ID.**
+   `(string) $page->parent` forced a mental lookup. Replaced with
+   `<Name> (<linked-ID>)` using an O(1) id→page map for resolution;
+   orphan parents fall back to bare `(ID)`. Only the ID itself is
+   anchored so the column stays readable.
+   - Branch: `feat/editor-pages-parent-label`.
+
+### ⏳ Deferred (post-cutover, low priority)
+
+1. **iManager `migrate:from-v1` does not remap `parent` after
+   ID-renumber.** Same root cause as Resolved §1; any future v1→v2
+   migration will reproduce the same self-parent / wrong-parent
+   pattern. Fix lives in `Imanager\Cli\Migrate\FromV1Command` (or
+   wherever the post-write renumber pass is — needs locating).
+   Suggested sub-PR pattern: `fix/migrate-from-v1-parent-remap` off
+   `bigins/imanager` `main`.
+
+2. **Cycle-guard in Scriptor's page save-flow.**
+   `PagesModule.php:115-117` rejects the exact-self case (parent ==
+   self), and `renderParentOptions()` does not offer self in the
+   dropdown. Indirect cycles (`a→b→a`) are not detected — the
+   dropdown today still allows picking a descendant as parent.
+   Realistic in practice only via crafted POSTs since the dropdown
+   omits descendants when the API is consistent, but a
+   `wouldCreateCycle()` server-side check is the durable answer.
+   Suggested sub-PR pattern: `fix/pages-cycle-guard` off
+   `imanager-2.0` (or post-cutover, off `master`).
 
 ## Cutover workflow (Plan §3)
 
