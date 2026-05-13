@@ -229,6 +229,64 @@ final readonly class PageRepository
         return false;
     }
 
+    /**
+     * Would setting `$pageId`'s parent to `$candidateParentId` create a cycle?
+     *
+     * Walks the candidate parent's existing chain upwards; if it eventually
+     * passes through `$pageId`, the proposed save would close a loop. We
+     * deliberately don't pre-simulate the save into the storage layer — we
+     * just chase the candidate's *current* chain, because the only new edge
+     * created by the proposed save is `pageId → candidateParentId`, and the
+     * cycle test "does the candidate's chain reach pageId" already covers
+     * every loop that edge can produce.
+     *
+     * Edge cases:
+     *   - `$candidateParentId === 0` — no parent change to a root can ever
+     *     create a cycle.
+     *   - `$pageId === 0` — a brand-new page that isn't persisted yet has no
+     *     dependants, so no cycle is possible.
+     *   - `$candidateParentId === $pageId` — direct self-parent. Always a
+     *     cycle. (Caught defensively here; PagesModule also collapses this
+     *     case to 0 before reaching us, but a stale callsite shouldn't be
+     *     able to bypass the check.)
+     *   - The candidate's chain already contains a cycle that doesn't pass
+     *     through `$pageId` — pre-existing data corruption. We bail
+     *     truthfully (return false) rather than blame the save for an issue
+     *     that was already there.
+     *   - Broken parent pointer (parent id doesn't resolve to a page) — we
+     *     stop walking and return false; you don't reject a save because of
+     *     someone else's dangling reference.
+     */
+    public function wouldCreateCycle(int $pageId, int $candidateParentId): bool
+    {
+        if ($candidateParentId === 0 || $pageId === 0) {
+            return false;
+        }
+        if ($candidateParentId === $pageId) {
+            return true;
+        }
+
+        /** @var array<int, true> $visited */
+        $visited = [];
+        $current = $candidateParentId;
+        while ($current !== 0) {
+            if ($current === $pageId) {
+                return true;
+            }
+            if (isset($visited[$current])) {
+                return false;
+            }
+            $visited[$current] = true;
+
+            $parent = $this->find($current);
+            if ($parent === null) {
+                return false;
+            }
+            $current = $parent->parent;
+        }
+        return false;
+    }
+
     public function nextPosition(): int
     {
         $items = $this->items->findByCategory($this->categoryId);
