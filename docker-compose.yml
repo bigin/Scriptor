@@ -1,0 +1,45 @@
+# Scriptor 2.0 demo stack.
+#
+# Two services:
+#   scriptor — php:8.3-fpm-alpine + iManager 2.0; runs the entrypoint
+#              that bootstraps a fresh demo database on first start.
+#   web      — nginx:alpine fronting it on http://localhost:8080.
+#
+# Filesystem sharing: both services mount the same named volume
+# `scriptor-app` at `/var/www/scriptor`. On first `docker compose up`,
+# Docker initialises the empty volume from the scriptor image's
+# baked-in filesystem (source + vendor/). Subsequent starts reuse the
+# volume; `docker compose down -v` resets the demo to factory-fresh.
+
+services:
+  scriptor:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: bigins/scriptor-demo:latest
+    container_name: scriptor-demo
+    restart: unless-stopped
+    volumes:
+      - scriptor-app:/var/www/scriptor
+    healthcheck:
+      test: ["CMD-SHELL", "php -r \"exit(file_exists('/var/www/scriptor/data/imanager.db') ? 0 : 1);\""]
+      interval: 5s
+      timeout: 3s
+      retries: 24
+      start_period: 30s
+
+  web:
+    image: nginx:alpine
+    container_name: scriptor-demo-web
+    restart: unless-stopped
+    depends_on:
+      scriptor:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - scriptor-app:/var/www/scriptor:ro
+
+volumes:
+  scriptor-app:

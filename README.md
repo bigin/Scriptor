@@ -50,6 +50,18 @@ schema-migrate step. To run migrations explicitly:
 vendor/bin/imanager schema:migrate --db=data/imanager.db
 ```
 
+### Try it in Docker
+
+A bundled demo stack starts Scriptor 2.0 on `http://localhost:8080`
+with one admin user (`admin / scriptor`) and one example page:
+
+```bash
+docker compose up -d --build
+```
+
+See [`docs/demo.md`](docs/demo.md) for what the seed creates, how to
+reset to factory state, and what the image is (and isn't) good for.
+
 ## Admin panel
 
 ```
