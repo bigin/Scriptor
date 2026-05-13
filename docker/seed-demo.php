@@ -88,8 +88,10 @@ foreach ($userFieldDefs as [$name, $type, $position]) {
 }
 
 // -- Admin user --
-// PasswordFieldType validates `scriptor` (8 chars, meets default minLength)
-// and bcrypts it on save. Do NOT pre-hash here — let the field type do it.
+// `ItemRepository::save()` writes `$data` verbatim — it does NOT run
+// the registered FieldTypePlugin's validate() (that's the host editor's
+// job). So we have to hash the password ourselves here, the same way
+// `PasswordFieldType::validate()` would: bcrypt via `password_hash()`.
 fwrite(\STDOUT, "[seed] creating admin user (admin/scriptor)…\n");
 $items->save(new Item(
     id: null,
@@ -99,7 +101,7 @@ $items->save(new Item(
     data: [
         'role'     => 'admin',
         'email'    => 'admin@example.com',
-        'password' => 'scriptor',
+        'password' => password_hash('scriptor', \PASSWORD_BCRYPT),
     ],
 ));
 
