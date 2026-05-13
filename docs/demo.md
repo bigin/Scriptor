@@ -31,6 +31,17 @@ Then open:
 | **http://localhost:8080/** | The public front. The single seeded page rendered through Scriptor's default theme. |
 | **http://localhost:8080/editor/** | The editor. Sign in with the credentials below. |
 
+> **Port already in use?** If something else on the host (a local web
+> stack, another container) is already on `8080`, override the host
+> port via the `SCRIPTOR_DEMO_PORT` env var:
+>
+> ```bash
+> SCRIPTOR_DEMO_PORT=8090 docker compose up -d --build
+> ```
+>
+> The container itself always listens on `80`; only the host-side
+> port is dynamic.
+
 ### Default credentials
 
 ```

@@ -36,7 +36,9 @@ services:
       scriptor:
         condition: service_healthy
     ports:
-      - "8080:80"
+      # Host port can be overridden — e.g. `SCRIPTOR_DEMO_PORT=8090 docker compose up`
+      # — when 8080 is already taken on the host (ServBay, another container, …).
+      - "${SCRIPTOR_DEMO_PORT:-8080}:80"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
       - scriptor-app:/var/www/scriptor:ro
