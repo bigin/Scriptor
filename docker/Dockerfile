@@ -42,22 +42,12 @@ ENV COMPOSER_HOME=/tmp/composer \
 
 WORKDIR /var/www/scriptor
 
-# Bring composer.json + the repo-rewrite helper in first so the install
-# layer caches independently from application source changes.
+# Bring composer.json + composer.lock in first so the install layer
+# caches independently from application source changes. The library
+# is now a plain Packagist dependency (`bigins/imanager:^2.0`), so a
+# straight `composer install` is enough — no repo rewrites needed.
 COPY composer.json composer.lock ./
-COPY docker/composer-rewrite.php /tmp/composer-rewrite.php
-
-# The repo's composer.json declares a `path` repository at `../imanager`
-# for local development. Inside the container that path doesn't exist, and
-# modern Composer treats a missing path-repo as a fatal error during
-# discovery — so we rewrite the `repositories` array to a VCS repo
-# pointing at the public iManager GitHub repo (iManager's `main` branch
-# is `branch-alias`-mapped to `2.0.x-dev`, which is what composer.json
-# requires). Then update (not install) so the lock regenerates against
-# the VCS source.
-RUN php /tmp/composer-rewrite.php \
- && rm -f composer.lock /tmp/composer-rewrite.php \
- && composer update --no-dev --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
 # Application code last so the previous layers (large) stay cached
 # across edits to PHP source / themes / etc.
