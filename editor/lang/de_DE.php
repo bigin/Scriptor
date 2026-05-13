@@ -83,6 +83,7 @@ $i18n = [
 	'error_slug_reserved' => 'Dieser Slug ist reserviert und kann nicht verwendet werden.',
 	'error_page_title_exists' => 'Seite konnte nicht gespeichert werden, da bereits eine Seite mit demselben Namen existiert.',
 	'error_page_content' => 'Feld Inhalt darf nicht leer sein.',
+	'error_page_parent_cycle' => 'Dieses Übergeordnete-Element ist nicht zulässig — es würde einen Zyklus im Seitenbaum erzeugen.',
 	'successful_saved_page' => 'Die Seite wurde erfolgreich gespeichert.',
 	'parent_select_option' => 'Auswählen',
 	'error_deleting_first_page' => 'Fehler beim Löschen von primären Seite. Die Seite mit der ID 1, kann nicht gelöscht werden.',

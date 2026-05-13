@@ -119,6 +119,23 @@ final class PagesModule
             $parentId = 0;
         }
 
+        // Cycle guard: reject the save if the proposed parent's chain
+        // walks back through the page being edited (a → b → … → a). The
+        // direct self-parent case above already collapses to root, so this
+        // catches *indirect* cycles. Only relevant when editing an
+        // existing page — a brand-new page has no dependants yet.
+        if ($existing !== null
+            && $parentId !== 0
+            && $this->pages->wouldCreateCycle($existing->id() ?? 0, $parentId)
+        ) {
+            $this->saveError(
+                $isXhr,
+                $this->t('error_page_parent_cycle')
+                    ?: 'Cannot set this parent — it would create a cycle in the page tree.',
+            );
+            return;
+        }
+
         if ($this->pages->slugTaken($slug, $parentId, $existing?->id())) {
             $this->saveError($isXhr, $this->t('error_page_title_exists') ?: 'A page with that slug already exists under this parent.');
             return;

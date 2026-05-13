@@ -83,6 +83,7 @@ $i18n = [
 	'error_slug_reserved' => 'This slug is reserved and cannot be used.',
 	'error_page_title_exists' => 'Page could not be saved, a page with the specified name already exists.',
 	'error_page_content' => 'The Content field is mandatory.',
+	'error_page_parent_cycle' => 'Cannot set this parent — it would create a cycle in the page tree.',
 	'successful_saved_page' => 'The page was saved successfully.',
 	'parent_select_option' => 'Select option',
 	'error_deleting_first_page' => 'Error when deleting primary page. The page with ID 1, cannot be deleted.',

@@ -35,6 +35,19 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   `Sanitizer`, `ImageUrlBuilder` — public-site renderer that bundled
   themes consume through the standard `$site` surface.
 
+### Fixed
+
+- **Pages tree: indirect-cycle guard on parent save.**
+  `PageRepository::wouldCreateCycle()` walks the proposed parent's
+  existing chain upwards; if it reaches the page being edited,
+  `PagesModule::saveAction()` refuses the save with a localised
+  error (`error_page_parent_cycle`, en + de). The direct
+  self-parent case was already collapsed to root, but indirect
+  cycles (a → b → c → a) could be saved silently. The frontend's
+  `Site::buildPageUrl()` already tolerates cyclic data via a
+  visited-set guard, so the editor now matches the frontend's
+  defensive shape.
+
 ### Removed
 
 - `Scriptor/imanager/` — the entire embedded 1.x library (~850 KB).
