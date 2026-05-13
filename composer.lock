@@ -4,15 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "760ef69f60aebe89dde4b79c0d44e8ab",
+    "content-hash": "a6ded29a37e1197e411047273dbd5fcf",
     "packages": [
         {
             "name": "bigins/imanager",
-            "version": "dev-main",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bigin/imanager.git",
+                "reference": "231ca442cb00014d8c1f86d32e91e54a55f2ce08"
+            },
             "dist": {
-                "type": "path",
-                "url": "../imanager",
-                "reference": "d88b1e9d29c6995aedbf0eb52af0640e22521f2b"
+                "type": "zip",
+                "url": "https://api.github.com/repos/bigin/imanager/zipball/231ca442cb00014d8c1f86d32e91e54a55f2ce08",
+                "reference": "231ca442cb00014d8c1f86d32e91e54a55f2ce08",
+                "shasum": ""
             },
             "require": {
                 "erusev/parsedown": "^1.7",
@@ -51,34 +57,7 @@
                     "Imanager\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Imanager\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "test": [
-                    "phpunit"
-                ],
-                "lint": [
-                    "php-cs-fixer fix --dry-run --diff"
-                ],
-                "format": [
-                    "php-cs-fixer fix"
-                ],
-                "stan": [
-                    "phpstan analyse --memory-limit=512M"
-                ],
-                "psalm": [
-                    "psalm"
-                ],
-                "ci": [
-                    "@lint",
-                    "@stan",
-                    "@psalm",
-                    "@test"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -99,10 +78,11 @@
                 "imanager",
                 "sqlite"
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/bigin/imanager/issues",
+                "source": "https://github.com/bigin/imanager/tree/2.0.0"
+            },
+            "time": "2026-05-13T14:04:40+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -1390,11 +1370,9 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {
-        "bigins/imanager": 20
-    },
-    "prefer-stable": true,
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2",
@@ -1408,5 +1386,5 @@
     "platform-overrides": {
         "php": "8.2.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

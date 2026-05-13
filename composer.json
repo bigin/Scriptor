@@ -13,8 +13,6 @@
             "role": "Developer"
         }
     ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "require": {
         "php": "^8.2",
         "ext-gd": "*",
@@ -22,17 +20,8 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-pdo_sqlite": "*",
-        "bigins/imanager": "2.0.x-dev"
+        "bigins/imanager": "^2.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../imanager",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Scriptor\\Boot\\": "boot/"

@@ -48,6 +48,24 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   visited-set guard, so the editor now matches the frontend's
   defensive shape.
 
+### Changed
+
+- **Composer dep on iManager: switched from path-repo + dev to the
+  Packagist stable release.** With `bigins/imanager 2.0.0` published
+  on Packagist, the `composer.json` no longer declares the
+  `../imanager` path repository or the `minimum-stability: dev` /
+  `prefer-stable: true` pair, and the constraint is plain `^2.0`
+  instead of `2.0.x-dev`. `composer install` now works against a
+  fresh clone without any sibling iManager checkout — and against
+  the public Packagist mirror, not the local working tree.
+- **Demo image: drop the composer-rewrite workaround.** With
+  `bigins/imanager` resolvable from Packagist directly,
+  `docker/Dockerfile` no longer needs the `composer-rewrite.php`
+  helper (which patched the `repositories` array at build time to
+  side-step the missing path-repo). The Dockerfile now runs a
+  plain `composer install --no-dev`. `docker/composer-rewrite.php`
+  is removed.
+
 ### Removed
 
 - `Scriptor/imanager/` — the entire embedded 1.x library (~850 KB).
