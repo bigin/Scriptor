@@ -5,6 +5,27 @@ declare(strict_types=1);
 use Scriptor\Boot\App;
 use Scriptor\Boot\Frontend\Site;
 
+// PHP's built-in server (`php -S … -t public public/index.php`) runs
+// this file for every request. Hand existing static files (CSS, JS,
+// images, fonts under public/...) back to the server instead of
+// bootstrapping the framework. Apache/Caddy/nginx handle this via
+// their own try_files rules; the PHP built-in needs the explicit
+// `return false`. Branch is a no-op under FPM (PHP_SAPI != cli-server).
+if (\PHP_SAPI === 'cli-server') {
+    $reqPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', \PHP_URL_PATH) ?? '/';
+    $file = __DIR__ . $reqPath;
+    // Hand existing static assets back to the server, EXCEPT .php
+    // files (only this front controller may run) and dotfiles
+    // (.htaccess etc. would otherwise leak via the cli-server's
+    // file_get_contents).
+    if ($reqPath !== '/'
+        && is_file($file)
+        && ! str_ends_with(strtolower($reqPath), '.php')
+        && ! preg_match('#(^|/)\.[^/]+#', $reqPath)) {
+        return false;
+    }
+}
+
 require_once dirname(__DIR__) . '/boot.php';
 
 /** @var array<string, mixed> $config */
