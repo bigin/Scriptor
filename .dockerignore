@@ -1,0 +1,35 @@
+# Keep the demo image free of maintainer-local runtime state.
+# Without this file, `COPY . .` in docker/Dockerfile pulls in the
+# maintainer's live SQLite database, uploaded files, caches, logs and
+# git history — which would (a) ship private content with the public
+# image, (b) prevent the entrypoint's first-start seeding from ever
+# running, and (c) inflate the image.
+
+# Git internals
+.git
+.gitignore
+.gitattributes
+.editorconfig
+.claude
+.DS_Store
+**/.DS_Store
+
+# Composer cache / lock state is needed at build time, but skip the
+# host's installed vendor/ — the container runs composer install itself.
+vendor
+
+# Runtime state
+data/imanager.db
+data/imanager.db-*
+data/imanager.db.*
+data/cache/sections
+data/logs
+data/backups
+data.bak.*
+public/uploads
+
+# Editor + IDE clutter
+node_modules
+*.log
+.idea
+.vscode
