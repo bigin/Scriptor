@@ -10,17 +10,17 @@ isset($editor) or die('You cannot access this page directly');
 	<meta name="description" content="">
 	<!-- Mobile-friendly viewport -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="icon" href="<?php echo $editor->siteUrl; ?>/theme/favicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/prism.css">
-	<link href="<?php echo $editor->siteUrl; ?>/theme/css/css-gg.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/jquery-ui.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/tokens.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/css/styles.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond.css">
-	<link rel="stylesheet" href="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-image-preview.css">
+	<link rel="icon" href="<?php echo $editor->assetUrl('favicon.ico'); ?>" type="image/x-icon" />
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('css/prism.css'); ?>">
+	<link href="<?php echo $editor->assetUrl('css/css-gg.min.css'); ?>" rel="stylesheet">
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('css/jquery-ui.css'); ?>">
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('css/tokens.css'); ?>">
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('css/styles.css'); ?>">
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('scripts/filepond/filepond.css'); ?>">
+	<link rel="stylesheet" href="<?php echo $editor->assetUrl('scripts/filepond/filepond-image-preview.css'); ?>">
 	<?php echo $editor->getResources('link'); ?>
-	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery.min.js"></script>
-	<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/jquery-ui.min.js"></script>
+	<script src="<?php echo $editor->assetUrl('scripts/jquery.min.js'); ?>"></script>
+	<script src="<?php echo $editor->assetUrl('scripts/jquery-ui.min.js'); ?>"></script>
 	<?php echo $editor->getResources('script'); ?>
 </head>
 <body>
@@ -43,14 +43,14 @@ isset($editor) or die('You cannot access this page directly');
 	</footer>
 </main>
 <?php echo $editor->getProperty('jsConfig'); ?>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/remarkable/remarkable.min.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/prism.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/editor.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-image-preview.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-file-validate-type.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond/filepond-file-validate-size.js"></script>
-<script src="<?php echo $editor->siteUrl; ?>/theme/scripts/filepond-init.js"></script>
+<script src="<?php echo $editor->assetUrl('scripts/remarkable/remarkable.min.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/prism.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/editor.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/filepond/filepond.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/filepond/filepond-image-preview.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/filepond/filepond-file-validate-type.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/filepond/filepond-file-validate-size.js'); ?>"></script>
+<script src="<?php echo $editor->assetUrl('scripts/filepond-init.js'); ?>"></script>
 <?php echo $editor->getResources('script', 'boddy'); ?>
 </body>
 </html>

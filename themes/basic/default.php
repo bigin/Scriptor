@@ -24,7 +24,7 @@
 	<!-- /OFFCANVAS -->
 </main>
 <script async src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
-<script async src="<?php echo $site->themeUrl; ?>/scripts/main.js"></script>
-<script async src="<?php echo $site->siteUrl.'/'.$site->config['admin_path']; ?>theme/scripts/prism.js"></script>
+<script async src="<?php echo $site->themeAssetUrl('scripts/main.js'); ?>"></script>
+<script async src="<?php echo $site->editorAssetUrl('scripts/prism.js'); ?>"></script>
 </body>
 </html>
