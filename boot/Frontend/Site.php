@@ -324,6 +324,27 @@ class Site
         return $this->sanitizer->markdown($this->page->content);
     }
 
+    /**
+     * Public URL for a static asset of the active theme (lives under
+     * public/themes/<theme>/). Pair with the PHP-source half at
+     * <root>/themes/<theme>/.
+     */
+    public function themeAssetUrl(string $relative): string
+    {
+        return rtrim($this->themeUrl, '/') . '/' . ltrim($relative, '/');
+    }
+
+    /**
+     * Public URL for an editor static asset (lives under
+     * public/editor-assets/). Used by frontend templates that embed
+     * admin-side resources — e.g. prism CSS shared between editor
+     * and blog.
+     */
+    public function editorAssetUrl(string $relative): string
+    {
+        return rtrim($this->siteUrl, '/') . '/editor-assets/' . ltrim($relative, '/');
+    }
+
     protected function renderNavigation(): string
     {
         $top = $this->pages->findActiveByParent(0);

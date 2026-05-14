@@ -29,7 +29,11 @@ use Scriptor\Boot\Frontend\Sanitizer;
  */
 class Editor
 {
+    /** Host URL, no path (e.g. `https://example.com`). */
+    public string $baseUrl;
+    /** Admin mount point (e.g. `https://example.com/editor`). */
     public string $siteUrl;
+    /** Public URL of the editor's static-asset directory. */
     public string $themeUrl;
     public string $version = '2.0.0-dev';
     public string $pageTitle = 'Scriptor';
@@ -72,8 +76,11 @@ class Editor
         $this->sanitizer = new Sanitizer($container->get(ImanagerSanitizer::class));
         $this->templateParser = new TemplateRenderer();
 
-        $this->siteUrl = self::detectSiteUrl() . '/' . trim((string) $config['admin_path'], '/');
-        $this->themeUrl = $this->siteUrl . '/theme';
+        $this->baseUrl  = self::detectSiteUrl();
+        $this->siteUrl  = $this->baseUrl . '/' . trim((string) $config['admin_path'], '/');
+        // Editor static assets live at /editor-assets/ in the webroot,
+        // independent of the admin_path URL prefix.
+        $this->themeUrl = $this->baseUrl . '/editor-assets';
         $this->urlSegments = self::editorSegments($config);
 
         $this->loadI18n();
@@ -194,6 +201,17 @@ class Editor
     {
         $value = $this->csrf->token($name);
         return '?tokenName=' . rawurlencode($name) . '&tokenValue=' . rawurlencode($value);
+    }
+
+    /**
+     * Public URL for an editor static asset (CSS, JS, image, font)
+     * under public/editor-assets/. Used by editor templates and by any
+     * frontend template that needs to embed admin-side resources
+     * (e.g. the prism syntax-highlighter css from a blog post).
+     */
+    public function assetUrl(string $relative): string
+    {
+        return rtrim($this->themeUrl, '/') . '/' . ltrim($relative, '/');
     }
 
     private function loadI18n(): void
