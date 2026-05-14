@@ -57,7 +57,7 @@ COPY . .
 # then drops into the FPM user for the actual workload.
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh \
- && mkdir -p data data/uploads-2.0 data/cache data/cache/sections data/logs data/backups data/settings \
+ && mkdir -p data data/cache data/cache/sections data/logs data/backups data/settings public/uploads \
  && chown -R www-data:www-data /var/www/scriptor
 
 # php-fpm listens on 9000; nginx (the sibling service) talks to us by

@@ -19,9 +19,9 @@ cd "${APP_DIR}"
 # Make sure the directories the library writes to exist and are owned by
 # the FPM user. Docker volumes can come up with root ownership on first
 # attach — fix that here rather than failing later.
-mkdir -p data data/uploads-2.0 data/cache data/cache/sections data/logs data/backups data/settings
+mkdir -p data data/cache data/cache/sections data/logs data/backups data/settings public/uploads
 if [ "$(id -u)" = "0" ]; then
-    chown -R www-data:www-data data
+    chown -R www-data:www-data data public/uploads
 fi
 
 if [ ! -f "${DB_PATH}" ]; then
