@@ -396,7 +396,8 @@ class BasicTheme extends Site
      * upload over the migrated 1.x `images[]` data array. The returned
      * shape is the 1.x-style `{name, path, title, position}` dict the
      * Frontend\ImageUrlBuilder consumes — `path` is normalised to point
-     * at `data/uploads-2.0/...` so URL rewriting doesn't double-prefix.
+     * at `uploads/...` (public/uploads/ in the webroot) so URL rewriting
+     * doesn't double-prefix.
      *
      * @return array{name: string, path: string, title: string, position: int}|null
      */
@@ -418,9 +419,9 @@ class BasicTheme extends Site
         return [
             'name'     => $first->name,
             // FileStorage paths are storage-root-relative; the
-            // ImageUrlBuilder rewrites `data/uploads/` legacy prefixes
-            // only, so prepend the 2.0 root explicitly.
-            'path'     => 'data/uploads-2.0/' . \dirname($first->path) . '/',
+            // ImageUrlBuilder rewrites legacy `data/uploads*` prefixes,
+            // so prepend the modern public root explicitly.
+            'path'     => 'uploads/' . \dirname($first->path) . '/',
             'title'    => $first->title,
             'position' => $first->position,
         ];
