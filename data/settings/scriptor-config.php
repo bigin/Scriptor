@@ -49,9 +49,11 @@ $config = [
 	/**
 	 * Relative path to the admin folder.
 	 *
-	 * Please note that if you change the folder name, you also need to update the paths
-	 * in the .htaccess file in the root directory accordingly.
-	 * 
+	 * The folder must exist on disk and contain `index.php` (the admin entry).
+	 * Routing to this path is handled in PHP (`index.php` delegates
+	 * `/<admin_path>/*` to `<admin_path>/index.php`), so no web-server
+	 * rewrite rules need to be touched when this value changes.
+	 *
 	 * @var string
 	 */
 	'admin_path' => 'editor/',

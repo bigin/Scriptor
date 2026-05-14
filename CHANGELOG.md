@@ -65,6 +65,20 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   side-step the missing path-repo). The Dockerfile now runs a
   plain `composer install --no-dev`. `docker/composer-rewrite.php`
   is removed.
+- **`.htaccess` refreshed for the 2.0 layout.** The Apache fallback
+  rules now match what actually lives in the tree: directory deny
+  list switched from the gone `imanager`/`modules`/`core` to the
+  current `boot`/`vendor`/`bin` (real source dirs); legacy
+  `imanager/upload/server/php` exception removed; the literal
+  `editor/`-rewrite is gone — every request lands on `index.php`
+  which delegates `/<admin_path>/*` in PHP, so changing
+  `admin_path` no longer requires editing `.htaccess`. The static
+  asset whitelist gained `woff/woff2/ttf/eot` for theme fonts.
+  Caddy and nginx ignore `.htaccess` entirely; this is purely an
+  Apache-fallback hygiene pass.
+- **`scriptor-config.php` admin_path comment** no longer claims
+  the user must update `.htaccess` after changing `admin_path`.
+  The 2.0 PHP-level delegation in `index.php` makes that obsolete.
 
 ### Removed
 
