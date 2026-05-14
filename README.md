@@ -22,9 +22,12 @@ Demo: [https://demos.scriptor-cms.info](https://demos.scriptor-cms.info)
   `intervention/image` (was: jQuery-fileupload + 1.x `FieldFileupload`).
 - **Per-image titles** as a typed `files.title` column with markdown
   caption rendering on the frontend.
-- **Single-entry routing** (`index.php` delegates `/<admin_path>/*` to
-  `editor/index.php` in PHP) — works on Apache, Caddy, Nginx, php-S
-  without per-server rewrite rules.
+- **Single-entry routing** (`public/index.php` delegates
+  `/<admin_path>/*` to `editor/index.php` in PHP) — works on Apache,
+  Caddy, Nginx, php-S without per-server rewrite rules.
+- **`public/` webroot** — source code, the SQLite DB, configs and
+  composer artifacts live OUTSIDE the webroot, so a misconfigured web
+  server cannot expose them.
 
 ## Requirements
 
@@ -32,8 +35,9 @@ Demo: [https://demos.scriptor-cms.info](https://demos.scriptor-cms.info)
 - Composer 2
 - SQLite 3.38+ (for `json_extract`, FTS5)
 - Standard PHP extensions: `mbstring`, `dom`, `json`, `gd`, `pdo_sqlite`
-- A web server that routes unknown paths to `index.php` — Apache (`.htaccess`
-  is shipped), Caddy, Nginx, or PHP's built-in server.
+- A web server with its document root pointed at `public/` and unknown
+  paths routed to `public/index.php` — Apache (`public/.htaccess` is
+  shipped), Caddy, Nginx, or PHP's built-in server.
 
 ## Installation
 
@@ -43,12 +47,22 @@ cd Scriptor
 composer install
 ```
 
-The installer creates `data/imanager.db` on the first request via the
-schema-migrate step. To run migrations explicitly:
+Point your web server at the `public/` directory. The installer
+creates `data/imanager.db` on the first request via the schema-migrate
+step. To run migrations explicitly:
 
 ```bash
 vendor/bin/imanager schema:migrate --db=data/imanager.db
 ```
+
+For PHP's built-in server during local development:
+
+```bash
+php -S 127.0.0.1:8080 -t public public/index.php
+```
+
+For shared hosting where the webroot is fixed (e.g. `public_html/`),
+see [`docs/install-shared-hosting.md`](docs/install-shared-hosting.md).
 
 ### Try it in Docker
 
@@ -113,26 +127,44 @@ vendor/bin/imanager migrate:from-v1 \
 
 After the migration finishes you can delete the `data/datasets/buffers/`
 directory. The original 1.x uploads stay in `data/uploads/` (untouched);
-the migrator copies them into `data/uploads-2.0/` for the 2.0 file
+the migrator copies them into `public/uploads/` for the 2.0 file
 storage. `data/uploads/` is safe to remove once you've verified the
 migration on the live site.
 
 ## Project layout
 
 ```
+public/                      THE WEBROOT (everything below is web-reachable)
+  index.php                  thin front controller
+  .htaccess                  Apache fallback (dotfile-deny + front-controller)
+  themes/<theme>/            static-only half of each theme (css, fonts, …)
+  editor-assets/             editor's CSS, JS, fonts, filepond, images
+  uploads/<itemId>/<…>       FilePond uploads — served directly
+  favicon.ico                root-level copy for the browser's implicit fetch
+
 boot/                        PSR-4 (Scriptor\Boot\) — Frontend, Editor, Events
   Frontend/Site, Page, …     public site renderer + repos
   Editor/Editor, Router, …   admin shell + per-module wiring
   Events/                    domain-event listeners (cache, file cleanup)
   ImanagerBootstrap.php      DI container + service graph
-editor/                      admin theme (templates, scripts, styles)
-site/themes/<theme>/         public-site themes (basic ships in-tree)
-data/
+boot.php                     bootstrap include (loaded by public/index.php)
+
+themes/<theme>/              PHP source of each theme — _ext.php, lib/,
+                             template.php, vendor/  (NEVER web-served)
+modules/                     user-installable site modules
+editor/                      admin entry + lang + PHP templates
+  index.php                  delegated to from public/index.php
+  lang/                      en_US.php, de_DE.php
+  theme/                     template.php, header.php, summary.php
+
+data/                        runtime state — NEVER web-served
   settings/                  scriptor-config.php, custom.scriptor-config.php
   imanager.db                SQLite database
-  uploads-2.0/               file storage root for FilePond uploads
   cache/sections/            FilesystemCache (page-level HTML)
+  logs/, backups/
+
 bin/                         CLI helpers (currently: perf-smoke.php)
+docs/                        themes.md, install-shared-hosting.md, …
 ```
 
 ## Use Scriptor as a library
@@ -146,7 +178,7 @@ use Imanager\Storage\ItemRepository;
 
 require __DIR__ . '/vendor/autoload.php';
 
-App::set(ImanagerBootstrap::create(__DIR__));
+App::set(ImanagerBootstrap::create(__DIR__));   // __DIR__ = the Scriptor root
 
 $item = App::container()->get(ItemRepository::class)->find(1);
 ```

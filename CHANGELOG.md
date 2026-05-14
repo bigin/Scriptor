@@ -1,5 +1,50 @@
 # Changelog
 
+## Unreleased
+
+### Changed (BREAKING — webroot reorganisation)
+
+- **`public/` is now THE webroot.** Source code, the SQLite DB, configs,
+  composer artifacts, the editor's PHP source, theme PHP source and CLI
+  scripts all live OUTSIDE the webroot now. Defense-in-depth is no longer
+  load-bearing: a misconfigured Caddy/nginx that lacks deny rules can no
+  longer expose `data/imanager.db`, `.git/`, `vendor/`, `boot/`, or
+  `bin/` simply because those paths are not below the document root.
+  Server admins point `root` at `<install>/public/` and that's it.
+- **Themes split into two halves.**
+  `themes/<name>/` (PHP source, includes only) +
+  `public/themes/<name>/` (static assets — css, fonts, images, scripts).
+  The `site/` wrapper directory is gone; `site/themes/` becomes
+  `themes/`, `site/modules/` becomes `modules/`.
+- **Editor static assets move to `public/editor-assets/`.** The editor
+  theme's PHP files (`template.php`, `header.php`, `summary.php`) stay in
+  `editor/theme/` — included only by `editor/index.php`, never web-served.
+  `editor/lang/` stays in `editor/`.
+- **User uploads move to `public/uploads/`** (was `data/uploads-2.0/`).
+  Inside the webroot, served by the web server directly, no alias rules
+  needed. The image rendering layer (`Frontend\ImageUrlBuilder`) is
+  backward-compatible with both the old `data/uploads/` (1.x-migrated)
+  and `data/uploads-2.0/` (2.0 pre-public-webroot) prefixes — existing
+  items in the live DB keep rendering without a path migration.
+- **New asset-URL helpers**:
+  `Site::themeAssetUrl()`, `Site::editorAssetUrl()`, `Editor::assetUrl()`.
+  All bundled-theme + editor-theme templates are converted. Custom
+  themes built against 2.0 should switch to the helpers — see
+  [`docs/themes.md`](docs/themes.md).
+- **`public/.htaccess`** replaces the root `.htaccess`. The deny list
+  collapses to dotfiles only, because the source/data directories no
+  longer live inside the webroot. The `editor/`-specific rewrite is
+  gone too — every request goes through `public/index.php`, which
+  handles admin-path delegation in PHP.
+- **Demo image rewired**: `nginx.conf` `root` is `/var/www/scriptor/public`,
+  the `/data/` alias + deny rules are dropped (data/ is outside the
+  webroot now), `/uploads/` location added with long-cache headers.
+
+See [`docs/refactor-public-webroot.md`](docs/refactor-public-webroot.md)
+for the full migration plan including server-config templates for
+Apache, Caddy, nginx and PHP's built-in server, and the
+allow/deny test matrix.
+
 ## 2.0.0 — Ground-up rewrite on iManager 2.0
 
 Scriptor 2.0 replaces the embedded 1.x `imanager/` library with the
