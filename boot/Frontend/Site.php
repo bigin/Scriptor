@@ -367,7 +367,13 @@ class Site
 
     private static function detectSiteUrl(): string
     {
-        $scheme = (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+        // Prefer X-Forwarded-Proto when present — TLS-terminating reverse
+        // proxies (nginx-proxy, traefik, …) reach PHP over plain HTTP
+        // and signal the original scheme via this header. First value
+        // wins for chained proxies ("https,http").
+        $proto = $_SERVER['HTTP_X_FORWARDED_PROTO']
+            ?? ((! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');
+        $scheme = strtolower(trim(explode(',', $proto)[0])) === 'https' ? 'https' : 'http';
         $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $scheme . '://' . $host;
     }
