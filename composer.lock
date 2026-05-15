@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bigins/imanager",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bigin/imanager.git",
-                "reference": "231ca442cb00014d8c1f86d32e91e54a55f2ce08"
+                "reference": "397b9616f361a5d44be5cc0c88c00f66d3deec0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bigin/imanager/zipball/231ca442cb00014d8c1f86d32e91e54a55f2ce08",
-                "reference": "231ca442cb00014d8c1f86d32e91e54a55f2ce08",
+                "url": "https://api.github.com/repos/bigin/imanager/zipball/397b9616f361a5d44be5cc0c88c00f66d3deec0c",
+                "reference": "397b9616f361a5d44be5cc0c88c00f66d3deec0c",
                 "shasum": ""
             },
             "require": {
@@ -80,9 +80,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bigin/imanager/issues",
-                "source": "https://github.com/bigin/imanager/tree/2.0.0"
+                "source": "https://github.com/bigin/imanager/tree/2.0.1"
             },
-            "time": "2026-05-13T14:04:40+00:00"
+            "time": "2026-05-15T12:18:14+00:00"
         },
         {
             "name": "erusev/parsedown",
@@ -1386,5 +1386,5 @@
     "platform-overrides": {
         "php": "8.2.0"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }

@@ -79,6 +79,68 @@ INSERT INTO "items" ("id", "category_id", "name", "label", "position", "active",
 INSERT INTO "items" ("id", "category_id", "name", "label", "position", "active", "data", "created", "updated") VALUES (8, 1, 'Getting Help', NULL, 8, 1, '{"menu_title":"Help","slug":"help","template":"","parent":6,"pagetype":"1","content":"...","images":null}', 1641818049, 1777793722);
 INSERT INTO "items" ("id", "category_id", "name", "label", "position", "active", "data", "created", "updated") VALUES (9, 2, 'admin', '', 1, 1, '{"role":"siteadmin","email":"gmail@chuck.norris.com","password":{"__class":"\\Imanager\\PasswordFieldValue","password":"$2y$10$gQdxIHrGm\/ia4RFzkoPXc.YmdpK87fbKGQIz.dXXhQuz0hwV4P\/C2","salt":""}}', 1519050932, 1777810723);
 
+-- Table: items_fts
+CREATE VIRTUAL TABLE items_fts USING fts5(
+    name,
+    label,
+    body,
+    tokenize = 'unicode61 remove_diacritics 2'
+);
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (1, 'Scriptor''s Demo Page', '', 'Scriptor''s Demo Page  scriptors-demo-page 0 1 Home Lorem markdownum notam sibila Argolicis habet, manibus illa, et. Fera vestigia
+metuunt annos ignibus *commota quippe*. Graiumque tua vix volanti Diomedeos
+lacrimis.
+
+### Urbe imbres qui laesaque
+
+Vestigia pallore. Matre quid dolore Acoetes sit videns frustraque retenta mare,
+caelestibus conamina coryli veloces.
+
+> Mariti cur: ante *causa* rigorem errabant gravitate imagine quotiensque amor
+> secundi cruribus [adclivi sibi est](http://caelestia.com/enim) apri dedimus
+> quinos. Mihi quoque gemelliparae factum gramen, alto nomina abest nostro,
+> illic extinctum regia, languescuntque. Anguis qui laesaque ciet nam lapsae,
+> *fortuna* manus at quam; in.
+
+### Highlighted code blocks
+
+```php
+echo $page->parsedown->text(
+    $page->content
+);
+```
+
+### Quibus sine velox
+
+Esse requiem pedes sub freta modo. Mortis **ieiunia furori animalia** credimus,
+terras per guttae paucaque coniuge in solas et illa sustinet? Antris proxima
+tantum lapidis Tonantis unde. Quoque sororis nivibus limine cognatumque
+pingebat, matre concentu Aeolides Cancri, ipsa terrae semper feci sanguine
+externos.
+
+- Acernas crescere et exitus
+- Silva deum Amphion tamen
+- Soror quondam contigit
+- Hamata modo quaerens ut velatam obmutuit decusque
+- Quam haererem aestatem ventos
+
+Incingere Aoniis celat imagine digitis et iram, cum est diu violave oculis passu
+meo. Sume in Cinyran aerane altrice amnis nefas gerebat properatis **orbem**
+sicco honorem ille bis. Repulsa quantaque aderat in relictas memoraverat arma
+desierant umerique, suo cum in nymphae signa praetemptatque suorum genetrici?
+Fieres sequitur quaeris Diana una parens, *te origo*; quid. Capherea liquitur
+mediis deerat facies agat quercu donavi Clara: Erinys Dies.   
+... default');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (2, 'Articles', '', 'Articles  Articles articles blog 0 1 <!--
+This page functions as a container for blog posts. Any page within this container is identified as a blog post and utilized by the base template. The base template uses these pages to display blog content in a consistent and efficient manner.
+-->');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (3, 'Get started with Scriptor', '', 'Get started with Scriptor  get-started-with-scriptor 2 1 Get started preserved default');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (4, 'Contact', '', 'Contact  Contact contact contact 0 1 The basic theme comes with a built-in contact form, so that your site visitors can make all sorts of queries and contact. The contact form does not support SMTP by default, but you may easily extend it with e.g. Scriptor''s SMailer module, which does.');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (5, 'Legal notice', '', 'Legal notice  Legal notice legal-notice  8 1 ...');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (6, 'Footer Pages', '', 'Footer Pages  Footer Pages some-pages  0 1 This page is a container for all pages that should appear in the footer navigation.');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (7, 'Privacy statement', '', 'Privacy statement  Privacy statement privacy-statement  8 1 ...');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (8, 'Getting Help', '', 'Getting Help  Help help  8 1 ...');
+INSERT INTO "items_fts" ("rowid", "name", "label", "body") VALUES (9, 'admin', '', 'admin  siteadmin gmail@chuck.norris.com \Imanager\PasswordFieldValue $2y$10$gQdxIHrGm/ia4RFzkoPXc.YmdpK87fbKGQIz.dXXhQuz0hwV4P/C2 ');
+
 -- Table: schema_version
 CREATE TABLE schema_version (
                 version     INTEGER PRIMARY KEY,

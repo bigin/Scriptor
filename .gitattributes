@@ -2,3 +2,9 @@
 * text=auto
 *.tpl linguist-language=HTML
 *.php linguist-language=PHP
+
+# Seed dumps carry verbatim user content (e.g. CRLF inside markdown
+# bodies pasted into the editor). Disable line-ending normalisation so
+# the round-trip via `imanager dump` stays byte-identical to source.
+docker/seed-demo.sql -text
+docker/seed-demo-uploads.tar.gz binary
