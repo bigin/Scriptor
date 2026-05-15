@@ -31,6 +31,7 @@ RUN { \
         echo 'opcache.fast_shutdown=1'; \
         echo 'realpath_cache_size=4M'; \
         echo 'realpath_cache_ttl=600'; \
+        echo 'expose_php=Off'; \
     } > /usr/local/etc/php/conf.d/scriptor-demo.ini
 
 # Composer + a writable home for it (composer.json may also pull dev
