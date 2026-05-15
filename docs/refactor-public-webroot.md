@@ -698,6 +698,28 @@ files landing under `public/uploads/` in the new layout vs.
    UI Web-Root flip is reversible in seconds, full smoke + Apache +
    nginx + php-S coverage runs pre-merge anyway.
 
+### Known limitation — accepted
+
+- **ServBay's `php-rewrite-default` Caddy snippet has no dotfile
+  block.** After the live deploy, `https://scriptor.cms/.htaccess`
+  serves the file's contents byte-for-byte — Caddy's `file_server`
+  has no special handling for dotfiles. The leak is informational
+  only (the file just enumerates the Apache fallback rules; all
+  truly-sensitive paths live outside `public/` and are physically
+  unreachable). `.env` and `/.git/...` are also outside `public/`,
+  so they're not affected. Decision: leave it. The Hetzner demo
+  ships its own `docker/nginx.conf` which already blocks dotfiles
+  via `location ~ /\.(?!well-known) { … }`. If ServBay-local hygiene
+  becomes important later, add to the site's Caddy stanza:
+
+  ```caddy
+  @dotfiles {
+      path_regexp dotfiles ^/(\.|.*/\.)[^/]+
+      not path /.well-known/*
+  }
+  respond @dotfiles 404
+  ```
+
 ---
 
 ## 10. Shared-hosting recipe (documentation snippet)
