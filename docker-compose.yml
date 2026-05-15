@@ -3,13 +3,20 @@
 # Two services:
 #   scriptor — php:8.3-fpm-alpine + iManager 2.0; runs the entrypoint
 #              that bootstraps a fresh demo database on first start.
-#   web      — nginx:alpine fronting it on http://localhost:8080.
+#   web      — nginx:alpine + the public/ webroot baked in; fronts
+#              scriptor on http://localhost:8080 and forwards .php to
+#              scriptor's fastcgi.
 #
-# Filesystem sharing: both services mount the same named volume
-# `scriptor-app` at `/var/www/scriptor`. On first `docker compose up`,
-# Docker initialises the empty volume from the scriptor image's
-# baked-in filesystem (source + vendor/). Subsequent starts reuse the
-# volume; `docker compose down -v` resets the demo to factory-fresh.
+# Volume strategy: code lives in the IMAGES (rebuilt on every
+# `docker compose up -d --build`); only mutable state is in named
+# volumes:
+#   scriptor-data    → /var/www/scriptor/data         (SQLite, cache,
+#                                                      logs, settings)
+#   scriptor-uploads → /var/www/scriptor/public/uploads (FileStorage)
+#
+# This means `git pull && docker compose up -d --build` propagates
+# code changes; the DB and uploads survive container recreation.
+# `docker compose down -v` still resets the demo to factory-fresh.
 
 services:
   scriptor:
@@ -20,7 +27,8 @@ services:
     container_name: scriptor-demo
     restart: unless-stopped
     volumes:
-      - scriptor-app:/var/www/scriptor
+      - scriptor-data:/var/www/scriptor/data
+      - scriptor-uploads:/var/www/scriptor/public/uploads
     healthcheck:
       test: ["CMD-SHELL", "php -r \"exit(file_exists('/var/www/scriptor/data/imanager.db') ? 0 : 1);\""]
       interval: 5s
@@ -29,7 +37,10 @@ services:
       start_period: 30s
 
   web:
-    image: nginx:alpine
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    image: bigins/scriptor-demo-web:latest
     container_name: scriptor-demo-web
     restart: unless-stopped
     depends_on:
@@ -41,7 +52,8 @@ services:
       - "${SCRIPTOR_DEMO_PORT:-8080}:80"
     volumes:
       - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
-      - scriptor-app:/var/www/scriptor:ro
+      - scriptor-uploads:/var/www/scriptor/public/uploads:ro
 
 volumes:
-  scriptor-app:
+  scriptor-data:
+  scriptor-uploads:

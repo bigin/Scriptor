@@ -1,0 +1,16 @@
+# Scriptor 2.0 — demo web image.
+#
+# Tiny nginx:alpine with the public/ webroot baked in. Pairs with the
+# php-fpm container (docker/Dockerfile) — both images carry an identical
+# copy of public/ so SCRIPT_FILENAME paths resolve in both places when
+# nginx forwards a .php request via fastcgi.
+#
+# At runtime, public/uploads/ is overlaid by the scriptor-uploads named
+# volume so user uploads persist across rebuilds.
+
+FROM nginx:alpine
+
+# Static webroot — everything in public/ except uploads/, which is
+# volume-mounted at runtime. .dockerignore handles the rest of the
+# noise (data/, vendor/, .git/, etc.).
+COPY public/ /var/www/scriptor/public/
