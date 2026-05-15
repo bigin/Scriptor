@@ -3,7 +3,7 @@
 	<span class="close"><i class="gg-close"></i></span>
 	<nav role="navigation">
 		<div class="brand-wrapper">
-			<a href="<?php echo htmlspecialchars($editor->siteUrl, ENT_QUOTES); ?>"><img alt="logo" width="200" src="<?php echo htmlspecialchars($editor->siteUrl, ENT_QUOTES); ?>/theme/images/logo.svg"></a>
+			<a href="<?php echo htmlspecialchars($editor->siteUrl, ENT_QUOTES); ?>"><img alt="logo" width="200" src="<?php echo htmlspecialchars($editor->assetUrl('images/logo.svg'), ENT_QUOTES); ?>"></a>
 		</div>
 <?php if ($editor->isLoggedIn()): ?>
 		<ul class="summary">

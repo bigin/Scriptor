@@ -493,8 +493,9 @@ final class PagesModule
         $i = static fn(string $s): string => htmlspecialchars($s, \ENT_QUOTES);
         $thumbName = \sprintf('300x300_%s', $file->name);
         // Public-URL convention from FileStorage::url() — the storage is
-        // wired with /data/uploads-2.0 as its public base in the bootstrap.
-        $base = '/data/uploads-2.0';
+        // wired with /uploads as its public base in the bootstrap
+        // (public/uploads/ on disk).
+        $base = '/uploads';
         $assetUrl = $base . '/' . $file->path;
         $thumbUrl = $base . '/' . \dirname($file->path) . '/thumbnail/' . $thumbName;
         $token  = $this->editor->csrf->token('pages');

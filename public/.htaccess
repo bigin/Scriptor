@@ -1,0 +1,26 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    AddDefaultCharset UTF-8
+
+    Options -Indexes
+    Options +SymLinksIfOwnerMatch
+
+    # Redirecting HTTP to HTTPS
+    # RewriteCond %{SERVER_PORT} 80
+    # RewriteRule ^(.*)$ https://your-website.com/$1 [R,L]
+
+    # Forbid every dot-file (.htaccess, .git is outside webroot anyway,
+    # .env, .DS_Store, ...). Source code, configs and the SQLite db all
+    # live OUTSIDE this webroot — no directory deny rules needed.
+    RewriteCond %{REQUEST_URI} (^|/)\.[^/]*($|/.*$)
+    RewriteRule ^ - [F,L]
+
+    # Front controller — everything that isn't a real file or directory
+    # goes to index.php. The PHP-level delegation in index.php routes
+    # `/<admin_path>/*` to the editor entry without needing an Apache
+    # rewrite rule for it.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?id=$1 [L,QSA]
+</IfModule>

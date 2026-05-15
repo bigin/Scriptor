@@ -39,8 +39,8 @@ final class ImanagerBootstrap
     public static function create(string $scriptorRoot, array $paths = []): Container
     {
         $databasePath = $paths['databasePath'] ?? $scriptorRoot . '/data/imanager.db';
-        $uploadsPath  = $paths['uploadsPath']  ?? $scriptorRoot . '/data/uploads-2.0';
-        $uploadsUrl   = $paths['uploadsUrl']   ?? '/data/uploads-2.0';
+        $uploadsPath  = $paths['uploadsPath']  ?? $scriptorRoot . '/public/uploads';
+        $uploadsUrl   = $paths['uploadsUrl']   ?? '/uploads';
         $cachePath    = $paths['cachePath']    ?? $scriptorRoot . '/data/cache/sections';
 
         $container = DefaultBootstrap::boot(

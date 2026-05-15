@@ -17,7 +17,8 @@ use Themes\Basic\BasicTheme;
 require_once __DIR__ . '/vendor/autoload.php';
 
 /** @var array<string, mixed> $config */
-$site = new BasicTheme(App::container(), $config, dirname(__DIR__, 3));
+// Scriptor root = themes/basic/ → ../../ (two `dirname` calls).
+$site = new BasicTheme(App::container(), $config, dirname(__DIR__, 2));
 
 // SuperCache: short-circuit the request when a cached body is available.
 $cached = $site->hitCache();

@@ -11,24 +11,33 @@ use Imanager\Files\ImageProcessor;
  * Builds public URLs for image-field values stored on items, generating
  * resized thumbnails on demand and caching them next to the original.
  *
- * The migration writes image entries with the 1.x-shaped path
- * `data/uploads/<itemDir>/` (the legacy upload prefix). This builder
- * transparently rewrites that to the 2.0 upload root configured at
- * construction time and produces a thumbnail filename of
- * `<W>x<H>_<file>` inside a sibling `thumbnail/` directory — same
- * convention 1.x used so the existing on-disk thumbnails stay reachable
- * without re-encoding.
+ * Image entries on items carry a `path` that historically used one of
+ * two legacy prefixes — `data/uploads/` (1.x flat-file shape) or
+ * `data/uploads-2.0/` (2.0 pre-public-webroot shape). Both are
+ * transparently rewritten to the current modern prefix (`uploads/`,
+ * matching public/uploads/ in the webroot) so existing items keep
+ * rendering without a DB migration.
+ *
+ * Thumbnails land at `<W>x<H>_<file>` inside a sibling `thumbnail/`
+ * directory — same convention 1.x used so the existing on-disk
+ * thumbnails stay reachable without re-encoding.
  *
  * Pass `width = 0` (or `height = 0`) to keep the source aspect ratio
  * along that axis. Both 0 → return the original image URL, no resize.
  */
 final readonly class ImageUrlBuilder
 {
+    /**
+     * @param list<string> $legacyPathPrefixes  Old path-prefixes to rewrite
+     *                                          on read. Order doesn't matter
+     *                                          (no prefix is a substring of
+     *                                          another).
+     */
     public function __construct(
         private ImageProcessor $processor,
         private string $scriptorRoot,
-        private string $legacyPathPrefix = 'data/uploads/',
-        private string $modernPathPrefix = 'data/uploads-2.0/',
+        private array $legacyPathPrefixes = ['data/uploads/', 'data/uploads-2.0/'],
+        private string $modernPathPrefix = 'uploads/',
     ) {}
 
     /**
@@ -60,8 +69,10 @@ final readonly class ImageUrlBuilder
     }
 
     /**
-     * Rewrites a legacy 1.x `data/uploads/...` path to the configured 2.0
-     * upload root, leaving foreign or already-modern paths untouched.
+     * Rewrites any of the configured legacy path prefixes
+     * (`data/uploads/`, `data/uploads-2.0/`) to the modern prefix
+     * (`uploads/`). Foreign or already-modern paths pass through
+     * untouched.
      */
     private function rewritePath(string $path): string
     {
@@ -69,9 +80,15 @@ final readonly class ImageUrlBuilder
         if ($clean === '') {
             return $this->modernPathPrefix;
         }
-        $legacy = trim($this->legacyPathPrefix, '/');
-        if ($legacy !== '' && str_starts_with($clean, $legacy . '/')) {
-            $clean = trim($this->modernPathPrefix, '/') . '/' . substr($clean, \strlen($legacy) + 1);
+        foreach ($this->legacyPathPrefixes as $legacy) {
+            $legacy = trim($legacy, '/');
+            if ($legacy === '') {
+                continue;
+            }
+            if (str_starts_with($clean, $legacy . '/')) {
+                $clean = trim($this->modernPathPrefix, '/') . '/' . substr($clean, \strlen($legacy) + 1);
+                break;
+            }
         }
         return $clean . '/';
     }
