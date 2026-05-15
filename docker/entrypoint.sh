@@ -38,12 +38,6 @@ if [ ! -f "${DB_PATH}" ]; then
         echo "[entrypoint] extracting ${SEED_UPLOADS} into public/."
         su -s /bin/sh -c "tar xzf ${SEED_UPLOADS} -C public/" www-data
     fi
-    # `imanager dump` (sqlite3 .dump) silently skips FTS5 virtual tables, so
-    # the seed leaves items_fts missing even though schema_version says the
-    # FTS migration ran. Re-apply the migration SQL and repopulate the index.
-    echo "[entrypoint] recreating FTS5 index (dump skips virtual tables)."
-    su -s /bin/sh -c "sqlite3 ${DB_PATH} < vendor/bigins/imanager/config/schema/0002_fts.sql" www-data
-    su -s /bin/sh -c "vendor/bin/imanager fts:rebuild --db=${DB_PATH}" www-data
     echo "[entrypoint] seed restore complete."
 fi
 
