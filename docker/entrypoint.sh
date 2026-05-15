@@ -3,16 +3,19 @@ set -eu
 
 # Entrypoint for the Scriptor demo container.
 #
-# On first start (no SQLite DB yet) we:
-#   1. Apply schema migrations against a fresh DB file.
-#   2. Run docker/seed-demo.php to create the canonical Pages/Users
-#      categories, an admin user (admin/scriptor) and one example page.
+# On first start (no SQLite DB yet) we restore a snapshot of the
+# scriptor-cms.dev demo content:
+#   1. docker/seed-demo.sql           — sqlite3 dump (schema + data,
+#                                       captured via `imanager dump`)
+#   2. docker/seed-demo-uploads.tar.gz — public/uploads/ tarball
 #
-# On every subsequent start the entrypoint is a no-op — the DB already
-# exists and the seed script is idempotent anyway.
+# On every start we then run schema:migrate, so a dump captured on
+# an older schema gets caught up if the image carries newer migrations.
 
 APP_DIR=/var/www/scriptor
 DB_PATH="${APP_DIR}/data/imanager.db"
+SEED_SQL="${APP_DIR}/docker/seed-demo.sql"
+SEED_UPLOADS="${APP_DIR}/docker/seed-demo-uploads.tar.gz"
 
 cd "${APP_DIR}"
 
@@ -25,19 +28,22 @@ if [ "$(id -u)" = "0" ]; then
 fi
 
 if [ ! -f "${DB_PATH}" ]; then
-    echo "[entrypoint] no database at ${DB_PATH} — bootstrapping demo data."
-    # Schema migrations are auto-applied on the first PDO resolve from
-    # DefaultBootstrap, so the seed script gets a fully-migrated DB for
-    # free. We run schema:migrate explicitly too so a future entrypoint
-    # change that doesn't open a container connection still applies
-    # pending migrations.
-    su -s /bin/sh -c "vendor/bin/imanager schema:migrate --db=${DB_PATH}" www-data
-    su -s /bin/sh -c "php docker/seed-demo.php" www-data
-    echo "[entrypoint] seed complete."
-else
-    echo "[entrypoint] database present — applying any pending schema migrations."
-    su -s /bin/sh -c "vendor/bin/imanager schema:migrate --db=${DB_PATH}" www-data
+    if [ ! -f "${SEED_SQL}" ]; then
+        echo "[entrypoint] FATAL: no DB and no seed at ${SEED_SQL}" >&2
+        exit 1
+    fi
+    echo "[entrypoint] no database — restoring seed from ${SEED_SQL}."
+    su -s /bin/sh -c "sqlite3 ${DB_PATH} < ${SEED_SQL}" www-data
+    if [ -f "${SEED_UPLOADS}" ]; then
+        echo "[entrypoint] extracting ${SEED_UPLOADS} into public/."
+        su -s /bin/sh -c "tar xzf ${SEED_UPLOADS} -C public/" www-data
+    fi
+    echo "[entrypoint] seed restore complete."
 fi
+
+# Always: apply any pending schema migrations (idempotent — no-op when
+# the dump's schema matches the image's migrations).
+su -s /bin/sh -c "vendor/bin/imanager schema:migrate --db=${DB_PATH}" www-data
 
 # Hand control to whatever CMD was passed (php-fpm by default).
 exec "$@"
