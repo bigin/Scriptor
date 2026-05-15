@@ -38,7 +38,7 @@ isset($editor) or die('You cannot access this page directly');
 	</div>
 	<footer role="contentinfo">
 		<div>
-			<a href="https://scriptor-cms.info">Scriptor</a> <?php echo htmlspecialchars($editor->version, ENT_QUOTES); ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
+			<a href="https://scriptor-cms.dev">Scriptor</a> <?php echo htmlspecialchars($editor->version, ENT_QUOTES); ?> &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
 		</div>
 	</footer>
 </main>

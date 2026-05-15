@@ -1,5 +1,5 @@
 
-![Scriptor Header](https://scriptor-cms.info/site/themes/info/images/scriptor-header.png)
+![Scriptor 2.0](docs/images/scriptor-banner-2.0.png)
 
 
 # Scriptor 2.0
@@ -8,7 +8,7 @@ Scriptor is a lightweight and versatile CMS for creating microsites, blogs, or
 wikis. Version 2.0 is a ground-up rewrite on top of [iManager 2.0][imanager],
 SQLite and PSR-standards (PSR-3, -14, -16).
 
-Demo: [https://demos.scriptor-cms.info](https://demos.scriptor-cms.info)
+Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 
 ## What's new in 2.0
 
@@ -191,9 +191,9 @@ themes consume.
 - iManager 2.0 framework: <https://github.com/bigin/imanager>
 - Phase 14 migration plan: `docs/imanager-2.0-phase-14-plan.md`
   (in the [iManager repo][imanager])
-- Documentation: <https://scriptor-cms.info/documentation/>
-- Modules / extensions: <https://scriptor-cms.info/extensions/extensions-modules/>
-- Demo: <https://demos.scriptor-cms.info>
+- Documentation: <https://scriptor-cms.dev/documentation/>
+- Modules / extensions: <https://scriptor-cms.dev/extensions/extensions-modules/>
+- Demo: <https://demos.scriptor-cms.dev>
 
 [imanager]: https://github.com/bigin/imanager
 

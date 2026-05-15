@@ -14,3 +14,16 @@
 
 # Phase 14 migration backups
 /data.bak.*
+
+# DB snapshots taken before risky operations — never commit
+/data/imanager.db.*
+
+# Hosting/SSL secrets — TLS private keys, IONOS exports etc. must
+# never enter the repo.
+/IONOS-SCRIPTOR/
+*.key
+*.pem
+
+# Editor / OS clutter
+/.claude/
+.DS_Store

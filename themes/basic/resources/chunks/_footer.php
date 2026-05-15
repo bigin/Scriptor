@@ -33,7 +33,7 @@
 		<div class="uk-child-width-expand@s" uk-grid>
 			<div class="uk-flex uk-flex-middle">
 				<p>Copyright &copy; <time datetime="<?php echo date('Y'); ?>"><?php echo date('Y'); ?></time>
-				<?php echo $site->getTCP('copyright_info') ?> | <a class="decent" href="https://scriptor-cms.info/"><strong>Scriptor</strong></a> 
+				<?php echo $site->getTCP('copyright_info') ?> | <a class="decent" href="https://scriptor-cms.dev/"><strong>Scriptor</strong></a>
 				<?php echo htmlspecialchars($site->version, ENT_QUOTES); ?></p>
 			</div>
 			<div class="uk-flex uk-flex-middle uk-flex-right@s">
