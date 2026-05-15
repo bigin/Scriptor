@@ -1,12 +1,14 @@
-# Hetzner demo deploy — plan
+# Hetzner demo deploy — architecture & decisions
 
-Status: **plan, not yet implemented**
+Status: **architecture frozen**
 Target URL: `https://demos.scriptor-cms.dev`
 Host: Hetzner Ubuntu 24.04 box (already provisioned — see project memory)
 
-This document is the single source of truth for getting Scriptor's
-demo image onto the Hetzner box behind nginx-proxy + Let's Encrypt.
-Update it as decisions land.
+> **Implementation lives at [`bigin/scriptor-cms-ops`](https://github.com/bigin/scriptor-cms-ops)**
+> (private). That repo holds the proxy stack, the Scriptor compose
+> override, and the runbook (§5–§10 below describe the same files).
+> This document stays in Scriptor as the architecture / decisions
+> reference — keep it in sync if the design changes.
 
 ---
 
@@ -158,189 +160,125 @@ everything's stable.
 
 ```
 /opt/
-├── proxy/                          ← nginx-proxy + acme-companion stack
-│   └── docker-compose.yml          (NEW — written in §6)
+├── scriptor-cms-ops/        ← clone of bigin/scriptor-cms-ops
+│   ├── proxy/
+│   │   └── docker-compose.yml
+│   └── scriptor-demo/
+│       ├── docker-compose.override.yml
+│       ├── .env.example
+│       └── .env             ← real values, NOT in git
 │
-└── scriptor-demo/                  ← Scriptor repo, cloned via git
+├── proxy/                   ← copy of scriptor-cms-ops/proxy/docker-compose.yml
+│   └── docker-compose.yml   (`docker compose up -d` from here)
+│
+└── scriptor-demo/           ← clone of bigin/Scriptor
     ├── (entire repo contents)
-    ├── docker-compose.yml          (existing — for local-dev)
-    └── docker/
-        └── docker-compose.prod.yml (NEW — host-deploy override, §7)
+    └── docker-compose.yml   (vanilla local-dev compose, untouched)
 ```
 
-Both stacks share an external Docker network called `proxy`.
-nginx-proxy creates the network (or we pre-create it once with
-`docker network create proxy`), the scriptor stack joins it as
-`external: true`.
+Three separate Git roots, three separate concerns:
 
-Why two separate stacks:
+- **Scriptor** — pure app source, safe to `git pull` without ops fallout.
+- **scriptor-cms-ops** — host-specific config: proxy stack, override
+  file, env values. Private repo because it carries the real domains
+  + e-mail.
+- **`/opt/proxy/`** — runtime working dir for the proxy. We keep it
+  separate from `scriptor-cms-ops/proxy/` so `cd /opt/proxy && docker
+  compose ...` is short, and so a re-clone of the ops repo doesn't
+  trigger compose to think the project moved (compose tracks the
+  containing-dir name).
+
+Both compose stacks share the external Docker network `proxy`.
+The proxy stack creates it (`name: proxy` directive); the scriptor
+stack joins it as `external: true`.
+
+Why two separate stacks (proxy vs. scriptor):
 - proxy is shared infra — could later host other apps under
   different `VIRTUAL_HOST`s without touching the scriptor stack
 - updates are independent — `git pull && docker compose up -d` for
   Scriptor doesn't bounce the proxy or its certs
 - the bundled `docker-compose.yml` stays unchanged and continues
-  to work for local dev; the prod-only bits live in a sibling
-  override file
+  to work for local dev; the prod-only bits live in the override
+  inside the ops repo
 
 ---
 
-## 6. Proxy stack — `/opt/proxy/docker-compose.yml`
+## 6. Proxy stack — pinned versions
 
-```yaml
-# nginx-proxy + acme-companion: shared TLS-terminating reverse proxy
-# for any container that declares VIRTUAL_HOST + LETSENCRYPT_HOST.
+`nginxproxy/nginx-proxy:1.7` + `nginxproxy/acme-companion:2.5`
+on host ports 80/443. Image tag pinning is intentional — protects
+against upstream surprise changes; bump deliberately.
 
-services:
-  nginx-proxy:
-    image: nginxproxy/nginx-proxy:1.7
-    container_name: nginx-proxy
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - certs:/etc/nginx/certs
-      - vhost:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    networks:
-      - proxy
-
-  acme-companion:
-    image: nginxproxy/acme-companion:2.5
-    container_name: nginx-proxy-acme
-    restart: unless-stopped
-    depends_on:
-      - nginx-proxy
-    volumes_from:
-      - nginx-proxy
-    volumes:
-      - acme:/etc/acme.sh
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      DEFAULT_EMAIL: juri.ehret@gmail.com
-    networks:
-      - proxy
-
-volumes:
-  certs:
-  vhost:
-  html:
-  acme:
-
-networks:
-  proxy:
-    name: proxy   # explicit name so the scriptor stack joins by name
-```
-
-Image tag pinning (`1.7`, `2.5`) is intentional — protects against
-upstream surprise changes. Bump deliberately when you want them.
+The actual compose file: [`scriptor-cms-ops/proxy/docker-compose.yml`](https://github.com/bigin/scriptor-cms-ops/blob/main/proxy/docker-compose.yml).
 
 ---
 
-## 7. Scriptor demo stack override — `docker/docker-compose.prod.yml`
+## 7. Scriptor demo stack override
 
-NEW FILE in this repo (lands with the implementation PR, not the
-plan PR). Loaded together with the bundled compose:
+Env-driven override on top of Scriptor's bundled `docker-compose.yml`.
+Lives at [`scriptor-cms-ops/scriptor-demo/docker-compose.override.yml`](https://github.com/bigin/scriptor-cms-ops/blob/main/scriptor-demo/docker-compose.override.yml).
+
+Loaded together with the bundled compose:
 
 ```bash
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d
+docker compose \
+  -f docker-compose.yml \
+  -f /opt/scriptor-cms-ops/scriptor-demo/docker-compose.override.yml \
+  --env-file /opt/scriptor-cms-ops/scriptor-demo/.env \
+  up -d --build
 ```
 
-```yaml
-# Override file for the Hetzner deploy.
-# Used as a SECOND compose file on top of the bundled docker-compose.yml:
-#   docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d
-#
-# Effect on the bundled stack:
-#   - drops the `ports: 8080:80` host-publish on `web` (nginx-proxy
-#     reaches `web` over the internal proxy network)
-#   - adds VIRTUAL_HOST + LETSENCRYPT_HOST so nginx-proxy + companion
-#     pick `web` up automatically
-#   - joins the external `proxy` network
+Effect on the bundled stack:
+- drops `ports: 8080:80` on `web` via the Compose-spec `!reset []`
+  marker — otherwise the port lists would merge and 8080 would stay
+  published on the host
+- adds `VIRTUAL_HOST` + `LETSENCRYPT_HOST` env on `web` so
+  nginx-proxy + companion auto-discover and TLS-terminate
+- joins the external `proxy` network
 
-services:
-  web:
-    ports: !reset []
-    environment:
-      VIRTUAL_HOST: demos.scriptor-cms.dev
-      VIRTUAL_PORT: "80"
-      LETSENCRYPT_HOST: demos.scriptor-cms.dev
-      LETSENCRYPT_EMAIL: juri.ehret@gmail.com
-    networks:
-      - default        # keep talking to the scriptor php-fpm container
-      - proxy          # let nginx-proxy reach us
-
-networks:
-  proxy:
-    external: true
-    name: proxy
-```
-
-`!reset []` is a Compose-spec marker that drops the `ports` list
-inherited from the base file — necessary because port mappings
-otherwise merge, leaving 8080:80 published to the host. (Compose
-2.24+; bundled with current `docker compose` plugin.)
+Values come from `.env` (`VIRTUAL_HOST=demos.scriptor-cms.dev` +
+`LETSENCRYPT_EMAIL=juri.ehret@gmail.com`). The `.env.example` is
+checked in as a template; the real `.env` stays out of git.
 
 ---
 
 ## 8. Initial deploy procedure
 
-Run the steps in order. ssh in once, do everything in one session.
-
-```bash
-# 0. pre-flight: from your Mac, confirm DNS is live.
-dig +short demos.scriptor-cms.dev    # must show the Hetzner IP
-
-# 1. SSH to the box.
-ssh hetzner
-
-# 2. Set up the proxy stack.
-sudo install -d -m 755 -o juri -g juri /opt/proxy
-cat > /opt/proxy/docker-compose.yml <<'YAML'
-[paste the §6 yaml — or scp it from local first]
-YAML
-
-cd /opt/proxy
-docker compose up -d
-docker compose ps              # both containers should be up
-
-# 3. Clone Scriptor.
-sudo install -d -m 755 -o juri -g juri /opt/scriptor-demo
-git clone https://github.com/bigin/Scriptor.git /opt/scriptor-demo
-cd /opt/scriptor-demo
-
-# 4. Bring up the demo stack with the prod override.
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d --build
-
-# 5. Watch acme-companion pick the host up + issue the cert.
-docker logs -f nginx-proxy-acme   # ctrl-c when you see
-                                  # "Creating/renewal of demos.scriptor-cms.dev finished"
-
-# 6. Smoke (also runnable from your Mac).
-curl -sI https://demos.scriptor-cms.dev/                    # 200
-curl -sI https://demos.scriptor-cms.dev/editor/             # 200
-curl -sI https://demos.scriptor-cms.dev/data/imanager.db    # 404
-curl -sI http://demos.scriptor-cms.dev/                     # 301 → https
-```
+Full step-by-step in [`scriptor-cms-ops/README.md`](https://github.com/bigin/scriptor-cms-ops/blob/main/README.md#initial-deploy).
+Pre-flight from your Mac: `dig +short demos.scriptor-cms.dev` must
+return the Hetzner IPv4 before the first `docker compose up`,
+otherwise acme-companion's HTTP-01 challenge will fail.
 
 ---
 
 ## 9. Updates
 
+App code:
+
 ```bash
 ssh hetzner
 cd /opt/scriptor-demo
 git pull
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml up -d --build
+docker compose \
+  -f docker-compose.yml \
+  -f /opt/scriptor-cms-ops/scriptor-demo/docker-compose.override.yml \
+  --env-file /opt/scriptor-cms-ops/scriptor-demo/.env \
+  up -d --build
+```
+
+Override / env tweaks:
+
+```bash
+ssh hetzner
+cd /opt/scriptor-cms-ops && git pull
+# rerun the compose up -d above to apply
 ```
 
 Named volumes (`scriptor-app`) survive container recreation, so the
 DB and uploads persist across updates.
 
-The proxy stack at `/opt/proxy` is independent — only update it
-when bumping the pinned `nginx-proxy:1.7` / `acme-companion:2.5`
-versions.
+Proxy stack at `/opt/proxy` is independent — only update when bumping
+the pinned versions.
 
 ---
 
@@ -399,21 +337,10 @@ Login: `admin` / `scriptor` (baked seed in `docker/seed-demo.php`).
 
 ## 12. Rollback
 
-If the initial deploy goes sideways:
-
-```bash
-ssh hetzner
-cd /opt/scriptor-demo
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml down
-# DNS still points at the box, but nothing answers — site is dark
-# rather than serving a broken Scriptor.
-
-# To full-reset (also drops the volume, including the seeded DB):
-docker compose -f docker-compose.yml -f docker/docker-compose.prod.yml down -v
-```
-
-The proxy stack stays up; it's tied to the host, not Scriptor. If
-you also want it down: `cd /opt/proxy && docker compose down`.
+See [`scriptor-cms-ops/README.md` § Rollback](https://github.com/bigin/scriptor-cms-ops/blob/main/README.md#rollback)
+for the exact commands. In short: `down` drops Scriptor but keeps the
+volume (and the proxy + certs); `down -v` also drops the named volume,
+re-seeding the DB on next `up`.
 
 If a Let's Encrypt rate limit or HTTP-01 challenge fails, the cert
 issuance retries automatically (acme-companion polls every hour by
@@ -453,6 +380,13 @@ Things explicitly out of scope for this plan but worth a follow-up:
 - **Two separate compose stacks** (not one big file). Reason:
   proxy is shared infra, scriptor is one of (potentially) many
   apps later; independent lifecycles.
+- **Separate ops repo (`bigin/scriptor-cms-ops`)** for the override
+  + proxy stack + .env, instead of putting them in Scriptor itself.
+  Reason: keep host-specific values (domain, e-mail) and
+  shared-infra config out of the open-source app source; gives
+  future apps (`scriptor-cms.dev` prod, etc.) a natural home;
+  Scriptor stays a clean "the application", not "the application +
+  my deployment".
 - **`!reset []` to drop ports in the override** (not a base-file
   edit). Reason: keep `docker-compose.yml` working for local-dev;
   prod-only behavior lives in the override.
@@ -466,11 +400,9 @@ Things explicitly out of scope for this plan but worth a follow-up:
 ```
 1. Read this doc, agree or amend.
 2. USER ACTION: add `demos A <hetzner-ip>` at IONOS, verify with dig.
-3. Open implementation branch (refactor/hetzner-demo or similar).
-4. Add docker/docker-compose.prod.yml in this repo, commit, PR.
-5. Merge PR.
-6. SSH hetzner, follow §8 steps 1–6.
-7. Verify §11 smoke matrix.
-8. Mark task #54 done.
-9. Resume Example-Theme (#48).
+3. Bootstrap scriptor-cms-ops repo with proxy stack + override + README.
+4. SSH hetzner, follow scriptor-cms-ops/README.md § Initial deploy.
+5. Verify §11 smoke matrix here.
+6. Mark task #54 done.
+7. Resume Example-Theme (#48).
 ```
