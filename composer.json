@@ -1,8 +1,8 @@
 {
     "name": "bigins/scriptor",
     "type": "project",
-    "description": "Scriptor CMS/CMF",
-    "keywords": ["scriptor", "cms", "cmf", "flat file"],
+    "description": "Lightweight PHP CMS for microsites, blogs and wikis — SQLite + FTS5 search, Markdown, rich-text editing.",
+    "keywords": ["scriptor", "cms", "cmf", "php", "sqlite", "markdown", "microsite", "blog", "wiki"],
     "license": "MIT",
     "homepage": "https://scriptor-cms.dev",
     "authors": [
