@@ -8,3 +8,19 @@
 # the round-trip via `imanager dump` stays byte-identical to source.
 docker/seed-demo.sql -text
 docker/seed-demo-uploads.tar.gz binary
+
+# Bundled third-party assets under public/editor-assets/ and
+# public/themes/. These are shipped as-is from upstream releases (no
+# build step) and would otherwise drown the real Scriptor source in
+# GitHub's language stats. Mark them as vendored so Linguist excludes
+# them. Own code (filepond-init.js, editor.js, styles.css, tokens.css,
+# themes/basic/{scripts/main.js,css/styles.css}) stays unmarked.
+public/editor-assets/scripts/jquery.min.js              linguist-vendored
+public/editor-assets/scripts/jquery-ui.min.js           linguist-vendored
+public/editor-assets/scripts/prism.js                   linguist-vendored
+public/editor-assets/scripts/remarkable/**              linguist-vendored
+public/editor-assets/scripts/filepond/**                linguist-vendored
+public/editor-assets/css/jquery-ui.css                  linguist-vendored
+public/editor-assets/css/css-gg.css                     linguist-vendored
+public/editor-assets/css/css-gg.min.css                 linguist-vendored
+public/editor-assets/css/prism.css                      linguist-vendored
