@@ -10,16 +10,13 @@ SQLite and PSR-standards (PSR-3, -14, -16).
 
 Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 
-## What's new in 2.0
+## Highlights
 
-- **SQLite storage** with JSON columns and FTS5 full-text search
-  (was: per-item flat files in `data/datasets/buffers/`).
-- **Composer-based** install on top of `bigins/imanager:^2.0`
-  (was: bundled `Scriptor/imanager/` library).
-- **PSR-14 domain events** drive cache invalidation and file cleanup
-  (was: hard-coded calls to `imanager()->sectionCache->expire()`).
+- **SQLite storage** with JSON columns and FTS5 full-text search.
+- **Composer-based** install on top of `bigins/imanager:^2.0`.
+- **PSR-14 domain events** drive cache invalidation and file cleanup.
 - **FilePond** uploads with on-demand thumbnail generation through
-  `intervention/image` (was: jQuery-fileupload + 1.x `FieldFileupload`).
+  `intervention/image`.
 - **Per-image titles** as a typed `files.title` column with markdown
   caption rendering on the frontend.
 - **Single-entry routing** (`public/index.php` delegates
