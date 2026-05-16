@@ -170,14 +170,25 @@ docs/                        themes.md, install-shared-hosting.md, …
 <?php
 
 use Scriptor\Boot\App;
-use Scriptor\Boot\ImanagerBootstrap;
-use Imanager\Storage\ItemRepository;
+use Scriptor\Boot\Frontend\Site;
 
-require __DIR__ . '/vendor/autoload.php';
+// Loads the autoloader, builds the iManager container on App::container(),
+// and populates $config from data/settings/scriptor-config.php.
+require __DIR__ . '/boot.php';
 
-App::set(ImanagerBootstrap::create(__DIR__));   // __DIR__ = the Scriptor root
+$site = new Site(App::container(), $config, __DIR__);
 
-$item = App::container()->get(ItemRepository::class)->find(1);
+// Data access — read pages directly off the Pages category:
+$home = $site->pages()->findHome();          // or ->findBySlug('contact')
+echo $home->name;                            // page title
+echo $home->content;                         // markdown source
+
+// Theme rendering — resolves $_SERVER['REQUEST_URI'] to a Page and
+// returns the same fragments the bundled themes' template.php consumes.
+// Call from your own front controller:
+$site->execute();
+echo $site->render('content');               // page body, rendered + cached
+echo $site->render('navigation');            // theme nav
 ```
 
 See `boot/Frontend/Site.php` for the full set of services the bundled
