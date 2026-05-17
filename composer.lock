@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "bigins/imanager",
-            "version": "2.2.0",
+            "version": "2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bigin/imanager.git",
-                "reference": "421aabb38bf252743bc8e4f2847e6be1abbca790"
+                "reference": "958025e9cc7b832f837424abef40462b1d9599cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bigin/imanager/zipball/421aabb38bf252743bc8e4f2847e6be1abbca790",
-                "reference": "421aabb38bf252743bc8e4f2847e6be1abbca790",
+                "url": "https://api.github.com/repos/bigin/imanager/zipball/958025e9cc7b832f837424abef40462b1d9599cd",
+                "reference": "958025e9cc7b832f837424abef40462b1d9599cd",
                 "shasum": ""
             },
             "require": {
@@ -83,9 +83,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bigin/imanager/issues",
-                "source": "https://github.com/bigin/imanager/tree/2.2.0"
+                "source": "https://github.com/bigin/imanager/tree/2.2.1"
             },
-            "time": "2026-05-17T09:35:29+00:00"
+            "time": "2026-05-17T09:50:01+00:00"
         },
         {
             "name": "erusev/parsedown",
