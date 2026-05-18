@@ -2,13 +2,13 @@
 
 Status: **architecture frozen**
 Target URL: `https://demos.scriptor-cms.dev`
-Host: Hetzner Ubuntu 24.04 box (already provisioned — see project memory)
+Host: Hetzner Ubuntu 24.04 box (already provisioned by the operator).
 
 > **Implementation lives at [`bigin/scriptor-cms-ops`](https://github.com/bigin/scriptor-cms-ops)**
 > (private). That repo holds the proxy stack, the Scriptor compose
 > override, and the runbook (§5–§10 below describe the same files).
-> This document stays in Scriptor as the architecture / decisions
-> reference — keep it in sync if the design changes.
+> This document is the architecture / decisions reference; keep it in
+> sync if the design changes.
 
 ---
 
@@ -23,12 +23,12 @@ updateable via `git pull && docker compose up -d --build`.
 
 ### Non-goals
 
-- Production `scriptor-cms.dev` itself — that comes later, this is
+- Production `scriptor-cms.dev` itself; that comes later, this is
   only the demo subdomain.
 - High availability, load balancing, multi-host. One box.
-- Database backup automation — covered by a manual cron job /
+- Database backup automation: covered by a manual cron job /
   rsync recipe, not infra-as-code.
-- CI/CD push-to-deploy — manual SSH + git pull is the workflow.
+- CI/CD push-to-deploy: manual SSH + git pull is the workflow.
 
 ---
 
@@ -39,7 +39,7 @@ updateable via `git pull && docker compose up -d --build`.
                           │
                           ▼
     ┌─────────────────────────────────────────────────────┐
-    │  Hetzner host — UFW (22/80/443), Docker 29.4.3      │
+    │  Hetzner host: UFW (22/80/443), Docker 29.4.3       │
     │                                                      │
     │  ┌────────────────────────┐                         │
     │  │ nginx-proxy            │  ──── Docker socket     │
@@ -65,29 +65,31 @@ updateable via `git pull && docker compose up -d --build`.
     │  │ (php-fpm)              │             │           │
     │  └────────────┬───────────┘             │           │
     │               │                          │          │
-    │   ┌───────────▼─────────────────────────▼─────┐    │
-    │   │ named volume: scriptor-app                │    │
-    │   │ (the entire repo + data + uploads)        │    │
-    │   └────────────────────────────────────────────┘   │
+    │   ┌───────────▼──────────┐   ┌───────────▼─────┐   │
+    │   │ volume: scriptor-data│   │ volume:         │   │
+    │   │ (SQLite, cache, logs,│   │ scriptor-uploads│   │
+    │   │  settings)           │   │ (FileStorage)   │   │
+    │   └──────────────────────┘   └─────────────────┘   │
     └─────────────────────────────────────────────────────┘
 ```
 
 Three layers, all in Docker:
 
-1. **Reverse proxy** (`nginxproxy/nginx-proxy`) — terminates TLS,
+1. **Reverse proxy** (`nginxproxy/nginx-proxy`): terminates TLS,
    inspects every other Docker container's `VIRTUAL_HOST` env var,
    generates per-vhost nginx configs on the fly, forwards traffic to
    the matching backend container.
 
-2. **ACME companion** (`nginxproxy/acme-companion`) — watches the
+2. **ACME companion** (`nginxproxy/acme-companion`): watches the
    same containers' `LETSENCRYPT_HOST` env, fetches Let's Encrypt
    certs via HTTP-01 challenge (which the proxy answers from
    `/.well-known/acme-challenge/`), stores them in the shared
    `certs` volume, kicks nginx-proxy to reload, schedules renewal.
 
-3. **Scriptor demo stack** — the existing `docker-compose.yml` from
-   this repo (php-fpm + nginx siblings sharing the `scriptor-app`
-   volume), with two changes for the deploy:
+3. **Scriptor demo stack**: the existing `docker-compose.yml` from
+   this repo (php-fpm + nginx siblings sharing the `scriptor-data`
+   and `scriptor-uploads` named volumes), with two changes for the
+   deploy:
    - drop the `ports: 8080:80` host-publish (nginx-proxy reaches the
      `web` container over the internal `proxy` network)
    - add `VIRTUAL_HOST=demos.scriptor-cms.dev` + `LETSENCRYPT_HOST=…`
@@ -106,18 +108,18 @@ Why nginx-proxy + companion (vs. Caddy / standalone nginx + certbot):
 ## 3. Pre-requisites checklist
 
 - [x] Hetzner host: Ubuntu 24.04, Docker 29.4.3 + Compose v5.1.3,
-      UFW (22/80/443 open), fail2ban active, sshd hardened, user
-      `juri` in the `docker` group. (Server-setup transcript:
-      `/Users/juri/Documents/HETZNER-IONOS/Claude-Servereinrichtung.txt`.)
+      UFW (22/80/443 open), fail2ban active, sshd hardened, operator
+      user in the `docker` group. (Server-setup transcript lives with
+      the operator, outside the repo.)
 - [x] Domain registered: `scriptor-cms.dev` at IONOS, A record on
       apex pointing to the Hetzner box.
-- [ ] **DNS for `demos.scriptor-cms.dev` — USER ACTION (see §4)**.
+- [ ] **DNS for `demos.scriptor-cms.dev`: USER ACTION (see §4)**.
 - [ ] Email for Let's Encrypt notifications: `juri.ehret@gmail.com`
-      (assumed — confirm before deploy).
+      (assumed, confirm before deploy).
 
 ---
 
-## 4. DNS setup at IONOS — USER ACTION
+## 4. DNS setup at IONOS: USER ACTION
 
 Required BEFORE the first `docker compose up`. acme-companion's
 HTTP-01 challenge needs `demos.scriptor-cms.dev` to resolve to the
@@ -131,11 +133,11 @@ only.
    - **Type**: `A`
    - **Hostname / Name / Subdomain**: `demos`
    - **Pointing to / IP**: `<Hetzner-IPv4>` (the same IP the apex
-     `scriptor-cms.dev` already resolves to — if you're not sure,
+     `scriptor-cms.dev` already resolves to; if you're not sure,
      check the existing apex A record).
    - **TTL**: keep the IONOS default (1 hour is fine).
 3. (Optional, recommended) **AAAA** record with the Hetzner IPv6 if
-   the box has one — saves a fallback round-trip for IPv6 clients.
+   the box has one; saves a fallback round-trip for IPv6 clients.
 4. Save.
 
 ### Verifying
@@ -151,7 +153,7 @@ dig +short demos.scriptor-cms.dev
 
 IONOS usually propagates in 5–30 min. If you want faster iteration
 during the first deploy, you can lower the TTL to 300 a few minutes
-before saving the new record — then bump it back to 3600 once
+before saving the new record, then bump it back to 3600 once
 everything's stable.
 
 ---
@@ -178,11 +180,11 @@ everything's stable.
 
 Three separate Git roots, three separate concerns:
 
-- **Scriptor** — pure app source, safe to `git pull` without ops fallout.
-- **scriptor-cms-ops** — host-specific config: proxy stack, override
-  file, env values. Private repo because it carries the real domains
+- **Scriptor**: pure app source, safe to `git pull` without ops fallout.
+- **scriptor-cms-ops**: host-specific config (proxy stack, override
+  file, env values). Private repo because it carries the real domains
   + e-mail.
-- **`/opt/proxy/`** — runtime working dir for the proxy. We keep it
+- **`/opt/proxy/`**: runtime working dir for the proxy. We keep it
   separate from `scriptor-cms-ops/proxy/` so `cd /opt/proxy && docker
   compose ...` is short, and so a re-clone of the ops repo doesn't
   trigger compose to think the project moved (compose tracks the
@@ -193,9 +195,9 @@ The proxy stack creates it (`name: proxy` directive); the scriptor
 stack joins it as `external: true`.
 
 Why two separate stacks (proxy vs. scriptor):
-- proxy is shared infra — could later host other apps under
+- proxy is shared infra; could later host other apps under
   different `VIRTUAL_HOST`s without touching the scriptor stack
-- updates are independent — `git pull && docker compose up -d` for
+- updates are independent; `git pull && docker compose up -d` for
   Scriptor doesn't bounce the proxy or its certs
 - the bundled `docker-compose.yml` stays unchanged and continues
   to work for local dev; the prod-only bits live in the override
@@ -203,11 +205,11 @@ Why two separate stacks (proxy vs. scriptor):
 
 ---
 
-## 6. Proxy stack — pinned versions
+## 6. Proxy stack: pinned versions
 
 `nginxproxy/nginx-proxy:1.7` + `nginxproxy/acme-companion:2.5`
-on host ports 80/443. Image tag pinning is intentional — protects
-against upstream surprise changes; bump deliberately.
+on host ports 80/443. Image tag pinning is intentional; it protects
+against upstream surprise changes, bump deliberately.
 
 The actual compose file: [`scriptor-cms-ops/proxy/docker-compose.yml`](https://github.com/bigin/scriptor-cms-ops/blob/main/proxy/docker-compose.yml).
 
@@ -230,7 +232,7 @@ docker compose \
 
 Effect on the bundled stack:
 - drops `ports: 8080:80` on `web` via the Compose-spec `!reset []`
-  marker — otherwise the port lists would merge and 8080 would stay
+  marker; otherwise the port lists would merge and 8080 would stay
   published on the host
 - adds `VIRTUAL_HOST` + `LETSENCRYPT_HOST` env on `web` so
   nginx-proxy + companion auto-discover and TLS-terminate
@@ -274,10 +276,10 @@ cd /opt/scriptor-cms-ops && git pull
 # rerun the compose up -d above to apply
 ```
 
-Named volumes (`scriptor-app`) survive container recreation, so the
-DB and uploads persist across updates.
+Named volumes (`scriptor-data`, `scriptor-uploads`) survive container
+recreation, so the DB and uploads persist across updates.
 
-Proxy stack at `/opt/proxy` is independent — only update when bumping
+Proxy stack at `/opt/proxy` is independent; only update when bumping
 the pinned versions.
 
 ---
@@ -295,16 +297,19 @@ docker cp scriptor-demo:/tmp/imanager.db.bak \
   /opt/scriptor-demo-backups/imanager.db.$(date +%F).bak
 ```
 
-Uploads survive in the named volume — back up `public/uploads/`
-the same way if needed:
+Uploads survive in their named volume; back up `public/uploads/`
+the same way if needed (compose project on Hetzner is `scriptor-demo`,
+so the volume on disk is `scriptor-demo_scriptor-uploads`):
 
 ```bash
-docker run --rm -v scriptor_scriptor-app:/app -v /opt/scriptor-demo-backups:/bk \
-  alpine tar czf /bk/uploads.$(date +%F).tar.gz -C /app public/uploads
+docker run --rm \
+  -v scriptor-demo_scriptor-uploads:/uploads:ro \
+  -v /opt/scriptor-demo-backups:/bk \
+  alpine tar czf /bk/uploads.$(date +%F).tar.gz -C / uploads
 ```
 
 For the demo, "if it breaks, blow it away and reseed" is also a
-valid posture — `docker compose down -v` reseeds on next `up`.
+valid posture; `docker compose down -v` reseeds on next `up`.
 
 ---
 
@@ -331,7 +336,7 @@ echo | openssl s_client -servername demos.scriptor-cms.dev -connect demos.script
     | openssl x509 -noout -subject -issuer -dates
 ```
 
-Login: `admin` / `scriptor` (baked seed in `docker/seed-demo.php`).
+Login: `admin` / `gT5nLazzyBob` (baked seed in `docker/seed-demo.sql`).
 
 ---
 
@@ -373,10 +378,10 @@ Things explicitly out of scope for this plan but worth a follow-up:
 - **TLS via Let's Encrypt + acme-companion** (not the IONOS
   wildcard cert). Reason: auto-renewal, no manual yearly re-import,
   per-host cert keeps subdomains independent. The IONOS private
-  key in `IONOS-SCRIPTOR/` stays gitignored as a fallback.
+  key stays with the operator as an offline fallback.
 - **nginx-proxy + acme-companion** (not Caddy). Reason: matches
   the demo image's own nginx, ≤ ~6 subdomains expected in 12
-  months — well within easy operational reach.
+  months, well within easy operational reach.
 - **Two separate compose stacks** (not one big file). Reason:
   proxy is shared infra, scriptor is one of (potentially) many
   apps later; independent lifecycles.
@@ -403,6 +408,4 @@ Things explicitly out of scope for this plan but worth a follow-up:
 3. Bootstrap scriptor-cms-ops repo with proxy stack + override + README.
 4. SSH hetzner, follow scriptor-cms-ops/README.md § Initial deploy.
 5. Verify §11 smoke matrix here.
-6. Mark task #54 done.
-7. Resume Example-Theme (#48).
 ```
