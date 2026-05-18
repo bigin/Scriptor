@@ -24,7 +24,12 @@ cd "${APP_DIR}"
 # attach — fix that here rather than failing later.
 mkdir -p data data/cache data/cache/sections data/logs data/backups data/settings public/uploads
 if [ "$(id -u)" = "0" ]; then
-    chown -R www-data:www-data data public/uploads
+    # `|| :` swallows EROFS on bind-mounted read-only config files
+    # (e.g. an operator overlaying a custom.scriptor-config.php inside
+    # data/settings/). The writable paths still get chowned; the
+    # read-only entries we couldn't touch were owner-correct to begin
+    # with, since the operator mounted them.
+    chown -R www-data:www-data data public/uploads 2>/dev/null || :
 fi
 
 if [ ! -f "${DB_PATH}" ]; then
