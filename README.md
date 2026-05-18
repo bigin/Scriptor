@@ -5,7 +5,7 @@
 # Scriptor 2.0
 
 Scriptor is a lightweight and versatile CMS for creating microsites, blogs, or
-wikis. Version 2.0 is a ground-up rewrite on top of [iManager 2.0][imanager],
+wikis. Version 2 is a ground-up rewrite on top of [iManager 2][imanager],
 SQLite and PSR-standards (PSR-3, -14, -16).
 
 Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
@@ -20,9 +20,9 @@ Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 - **Per-image titles** as a typed `files.title` column with markdown
   caption rendering on the frontend.
 - **Single-entry routing** (`public/index.php` delegates
-  `/<admin_path>/*` to `editor/index.php` in PHP) — works on Apache,
+  `/<admin_path>/*` to `editor/index.php` in PHP). Works on Apache,
   Caddy, Nginx, php-S without per-server rewrite rules.
-- **`public/` webroot** — source code, the SQLite DB, configs and
+- **`public/` webroot**: source code, the SQLite DB, configs and
   composer artifacts live OUTSIDE the webroot, so a misconfigured web
   server cannot expose them.
 
@@ -33,8 +33,8 @@ Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 - SQLite 3.38+ (for `json_extract`, FTS5)
 - Standard PHP extensions: `mbstring`, `dom`, `json`, `gd`, `pdo_sqlite`
 - A web server with its document root pointed at `public/` and unknown
-  paths routed to `public/index.php` — Apache (`public/.htaccess` is
-  shipped), Caddy, Nginx, or PHP's built-in server.
+  paths routed to `public/index.php`. Apache (`public/.htaccess` is
+  shipped), Caddy, Nginx, or PHP's built-in server all work.
 
 ## Installation
 
@@ -64,7 +64,7 @@ see [`docs/install-shared-hosting.md`](docs/install-shared-hosting.md).
 ### Try it in Docker
 
 A bundled demo stack starts Scriptor 2.0 on `http://localhost:8080`
-with one admin user (`admin / scriptor`) and one example page:
+with one admin user (`admin / gT5nLazzyBob`) and one example page:
 
 ```bash
 docker compose up -d --build
@@ -87,9 +87,9 @@ Default credentials (change them on first login):
 ## Performance
 
 `bin/perf-smoke.php` runs four canonical timing checkpoints against the
-live SQLite database. Plan §8.2 budget is `getItem < 1 ms`,
-`getItems(20) < 50 ms`, FTS search `< 100 ms`. Typical results on the
-bundled demo data:
+live SQLite database. The budgets (printed in brackets next to each
+result) are `getItem < 1 ms`, `getItems(20) < 50 ms`, FTS search
+`< 100 ms`. Typical results on the bundled demo data:
 
 ```
 items()->find(1)                       0.009 ms  [budget   1.0 ms] OK
@@ -136,17 +136,17 @@ public/                      THE WEBROOT (everything below is web-reachable)
   .htaccess                  Apache fallback (dotfile-deny + front-controller)
   themes/<theme>/            static-only half of each theme (css, fonts, …)
   editor-assets/             editor's CSS, JS, fonts, filepond, images
-  uploads/<itemId>/<…>       FilePond uploads — served directly
+  uploads/<itemId>/<…>       FilePond uploads, served directly
   favicon.ico                root-level copy for the browser's implicit fetch
 
-boot/                        PSR-4 (Scriptor\Boot\) — Frontend, Editor, Events
+boot/                        PSR-4 (Scriptor\Boot\): Frontend, Editor, Events
   Frontend/Site, Page, …     public site renderer + repos
   Editor/Editor, Router, …   admin shell + per-module wiring
   Events/                    domain-event listeners (cache, file cleanup)
   ImanagerBootstrap.php      DI container + service graph
 boot.php                     bootstrap include (loaded by public/index.php)
 
-themes/<theme>/              PHP source of each theme — _ext.php, lib/,
+themes/<theme>/              PHP source of each theme: _ext.php, lib/,
                              template.php, vendor/  (NEVER web-served)
 modules/                     user-installable site modules
 editor/                      admin entry + lang + PHP templates
@@ -154,7 +154,7 @@ editor/                      admin entry + lang + PHP templates
   lang/                      en_US.php, de_DE.php
   theme/                     template.php, header.php, summary.php
 
-data/                        runtime state — NEVER web-served
+data/                        runtime state, NEVER web-served
   settings/                  scriptor-config.php, custom.scriptor-config.php
   imanager.db                SQLite database
   cache/sections/            FilesystemCache (page-level HTML)
@@ -178,14 +178,14 @@ require __DIR__ . '/boot.php';
 
 $site = new Site(App::container(), $config, __DIR__);
 
-// Data access — read pages directly off the Pages category:
+// Data access: read pages directly off the Pages category.
 $home = $site->pages()->findHome();          // or ->findBySlug('contact')
 echo $home->name;                            // page title
 echo $home->content;                         // markdown source
 
-// Theme rendering — resolves $_SERVER['REQUEST_URI'] to a Page and
+// Theme rendering: resolves $_SERVER['REQUEST_URI'] to a Page and
 // returns the same fragments the bundled themes' template.php consumes.
-// Call from your own front controller:
+// Call from your own front controller.
 $site->execute();
 echo $site->render('content');               // page body, rendered + cached
 echo $site->render('navigation');            // theme nav
@@ -196,9 +196,7 @@ themes consume.
 
 ## Links
 
-- iManager 2.0 framework: <https://github.com/bigin/imanager>
-- Phase 14 migration plan: `docs/imanager-2.0-phase-14-plan.md`
-  (in the [iManager repo][imanager])
+- iManager 2 framework: <https://github.com/bigin/imanager>
 - Documentation: <https://scriptor-cms.dev/documentation/>
 - Modules / extensions: <https://scriptor-cms.dev/extensions/extensions-modules/>
 - Demo: <https://demos.scriptor-cms.dev>
