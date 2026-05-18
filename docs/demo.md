@@ -21,9 +21,10 @@ cd Scriptor
 docker compose up -d --build
 ```
 
-First boot takes a minute or two — Docker has to pull
-`php:8.3-fpm-alpine` + `nginx:alpine` and Composer has to install
-dependencies inside the image. Subsequent starts are instant.
+First build takes a minute or two. Docker has to pull
+`php:8.3-fpm-alpine` + `nginx:alpine`, and Composer installs
+dependencies during the image build. Subsequent `up -d` (without
+`--build`) is instant.
 
 Then open:
 
@@ -49,7 +50,7 @@ username: admin
 password: gT5nLazzyBob
 ```
 
-The credentials are baked into the seed snapshot — change them
+The credentials are baked into the seed snapshot; change them
 immediately if you expose the container beyond your machine.
 
 ---
@@ -59,10 +60,10 @@ immediately if you expose the container beyond your machine.
 The first time the container starts (no SQLite database yet) the
 entrypoint loads two seed artefacts shipped with the repo:
 
-- `docker/seed-demo.sql` — sqlite3 dump captured via
+- `docker/seed-demo.sql`: sqlite3 dump captured via
   `vendor/bin/imanager dump`. Restores schema + every category, field,
   page, file row, and the FTS5 index for full-text search.
-- `docker/seed-demo-uploads.tar.gz` — `public/uploads/` for the page
+- `docker/seed-demo-uploads.tar.gz`: `public/uploads/` for the page
   images referenced from the dump.
 
 After the restore, `vendor/bin/imanager schema:migrate` runs as a
@@ -70,7 +71,7 @@ no-op (or applies any newer migrations the snapshot didn't include).
 
 The seed snapshot mirrors `https://scriptor.cms` content as of the
 last `chore(deps): bump bigins/imanager` PR. Restarts re-apply
-pending iManager migrations but do **not** re-seed data — the
+pending iManager migrations but do **not** re-seed data. The
 SQLite DB and uploads live in named volumes that survive
 `docker compose down`.
 
@@ -83,7 +84,7 @@ SQLite DB and uploads live in named volumes that survive
 1. Sign in at `/editor/`.
 2. **Pages → New**, set a slug (e.g. `about`), give it some content,
    save.
-3. Open `http://localhost:8080/about` — your new page renders through
+3. Open `http://localhost:8080/about`. Your new page renders through
    the default theme.
 
 ### Inspect the live database
@@ -105,7 +106,7 @@ docker compose exec scriptor vendor/bin/imanager fts:rebuild  --db=data/imanager
 ```
 
 The full CLI surface is documented in the
-[iManager CLI section](https://github.com/bigin/imanager/tree/main/docs/api).
+[iManager CLI section](https://github.com/bigin/imanager#cli).
 
 ### Reset to factory state
 
@@ -115,7 +116,7 @@ docker compose up -d
 ```
 
 `down -v` removes the named volumes (`scriptor-data` for the SQLite
-DB + cache/logs, `scriptor-uploads` for `public/uploads/`) — the next
+DB + cache/logs, `scriptor-uploads` for `public/uploads/`); the next
 `up` re-seeds.
 
 ---
@@ -142,11 +143,11 @@ recreation.
 
 | File | Role |
 |---|---|
-| `docker/Dockerfile` | `php:8.3-fpm-alpine` + iManager extensions + opcache + composer install of `bigins/imanager` from Packagist. |
+| `docker/Dockerfile` | `php:8.3-fpm-alpine` + iManager extensions + opcache + composer install of the runtime deps from Packagist. |
 | `docker/Dockerfile.web` | `nginx:alpine` with `public/` baked in so SCRIPT_FILENAME paths resolve identically in both containers. |
 | `docker/nginx.conf` | Front-controller routing; serves `/uploads/` directly; blocks dotfiles + any stray non-`index.php` PHP. |
 | `docker/entrypoint.sh` | On every start: `schema:migrate` (idempotent). On first start (no DB): restore seed + extract uploads. |
-| `docker/seed-demo.sql` | Database snapshot — schema + every page, field, file row, FTS5 index. |
+| `docker/seed-demo.sql` | Database snapshot: schema + every page, field, file row, FTS5 index. |
 | `docker/seed-demo-uploads.tar.gz` | `public/uploads/` snapshot for page images referenced by the dump. |
 | `docker-compose.yml` | Two-service stack on `http://localhost:8080`. |
 
@@ -180,7 +181,7 @@ doesn't warn about pax extended headers.
   and write your own Dockerfile.
 - **Developing on Scriptor itself.** Use the local
   `composer install` + ServBay / nginx / Caddy setup the
-  [README](../README.md) documents — the demo image ships frozen
+  [README](../README.md) documents; the demo image ships frozen
   code from a `docker build` snapshot.
 - **Migrating real 1.x data.** Use
   [`vendor/bin/imanager migrate:from-v1`](https://github.com/bigin/imanager/blob/main/docs/migration-guide.md)

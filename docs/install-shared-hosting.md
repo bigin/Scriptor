@@ -3,12 +3,12 @@
 Scriptor's webroot is `public/`. The library + configs + database live
 above it (`boot/`, `vendor/`, `data/`, `editor/`, `themes/`). Most
 shared hosting providers fix the webroot to `public_html/` (or
-`htdocs/`, `www/`) and won't let you point it elsewhere — so you have
+`htdocs/`, `www/`) and won't let you point it elsewhere, so you have
 to bridge `public/` to that fixed location.
 
 Two acceptable options, in order of preference.
 
-## Option A — symlink `public_html` → `public` (preferred)
+## Option A: symlink `public_html` → `public` (preferred)
 
 Works on every host that allows symlinks (the vast majority of
 shared-hosting LAMP stacks; many cPanel-based ones; nearly all
@@ -31,7 +31,7 @@ curl -sI http://<your-domain>/   # → 200, Scriptor frontend
 No source-code edits needed. Updates are `git pull` (or re-upload)
 and the symlink keeps pointing.
 
-## Option B — copy `public/` into `public_html/`
+## Option B: copy `public/` into `public_html/`
 
 When symlinks are forbidden or stripped. Trade-off: every
 Scriptor update means re-copying `public/`.
@@ -51,7 +51,7 @@ Then patch the copy's `index.php` so its relative `require` finds
 `boot.php` at the original install root:
 
 ```php
-// /home/<user>/public_html/index.php — only the require line changes:
+// /home/<user>/public_html/index.php; only the require line changes:
 require_once '/home/<user>/Scriptor/boot.php';
 ```
 
@@ -86,7 +86,7 @@ curl -sI http://<your-domain>/themes/basic/css/styles.css # 200 (theme static IS
 ```
 
 If `data/imanager.db` returns anything other than `404`, the webroot
-is wrong — re-check your symlink or your copy. The database must not
+is wrong; re-check your symlink or your copy. The database must not
 be downloadable.
 
 ## File permissions

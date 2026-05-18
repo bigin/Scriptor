@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.0.1 (2026-05-17) — Dependency refresh + doc polish
+
+No changes to Scriptor's own source. Captures the current state of
+master after five post-2.0.0 commits, so `git clone --branch v2.0.1`
+pulls the up-to-date dependency pins instead of the original 2.0.0
+lock. `scriptor.cms` and `demos.scriptor-cms.dev` are both running
+this state.
+
+### Changed
+
+- `bigins/imanager` 2.0.1 → 2.0.2: auto-mkdir on first boot, nicer
+  `ConnectionFactory` error.
+- `bigins/imanager` 2.0.2 → 2.1.0: schema-setup ergonomics (`Field`
+  factories + repository `ensure()` methods).
+- `bigins/imanager` 2.1.0 → 2.2.0: honest `searchable` flag, FTS5
+  indexing now respects the per-field flag.
+- `bigins/imanager` 2.2.0 → 2.2.1: `fts:rebuild` + `optimize`
+  auto-migrate, upgrade-path hotfix.
+- README "What's new in 2.0" section renamed to "Highlights".
+- README "library" example rewritten to match the real surface.
+- `composer.json`: dropped "flat file" keyword, refreshed
+  description.
+
+---
+
 ## 2.0.0 (2026-05-16) — Ground-up rewrite on iManager 2.0
 
 Scriptor 2.0 replaces the embedded 1.x `imanager/` library with the
@@ -10,13 +35,14 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
 ### Added
 
 - **SQLite storage** with JSON columns and FTS5 full-text search.
-- **Composer-based** install (`bigins/imanager:^2.0` is the only direct
-  runtime dep besides Symfony Console for the CLI).
+- **Composer-based** install: the third-party runtime deps are
+  `bigins/imanager:^2.0` and `intervention/image`, plus Symfony
+  Console for the CLI.
 - **Domain-event listeners** (`Scriptor\Boot\Events\*`):
-  - `ItemFileCleanupListener` — drops uploaded files (and thumbnails)
+  - `ItemFileCleanupListener`: drops uploaded files (and thumbnails)
     from disk when an item is deleted, before the FK cascade clears
     the metadata rows.
-  - `PageCacheInvalidationListener` — flushes the rendered-page cache
+  - `PageCacheInvalidationListener`: flushes the rendered-page cache
     on every Pages-category mutation.
 - **FilePond** uploads with on-demand thumbnail generation through
   `intervention/image`. Endpoint: `/editor/api/upload` (POST/PATCH/DELETE).
@@ -24,18 +50,18 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   schema migration `0004`). Captions render through `Sanitizer::markdown`
   on the frontend so links and emphasis work in 2.0 the same way they
   did in 1.x.
-- **Single-entry routing** — root `index.php` delegates `/<admin_path>/*`
+- **Single-entry routing**: root `index.php` delegates `/<admin_path>/*`
   to `editor/index.php` at the PHP level, which works on Apache, Caddy,
   Nginx, and PHP's built-in server without per-server rewrite rules.
-- **`bin/perf-smoke.php`** runs Plan §8.2 timing checkpoints against
-  the live SQLite database.
+- **`bin/perf-smoke.php`** runs the canonical timing checkpoints
+  against the live SQLite database.
 - **`Scriptor\Boot\Editor\*`** rewrites of all admin modules (auth,
   pages, profile, settings, install) on the iManager 2.0 stack.
-- **`Scriptor\Boot\Frontend\*`** — `Site`, `Page`, `PageRepository`,
-  `Sanitizer`, `ImageUrlBuilder` — public-site renderer that bundled
+- **`Scriptor\Boot\Frontend\*`**: `Site`, `Page`, `PageRepository`,
+  `Sanitizer`, `ImageUrlBuilder`. Public-site renderer that bundled
   themes consume through the standard `$site` surface.
 - **Asset-URL helpers**: `Site::themeAssetUrl()`,
-  `Site::editorAssetUrl()`, `Editor::assetUrl()` — used by every
+  `Site::editorAssetUrl()`, `Editor::assetUrl()`. Used by every
   bundled template after the public/-webroot split. Custom themes
   built against 2.0 should call these instead of hard-coding paths;
   see [`docs/themes.md`](docs/themes.md).
@@ -56,7 +82,7 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   TLS-terminating reverse proxy (nginx-proxy on the Hetzner demo,
   Caddy as a forwarding proxy), `Frontend\Site::detectSiteUrl()` and
   `Editor\Editor::detectSiteUrl()` no longer hard-code `http` from
-  `$_SERVER['HTTPS']` — they read `X-Forwarded-Proto` first. Fixes
+  `$_SERVER['HTTPS']`; they read `X-Forwarded-Proto` first. Fixes
   mixed-content errors when the site is reverse-proxied.
 - **Demo seed restore recreates the FTS5 index.** The first-boot
   entrypoint re-applies the FTS schema and runs `imanager fts:rebuild`
@@ -75,29 +101,30 @@ dispatch, PSR-16 caching). The legacy 1.x flat-file storage is gone.
   Server admins point `root` at `<install>/public/` and that's it.
 - **Themes split into two halves.**
   `themes/<name>/` (PHP source, includes only) +
-  `public/themes/<name>/` (static assets — css, fonts, images, scripts).
+  `public/themes/<name>/` (static assets: css, fonts, images, scripts).
   The `site/` wrapper directory is gone; `site/themes/` becomes
   `themes/`, `site/modules/` becomes `modules/`.
 - **Editor static assets move to `public/editor-assets/`.** The editor
   theme's PHP files (`template.php`, `header.php`, `summary.php`) stay in
-  `editor/theme/` — included only by `editor/index.php`, never web-served.
+  `editor/theme/`; included only by `editor/index.php`, never web-served.
   `editor/lang/` stays in `editor/`.
 - **User uploads move to `public/uploads/`** (was `data/uploads-2.0/`).
   Inside the webroot, served by the web server directly, no alias rules
   needed. The image rendering layer (`Frontend\ImageUrlBuilder`) is
   backward-compatible with both the old `data/uploads/` (1.x-migrated)
-  and `data/uploads-2.0/` (2.0 pre-public-webroot) prefixes — existing
+  and `data/uploads-2.0/` (2.0 pre-public-webroot) prefixes. Existing
   items in the live DB keep rendering without a path migration.
 - **`public/.htaccess`** replaces the root `.htaccess`. The deny list
   collapses to dotfiles only, because the source/data directories no
   longer live inside the webroot. The `editor/`-specific rewrite is
-  gone too — every request goes through `public/index.php`, which
+  gone too; every request goes through `public/index.php`, which
   handles admin-path delegation in PHP.
 
-See [`docs/refactor-public-webroot.md`](docs/refactor-public-webroot.md)
+See [`docs/refactor-public-webroot.md`](https://github.com/bigin/Scriptor/blob/22a6144/docs/refactor-public-webroot.md)
 for the full migration plan including server-config templates for
 Apache, Caddy, nginx and PHP's built-in server, and the
-allow/deny test matrix.
+allow/deny test matrix. (Operational sections also archived in
+[`bigin/scriptor-cms-ops/docs/archive/refactor-public-webroot.md`](https://github.com/bigin/scriptor-cms-ops/blob/main/docs/archive/refactor-public-webroot.md).)
 
 ### Changed
 
@@ -120,7 +147,7 @@ allow/deny test matrix.
   list switched from the gone `imanager`/`modules`/`core` to the
   current `boot`/`vendor`/`bin` (real source dirs); legacy
   `imanager/upload/server/php` exception removed; the literal
-  `editor/`-rewrite is gone — every request lands on `index.php`
+  `editor/`-rewrite is gone; every request lands on `index.php`
   which delegates `/<admin_path>/*` in PHP, so changing
   `admin_path` no longer requires editing `.htaccess`. The static
   asset whitelist gained `woff/woff2/ttf/eot` for theme fonts.
@@ -142,11 +169,11 @@ allow/deny test matrix.
   and the front isn't shadowed by a single shared volume.
 - **Demo seed mirrors `https://scriptor.cms` content** instead of
   the previous synthetic programmatic seed. Snapshot captured via
-  `imanager dump`. Ships with `admin / gT5nLazzyBob` — change
+  `imanager dump`. Ships with `admin / gT5nLazzyBob`; change
   before exposing.
 - **Docker volume layout split**: the pre-refactor single
   `scriptor-app` volume mounted code AND state, which silently
-  shadowed image updates — `git pull && up -d --build` didn't
+  shadowed image updates; `git pull && up -d --build` didn't
   propagate code changes without `down -v` (which wiped state).
   Now `scriptor-data` (DB, cache, logs, settings) and
   `scriptor-uploads` (FileStorage) hold state; code lives in the
@@ -161,7 +188,7 @@ allow/deny test matrix.
   `Referrer-Policy: strict-origin-when-cross-origin`,
   `Permissions-Policy` opting out of
   geolocation/camera/microphone/payment/FLoC. `server_tokens off`
-  + `expose_php=Off` — the nginx version no longer leaks and
+  + `expose_php=Off`. The nginx version no longer leaks and
   `X-Powered-By` is gone.
 - **Editor `IMSESSID` session cookie** ships with `Secure`
   (X-Forwarded-Proto-aware, so local HTTP dev still works),
@@ -169,15 +196,15 @@ allow/deny test matrix.
 
 ### Removed
 
-- `Scriptor/imanager/` — the entire embedded 1.x library (~850 KB).
-- `data/datasets/buffers/` — flat-file storage; superseded by SQLite.
-- `editor/core/` — legacy `Scriptor\Core\Scriptor`, `Module`, `Site`,
+- `Scriptor/imanager/`: the entire embedded 1.x library (~850 KB).
+- `data/datasets/buffers/`: flat-file storage, superseded by SQLite.
+- `editor/core/`: legacy `Scriptor\Core\Scriptor`, `Module`, `Site`,
   `Pages`, `User`, `Editor`, `CSRF`, `Helper`. All replaced by
   `Scriptor\Boot\*` equivalents.
-- `editor/modules/` — every legacy admin module file. Replacements live
+- `editor/modules/`: every legacy admin module file. Replacements live
   under `boot/Editor/Auth/`, `boot/Editor/Pages/`, `boot/Editor/Profile/`,
   `boot/Editor/Settings/`, `boot/Editor/Install/`.
-- `imanager.php` (root file) — old `imanager()`-bootstrap stub.
+- `imanager.php` (root file): old `imanager()`-bootstrap stub.
 - The legacy `Scriptor::execHook()` system. Domain events on the
   iManager side replace it; if a 3rd-party module needs the old hook
   shape we can ship a Hook-Bridge listener provider in a follow-up.
@@ -190,7 +217,7 @@ The command takes a `--dry-run` flag for previewing the import.
 
 ### Performance
 
-Plan §8.2 budgets and typical results on the bundled demo data:
+Documented budgets and typical results on the bundled demo data:
 
 | Operation                          | Result    | Budget    | Headroom |
 |------------------------------------|-----------|-----------|----------|
