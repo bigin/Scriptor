@@ -6,6 +6,7 @@
 /data/imanager.db-wal
 /data/imanager.db-shm
 /data/cache/sections/
+/data/cache/plugins.php
 
 # User uploads — live under the webroot (public/uploads/) so the web
 # server can serve them directly, but are runtime state and not part
