@@ -1174,3 +1174,97 @@ ul.messages {
 .image-list__item.ui-sortable-helper {
 	background: var(--color-surface-code);
 }
+
+/* ============================================================
+ * Markdown-pages plugin: shared prose styles for the editor's
+ * Documentation module. The plugin writes pageContent wrapped in
+ * .markdown-pages-document, with a .markdown-pages-listing table
+ * underneath when at a directory URL. These rules give those
+ * blocks tables, code, and quote styling consistent with the
+ * editor's design tokens.
+ * ============================================================ */
+
+.markdown-pages-document table,
+.markdown-pages-listing {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.2em 0;
+	font-size: 0.95em;
+}
+.markdown-pages-document table th,
+.markdown-pages-document table td,
+.markdown-pages-listing td {
+	padding: 0.55em 0.75em;
+	text-align: left;
+	vertical-align: top;
+	border-bottom: 1px solid var(--color-border-faint);
+}
+.markdown-pages-document table thead th {
+	background: var(--color-surface-alt);
+	border-bottom: 2px solid var(--color-border);
+	font-weight: var(--font-weight-semibold);
+}
+.markdown-pages-document table tbody tr:hover,
+.markdown-pages-listing tbody tr:hover {
+	background: var(--color-surface-row-hot);
+}
+
+.markdown-pages-listing td.markdown-pages-icon {
+	width: 24px;
+	text-align: center;
+	color: var(--color-fg-muted);
+}
+.markdown-pages-listing td.markdown-pages-icon .gg-list,
+.markdown-pages-listing td.markdown-pages-icon .gg-screen {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.markdown-pages-document pre {
+	overflow: auto;
+	padding: 0.85em 1em;
+	margin: 1em 0;
+	background: var(--color-surface-pre);
+	border: 1px solid var(--color-border-faint);
+	border-radius: var(--radius);
+	font-family: var(--font-mono);
+	font-size: 0.9em;
+	line-height: var(--line-height-normal);
+}
+.markdown-pages-document pre > code {
+	background: transparent;
+	padding: 0;
+	border: none;
+}
+.markdown-pages-document :not(pre) > code {
+	padding: 0.15em 0.35em;
+	background: var(--color-surface-code);
+	border: 1px solid var(--color-border-faint);
+	border-radius: var(--radius-sm);
+	font-family: var(--font-mono);
+	font-size: 0.95em;
+}
+
+.markdown-pages-document blockquote {
+	margin: 1em 0;
+	padding: 0.4em 1em;
+	border-left: 3px solid var(--color-border-quote);
+	color: var(--color-fg-muted);
+}
+
+.markdown-pages-document h1,
+.markdown-pages-document h2,
+.markdown-pages-document h3,
+.markdown-pages-document h4 {
+	margin-top: 1.5em;
+}
+.markdown-pages-document h1:first-child,
+.markdown-pages-document h2:first-child {
+	margin-top: 0;
+}
+
+.markdown-pages-source {
+	font-size: 0.85em;
+	color: var(--color-fg-muted);
+	margin-bottom: 1.2em;
+}
