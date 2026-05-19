@@ -64,7 +64,7 @@ final class PluginsModule implements Module
         foreach ($booted as $plugin) {
             $name = $plugin->name();
             $regs = $this->pluginManager->registrationsFor($name) ?? [
-                'events' => [], 'modules' => [], 'menuItems' => [],
+                'events' => [], 'modules' => [], 'menuItems' => [], 'navBuilders' => 0,
             ];
             // Prefer the Composer manifest version over Plugin::version()
             // for Composer-installed plugins. The manifest matches the

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Scriptor\Boot\App;
 use Scriptor\Boot\Editor\Menu\MenuRegistry;
 use Scriptor\Boot\Editor\ModuleRegistry;
+use Scriptor\Boot\Frontend\Nav\FrontendNavRegistry;
 use Scriptor\Boot\ImanagerBootstrap;
 use Scriptor\Boot\Plugin\PluginManager;
 
@@ -31,6 +32,12 @@ App::container()->addShared(
 // templates read MenuRegistry to render the sidebar and profile cluster.
 App::container()->addShared(ModuleRegistry::class, static fn() => new ModuleRegistry());
 App::container()->addShared(MenuRegistry::class,   static fn() => new MenuRegistry());
+
+// Frontend nav registry. Plugins contribute builder callables via
+// PluginContext::contributeFrontendNav(); themes resolve this service
+// and call collect($urlSegments) to get the merged NavItem tree for
+// the current request. Stays empty until a plugin populates it.
+App::container()->addShared(FrontendNavRegistry::class, static fn() => new FrontendNavRegistry());
 
 /*
  * Boot path:

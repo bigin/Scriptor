@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Plugin;
 
 use Imanager\Events\SubscriberListenerProvider;
+use Imanager\Http\UrlSegments;
 use League\Container\Container;
 use Scriptor\Boot\Editor\Editor;
 use Scriptor\Boot\Editor\Menu\MenuItem;
 use Scriptor\Boot\Editor\Menu\MenuRegistry;
 use Scriptor\Boot\Editor\Module;
 use Scriptor\Boot\Editor\ModuleRegistry;
+use Scriptor\Boot\Frontend\Nav\FrontendNavRegistry;
+use Scriptor\Boot\Frontend\Nav\NavItem;
 
 /**
  * Registration surface handed to every plugin's {@see Plugin::register()}.
@@ -39,6 +42,9 @@ final class PluginContext
 
     /** @var list<MenuItem> Editor menu items this plugin added. */
     private array $menuItems = [];
+
+    /** @var int Frontend nav builders this plugin contributed. */
+    private int $navBuilderCount = 0;
 
     public function __construct(
         private readonly Container $container,
@@ -95,17 +101,41 @@ final class PluginContext
     }
 
     /**
+     * Contribute a frontend nav builder. The builder runs once per
+     * request with the current {@see UrlSegments} and returns a list
+     * of top-level {@see NavItem} nodes (optionally nested via
+     * `NavItem::$children`). Themes that consume the frontend nav
+     * ask {@see FrontendNavRegistry::collect()} for the merged tree;
+     * the registry sorts entries by `position` then registration
+     * order.
+     *
+     * Plugins that own a content tree (markdown pages, blog posts,
+     * external links, ...) should contribute through this hook
+     * instead of asking themes to walk plugin-owned directories.
+     *
+     * @param callable(UrlSegments): array<int, NavItem> $builder
+     */
+    public function contributeFrontendNav(callable $builder): void
+    {
+        $this->navBuilderCount++;
+        /** @var FrontendNavRegistry $registry */
+        $registry = $this->container->get(FrontendNavRegistry::class);
+        $registry->contribute($builder);
+    }
+
+    /**
      * Snapshot of what this plugin registered. Used by the editor's
      * InstalledPluginsModule to render a per-plugin breakdown.
      *
-     * @return array{events: list<string>, modules: list<string>, menuItems: list<MenuItem>}
+     * @return array{events: list<string>, modules: list<string>, menuItems: list<MenuItem>, navBuilders: int}
      */
     public function registrations(): array
     {
         return [
-            'events'    => $this->events,
-            'modules'   => $this->modules,
-            'menuItems' => $this->menuItems,
+            'events'      => $this->events,
+            'modules'     => $this->modules,
+            'menuItems'   => $this->menuItems,
+            'navBuilders' => $this->navBuilderCount,
         ];
     }
 }
