@@ -66,6 +66,14 @@ final class PluginsModule implements Module
             $regs = $this->pluginManager->registrationsFor($name) ?? [
                 'events' => [], 'modules' => [], 'menuItems' => [],
             ];
+            // Prefer the Composer manifest version over Plugin::version()
+            // for Composer-installed plugins. The manifest matches the
+            // git tag composer resolved; the hardcoded version() string
+            // is a footgun when a plugin author forgets to bump it in
+            // the release commit. Core plugins (no manifest) keep
+            // their own version() string.
+            $manifest = $this->pluginManager->manifestFor($name);
+            $version  = $manifest !== null ? $manifest->packageVersion : $plugin->version();
             $rows .= sprintf(
                 '<tr>'
                 . '<td><strong>%s</strong></td>'
@@ -75,7 +83,7 @@ final class PluginsModule implements Module
                 . '<td>%s</td>'
                 . '</tr>',
                 htmlspecialchars($name, \ENT_QUOTES),
-                htmlspecialchars($plugin->version(), \ENT_QUOTES),
+                htmlspecialchars($version, \ENT_QUOTES),
                 $this->renderEventList($regs['events']),
                 $this->renderModuleList($regs['modules']),
                 $this->renderMenuList($regs['menuItems']),

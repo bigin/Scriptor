@@ -42,6 +42,9 @@ final class PluginManager
     /** @var array<string, PluginContext> Per-plugin contexts, keyed by Plugin::name(). */
     private array $contexts = [];
 
+    /** @var array<string, PluginManifest> Manifests keyed by Plugin::name(); only set for Composer-discovered plugins. */
+    private array $manifestsByPluginName = [];
+
     /**
      * @param list<string> $disabled    FQCNs of plugins to skip at boot.
      * @param list<string> $corePlugins FQCNs of first-party plugins shipped
@@ -101,14 +104,14 @@ final class PluginManager
             return;
         }
         foreach ($this->corePlugins as $class) {
-            $this->bootPluginClass($class);
+            $this->bootPluginClass($class, null);
         }
         foreach ($this->discover() as $manifest) {
-            $this->bootPluginClass($manifest->pluginClass);
+            $this->bootPluginClass($manifest->pluginClass, $manifest);
         }
     }
 
-    private function bootPluginClass(string $class): void
+    private function bootPluginClass(string $class, ?PluginManifest $manifest): void
     {
         if (in_array($class, $this->disabled, true)) {
             return;
@@ -122,8 +125,11 @@ final class PluginManager
         }
         $context = new PluginContext($this->container, $instance->name());
         $instance->register($context);
-        $this->bootedPlugins[]                = $instance;
-        $this->contexts[$instance->name()]    = $context;
+        $this->bootedPlugins[]                  = $instance;
+        $this->contexts[$instance->name()]      = $context;
+        if ($manifest !== null) {
+            $this->manifestsByPluginName[$instance->name()] = $manifest;
+        }
     }
 
     /**
@@ -138,6 +144,19 @@ final class PluginManager
         return isset($this->contexts[$pluginName])
             ? $this->contexts[$pluginName]->registrations()
             : null;
+    }
+
+    /**
+     * Returns the Composer manifest for the named plugin, or null
+     * for core plugins (which ship with Scriptor and have no
+     * installed.json record). The PluginsModule editor surface
+     * prefers the manifest version over Plugin::version() to avoid
+     * the source-string-drift the early plugin releases had to
+     * correct one-by-one.
+     */
+    public function manifestFor(string $pluginName): ?PluginManifest
+    {
+        return $this->manifestsByPluginName[$pluginName] ?? null;
     }
 
     /** @return list<Plugin> */
