@@ -13,6 +13,10 @@ use Imanager\Storage\FileRepository;
 use Imanager\Templating\TemplateRenderer;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
+use Psr\EventDispatcher\EventDispatcherInterface;
+use Scriptor\Boot\Events\Frontend\PageResolved;
+use Scriptor\Boot\Events\Frontend\PageResolving;
+use Scriptor\Boot\Events\Frontend\RouteNotFound;
 
 /**
  * Frontend renderer for the public Scriptor site, replacing the legacy
@@ -88,10 +92,7 @@ class Site
     ) {
         $this->config = $config;
         $this->sanitizer = new Sanitizer($container->get(ImanagerSanitizer::class));
-        $this->pages = new PageRepository(
-            $container->get(\Imanager\Storage\CategoryRepository::class),
-            $container->get(\Imanager\Storage\ItemRepository::class),
-        );
+        $this->pages = $container->get(PageRepository::class);
         $this->cache = $container->get(FilesystemCache::class);
         $this->files = $container->get(FileRepository::class);
         $this->fileStorage = $container->get(FileStorage::class);
@@ -116,48 +117,43 @@ class Site
     }
 
     /**
-     * Resolve the requested page from the URL or fall back to home/404.
+     * Resolve the requested page from the URL or fall back to 404.
      *
-     * The lookup honours nested page paths: when multiple pages share the
-     * same slug the parent chain is verified by walking back through the
-     * URL segments and rejecting mismatches as 404.
+     * The actual resolution lives in plugins now. Built-in DB-backed
+     * slug resolution is shipped as `DbPagesResolverPlugin` (registered
+     * as a core plugin in boot.php). This method only orchestrates the
+     * event dispatch:
+     *
+     * 1. Dispatch {@see PageResolving}. Listeners can fill the
+     *    `resolution` slot; first writer wins by convention.
+     * 2. If something resolved, dispatch {@see PageResolved} for
+     *    read-only side-effect listeners and return.
+     * 3. Otherwise dispatch {@see RouteNotFound} as a last-chance
+     *    resolver. If it still produces nothing, throw the 404.
      */
     public function execute(): void
     {
-        if ($this->urlSegments->isEmpty()) {
-            $this->page = $this->pages->findHome();
-            if ($this->page === null || ! $this->page->active()) {
-                $this->throw404();
-            }
+        $dispatcher = $this->container->get(EventDispatcherInterface::class);
+
+        $resolving = new PageResolving($this->urlSegments);
+        $dispatcher->dispatch($resolving);
+
+        if ($resolving->resolution !== null) {
+            $this->page = $resolving->resolution;
+            $dispatcher->dispatch(new PageResolved($this->page));
             return;
         }
 
-        $slug = $this->urlSegments->last();
-        if ($slug === null) {
-            $this->page = $this->pages->findHome();
+        $notFound = new RouteNotFound($this->urlSegments);
+        $dispatcher->dispatch($notFound);
+
+        if ($notFound->resolution !== null) {
+            $this->page = $notFound->resolution;
+            $dispatcher->dispatch(new PageResolved($this->page));
             return;
         }
 
-        $page = $this->pages->findBySlug($this->sanitizer->slug($slug));
-        if ($page === null || ! $page->active()) {
-            $this->throw404();
-            return;
-        }
-
-        // Confirm the URL fully matches the page's parent chain so a
-        // request like /wrong-parent/articles/ does not silently render
-        // the matching child page. The home page (id=1) is reachable
-        // both via `/` (already handled above) and via its own slug.
-        if ($page->id() !== 1) {
-            $expected = '/' . $this->getPageUrl($page);
-            $actual   = '/' . $this->urlSegments->path(trailingSlash: true);
-            if ($actual !== $expected) {
-                $this->throw404();
-                return;
-            }
-        }
-
-        $this->page = $page;
+        $this->throw404();
     }
 
     public function render(string $element): ?string

@@ -37,13 +37,19 @@ final class PluginManager
     private array $bootedPlugins = [];
 
     /**
-     * @param list<string> $disabled FQCNs of plugins to skip at boot.
+     * @param list<string> $disabled    FQCNs of plugins to skip at boot.
+     * @param list<string> $corePlugins FQCNs of first-party plugins shipped
+     *                                  inside Scriptor itself (not via Composer).
+     *                                  They boot before discovered plugins, so
+     *                                  user plugins can override any service or
+     *                                  listener a core plugin registered.
      */
     public function __construct(
         private readonly Container $container,
         private readonly string $vendorDir,
         private readonly string $cachePath,
         private readonly array $disabled = [],
+        private readonly array $corePlugins = [],
     ) {}
 
     /**
@@ -74,9 +80,9 @@ final class PluginManager
     }
 
     /**
-     * Instantiate every discovered plugin (skipping disabled ones),
-     * call {@see Plugin::register()}. Idempotent: subsequent calls
-     * within the same request are a no-op.
+     * Instantiate every plugin (core first, then discovered, skipping
+     * disabled ones in both sets), call {@see Plugin::register()}.
+     * Idempotent: subsequent calls within the same request are a no-op.
      */
     public function bootAll(): void
     {
@@ -84,20 +90,29 @@ final class PluginManager
             return;
         }
         $context = new PluginContext($this->container);
-        foreach ($this->discover() as $manifest) {
-            if (in_array($manifest->pluginClass, $this->disabled, true)) {
-                continue;
-            }
-            if (! class_exists($manifest->pluginClass)) {
-                continue;
-            }
-            $instance = new $manifest->pluginClass();
-            if (! $instance instanceof Plugin) {
-                continue;
-            }
-            $instance->register($context);
-            $this->bootedPlugins[] = $instance;
+
+        foreach ($this->corePlugins as $class) {
+            $this->bootPluginClass($class, $context);
         }
+        foreach ($this->discover() as $manifest) {
+            $this->bootPluginClass($manifest->pluginClass, $context);
+        }
+    }
+
+    private function bootPluginClass(string $class, PluginContext $context): void
+    {
+        if (in_array($class, $this->disabled, true)) {
+            return;
+        }
+        if (! class_exists($class)) {
+            return;
+        }
+        $instance = new $class();
+        if (! $instance instanceof Plugin) {
+            return;
+        }
+        $instance->register($context);
+        $this->bootedPlugins[] = $instance;
     }
 
     /** @return list<Plugin> */
