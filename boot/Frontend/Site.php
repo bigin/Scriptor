@@ -14,6 +14,7 @@ use Imanager\Templating\TemplateRenderer;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Scriptor\Boot\Events\Frontend\ContentRendering;
 use Scriptor\Boot\Events\Frontend\PageResolved;
 use Scriptor\Boot\Events\Frontend\PageResolving;
 use Scriptor\Boot\Events\Frontend\RouteNotFound;
@@ -312,11 +313,21 @@ class Site
         if ($this->page === null) {
             return '';
         }
-        // Page content is stored as raw Markdown. Parsedown safe-mode
-        // escapes embedded HTML and rewrites non-whitelisted URL schemes
-        // (no `javascript:` etc.). A future plugin that introduces an
-        // alternative content format should dispatch on a per-page
-        // marker rather than reinstating a global flag here.
+
+        // Give plugins a shot at substituting the rendered content.
+        // The markdown-pages plugin, for instance, pre-computes
+        // CommonMark output during PageResolving and returns it here
+        // so its virtual pages don't get re-processed by Parsedown.
+        $dispatcher = $this->container->get(EventDispatcherInterface::class);
+        $event = new ContentRendering($this->page);
+        $dispatcher->dispatch($event);
+
+        if ($event->html !== null) {
+            return $event->html;
+        }
+
+        // Default path: Parsedown in safe mode (escapes embedded HTML,
+        // rejects non-whitelisted URL schemes).
         return $this->sanitizer->markdown($this->page->content);
     }
 
