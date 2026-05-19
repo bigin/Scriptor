@@ -8,6 +8,7 @@ $i18n = [
 	'settings_menu' => 'Einstellungen',
 	'install_info_text' => 'Während der Installation ändert der Manager Ihre Datei <mark class="nowrap">custom.scriptor-config.php</mark>. In der Regel werden dabei Ihre Konfigurationen nicht überschrieben. Es wird automatisch eine Sicherungskopie Ihrer aktuellen Datei erstellt. Bitte folgen Sie den Installationsanweisungen sorgfältig. Bei Konflikten können Sie Ihre vorherigen Konfigurationen mithilfe der Sicherungskopie wiederherstellen.',
 	'install_menu' => 'Module',
+	'plugins_menu' => 'Plugins',
 	'install_module_list_header' => 'Module Verwaltung',
 	'install_no_modules_found' => 'Keine Module für die Installation verfügbar. Derzeit stehen keine Module zur Installation bereit. Wenn Sie neue Module hinzufügen möchten, können Sie unser <a href="https://scriptor-cms.dev/extensions/extensions-modules/">Modul-Verzeichnis</a> erkunden, um eine Auswahl an verfügbaren Modulen zu entdecken. Alternativ können Sie auch Ihre eigenen Module entwickeln und diese hier installieren.',
 	'install_backup_message' => 'Das Modul <strong>[[module_name]]</strong> wurde installiert und Änderungen wurden in der Konfigurationsdatei <strong>[[custom_config_path]]</strong> vorgenommen.',

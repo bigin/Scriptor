@@ -12,16 +12,17 @@ use League\Container\Container;
 use Scriptor\Boot\Editor\Auth\AuthModule;
 use Scriptor\Boot\Editor\Auth\LoginAttempts;
 use Scriptor\Boot\Editor\Editor;
-use Scriptor\Boot\Editor\Install\InstallModule;
 use Scriptor\Boot\Editor\Menu\MenuItem;
 use Scriptor\Boot\Editor\Module;
 use Scriptor\Boot\Editor\Pages\PagesModule;
+use Scriptor\Boot\Editor\Plugins\PluginsModule;
 use Scriptor\Boot\Editor\Profile\ProfileModule;
 use Scriptor\Boot\Editor\Settings\SettingsModule;
 use Scriptor\Boot\Editor\UserRepository;
 use Scriptor\Boot\Frontend\PageRepository;
 use Scriptor\Boot\Plugin\Plugin;
 use Scriptor\Boot\Plugin\PluginContext;
+use Scriptor\Boot\Plugin\PluginManager;
 
 /**
  * Registers the five built-in editor modules through the same
@@ -89,8 +90,13 @@ final class CoreEditorPlugin implements Plugin
         $context->registerEditorModule('settings', static fn (Container $c, Editor $e): Module
             => new SettingsModule($e));
 
-        $context->registerEditorModule('install', static fn (Container $c, Editor $e): Module
-            => new InstallModule($e, (string) $c->get('scriptor.root')));
+        // Plugins module: replaces the legacy site/modules/* InstallModule
+        // with a read-only browser over the Composer-discovered Scriptor
+        // plugins (the new Plugin API surface). Operators install plugins
+        // via `composer require` and disable them through the
+        // `plugins.disabled` config key.
+        $context->registerEditorModule('plugins', static fn (Container $c, Editor $e): Module
+            => new PluginsModule($e, $c->get(PluginManager::class)));
 
         // The api/upload endpoint is not a Module (it's a JSON
         // endpoint, not a layout-bearing page), so it does NOT

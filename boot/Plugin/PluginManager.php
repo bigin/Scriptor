@@ -39,6 +39,9 @@ final class PluginManager
     /** @var list<Plugin> */
     private array $bootedPlugins = [];
 
+    /** @var array<string, PluginContext> Per-plugin contexts, keyed by Plugin::name(). */
+    private array $contexts = [];
+
     /**
      * @param list<string> $disabled    FQCNs of plugins to skip at boot.
      * @param list<string> $corePlugins FQCNs of first-party plugins shipped
@@ -86,23 +89,26 @@ final class PluginManager
      * Instantiate every plugin (core first, then discovered, skipping
      * disabled ones in both sets), call {@see Plugin::register()}.
      * Idempotent: subsequent calls within the same request are a no-op.
+     *
+     * Each plugin gets its own {@see PluginContext} so the context can
+     * record which events/modules/menu items the plugin contributed.
+     * The contexts are retained on the manager for later introspection
+     * (see the InstalledPluginsModule editor surface).
      */
     public function bootAll(): void
     {
         if ($this->bootedPlugins !== []) {
             return;
         }
-        $context = new PluginContext($this->container);
-
         foreach ($this->corePlugins as $class) {
-            $this->bootPluginClass($class, $context);
+            $this->bootPluginClass($class);
         }
         foreach ($this->discover() as $manifest) {
-            $this->bootPluginClass($manifest->pluginClass, $context);
+            $this->bootPluginClass($manifest->pluginClass);
         }
     }
 
-    private function bootPluginClass(string $class, PluginContext $context): void
+    private function bootPluginClass(string $class): void
     {
         if (in_array($class, $this->disabled, true)) {
             return;
@@ -114,8 +120,24 @@ final class PluginManager
         if (! $instance instanceof Plugin) {
             return;
         }
+        $context = new PluginContext($this->container, $instance->name());
         $instance->register($context);
-        $this->bootedPlugins[] = $instance;
+        $this->bootedPlugins[]                = $instance;
+        $this->contexts[$instance->name()]    = $context;
+    }
+
+    /**
+     * Returns the registrations recorded for the named plugin, or null
+     * if the plugin is not booted (disabled, missing class, or never
+     * discovered).
+     *
+     * @return array{events: list<string>, modules: list<string>, menuItems: list<\Scriptor\Boot\Editor\Menu\MenuItem>}|null
+     */
+    public function registrationsFor(string $pluginName): ?array
+    {
+        return isset($this->contexts[$pluginName])
+            ? $this->contexts[$pluginName]->registrations()
+            : null;
     }
 
     /** @return list<Plugin> */
