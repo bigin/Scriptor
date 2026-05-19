@@ -6,38 +6,30 @@ namespace Scriptor\Boot\Editor;
 
 use Imanager\Files\FileStorage;
 use Imanager\Files\ImageProcessor;
-use Imanager\Storage\CategoryRepository;
-use Imanager\Storage\FieldRepository;
 use Imanager\Storage\FileRepository;
-use Imanager\Storage\ItemRepository;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
 use Scriptor\Boot\Editor\Api\UploadEndpoint;
-use Scriptor\Boot\Editor\Auth\AuthModule;
-use Scriptor\Boot\Editor\Auth\LoginAttempts;
-use Scriptor\Boot\Editor\Install\InstallModule;
-use Scriptor\Boot\Editor\Pages\PagesModule;
-use Scriptor\Boot\Editor\Profile\ProfileModule;
-use Scriptor\Boot\Editor\Settings\SettingsModule;
-use Scriptor\Boot\Frontend\PageRepository;
 
 /**
- * Editor URL router — dispatches to the right module.
+ * Editor URL router. The first segment selects which module handles
+ * the request. Modules live behind {@see ModuleRegistry}: both first-
+ * party surfaces (auth, pages, profile, settings, install) and
+ * plugin-contributed ones are registered the same way, so this
+ * dispatcher has one code path instead of an if-ladder.
  *
- * Modules:
- *   - auth      login / logout (CSRF + bcrypt password verification)
- *   - pages     page list + edit (FilePond uploads, Markdown preview)
- *   - profile   logged-in user edits their own record
- *   - settings  read-only "edit data/settings/*.php manually" page
- *   - install   discover / install / uninstall site/modules/* plugins
- *   - api       JSON endpoints (/editor/api/upload — POST/PATCH/DELETE)
+ * Auth gating is still hard-coded here because it crosses every
+ * module rather than living inside one. The flow is:
  *
- * Auth gating:
- *   - `auth/*` is always reachable (anonymous login form);
- *   - `api/*` returns 401 JSON for anonymous callers;
- *   - everything else 302's to `/editor/auth/` until logged in.
+ *   /auth(/...)       always reachable (the login form needs to be)
+ *   /api/...          401 JSON when not logged in; auth otherwise
+ *   /<anything-else>  302 to /auth/ until logged in
  *
- * Unknown module slugs return a 404 page through {@see renderUnknownModule()}.
+ * Once auth has passed, the dispatcher looks up the first URL segment
+ * in the registry and instantiates the module via its factory. The
+ * factory receives the DI container plus this request's Editor, which
+ * is enough to resolve every per-request dependency (the same closures
+ * that used to live in dispatch*() helpers below).
  */
 final class EditorRouter
 {
@@ -51,13 +43,11 @@ final class EditorRouter
         $first = $this->editor->urlSegments->first();
 
         if ($first === 'auth' || ($first === null && ! $this->editor->isLoggedIn())) {
-            $this->dispatchAuth();
+            $this->dispatchModule('auth');
             return;
         }
 
         if (! $this->editor->isLoggedIn()) {
-            // JSON endpoints get a 401 instead of a 302 so XHR callers
-            // (FilePond, future SPA bits) can react to it cleanly.
             if ($first === 'api') {
                 $this->jsonError(401, 'Authentication required');
             }
@@ -74,55 +64,32 @@ final class EditorRouter
             return;
         }
 
-        if ($first === 'pages') {
-            $this->dispatchPages();
+        if (! $this->moduleRegistry()->has($first)) {
+            $this->renderUnknownModule($first);
             return;
         }
 
-        if ($first === 'profile') {
-            $this->dispatchProfile();
-            return;
-        }
-
-        if ($first === 'settings') {
-            (new SettingsModule($this->editor))->execute();
-            return;
-        }
-
-        if ($first === 'install') {
-            (new InstallModule($this->editor, dirname(__DIR__, 2)))->execute();
-            return;
-        }
-
-        $this->renderUnknownModule($first);
+        $this->dispatchModule($first);
     }
 
-    private function dispatchPages(): void
+    private function dispatchModule(string $slug): void
     {
-        $module = new PagesModule(
-            $this->editor,
-            new PageRepository(
-                $this->container->get(CategoryRepository::class),
-                $this->container->get(ItemRepository::class),
-            ),
-            $this->container->get(FieldRepository::class),
-            $this->container->get(FileRepository::class),
-        );
+        $module = $this->moduleRegistry()->create($slug, $this->container, $this->editor);
         $module->execute();
     }
 
-    private function dispatchProfile(): void
+    private function moduleRegistry(): ModuleRegistry
     {
-        $module = new ProfileModule(
-            $this->editor,
-            new UserRepository(
-                $this->container->get(CategoryRepository::class),
-                $this->container->get(ItemRepository::class),
-            ),
-        );
-        $module->execute();
+        /** @var ModuleRegistry $registry */
+        $registry = $this->container->get(ModuleRegistry::class);
+        return $registry;
     }
 
+    /**
+     * JSON sub-tree under /editor/api/*. The only endpoint today is
+     * upload; adding more would justify an ApiEndpointRegistry, but
+     * for one entry inline dispatch is clearer than over-design.
+     */
     private function dispatchApi(): void
     {
         $resource = $this->editor->urlSegments->get(1);
@@ -145,23 +112,6 @@ final class EditorRouter
         header('Content-Type: application/json; charset=utf-8');
         echo json_encode(['error' => $message]);
         exit;
-    }
-
-    private function dispatchAuth(): void
-    {
-        $auth = new AuthModule(
-            $this->editor,
-            new UserRepository(
-                $this->container->get(CategoryRepository::class),
-                $this->container->get(ItemRepository::class),
-            ),
-            new LoginAttempts(
-                $this->editor->session,
-                maxAttempts: (int) ($this->editor->config['maxFailedAccessAttempts'] ?? 5),
-                lockoutMinutes: (int) ($this->editor->config['accessLockoutDuration'] ?? 5),
-            ),
-        );
-        $auth->execute();
     }
 
     private function renderDashboard(): void

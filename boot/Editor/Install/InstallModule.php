@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Editor\Install;
 
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Editor\Module;
 
 /**
  * Install module — list site/modules/* candidates, install/uninstall
@@ -26,7 +27,7 @@ use Scriptor\Boot\Editor\Editor;
  * expose `public static function moduleInfo(): array`. Modules that
  * don't are skipped silently.
  */
-final class InstallModule
+final class InstallModule implements Module
 {
     private const DEFAULT_CUSTOM_CONFIG = [
         'modules' => [],

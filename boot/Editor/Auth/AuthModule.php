@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Editor\Auth;
 
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Editor\Module;
 use Scriptor\Boot\Editor\UserRepository;
 
 /**
@@ -19,7 +20,7 @@ use Scriptor\Boot\Editor\UserRepository;
  * bcrypt hash that the migrator preserved in the user item's `password`
  * field (Phase 9 + iManager `PasswordFieldType`).
  */
-final class AuthModule
+final class AuthModule implements Module
 {
     public function __construct(
         private readonly Editor $editor,
