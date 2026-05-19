@@ -9,6 +9,7 @@ use Imanager\Domain\Item;
 use Imanager\Storage\FieldRepository;
 use Imanager\Storage\FileRepository;
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Editor\Module;
 use Scriptor\Boot\Frontend\Page;
 use Scriptor\Boot\Frontend\PageRepository;
 
@@ -27,7 +28,7 @@ use Scriptor\Boot\Frontend\PageRepository;
  * the action handlers; render output lands on `$editor->pageContent`
  * exactly like the auth module.
  */
-final class PagesModule
+final class PagesModule implements Module
 {
     /** @var list<int> */
     private array $reservedSlugs;

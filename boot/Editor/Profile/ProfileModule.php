@@ -6,6 +6,7 @@ namespace Scriptor\Boot\Editor\Profile;
 
 use Imanager\Domain\Item;
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Editor\Module;
 use Scriptor\Boot\Editor\UserRepository;
 
 /**
@@ -22,7 +23,7 @@ use Scriptor\Boot\Editor\UserRepository;
  * change written here stays compatible with rows that have already
  * been re-saved as plain hashes alongside ones that haven't.
  */
-final class ProfileModule
+final class ProfileModule implements Module
 {
     private const MIN_PASSWORD_LENGTH = 6;
 

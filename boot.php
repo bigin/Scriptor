@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Scriptor\Boot\App;
+use Scriptor\Boot\Editor\Menu\MenuRegistry;
+use Scriptor\Boot\Editor\ModuleRegistry;
 use Scriptor\Boot\ImanagerBootstrap;
 use Scriptor\Boot\Plugin\PluginManager;
 
@@ -22,6 +24,13 @@ App::container()->addShared(
             App::container()->get(\Imanager\Storage\ItemRepository::class),
         ),
 );
+
+// Editor extension registries. Created empty here so the CoreEditorPlugin
+// and any third-party plugin can populate them during Plugin::register().
+// EditorRouter reads ModuleRegistry to dispatch; the editor layout
+// templates read MenuRegistry to render the sidebar and profile cluster.
+App::container()->addShared(ModuleRegistry::class, static fn() => new ModuleRegistry());
+App::container()->addShared(MenuRegistry::class,   static fn() => new MenuRegistry());
 
 /*
  * Boot path:
@@ -49,18 +58,25 @@ if (file_exists(__DIR__ . '/data/settings/custom.scriptor-config.php')) {
     );
 }
 
+// Make the resolved config and the Scriptor root reachable via the
+// container so plugins can read them at register() time, before
+// per-request services like Editor or Site exist.
+App::container()->add('scriptor.config', $config);
+App::container()->add('scriptor.root',   __DIR__);
+
 $pluginManager = new PluginManager(
     container:   App::container(),
     vendorDir:   __DIR__ . '/vendor',
     cachePath:   __DIR__ . '/data/cache/plugins.php',
     disabled:    (array) ($config['plugins']['disabled'] ?? []),
     corePlugins: [
-        // Built-in DB slug resolver. Sits behind the same PageResolving
-        // event that third-party plugins subscribe to so the dispatch
-        // pipeline is uniform. Operators can disable this by adding the
-        // FQCN to $config['plugins']['disabled'] (for a headless site
-        // that only resolves pages through a custom resolver plugin).
+        // Built-in DB slug resolver. Subscribes to PageResolving and
+        // runs the same DB-backed lookup the old Site::execute had.
         \Scriptor\Boot\Plugin\CorePlugins\DbPagesResolverPlugin::class,
+
+        // Built-in editor surfaces (pages, profile, auth, settings,
+        // install). Seeds ModuleRegistry + MenuRegistry from config.
+        \Scriptor\Boot\Plugin\CorePlugins\CoreEditorPlugin::class,
     ],
 );
 $pluginManager->bootAll();

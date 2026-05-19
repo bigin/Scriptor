@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Scriptor\Boot\Editor\Settings;
 
 use Scriptor\Boot\Editor\Editor;
+use Scriptor\Boot\Editor\Module;
 
 /**
  * Settings module — informational page that points the admin at the
@@ -15,7 +16,7 @@ use Scriptor\Boot\Editor\Editor;
  * A future iManager 2.0 settings UI (post-Phase-17) would replace
  * this with an in-place editor; for Phase 14 we keep parity.
  */
-final class SettingsModule
+final class SettingsModule implements Module
 {
     public function __construct(private readonly Editor $editor) {}
 
