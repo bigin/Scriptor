@@ -20,8 +20,15 @@
         "ext-dom": "*",
         "ext-json": "*",
         "ext-pdo_sqlite": "*",
-        "bigins/imanager": "^2.0"
+        "bigins/imanager": "^2.0",
+        "bigins/scriptor-markdown-pages": "^0.1"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/bigin/scriptor-markdown-pages"
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Scriptor\\Boot\\": "boot/"
