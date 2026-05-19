@@ -20,9 +20,12 @@ use League\Container\Container;
  *
  * Discovery results land in a PHP cache file (default
  * `data/cache/plugins.php`) so the installed.json scan does not run
- * on every request. Composer post-install / post-update scripts can
- * call {@see clearCache()} to invalidate after dependency changes;
- * in development a missing cache simply means one slow boot.
+ * on every request. Cache freshness is checked by comparing the
+ * mtime of the cache file with the mtime of `vendor/composer/installed.json`;
+ * any time composer rewrites installed.json (install, update, remove,
+ * dump-autoload) the next boot picks up the new state automatically.
+ * {@see clearCache()} stays available for callers that want to force
+ * a fresh scan explicitly.
  *
  * Disabling a discovered plugin without uninstalling it is possible
  * via `$config['plugins']['disabled']` in scriptor-config.php; the
@@ -187,6 +190,18 @@ final class PluginManager
     {
         if (! is_file($this->cachePath)) {
             return null;
+        }
+        // Self-invalidate when composer rewrites installed.json. Any
+        // composer install / update / remove / dump-autoload bumps the
+        // installed.json mtime, so the cache becomes stale the moment
+        // dependencies change. No external hook needed.
+        $installed = $this->vendorDir . '/composer/installed.json';
+        if (is_file($installed)) {
+            $installedMtime = (int) filemtime($installed);
+            $cacheMtime     = (int) filemtime($this->cachePath);
+            if ($installedMtime > $cacheMtime) {
+                return null;
+            }
         }
         $cached = @include $this->cachePath;
         if (! is_array($cached)) {
