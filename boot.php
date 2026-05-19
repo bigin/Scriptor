@@ -10,6 +10,19 @@ require __DIR__ . '/vendor/autoload.php';
 
 App::set(ImanagerBootstrap::create(__DIR__));
 
+// Scriptor's frontend Page repository sits one layer above iManager's
+// storage repositories. Bind it once so anything in the request
+// pipeline (Site, plugins, modules) can resolve the same instance via
+// the container instead of newing one up themselves.
+App::container()->addShared(
+    \Scriptor\Boot\Frontend\PageRepository::class,
+    static fn(): \Scriptor\Boot\Frontend\PageRepository
+        => new \Scriptor\Boot\Frontend\PageRepository(
+            App::container()->get(\Imanager\Storage\CategoryRepository::class),
+            App::container()->get(\Imanager\Storage\ItemRepository::class),
+        ),
+);
+
 /*
  * Boot path:
  *   - vendor/autoload.php (Composer + iManager 2.0)
@@ -37,10 +50,18 @@ if (file_exists(__DIR__ . '/data/settings/custom.scriptor-config.php')) {
 }
 
 $pluginManager = new PluginManager(
-    container:  App::container(),
-    vendorDir:  __DIR__ . '/vendor',
-    cachePath:  __DIR__ . '/data/cache/plugins.php',
-    disabled:   (array) ($config['plugins']['disabled'] ?? []),
+    container:   App::container(),
+    vendorDir:   __DIR__ . '/vendor',
+    cachePath:   __DIR__ . '/data/cache/plugins.php',
+    disabled:    (array) ($config['plugins']['disabled'] ?? []),
+    corePlugins: [
+        // Built-in DB slug resolver. Sits behind the same PageResolving
+        // event that third-party plugins subscribe to so the dispatch
+        // pipeline is uniform. Operators can disable this by adding the
+        // FQCN to $config['plugins']['disabled'] (for a headless site
+        // that only resolves pages through a custom resolver plugin).
+        \Scriptor\Boot\Plugin\CorePlugins\DbPagesResolverPlugin::class,
+    ],
 );
 $pluginManager->bootAll();
 App::container()->add(PluginManager::class, $pluginManager);
