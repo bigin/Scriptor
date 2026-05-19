@@ -212,19 +212,18 @@ $config = [
 			'icon' => 'gg-components',
 			'description' => 'A default module for displaying the settings menu'
 		],
-		'install' => [
-			'menu' => 'install_menu',
+		'plugins' => [
+			'menu' => 'plugins_menu',
 			'position' => 3,
 			'active' => true,
 			'auth' => true,
 			'autoinit' => true,
-			'path' => 'modules/install/install',
-			'class' => 'Scriptor\Core\Modules\Install',
+			'class' => 'Scriptor\Boot\Editor\Plugins\PluginsModule',
 			'display_type' => [
 				'sidebar'
 			],
 			'icon' => 'gg-plug',
-			'description' => 'A default module for managing module installations'
+			'description' => 'Read-only browser for installed Scriptor plugins (Composer-discovered)'
 		],
 		'parsedown' => [
 			'menu' => '',

@@ -17,17 +17,32 @@ use Scriptor\Boot\Editor\ModuleRegistry;
  *
  * Phase 2 exposed the DI container.
  * Phase 3 added {@see subscribe()} for PSR-14 frontend events.
- * Phase 4 adds {@see registerEditorModule()} and
- * {@see addEditorMenuItem()} so plugins can plug their own surfaces
- * into the editor.
+ * Phase 4 added {@see registerEditorModule()} and
+ * {@see addEditorMenuItem()} for editor extension hooks.
  *
- * The context mediates every registration so the underlying wiring
- * can change without breaking plugins on every refactor.
+ * Each call to a registration method is recorded on the context
+ * itself ({@see registrations()}) so the new InstalledPluginsModule
+ * can show operators which plugin contributed which surface. The
+ * actual registration still goes to the same global registries; the
+ * tracking is a side-channel for diagnostics.
+ *
+ * PluginManager constructs a separate context per plugin (instead of
+ * sharing one) so each plugin's registrations are isolated.
  */
 final class PluginContext
 {
+    /** @var list<string> Event class names this plugin subscribed to. */
+    private array $events = [];
+
+    /** @var list<string> Editor module slugs this plugin registered. */
+    private array $modules = [];
+
+    /** @var list<MenuItem> Editor menu items this plugin added. */
+    private array $menuItems = [];
+
     public function __construct(
         private readonly Container $container,
+        public readonly string $pluginName = '',
     ) {}
 
     public function container(): Container
@@ -44,6 +59,7 @@ final class PluginContext
      */
     public function subscribe(string $eventClass, callable $handler): void
     {
+        $this->events[] = $eventClass;
         /** @var SubscriberListenerProvider $provider */
         $provider = $this->container->get(SubscriberListenerProvider::class);
         $provider->subscribe($eventClass, $handler);
@@ -59,6 +75,7 @@ final class PluginContext
      */
     public function registerEditorModule(string $slug, callable $factory): void
     {
+        $this->modules[] = $slug;
         /** @var ModuleRegistry $registry */
         $registry = $this->container->get(ModuleRegistry::class);
         $registry->register($slug, $factory);
@@ -71,8 +88,24 @@ final class PluginContext
      */
     public function addEditorMenuItem(MenuItem $item): void
     {
+        $this->menuItems[] = $item;
         /** @var MenuRegistry $registry */
         $registry = $this->container->get(MenuRegistry::class);
         $registry->add($item);
+    }
+
+    /**
+     * Snapshot of what this plugin registered. Used by the editor's
+     * InstalledPluginsModule to render a per-plugin breakdown.
+     *
+     * @return array{events: list<string>, modules: list<string>, menuItems: list<MenuItem>}
+     */
+    public function registrations(): array
+    {
+        return [
+            'events'    => $this->events,
+            'modules'   => $this->modules,
+            'menuItems' => $this->menuItems,
+        ];
     }
 }
