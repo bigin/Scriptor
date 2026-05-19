@@ -137,7 +137,7 @@ final class PluginManager
      * if the plugin is not booted (disabled, missing class, or never
      * discovered).
      *
-     * @return array{events: list<string>, modules: list<string>, menuItems: list<\Scriptor\Boot\Editor\Menu\MenuItem>}|null
+     * @return array{events: list<string>, modules: list<string>, menuItems: list<\Scriptor\Boot\Editor\Menu\MenuItem>, navBuilders: int}|null
      */
     public function registrationsFor(string $pluginName): ?array
     {
