@@ -89,16 +89,16 @@
         },
         {
             "name": "bigins/scriptor-markdown-pages",
-            "version": "v0.1.4",
+            "version": "v0.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bigin/scriptor-markdown-pages.git",
-                "reference": "2cd180b6448b531c9af4c76090439498a636997d"
+                "reference": "2d2448e635aee417da1bf20a91506e136c068d21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bigin/scriptor-markdown-pages/zipball/2cd180b6448b531c9af4c76090439498a636997d",
-                "reference": "2cd180b6448b531c9af4c76090439498a636997d",
+                "url": "https://api.github.com/repos/bigin/scriptor-markdown-pages/zipball/2d2448e635aee417da1bf20a91506e136c068d21",
+                "reference": "2d2448e635aee417da1bf20a91506e136c068d21",
                 "shasum": ""
             },
             "require": {
@@ -139,10 +139,10 @@
                 "scriptor-plugin"
             ],
             "support": {
-                "source": "https://github.com/bigin/scriptor-markdown-pages/tree/v0.1.4",
+                "source": "https://github.com/bigin/scriptor-markdown-pages/tree/v0.1.5",
                 "issues": "https://github.com/bigin/scriptor-markdown-pages/issues"
             },
-            "time": "2026-05-19T13:06:51+00:00"
+            "time": "2026-05-20T11:21:05+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
