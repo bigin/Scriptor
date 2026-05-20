@@ -1180,6 +1180,36 @@ ul.messages {
 .image-list__meta > code {
 	word-break: break-all;
 }
+/* Copy-to-clipboard button next to the filename. Default click
+ * yields the full Markdown `![<title>](<path>)`; Shift+Click yields
+ * just the path. JS swaps the label to "copied" / "path copied"
+ * for ~1.2s. */
+.image-list__copy {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	margin-left: 4px;
+	padding: 2px 6px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-sm, 4px);
+	background: transparent;
+	color: var(--color-fg-muted);
+	font-size: var(--font-size-sm);
+	cursor: pointer;
+	vertical-align: middle;
+}
+.image-list__copy:hover {
+	color: var(--color-fg);
+	border-color: var(--color-fg-muted);
+}
+.image-list__copy.is-copied {
+	color: var(--color-success, #2a8a4a);
+	border-color: var(--color-success, #2a8a4a);
+}
+.image-list__copy .gg-copy {
+	transform: scale(0.55);
+	margin: 0 4px 0 -2px;
+}
 .image-list__title-edit {
 	margin-top: 0.25em;
 }

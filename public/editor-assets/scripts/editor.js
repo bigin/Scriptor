@@ -170,6 +170,36 @@
 		copyToClipboard($(this).attr("rel"));
     });
 
+	// Image-list copy button: default copies the Markdown construct
+	// `![<title>](/uploads/<path>)`; Shift+Click copies just the path.
+	$(document).on("click", ".image-list__copy", function(e) {
+		e.preventDefault();
+		var btn = $(this);
+		var text = e.shiftKey
+			? btn.attr("data-copy-path")
+			: btn.attr("data-copy-md");
+		if (!text) { return; }
+		var afterCopy = function() {
+			var label = btn.find(".image-list__copy-label");
+			var original = label.text();
+			label.text(e.shiftKey ? "path copied" : "copied");
+			btn.addClass("is-copied");
+			setTimeout(function() {
+				label.text(original);
+				btn.removeClass("is-copied");
+			}, 1200);
+		};
+		if (navigator.clipboard && navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(text).then(afterCopy, function() {
+				copyToClipboard(text);
+				afterCopy();
+			});
+		} else {
+			copyToClipboard(text);
+			afterCopy();
+		}
+	});
+
 	$("#page-list-table tbody").sortable({
 		helper: fixWidthHelper,
 		items:"tr.sortable",
