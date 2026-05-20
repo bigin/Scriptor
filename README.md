@@ -8,7 +8,8 @@ Scriptor is a lightweight and versatile CMS for creating microsites, blogs, or
 wikis. Version 2 is a ground-up rewrite on top of [iManager 2][imanager],
 SQLite and PSR-standards (PSR-3, -14, -16).
 
-Demo: [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
+Website: [https://scriptor-cms.dev](https://scriptor-cms.dev)  
+Demo:    [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 
 ## Highlights
 
