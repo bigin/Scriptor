@@ -679,6 +679,35 @@ label.required:after {
 	cursor: all-scroll;
 }
 
+/* css.gg ships `.gg-swap-vertical` as `display: block`, which would
+ * push the position badge onto its own line in the drag-handle cell.
+ * Override it to inline-block in the page list only, so the icon and
+ * the badge sit side-by-side on one baseline. */
+#page-list-table .sortable td:first-child {
+	white-space: nowrap;
+}
+#page-list-table .sortable td:first-child .gg-swap-vertical {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* Position badge next to the drag handle. `tabular-nums` keeps the
+ * numbers right-aligned across rows so a column of values lines up
+ * cleanly regardless of digit count. */
+.page-position {
+	display: inline-block;
+	min-width: 2.5em;
+	margin-left: 2px;
+	padding: 1px 6px;
+	border-radius: var(--radius-sm, 4px);
+	background: var(--color-surface-alt);
+	color: var(--color-fg-muted);
+	font-size: var(--font-size-sm);
+	font-variant-numeric: tabular-nums;
+	text-align: right;
+	vertical-align: middle;
+}
+
 /* Item list not sortable */
 
 .item-table {

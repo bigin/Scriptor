@@ -164,13 +164,21 @@ final class PagesModule implements Module
         $data['template']   = $template;
         $data['pagetype']   = $data['pagetype'] ?? '1';
 
+        // Position: form may set an explicit value (lets editors mix
+        // DB pages with plugin-contributed nav entries on one scale).
+        // Empty / 0 falls back to keep-existing (edit) or next-free (new).
+        $positionInput = $this->editor->input->postInt('position', 0);
+        $position = $positionInput > 0
+            ? $positionInput
+            : ($existing?->item->position ?? $this->pages->nextPosition());
+
         $now = time();
         $item = new Item(
             id:         $existing?->id(),
             categoryId: $this->pages->categoryId,
             name:       $name,
             label:      $existing?->item->label,
-            position:   $existing?->item->position ?? $this->pages->nextPosition(),
+            position:   $position,
             active:     $active,
             data:       $data,
             created:    $existing?->item->created ?? $now,
@@ -316,7 +324,17 @@ final class PagesModule implements Module
                 $ids[] = $int;
             }
         }
-        $this->pages->renumber($ids);
+        // The JS drag-handler sends the moved id explicitly so the
+        // server can reposition just that one row (midpoint between
+        // its new neighbours) instead of renumbering everything
+        // contiguously. Falling back to the old bulk-renumber path
+        // when `moved` is absent keeps any stale page-loads working.
+        $movedId = $this->editor->input->postInt('moved', 0);
+        if ($movedId > 0) {
+            $this->pages->reorderOne($movedId, $ids);
+        } else {
+            $this->pages->renumber($ids);
+        }
         $this->jsonResponse(['status' => 1]);
     }
 
@@ -362,15 +380,16 @@ final class PagesModule implements Module
             }
             $rows .= sprintf(
                 '<tr class="sortable">'
-                . '<td><i class="gg-swap-vertical"></i><input type="hidden" name="position[]" value="%d"></td>'
-                . '<td>%d</td><td>%s</td>'
-                . '<td><a href="edit/?page=%1$d">%s</a></td>'
-                . '<td><a class="remove" rel="%s" href="delete/?page=%1$d&amp;tokenName=pages&amp;tokenValue=%s"><i class="gg-trash"></i></a></td>'
+                . '<td><i class="gg-swap-vertical"></i> <span class="page-position">%2$d</span><input type="hidden" name="position[]" value="%1$d"></td>'
+                . '<td>%1$d</td>'
+                . '<td><a href="edit/?page=%1$d">%3$s</a></td>'
+                . '<td>%4$s</td>'
+                . '<td><a class="remove" rel="%5$s" href="delete/?page=%1$d&amp;tokenName=pages&amp;tokenValue=%6$s"><i class="gg-trash"></i></a></td>'
                 . '</tr>',
                 $page->id(),
-                $page->id(),
-                $parentCell,
+                $page->item->position,
                 htmlspecialchars($this->truncate($page->name, 80), \ENT_QUOTES),
+                $parentCell,
                 htmlspecialchars($this->t('pre_delete_msg'), \ENT_QUOTES),
                 rawurlencode($token),
             );
@@ -412,6 +431,7 @@ final class PagesModule implements Module
         $html .= $this->renderImagesSection($page);
         $html .= $this->fieldSelect('parent', 'parent', $this->t('parent_label'), $parentOptions);
         $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
+        $html .= $this->fieldPosition($page);
         $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
         $html .= '<input type="hidden" name="action" value="save-page">';
         $html .= sprintf('<input type="hidden" name="tokenName" value="%s">', htmlspecialchars('pages', \ENT_QUOTES));
@@ -576,6 +596,29 @@ final class PagesModule implements Module
         );
     }
 
+    /**
+     * Position number input. Empty value on the form leaves the page's
+     * current position untouched. The top-level nav merges DB pages
+     * with plugin-contributed entries by `position`, so editors with
+     * mixed nav can set explicit values here without drag-reordering.
+     */
+    private function fieldPosition(?Page $page): string
+    {
+        $label = $this->t('position_label') ?: 'Position';
+        $info  = $this->t('position_field_infotext')
+            ?: 'Sort key for the top-level navigation. Lower numbers come first. Leave empty to keep the current value.';
+        $value = $page !== null ? (string) $page->item->position : '';
+        return sprintf(
+            '<div class="form-control"><label for="position">%s</label>'
+            . '<p class="info-text i-wrapp"><i class="gg-danger"></i>%s</p>'
+            . '<input name="position" id="position" type="number" min="1" value="%s">'
+            . '</div>',
+            htmlspecialchars($label, \ENT_QUOTES),
+            htmlspecialchars($info, \ENT_QUOTES),
+            htmlspecialchars($value, \ENT_QUOTES),
+        );
+    }
+
     private function fieldCheckbox(string $id, string $name, string $label, bool $checked): string
     {
         return sprintf(
@@ -597,8 +640,8 @@ final class PagesModule implements Module
             . '<table id="page-list-table"><thead><tr>'
             . '<th><b>' . $i($this->t('position_table_header')) . '</b></th>'
             . '<th><b>' . $i($this->t('id_table_header')) . '</b></th>'
-            . '<th><b>' . $i($this->t('parent_table_header')) . '</b></th>'
             . '<th><b>' . $i($this->t('title_table_header')) . '</b></th>'
+            . '<th><b>' . $i($this->t('parent_table_header')) . '</b></th>'
             . '<th><b>' . $i($this->t('delete_table_header')) . '</b></th>'
             . '</tr></thead><tbody>' . $rows . '</tbody></table>'
             . '<input type="hidden" name="action" value="renumber-pages">'
