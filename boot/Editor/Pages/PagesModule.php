@@ -335,7 +335,17 @@ final class PagesModule implements Module
         } else {
             $this->pages->renumber($ids);
         }
-        $this->jsonResponse(['status' => 1]);
+        // Return the fresh id→position map so the client can update the
+        // visible badges without a full page reload. Only the ids that
+        // were submitted (i.e. currently rendered) are included.
+        $positions = [];
+        foreach ($ids as $id) {
+            $page = $this->pages->find($id);
+            if ($page !== null) {
+                $positions[(string) $id] = $page->item->position;
+            }
+        }
+        $this->jsonResponse(['status' => 1, 'positions' => $positions]);
     }
 
     private function markdownPreviewAction(): void

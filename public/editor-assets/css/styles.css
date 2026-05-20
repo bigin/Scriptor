@@ -699,8 +699,7 @@ label.required:after {
 	min-width: 2.5em;
 	margin-left: 2px;
 	padding: 1px 6px;
-	border-radius: var(--radius-sm, 4px);
-	background: var(--color-surface-alt);
+	background: transparent;
 	color: var(--color-fg-muted);
 	font-size: var(--font-size-sm);
 	font-variant-numeric: tabular-nums;

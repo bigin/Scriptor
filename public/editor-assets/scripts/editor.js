@@ -65,8 +65,15 @@
 			formData.append("moved", movedId);
 		}
 		sendData(form.attr("action"), formData, function(result) {
-			//console.log(result);
-			if(result && result.status == 1) { return true; }
+			if (result && result.status == 1 && result.positions) {
+				$('#page-list-table tr.sortable').each(function() {
+					var row = $(this);
+					var id = row.find('input[name="position[]"]').val();
+					if (id && result.positions[id] !== undefined) {
+						row.find('.page-position').text(result.positions[id]);
+					}
+				});
+			}
 		});
 	}
 	function fixWidthHelper(e, ui) {
