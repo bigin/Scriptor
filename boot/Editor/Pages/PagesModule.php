@@ -535,12 +535,20 @@ final class PagesModule implements Module
         $titleField    = 'image_titles[' . $id . ']';
         $positionField = 'image_positions[' . $id . ']';
 
+        $altText = $file->title !== '' ? $file->title : '';
+        $markdown = '![' . $altText . '](' . $assetUrl . ')';
         return '<li class="image-list__item" data-file-id="' . $id . '">'
             . '<a href="' . $i($assetUrl) . '" target="_blank">'
             . '<img src="' . $i($thumbUrl) . '" alt="' . $i($file->name) . '" loading="lazy" width="120" height="120">'
             . '</a>'
             . ' <div class="image-list__meta">'
                 . '<code>' . $i($file->name) . '</code> '
+                . '<button type="button" class="image-list__copy"'
+                    . ' data-copy-md="' . $i($markdown) . '"'
+                    . ' data-copy-path="' . $i($assetUrl) . '"'
+                    . ' title="Copy Markdown — Shift+Click for path only">'
+                    . '<i class="gg-copy"></i><span class="image-list__copy-label">copy</span>'
+                . '</button> '
                 . '<span class="muted">(' . $file->width . 'x' . $file->height . ', ' . $file->size . ' bytes)</span>'
                 . '<div class="image-list__title-edit">'
                     . '<input type="text" class="image-list__title-input"'
