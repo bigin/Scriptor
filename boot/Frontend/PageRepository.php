@@ -177,9 +177,116 @@ final readonly class PageRepository
     }
 
     /**
+     * Reposition a single page (the one the user just dragged) to sit
+     * directly before its new next-neighbour, without touching any
+     * other page's `position`. The new value is `nextPos - 1`; if the
+     * moved item lands at the end of the list it takes `prevPos + 1`.
+     *
+     * Used by `PagesModule::renumberAction()` when JS sends the explicit
+     * `moved` id alongside the new visual order — single-item drag is
+     * the common case and this preserves any manually-set positions on
+     * the other rows.
+     *
+     * If the gap between neighbours is too tight (`nextPos - prevPos < 2`),
+     * this cascade-shifts every following item by `+10` so the moved item
+     * still ends up just before the (shifted) next-neighbour.
+     *
+     * @param list<int> $idsInOrder Full top-level page id list in the
+     *                              new visual order (drag-end snapshot).
+     */
+    public function reorderOne(int $movedId, array $idsInOrder): void
+    {
+        $movedIndex = array_search($movedId, $idsInOrder, true);
+        if ($movedIndex === false) {
+            return;
+        }
+        $moved = $this->items->find($movedId);
+        if ($moved === null || $moved->categoryId !== $this->categoryId) {
+            return;
+        }
+
+        $prevPos = 0;
+        if ($movedIndex > 0) {
+            $prevItem = $this->items->find($idsInOrder[$movedIndex - 1]);
+            if ($prevItem !== null && $prevItem->categoryId === $this->categoryId) {
+                $prevPos = $prevItem->position;
+            }
+        }
+
+        $nextPos = null;
+        $nextIndex = $movedIndex + 1;
+        if ($nextIndex < count($idsInOrder)) {
+            $nextItem = $this->items->find($idsInOrder[$nextIndex]);
+            if ($nextItem !== null && $nextItem->categoryId === $this->categoryId) {
+                $nextPos = $nextItem->position;
+            }
+        }
+
+        if ($nextPos === null) {
+            // End of list: sit just after prev.
+            $newPos = $prevPos + 1;
+        } elseif ($nextPos - $prevPos >= 2) {
+            // Room exists: sit directly before next.
+            $newPos = $nextPos - 1;
+        } else {
+            // Neighbours touch (e.g. 5 and 6): moved item takes next's
+            // slot; next then bumps up by 1, and the ripple walks
+            // forward only as far as collisions actually exist. The
+            // first item with a position already higher than its new
+            // predecessor stops the cascade. Result: 1/2/3/4 → drag
+            // c between a and b → 1/2/3/4 (only b shifts by 1, d
+            // untouched).
+            $newPos = $nextPos;
+            $prevAssigned = $newPos;
+            for ($i = $nextIndex; $i < count($idsInOrder); $i++) {
+                $cascadeItem = $this->items->find($idsInOrder[$i]);
+                if ($cascadeItem === null || $cascadeItem->categoryId !== $this->categoryId) {
+                    continue;
+                }
+                if ($cascadeItem->position > $prevAssigned) {
+                    break; // gap reached
+                }
+                $newCascadePos = $prevAssigned + 1;
+                $this->items->save(new Item(
+                    id:         $cascadeItem->id,
+                    categoryId: $cascadeItem->categoryId,
+                    name:       $cascadeItem->name,
+                    label:      $cascadeItem->label,
+                    position:   $newCascadePos,
+                    active:     $cascadeItem->active,
+                    data:       $cascadeItem->data,
+                    created:    $cascadeItem->created,
+                    updated:    $cascadeItem->updated,
+                ));
+                $prevAssigned = $newCascadePos;
+            }
+        }
+
+        if ($moved->position === $newPos) {
+            return;
+        }
+
+        $this->items->save(new Item(
+            id:         $moved->id,
+            categoryId: $moved->categoryId,
+            name:       $moved->name,
+            label:      $moved->label,
+            position:   $newPos,
+            active:     $moved->active,
+            data:       $moved->data,
+            created:    $moved->created,
+            updated:    $moved->updated,
+        ));
+    }
+
+    /**
      * Bulk-renumber pages in the given order. Each id's `position`
      * becomes its (1-indexed) slot in the array. Pages absent from the
      * id list keep their current position.
+     *
+     * Kept for backwards compatibility (e.g. seed imports or admin
+     * tooling that wants explicit contiguous numbering). The interactive
+     * drag-reorder no longer calls this; it uses {@see reorderOne()}.
      *
      * @param list<int> $idsInOrder
      */

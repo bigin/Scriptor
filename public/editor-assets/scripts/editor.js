@@ -55,9 +55,15 @@
 			},
 		});
 	};
-	function renumberPages() {
+	function renumberPages(movedId) {
 		var form = $("#page-list-form");
 		var formData = new FormData(document.querySelector("#page-list-form"));
+		// Tells the server which row was just dragged so it can reposition
+		// only that row (midpoint between its new neighbours) instead of
+		// renumbering everything contiguously.
+		if (movedId) {
+			formData.append("moved", movedId);
+		}
 		sendData(form.attr("action"), formData, function(result) {
 			//console.log(result);
 			if(result && result.status == 1) { return true; }
@@ -162,7 +168,8 @@
 		items:"tr.sortable",
 		handle:"td",
 		update:function(e,ui) {
-			renumberPages();
+			var movedId = ui.item.find('input[name="position[]"]').val();
+			renumberPages(movedId);
 		}
 	}).disableSelection();
 
