@@ -1,4 +1,3 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); ?>
 <header class="uk-container">
 	<nav class="uk-navbar uk-navbar-container uk-margin uk-navbar-transparent">
 		<div class="uk-navbar-left brand-wrapper">
