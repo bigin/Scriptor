@@ -50,9 +50,31 @@ WORKDIR /var/www/scriptor
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
-# Application code last so the previous layers (large) stay cached
+# Application code next so the previous (large) layers stay cached
 # across edits to PHP source / themes / etc.
 COPY . .
+
+# Optional per-site plugin list. Default install ships plugin-free;
+# sites that need plugins pass a space-separated list of composer
+# package specs via build args, e.g. in a compose override:
+#
+#   services:
+#     scriptor:
+#       build:
+#         args:
+#           SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1"
+#
+# `composer require` runs after `COPY . .` so the modified
+# composer.json + composer.lock + vendor/ end up consistent in the
+# final image (otherwise COPY would clobber the require's edits to
+# composer.json). The `repositories` block in composer.json already
+# names the VCS source for bigins/* plugins, so `composer require`
+# finds them without further configuration.
+ARG SCRIPTOR_PLUGINS=""
+RUN if [ -n "$SCRIPTOR_PLUGINS" ]; then \
+        composer require $SCRIPTOR_PLUGINS \
+            --no-dev --no-interaction --prefer-dist --optimize-autoloader; \
+    fi
 
 # Entrypoint runs as root so it can chown a freshly-attached volume,
 # then drops into the FPM user for the actual workload.
