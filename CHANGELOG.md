@@ -28,6 +28,13 @@
   `gT5nLazzyBob`, override via host env for a private demo).
 - **Build-a-Theme tutorial + shared-hosting guide** both call out
   the new install step instead of stopping at `composer install`.
+- **Plugins are now opt-in.** A fresh Scriptor install ships with
+  zero plugins in its `vendor/`; sites that need a plugin pull it
+  in via their own `composer require` (or via the new
+  `SCRIPTOR_PLUGINS` build-arg on `docker/Dockerfile`). The
+  `repositories` block in `composer.json` keeps the VCS source
+  for `bigins/*` plugins discoverable so the require works
+  without further configuration.
 
 ### Removed
 
@@ -35,6 +42,16 @@
   iManager's auto-migrate; the data half lives in the install CLI
   (categories, fields, admin, Home) and the content overlay
   (`docker/seed-demo-content.sql`) for the demo's extra pages.
+- `bigins/scriptor-markdown-pages` from the default `require`. It
+  was a transitive dependency of the cms-site (scriptor-cms.dev),
+  not something every Scriptor install needs. The plugin pulled in
+  league/commonmark + symfony/yaml (~30 transitive packages) and
+  contributed a "Documentation" editor module plus five hardcoded
+  top-nav entries (`user-guide`, `developer-guide`, `api`,
+  `extensions`, `news`) into every install — which was a poor
+  default for portfolios, blogs, or anything that wasn't the CMS
+  doc site. Now sites opt in explicitly. The cms-site picks the
+  plugin back up via its own compose override.
 
 ## 2.0.1 (2026-05-17) — Dependency refresh + doc polish
 
