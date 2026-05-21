@@ -39,8 +39,8 @@ rm -f "$TMP_DB"
 assert_exit "rejects password < 12 chars" 2 $?
 
 # 2. Blacklisted password rejected.
-"$PHP_BIN" "$SCRIPTOR_BIN" install --password=gT5nLazzyBob --db="$TMP_DB" --yes >/dev/null 2>&1
-assert_exit "rejects blacklisted password (gT5nLazzyBob)" 2 $?
+"$PHP_BIN" "$SCRIPTOR_BIN" install --password=letmein12345 --db="$TMP_DB" --yes >/dev/null 2>&1
+assert_exit "rejects blacklisted password (letmein12345)" 2 $?
 
 # 3. Valid install succeeds.
 "$PHP_BIN" "$SCRIPTOR_BIN" install --password=smoke-test-2026 --db="$TMP_DB" --yes >/dev/null 2>&1
