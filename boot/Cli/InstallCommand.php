@@ -39,9 +39,15 @@ final class InstallCommand
 
     /**
      * Hard-coded blacklist of obvious-default passwords. Lower-case
-     * comparison; includes this project's old demo password plus the
-     * top entries from the 2024 NCSC list. Not exhaustive; the
-     * 12-char minimum is the primary defence.
+     * comparison. Top entries from the 2024 NCSC list plus a couple
+     * of Scriptor-specific variants. Not exhaustive; the 12-char
+     * minimum is the primary defence.
+     *
+     * The Docker demo's known password is intentionally *not* in this
+     * list, so that the same install CLI can drive both the demo
+     * image and real deployments. The demo password is also why this
+     * project keeps a public credential in `docs/demo.md`, a
+     * deliberate trade-off documented there.
      *
      * @var list<string>
      */
@@ -51,7 +57,6 @@ final class InstallCommand
         'password',
         'password123',
         'qwerty12345',
-        'gt5nlazzybob',
         'scriptor',
         'scriptor123',
         'changeme',
