@@ -43,17 +43,28 @@ Demo:    [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 git clone git@github.com:bigin/Scriptor.git
 cd Scriptor
 composer install
+php bin/scriptor install
 ```
 
-Point your web server at the `public/` directory. The installer
-creates `data/imanager.db` on the first request via the schema-migrate
-step. To run migrations explicitly:
+`bin/scriptor install` seeds a fresh SQLite database with the Pages
+and Users categories, their fields, a Home page, and one admin
+user. You will be prompted for an admin password (12+ characters).
+The command refuses to run a second time once installed, so it is
+safe to leave in a deployment script.
+
+For automation (CI, Docker, scripted provisioning) pass the
+password explicitly and skip the confirmation prompt:
 
 ```bash
-vendor/bin/imanager schema:migrate --db=data/imanager.db
+SCRIPTOR_ADMIN_PASSWORD='your-strong-secret' \
+  php bin/scriptor install --yes
 ```
 
-For PHP's built-in server during local development:
+See [`docs/install.md`](docs/install.md) for the full walkthrough,
+flag reference, and security notes.
+
+Point your web server at the `public/` directory. For PHP's
+built-in server during local development:
 
 ```bash
 php -S 127.0.0.1:8080 -t public public/index.php

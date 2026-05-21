@@ -1,0 +1,136 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Scriptor CLI entry point.
+ *
+ * Today only knows the `install` subcommand. Designed to grow more
+ * subcommands later (`user:add`, `user:passwd`, `cache:clear`, …);
+ * the dispatch stays a simple switch until that list outgrows it,
+ * at which point Symfony Console becomes worth its dependency cost.
+ *
+ * Security guarantee G1 from docs/scriptor-install-cli-plan.md: this
+ * file refuses to run under any SAPI but `cli`. Belt-and-suspenders
+ * to the webroot layout (bin/ lives outside public/), so a misconfig
+ * that exposes bin/ over HTTP still can't run install via PHP-FPM.
+ */
+
+if (\PHP_SAPI !== 'cli') {
+    \fwrite(\STDERR, "bin/scriptor only runs from the command line.\n");
+    exit(3);
+}
+
+$root = \dirname(__DIR__);
+require $root . '/vendor/autoload.php';
+
+$args = $argv;
+\array_shift($args); // drop the script name
+$command = $args[0] ?? '';
+\array_shift($args);
+
+switch ($command) {
+    case 'install':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_install_help();
+            exit(0);
+        }
+        $console = new \Scriptor\Boot\Cli\Console();
+        $prompt  = new \Scriptor\Boot\Cli\PasswordPrompt($console);
+        $cmd     = new \Scriptor\Boot\Cli\InstallCommand($root, $console, $prompt);
+        exit($cmd->run($options));
+
+    case '':
+    case 'help':
+    case '--help':
+    case '-h':
+        print_top_help();
+        exit($command === '' ? 1 : 0);
+
+    default:
+        \fwrite(\STDERR, "Unknown command: {$command}\n\n");
+        print_top_help();
+        exit(1);
+}
+
+/**
+ * @param list<string> $args
+ * @return array<string, string|bool>
+ */
+function parse_options(array $args): array
+{
+    $opts = [];
+    foreach ($args as $arg) {
+        if ($arg === '--yes' || $arg === '-y') {
+            $opts['yes'] = true;
+            continue;
+        }
+        if ($arg === '--help' || $arg === '-h') {
+            $opts['help'] = true;
+            continue;
+        }
+        if (\str_starts_with($arg, '--')) {
+            $body = \substr($arg, 2);
+            $eqPos = \strpos($body, '=');
+            if ($eqPos === false) {
+                // Treat boolean flag.
+                $opts[$body] = true;
+                continue;
+            }
+            $name  = \substr($body, 0, $eqPos);
+            $value = \substr($body, $eqPos + 1);
+            $opts[$name] = $value;
+            continue;
+        }
+        // Bare positional args have no meaning today; ignore silently
+        // rather than break future extensions.
+    }
+    return $opts;
+}
+
+function print_top_help(): void
+{
+    echo <<<'TXT'
+Scriptor CLI.
+
+Usage:
+  bin/scriptor <command> [options]
+
+Commands:
+  install    Seed a fresh Scriptor database (Pages, Users, admin, Home).
+  help       Show this message.
+
+Run `bin/scriptor <command> --help` for command-specific options.
+
+TXT;
+}
+
+function print_install_help(): void
+{
+    echo <<<'TXT'
+Seed a fresh Scriptor database.
+
+Usage:
+  bin/scriptor install [options]
+
+Options:
+  --password=<value>   Admin password (overrides SCRIPTOR_ADMIN_PASSWORD env).
+  --username=<name>    Admin username (default: admin).
+  --email=<addr>       Admin email (default: admin@localhost).
+  --db=<path>          Database file path (default: data/imanager.db).
+  --yes, -y            Skip the "type INSTALL to proceed" prompt. Required
+                       when stdin is not a TTY.
+  --help, -h           Show this message.
+
+Password sources (first match wins):
+  1. --password=...
+  2. $SCRIPTOR_ADMIN_PASSWORD
+  3. Interactive prompt (requires a TTY).
+
+The command refuses to run if a Pages category already exists in the
+database. To start over, delete the database file explicitly.
+
+TXT;
+}
