@@ -26,6 +26,11 @@ services:
     image: bigins/scriptor-demo:latest
     container_name: scriptor-demo
     restart: unless-stopped
+    environment:
+      # Admin password for the seeded `admin` user. Default value matches
+      # docs/demo.md. Override via host env var for a private demo:
+      # SCRIPTOR_ADMIN_PASSWORD=<your-secret> docker compose up -d --build
+      SCRIPTOR_ADMIN_PASSWORD: "${SCRIPTOR_ADMIN_PASSWORD:-gT5nLazzyBob}"
     volumes:
       - scriptor-data:/var/www/scriptor/data
       - scriptor-uploads:/var/www/scriptor/public/uploads
