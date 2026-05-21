@@ -1,5 +1,40 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **`bin/scriptor install` CLI** for greenfield setup. Seeds the
+  Pages + Users categories, their fields, an admin user, and a
+  minimal Home page so `/` works on the first request. Replaces
+  the previous "creates the DB on the first request" behaviour
+  that only ran schema migrations and left the editor unreachable.
+  Password is read from `--password`, `SCRIPTOR_ADMIN_PASSWORD`
+  env, or an interactive TTY prompt (12-char minimum, small
+  blocklist of obvious defaults). Refuses to run when a Pages
+  category already exists, refuses to run under any SAPI but
+  `cli`. Documented in [`docs/install.md`](docs/install.md).
+- **`bin/smoke-install.sh`** regression script (11 end-to-end
+  checks) covering the install CLI's contracts.
+
+### Changed
+
+- **Docker demo entrypoint** seeds through the install CLI rather
+  than a single all-in-one `seed-demo.sql` dump. The remaining
+  content rows (Articles, Contact, Footer cluster) moved to
+  `docker/seed-demo-content.sql` as a small content overlay.
+  Admin password reads from `SCRIPTOR_ADMIN_PASSWORD` (default
+  `gT5nLazzyBob`, override via host env for a private demo).
+- **Build-a-Theme tutorial + shared-hosting guide** both call out
+  the new install step instead of stopping at `composer install`.
+
+### Removed
+
+- `docker/seed-demo.sql`. The schema half is recreated by
+  iManager's auto-migrate; the data half lives in the install CLI
+  (categories, fields, admin, Home) and the content overlay
+  (`docker/seed-demo-content.sql`) for the demo's extra pages.
+
 ## 2.0.1 (2026-05-17) — Dependency refresh + doc polish
 
 No changes to Scriptor's own source. Captures the current state of

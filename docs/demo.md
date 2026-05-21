@@ -146,28 +146,55 @@ recreation.
 | `docker/Dockerfile` | `php:8.3-fpm-alpine` + iManager extensions + opcache + composer install of the runtime deps from Packagist. |
 | `docker/Dockerfile.web` | `nginx:alpine` with `public/` baked in so SCRIPT_FILENAME paths resolve identically in both containers. |
 | `docker/nginx.conf` | Front-controller routing; serves `/uploads/` directly; blocks dotfiles + any stray non-`index.php` PHP. |
-| `docker/entrypoint.sh` | On every start: `schema:migrate` (idempotent). On first start (no DB): restore seed + extract uploads. |
-| `docker/seed-demo.sql` | Database snapshot: schema + every page, field, file row, FTS5 index. |
-| `docker/seed-demo-uploads.tar.gz` | `public/uploads/` snapshot for page images referenced by the dump. |
+| `docker/entrypoint.sh` | On every start: `schema:migrate` (idempotent). On first start (no DB): run `bin/scriptor install`, overlay the content seed, extract uploads. |
+| `docker/seed-demo-content.sql` | Content overlay: the seven extra demo pages (Articles, Contact, Footer Pages, …) that `bin/scriptor install` does not seed itself. IDs start at 3 to leave room for the admin and Home rows the install command creates. |
+| `docker/seed-demo-uploads.tar.gz` | `public/uploads/` snapshot for page images referenced by the content overlay. |
 | `docker-compose.yml` | Two-service stack on `http://localhost:8080`. |
 
 ---
 
 ## Refreshing the seed when scriptor.cms content evolves
 
-```bash
-# In a working copy connected to the canonical scriptor.cms DB:
-vendor/bin/imanager dump --db=data/imanager.db > docker/seed-demo.sql
+The content overlay is hand-curated, not auto-generated. `bin/scriptor
+install` already handles categories, fields, the admin user, and a
+Home placeholder, so the seed file only carries the *extra* demo
+pages plus the file metadata for the images they reference.
 
-# And the upload subdirs the dump references:
+Workflow when the canonical scriptor.cms content changes and the
+demo image should pick it up:
+
+```bash
+# 1. From a working copy connected to the canonical scriptor.cms DB,
+#    dump the demo page rows. The admin user (Users category) and the
+#    install-created Home (id=2) are skipped on purpose.
+sqlite3 data/imanager.db <<'SQL' > /tmp/items.sql
+.mode insert items
+SELECT * FROM items WHERE category_id = 1 AND name != 'Home';
+SQL
+
+# 2. Renumber IDs so they start at 3 (the install command takes 1
+#    for admin and 2 for Home). Update parent references inside each
+#    row's JSON `data` blob the same way. Compare against the current
+#    docker/seed-demo-content.sql to see the exact shape, then hand-
+#    edit until it matches.
+
+# 3. Same for items_fts and files (item_id references follow items).
+
+# 4. Tar the upload subdirs the overlay references:
 COPYFILE_DISABLE=1 tar --format=ustar -czf docker/seed-demo-uploads.tar.gz \
   -C public uploads/<referenced-subdirs>
 ```
 
-Referenced subdirs come from
+Referenced upload subdirs come from
 `SELECT DISTINCT substr(path, 1, instr(path, '/') - 1) FROM files;`
 on the canonical DB. Use `ustar` format so alpine busybox tar
 doesn't warn about pax extended headers.
+
+If you find yourself doing this often, write a `bin/scriptor
+demo:dump` command that does the renumbering programmatically and
+commit it instead of refining the workflow above. The doc reflects
+the current cadence (a refresh every few quarters), not a long-term
+target.
 
 ---
 
@@ -180,9 +207,10 @@ doesn't warn about pax extended headers.
   [iManager deployment guide](https://github.com/bigin/imanager/blob/main/docs/deployment.md)
   and write your own Dockerfile.
 - **Developing on Scriptor itself.** Use the local
-  `composer install` + ServBay / nginx / Caddy setup the
-  [README](../README.md) documents; the demo image ships frozen
-  code from a `docker build` snapshot.
+  `composer install` + `php bin/scriptor install` + ServBay / nginx
+  / Caddy setup the [README](../README.md) and
+  [`docs/install.md`](install.md) document; the demo image ships
+  frozen code from a `docker build` snapshot.
 - **Migrating real 1.x data.** Use
   [`vendor/bin/imanager migrate:from-v1`](https://github.com/bigin/imanager/blob/main/docs/migration-guide.md)
   against your real data dir, not against this demo's seed.
