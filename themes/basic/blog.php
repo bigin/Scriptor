@@ -1,4 +1,3 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); ?>
 <?php include 'resources/chunks/_head.php' ?>
 <body>
 <main role="main" class="blog">

@@ -1,4 +1,3 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

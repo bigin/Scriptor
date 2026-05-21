@@ -1,4 +1,4 @@
-<?php defined('IS_IM') or die('You cannot access this page directly'); 
+<?php
 
 $tplName = $site->sanitizer->templateName($site->currentTemplate());
 $tplFile = __DIR__."/$tplName.php";
