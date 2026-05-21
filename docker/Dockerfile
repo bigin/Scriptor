@@ -73,7 +73,7 @@ COPY . .
 ARG SCRIPTOR_PLUGINS=""
 RUN if [ -n "$SCRIPTOR_PLUGINS" ]; then \
         composer require $SCRIPTOR_PLUGINS \
-            --no-dev --no-interaction --prefer-dist --optimize-autoloader; \
+            --update-no-dev --no-interaction --prefer-dist --optimize-autoloader; \
     fi
 
 # Entrypoint runs as root so it can chown a freshly-attached volume,
