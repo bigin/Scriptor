@@ -34,6 +34,9 @@
             "Scriptor\\Boot\\": "boot/"
         }
     },
+    "bin": [
+        "bin/scriptor"
+    ],
     "config": {
         "sort-packages": true,
         "platform": {
