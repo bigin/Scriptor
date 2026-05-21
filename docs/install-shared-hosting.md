@@ -6,6 +6,10 @@ shared hosting providers fix the webroot to `public_html/` (or
 `htdocs/`, `www/`) and won't let you point it elsewhere, so you have
 to bridge `public/` to that fixed location.
 
+This guide covers the webroot bridging. For the full setup walkthrough
+(seeding the database, admin credentials, troubleshooting), read
+[`docs/install.md`](install.md) first.
+
 Two acceptable options, in order of preference.
 
 ## Option A: symlink `public_html` → `public` (preferred)
@@ -20,6 +24,11 @@ modern SFTP-with-shell providers).
 cd /home/<user>
 rm -rf public_html              # remove any default placeholder content
 ln -s /home/<user>/Scriptor/public public_html
+
+# One-time database seed.
+cd Scriptor
+composer install --no-dev
+php bin/scriptor install        # prompts for an admin password
 ```
 
 Verify:
@@ -41,7 +50,8 @@ Scriptor update means re-copying `public/`.
 cd /home/<user>
 git clone https://github.com/bigin/Scriptor.git   # or upload via SFTP
 cd Scriptor
-composer install                                  # if you have shell
+composer install --no-dev                         # if you have shell
+php bin/scriptor install                          # prompts for an admin password
 
 # Copy public/ contents into the fixed webroot:
 cp -a /home/<user>/Scriptor/public/. /home/<user>/public_html/
