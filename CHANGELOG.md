@@ -10,8 +10,9 @@
   the previous "creates the DB on the first request" behaviour
   that only ran schema migrations and left the editor unreachable.
   Password is read from `--password`, `SCRIPTOR_ADMIN_PASSWORD`
-  env, or an interactive TTY prompt (12-char minimum, small
-  blocklist of obvious defaults). Refuses to run when a Pages
+  env, or an interactive TTY prompt (8-char minimum to match
+  iManager's `PasswordFieldType`, small blocklist of obvious
+  defaults). Refuses to run when a Pages
   category already exists, refuses to run under any SAPI but
   `cli`. Documented in [`docs/install.md`](docs/install.md).
 - **`bin/smoke-install.sh`** regression script (11 end-to-end

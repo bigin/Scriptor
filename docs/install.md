@@ -26,7 +26,7 @@ php bin/scriptor install
 The command will:
 
 1. Confirm the database path: `About to seed /path/to/data/imanager.db. Type INSTALL to proceed:`. Type `INSTALL` and press Enter.
-2. Prompt for an admin password (12 characters minimum, echo suppressed) and ask you to confirm it.
+2. Prompt for an admin password (8 characters minimum, echo suppressed) and ask you to confirm it. The minimum matches iManager's `PasswordFieldType` so the editor's change-password form accepts the same passwords.
 3. Create the Pages and Users categories with their fields, seed an `admin` user, and add a Home page.
 
 You should see four `[n/4]` progress lines and a final summary
@@ -106,8 +106,10 @@ direct SQL or the editor. The CLI is for greenfield seeding.
   that exposed `bin/scriptor` over HTTP would still be refused at
   the SAPI check on the first line of the script.
 - There is no default admin password. The command rejects passwords
-  under 12 characters and a small blocklist of obvious defaults
-  (including this project's old Docker demo password).
+  under 8 characters and a small blocklist of obvious defaults.
+  The editor's login flow rate-limits failed attempts via
+  `LoginAttempts`, so the 8-char floor plus lockout is the real
+  brute-force defence; the blocklist is a copy-paste catch.
 - The "already installed" check looks at the actual database, not a
   lock-file. An attacker who can delete files under `data/` cannot
   trigger a re-install that would overwrite credentials.
@@ -134,5 +136,7 @@ when a human is at the keyboard.
 
 ### "Invalid admin password: too short"
 
-The minimum is 12 characters. There is no override; pick a longer
-one. Length is the cheapest defence against brute-force.
+The minimum is 8 characters, matching iManager's
+`PasswordFieldType`. There is no override; pick a longer one.
+The editor's login rate-limiter is the real brute-force defence,
+but the floor stops the most obvious typos.
