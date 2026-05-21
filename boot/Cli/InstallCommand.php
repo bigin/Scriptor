@@ -22,7 +22,7 @@ use Scriptor\Boot\ImanagerBootstrap;
  * renders on first request. Refuses to run if any of those already
  * exist (idempotent via real-state check, not lock-files). Reads the
  * admin password from `--password`, then `SCRIPTOR_ADMIN_PASSWORD`,
- * then a TTY prompt. Enforces a 12-character minimum and rejects a
+ * then a TTY prompt. Enforces an 8-character minimum and rejects a
  * small blacklist of obvious defaults.
  *
  * See `docs/scriptor-install-cli-plan.md` for the security
@@ -40,8 +40,10 @@ final class InstallCommand
     /**
      * Hard-coded blacklist of obvious-default passwords. Lower-case
      * comparison. Top entries from the 2024 NCSC list plus a couple
-     * of Scriptor-specific variants. Not exhaustive; the 12-char
-     * minimum is the primary defence.
+     * of Scriptor-specific variants. Not exhaustive; the editor's
+     * LoginAttempts rate-limiter is the real defence against brute
+     * force, the blocklist just catches the most obvious copy-paste
+     * defaults.
      *
      * The Docker demo's known password is intentionally *not* in this
      * list, so that the same install CLI can drive both the demo
@@ -63,7 +65,15 @@ final class InstallCommand
         'letmein12345',
     ];
 
-    private const MIN_PASSWORD_LENGTH = 12;
+    /**
+     * Same floor as `Imanager\Field\Types\PasswordFieldType::defaultConfig()`
+     * uses for the editor's password input. Keeping the two in sync avoids
+     * the awkward situation where the CLI accepts a password the editor's
+     * change-password form would reject (or vice versa). The editor also
+     * rate-limits failed logins via LoginAttempts, so 8 chars + lockout is
+     * the actual defence; the install CLI just enforces the same floor.
+     */
+    private const MIN_PASSWORD_LENGTH = 8;
 
     public function __construct(
         private readonly string $scriptorRoot,

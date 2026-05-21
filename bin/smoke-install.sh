@@ -36,7 +36,7 @@ assert_exit() {
 # 1. Too-short password rejected.
 rm -f "$TMP_DB"
 "$PHP_BIN" "$SCRIPTOR_BIN" install --password=short --db="$TMP_DB" --yes >/dev/null 2>&1
-assert_exit "rejects password < 12 chars" 2 $?
+assert_exit "rejects password < 8 chars" 2 $?
 
 # 2. Blacklisted password rejected.
 "$PHP_BIN" "$SCRIPTOR_BIN" install --password=letmein12345 --db="$TMP_DB" --yes >/dev/null 2>&1

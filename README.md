@@ -48,7 +48,7 @@ php bin/scriptor install
 
 `bin/scriptor install` seeds a fresh SQLite database with the Pages
 and Users categories, their fields, a Home page, and one admin
-user. You will be prompted for an admin password (12+ characters).
+user. You will be prompted for an admin password (8+ characters).
 The command refuses to run a second time once installed, so it is
 safe to leave in a deployment script.
 
