@@ -14,6 +14,44 @@ Home page so `/` works on first request.
 - Standard PHP extensions: `mbstring`, `dom`, `json`, `gd`, `pdo_sqlite`
 - A web server with its document root pointed at `public/`
 
+The Docker option below skips all of the above except Docker itself.
+
+## Try with Docker (fastest, no local PHP needed)
+
+If you just want to see Scriptor run without installing PHP,
+Composer, or SQLite locally, the bundled demo image is one
+command:
+
+```bash
+git clone https://github.com/bigin/Scriptor.git
+cd Scriptor
+docker compose up -d --build
+```
+
+The stack listens on `http://localhost:8080/`. When port 8080 is
+already taken (ServBay, another local container, …) override the
+host port:
+
+```bash
+SCRIPTOR_DEMO_PORT=8090 docker compose up -d --build
+```
+
+The container itself always binds `80`; only the host-side port
+is dynamic. Default admin login is `admin / gT5nLazzyBob` (the
+container runs `bin/scriptor install` on first start with the
+documented demo password). For a private demo with your own
+password:
+
+```bash
+SCRIPTOR_ADMIN_PASSWORD='your-strong-secret' \
+  SCRIPTOR_DEMO_PORT=8090 \
+  docker compose up -d --build
+```
+
+See [`docs/demo.md`](demo.md) for what the seed creates, how to
+reset, and when **not** to use this image (it is built for
+exploration, not production).
+
 ## Interactive install (local dev)
 
 ```bash
