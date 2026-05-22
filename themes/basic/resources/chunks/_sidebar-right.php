@@ -19,7 +19,7 @@
 				<div id="page-header">
 					<h1><?php echo $site->page->name; ?></h1>
 				</div>
-				<?php echo $site->messages; ?>
+				<?php echo $site->render('messages'); ?>
 				<div id="content" role="article">
 					<?php echo $site->render('content'); ?>
 				</div>

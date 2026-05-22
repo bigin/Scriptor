@@ -25,10 +25,11 @@ use Scriptor\Boot\Events\Frontend\RouteNotFound;
  *
  * Holds the `$site` surface that bundled themes consume:
  *   - properties: `siteUrl`, `themeUrl`, `version`, `config`, `page`,
- *     `messages`, `urlSegments`, `input`, `sanitizer`, `pages`,
+ *     `urlSegments`, `input`, `sanitizer`, `pages`,
  *     `templateParser`, `cache`
  *   - rendering: `render($element)` with overridable hooks; theme
- *     subclasses override the `render*()` methods.
+ *     subclasses override the `render*()` methods. The `messages`
+ *     element renders the pending `$msgs[]` queue as HTML.
  *   - utilities: `getBasePath()`, `getPageUrl()`, `addMsg()`,
  *     `throw404()`, `getTCP()`, `templateName()`.
  *
@@ -41,7 +42,6 @@ class Site
     public string $themeUrl;
     public string $version = '2.0.0-dev';
     public ?Page $page = null;
-    public string $messages = '';
     public UrlSegments $urlSegments;
     public Request $input;
     public Sanitizer $sanitizer;
@@ -162,7 +162,7 @@ class Site
         return match ($element) {
             'content'    => $this->renderContent(),
             'navigation' => $this->renderNavigation(),
-            'messages'   => $this->messages,
+            'messages'   => $this->renderMsgs(),
             // Theme-extension hooks. Theme subclasses override these by
             // returning their own markup before delegating to parent.
             'hero',
@@ -226,6 +226,37 @@ class Site
             $msg['header'] = $header;
         }
         $this->msgs[] = $msg;
+    }
+
+    /**
+     * Render the pending `$msgs[]` queue as a `<ul class="messages">`
+     * list and drain it. Empty queue returns an empty string so a
+     * template can call `<?= $site->render('messages') ?>` without
+     * conditionals. Markup mirrors {@see Editor::renderMsgs()} so the
+     * frontend and editor share the same CSS hooks. The `value` is
+     * emitted raw — addMsg() callers are trusted to either pass
+     * static strings or escape themselves; the `type` and `header`
+     * are HTML-escaped because they are intended to be plain text.
+     */
+    public function renderMsgs(): string
+    {
+        if ($this->msgs === []) {
+            return '';
+        }
+        $html = '<ul class="messages">';
+        foreach ($this->msgs as $msg) {
+            $html .= sprintf(
+                '<li class="msg msg-%s">%s%s</li>',
+                htmlspecialchars((string) $msg['type'], \ENT_QUOTES),
+                isset($msg['header']) && $msg['header'] !== ''
+                    ? '<strong>' . htmlspecialchars((string) $msg['header'], \ENT_QUOTES) . '</strong> '
+                    : '',
+                (string) $msg['value'],
+            );
+        }
+        $html .= '</ul>';
+        $this->msgs = [];
+        return $html;
     }
 
     /**
