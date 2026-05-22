@@ -11,6 +11,7 @@ use Imanager\Http\UrlSegments;
 use Imanager\Templating\TemplateRenderer;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
+use Psr\Log\LoggerInterface;
 use Scriptor\Boot\Frontend\Sanitizer;
 
 /**
@@ -20,7 +21,7 @@ use Scriptor\Boot\Frontend\Sanitizer;
  *
  *   - Properties:  config, siteUrl, themeUrl, version, csrf, msgs[],
  *                  pageTitle, pageContent, breadcrumbs, jsConfig,
- *                  i18n, input, sanitizer, urlSegments, session
+ *                  i18n, input, sanitizer, urlSegments, session, logger
  *   - Helpers:     getProperty(), getResources(), addMsg(), renderMsgs(),
  *                  isLoggedIn(), currentUserId(), templateName()
  *
@@ -50,6 +51,7 @@ class Editor
     public UrlSegments $urlSegments;
     public TemplateRenderer $templateParser;
     public SessionStore $session;
+    public LoggerInterface $logger;
 
     /** @var array<string, mixed> */
     public array $config;
@@ -72,6 +74,7 @@ class Editor
         $this->config = $config;
         $this->csrf = $container->get(Csrf::class);
         $this->session = $container->get(SessionStore::class);
+        $this->logger = $container->get(LoggerInterface::class);
         $this->input = Request::fromGlobals();
         $this->sanitizer = new Sanitizer($container->get(ImanagerSanitizer::class));
         $this->templateParser = new TemplateRenderer();

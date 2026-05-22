@@ -55,6 +55,20 @@
 
 ### Added
 
+- **PSR-3 logger surface.** Until now Scriptor had no first-class
+  logger; tutorial and bundled handlers fell back to `error_log()`,
+  which is hard to scope and hard to find. Adds
+  `Psr\Log\LoggerInterface` as a container-bound service and a
+  small `Scriptor\Boot\Logging\FileLogger` default (~80 lines, no
+  new Composer deps — `psr/log:^3` is already transitive). Writes
+  one line per record to `data/logs/scriptor.log` (path +
+  min-level configurable via `$config['logging']`), with PSR-3
+  `{placeholder}` interpolation and `LOCK_EX` for concurrent FPM
+  workers. `Site::$logger` and `Editor::$logger` expose the
+  instance; themes and plugins can pull `LoggerInterface` directly
+  from the container. Swap the binding in `boot.php` to wire in
+  Monolog or any other PSR-3 implementation without touching call
+  sites.
 - **Basic theme: styles for the `messages` slot.** The bundled
   `basic` theme's `styles.css` had no rules for the
   `<ul class="messages"><li class="msg msg-{type}">…</li></ul>`
