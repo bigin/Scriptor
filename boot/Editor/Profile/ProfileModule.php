@@ -76,10 +76,16 @@ final class ProfileModule implements Module
             return;
         }
 
+        $rawEmail = trim($this->editor->input->postString('email'));
         $name  = $this->editor->sanitizer->text(str_replace('"', '', $this->editor->input->postString('username')));
-        $email = $this->editor->sanitizer->email($this->editor->input->postString('email'));
-        if ($name === '' || $email === null || $email === '') {
+        if ($name === '' || $rawEmail === '') {
             $this->editor->addMsg('error', $this->t('profile_incomplete'));
+            $this->renderEdit($currentId);
+            return;
+        }
+        $email = $this->editor->sanitizer->email($rawEmail);
+        if ($email === null) {
+            $this->editor->addMsg('error', $this->t('profile_email_invalid'));
             $this->renderEdit($currentId);
             return;
         }

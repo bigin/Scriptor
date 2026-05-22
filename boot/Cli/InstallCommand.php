@@ -112,7 +112,7 @@ final class InstallCommand
             : 'admin';
         $email = isset($options['email']) && \is_string($options['email']) && $options['email'] !== ''
             ? $options['email']
-            : 'admin@localhost';
+            : 'admin@example.com';
         $skipConfirm = ! empty($options['yes']);
 
         $databasePath = isset($options['db']) && \is_string($options['db']) && $options['db'] !== ''
