@@ -137,6 +137,16 @@ This split means `git pull && docker compose up -d --build`
 propagates code changes; the DB and uploads survive container
 recreation.
 
+The demo image ships **plugin-free** — every `vendor/bigins/*`
+package you see in the container came in through the default
+`composer.json`'s `require`. To add a plugin to the demo (e.g. to
+exercise the *Documentation* editor module from
+`bigins/scriptor-markdown-pages`), set a `SCRIPTOR_PLUGINS` build
+arg in a compose override and rebuild — see
+[`docs/install.md` → Installing plugins](install.md#installing-plugins)
+for the recipe. The cms-site (scriptor-cms.dev) is the
+production reference for this pattern.
+
 ---
 
 ## Files in this repo
