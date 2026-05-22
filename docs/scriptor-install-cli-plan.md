@@ -182,7 +182,7 @@ php bin/scriptor install [options]
 Options:
   --password=<value>    Admin password. Overrides SCRIPTOR_ADMIN_PASSWORD env.
   --username=<name>     Admin username (default: admin).
-  --email=<addr>        Admin email (default: admin@localhost).
+  --email=<addr>        Admin email (default: admin@example.com).
   --yes                 Skip the "type INSTALL to proceed" confirmation.
                         Required when stdin is not a TTY (CI, Docker).
   --db=<path>           Override database path (default: data/imanager.db).

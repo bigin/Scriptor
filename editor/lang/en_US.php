@@ -44,6 +44,7 @@ $i18n = [
 	'successful_login' => 'You have been successfully logged in.',
 	'successful_logout' => 'You have been successfully logged out.',
 	'profile_incomplete' => 'Please fill in all required fields.',
+	'profile_email_invalid' => 'The email address is not in a valid format.',
 	'short_password' => 'The password you specified is too short, please enter a new password with a length of at least 6 characters.',
 	'error_password_comparison' => 'Password does not match the confirm password.',
 	'profile_successful_saved' => 'Your profile data has been saved successfully.',

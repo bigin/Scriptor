@@ -53,6 +53,22 @@
   doc site. Now sites opt in explicitly. The cms-site picks the
   plugin back up via its own compose override.
 
+### Fixed
+
+- **Profile save no longer rejects the install-default email.** The
+  install CLI used to seed `admin@localhost`, which PHP's
+  `FILTER_VALIDATE_EMAIL` rejects (no TLD). The profile editor's
+  email sanitizer then refused to save any change against that
+  default, with the misleading "Please fill in all required fields"
+  message. Two changes: the install default is now
+  `admin@example.com` (IANA-reserved, passes the validator), and the
+  profile module distinguishes between empty fields and an
+  invalid-format email (new `profile_email_invalid` i18n key) so
+  the message points at the actual problem. Existing installs with
+  `admin@localhost` need to set a valid email once via the profile
+  form to clear the validation; the new error message tells them
+  exactly that.
+
 ## 2.0.1 (2026-05-17) — Dependency refresh + doc polish
 
 No changes to Scriptor's own source. Captures the current state of
