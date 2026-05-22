@@ -4,6 +4,15 @@
 
 ### Added
 
+- **Docker entrypoint full-dump seed mode**. When the operator bind-mounts
+  a SQL dump at `/var/www/scriptor/docker/seed-demo-full.sql`, the
+  entrypoint skips `bin/scriptor install` + `seed-demo-content.sql`
+  overlay and applies the dump directly via `sqlite3`. The dump is then
+  authoritative for the whole DB (categories, fields, items, users).
+  File-presence is the switch — no env var, no extra config. Sites that
+  ship a captured `imanager dump` of their production content (e.g.
+  scriptor-cms-site's `seed-site.sql`) can use this path without forcing
+  the dump to be rewritten as an overlay on top of the install seed.
 - **`bin/scriptor install` CLI** for greenfield setup. Seeds the
   Pages + Users categories, their fields, an admin user, and a
   minimal Home page so `/` works on the first request. Replaces

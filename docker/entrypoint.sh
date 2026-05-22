@@ -3,7 +3,9 @@ set -eu
 
 # Entrypoint for the Scriptor demo container.
 #
-# On first start (no SQLite DB yet) we bootstrap a fresh demo:
+# On first start (no SQLite DB yet) we bootstrap one of two ways:
+#
+# Default flow (no full-dump mounted):
 #   1. bin/scriptor install            seeds Pages + Users + admin +
 #                                       minimal Home via the same CLI
 #                                       a bare-metal install uses
@@ -13,16 +15,30 @@ set -eu
 #   3. docker/seed-demo-uploads.tar.gz the uploaded images those pages
 #                                       reference, extracted into public/
 #
+# Full-dump flow (operator bind-mounts docker/seed-demo-full.sql):
+#   1. docker/seed-demo-full.sql       applied directly via sqlite3
+#                                       (creates categories/items/users
+#                                       from the dump, no `bin/scriptor
+#                                       install` involved)
+#   2. docker/seed-demo-uploads.tar.gz unchanged, still extracted
+#
+#   The presence of SEED_FULL is the switch — no env var. Operators
+#   pointing at a captured `imanager dump` of an existing site (e.g.
+#   scriptor-cms-site mounts seed-site.sql there) skip the install
+#   step entirely and let the dump rebuild the DB from scratch.
+#
 # On every start we then run schema:migrate, so an existing DB carried
 # over from an older image catches up to whatever migrations this image
 # carries.
 #
 # Admin credentials: SCRIPTOR_ADMIN_PASSWORD from docker-compose.yml is
 # passed straight to `bin/scriptor install`. The demo's default value
-# is gT5nLazzyBob and matches docs/demo.md.
+# is gT5nLazzyBob and matches docs/demo.md. Only consulted in the
+# default flow; full-dump flow carries its own user rows.
 
 APP_DIR=/var/www/scriptor
 DB_PATH="${APP_DIR}/data/imanager.db"
+SEED_FULL="${APP_DIR}/docker/seed-demo-full.sql"
 SEED_CONTENT="${APP_DIR}/docker/seed-demo-content.sql"
 SEED_UPLOADS="${APP_DIR}/docker/seed-demo-uploads.tar.gz"
 
@@ -42,21 +58,27 @@ if [ "$(id -u)" = "0" ]; then
 fi
 
 if [ ! -f "${DB_PATH}" ]; then
-    if [ -z "${SCRIPTOR_ADMIN_PASSWORD:-}" ]; then
-        echo "[entrypoint] FATAL: SCRIPTOR_ADMIN_PASSWORD env not set" >&2
-        echo "[entrypoint] docker-compose.yml ships a default; check that the value is propagating to the container" >&2
-        exit 1
-    fi
+    if [ -f "${SEED_FULL}" ]; then
+        echo "[entrypoint] full-dump seed present at ${SEED_FULL}, applying directly."
+        echo "[entrypoint] skipping bin/scriptor install — the dump rebuilds the DB."
+        su -s /bin/sh -c "sqlite3 ${DB_PATH} < ${SEED_FULL}" www-data
+    else
+        if [ -z "${SCRIPTOR_ADMIN_PASSWORD:-}" ]; then
+            echo "[entrypoint] FATAL: SCRIPTOR_ADMIN_PASSWORD env not set" >&2
+            echo "[entrypoint] docker-compose.yml ships a default; check that the value is propagating to the container" >&2
+            exit 1
+        fi
 
-    echo "[entrypoint] no database, running bin/scriptor install."
-    su -s /bin/sh www-data -c "\
-        SCRIPTOR_ADMIN_PASSWORD='${SCRIPTOR_ADMIN_PASSWORD}' \
-        php bin/scriptor install --yes \
-    "
+        echo "[entrypoint] no database, running bin/scriptor install."
+        su -s /bin/sh www-data -c "\
+            SCRIPTOR_ADMIN_PASSWORD='${SCRIPTOR_ADMIN_PASSWORD}' \
+            php bin/scriptor install --yes \
+        "
 
-    if [ -f "${SEED_CONTENT}" ]; then
-        echo "[entrypoint] overlaying ${SEED_CONTENT}."
-        su -s /bin/sh -c "sqlite3 ${DB_PATH} < ${SEED_CONTENT}" www-data
+        if [ -f "${SEED_CONTENT}" ]; then
+            echo "[entrypoint] overlaying ${SEED_CONTENT}."
+            su -s /bin/sh -c "sqlite3 ${DB_PATH} < ${SEED_CONTENT}" www-data
+        fi
     fi
 
     if [ -f "${SEED_UPLOADS}" ]; then
