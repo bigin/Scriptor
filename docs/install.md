@@ -138,6 +138,66 @@ There is intentionally no `--force` flag. If the install ever
 needs to recover from a half-written state, fix the data with
 direct SQL or the editor. The CLI is for greenfield seeding.
 
+## Installing plugins
+
+A default Scriptor install ships with **zero plugins**. Plugins
+are Composer packages of `type: scriptor-plugin` that you add per
+install. Discovery is automatic: Scriptor scans
+`vendor/composer/installed.json` on every boot, so the next request
+picks the plugin up after the `composer require` completes.
+
+### Host install (local PHP, shared hosting)
+
+From the Scriptor root:
+
+```bash
+composer require bigins/scriptor-markdown-pages
+```
+
+The `repositories` block in Scriptor's `composer.json` already
+points Composer at the VCS sources for `bigins/*` plugins, so no
+extra setup is needed.
+
+### Docker
+
+Container filesystems are immutable below the volumes, so the
+Docker workflow is to **bake the plugin into the image** via a
+build arg in your compose override:
+
+```yaml
+services:
+  scriptor:
+    build:
+      args:
+        SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1"
+```
+
+Then `docker compose up -d --build`. Scriptor's Dockerfile runs
+`composer require $SCRIPTOR_PLUGINS` during image build, so the
+plugin lands in `vendor/` and survives every restart, recreation,
+or deploy.
+
+Multiple plugins go in the same arg as a space-separated list:
+
+```yaml
+SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1 vendor/other-plugin:^2"
+```
+
+> **Trap: `docker exec scriptor composer require ...`** Works
+> immediately because the discovery cache invalidates from
+> `installed.json` mtime, but the change lives in the running
+> container's layer and is wiped by the next
+> `docker compose down && up`. Use it for "does this plugin even
+> boot" probes; never as an install path for anything you want to
+> keep.
+
+### Disabling a plugin without uninstalling it
+
+Set `$config['plugins']['disabled'] = ['vendor/name']` in
+`data/settings/custom.scriptor-config.php`. The plugin stays in
+`vendor/` but `PluginManager` skips it. Useful when bisecting a
+suspected plugin bug without touching Composer.
+
 ## Security notes
 
 - The install command only runs from the command line. A misconfig

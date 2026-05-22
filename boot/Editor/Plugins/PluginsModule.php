@@ -43,8 +43,10 @@ final class PluginsModule implements Module
         $this->editor->pageContent =
             '<h1>' . htmlspecialchars($this->t('plugins_menu'), \ENT_QUOTES) . '</h1>'
             . '<p>Read-only view of installed Scriptor plugins. '
-            . 'Install with <code>composer require</code>; disable by '
-            . 'adding the plugin FQCN to '
+            . 'Install with <code>composer require</code> (host installs) '
+            . 'or set <code>SCRIPTOR_PLUGINS</code> as a Docker build arg '
+            . 'and <code>up -d --build</code> (containerised installs); '
+            . 'disable by adding the plugin FQCN to '
             . '<code>$config[\'plugins\'][\'disabled\']</code> in '
             . '<code>data/settings/custom.scriptor-config.php</code>.</p>'
             . '<table class="plugins-list"><thead><tr>'
