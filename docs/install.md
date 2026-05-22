@@ -198,6 +198,38 @@ Set `$config['plugins']['disabled'] = ['vendor/name']` in
 `vendor/` but `PluginManager` skips it. Useful when bisecting a
 suspected plugin bug without touching Composer.
 
+### Uninstalling plugins
+
+Reverse of the install path you used.
+
+**Host install:**
+
+```bash
+composer remove bigins/scriptor-markdown-pages
+```
+
+The plugin disappears from `vendor/composer/installed.json`, the
+discovery cache invalidates on the next request, and the editor
+modules + nav items the plugin contributed are gone.
+
+**Docker:** drop the plugin from your `SCRIPTOR_PLUGINS` build arg
+in the compose override (or remove the whole arg block if it was
+the only plugin), then rebuild:
+
+```bash
+docker compose up -d --build
+```
+
+The new image is built without that `composer require` step, so
+the plugin never lands in `vendor/`.
+
+> **Plugin-owned data is not removed.** Content trees, settings,
+> uploads, or database rows the plugin manages stay where they
+> are. Check the plugin's README for its on-disk footprint and
+> delete those paths manually if you want a clean state. For
+> `bigins/scriptor-markdown-pages` that means the per-theme
+> `content/` directories with `_index.md` files.
+
 ## Security notes
 
 - The install command only runs from the command line. A misconfig

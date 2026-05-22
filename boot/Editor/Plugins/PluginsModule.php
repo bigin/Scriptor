@@ -19,7 +19,8 @@ use Scriptor\Boot\Plugin\PluginManager;
  * surfaces each one contributes through the Plugin API.
  *
  * No write actions here. Plugins are managed through Composer
- * (`composer require <vendor>/<plugin>`) and disabled by listing their
+ * (`composer require` / `composer remove`, or the `SCRIPTOR_PLUGINS`
+ * build arg in Docker) and disabled without removal by listing their
  * FQCN in `$config['plugins']['disabled']`. The module exists so
  * operators can see what is loaded without scrolling through PHP code.
  */
@@ -46,7 +47,9 @@ final class PluginsModule implements Module
             . 'Install with <code>composer require</code> (host installs) '
             . 'or set <code>SCRIPTOR_PLUGINS</code> as a Docker build arg '
             . 'and <code>up -d --build</code> (containerised installs); '
-            . 'disable by adding the plugin FQCN to '
+            . 'uninstall via <code>composer remove</code> or by dropping '
+            . 'the plugin from <code>SCRIPTOR_PLUGINS</code> + rebuild; '
+            . 'disable without removing by adding the plugin FQCN to '
             . '<code>$config[\'plugins\'][\'disabled\']</code> in '
             . '<code>data/settings/custom.scriptor-config.php</code>.</p>'
             . '<table class="plugins-list"><thead><tr>'
