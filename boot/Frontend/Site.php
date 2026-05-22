@@ -411,7 +411,10 @@ class Site
                 $url .= $this->buildPageUrl($parent, $visited);
             }
         }
-        if ($id !== 1) {
+        // Empty slug = site root; emits no URL segment so the
+        // canonical URL collapses to whatever the parent chain
+        // produced (typically ''/the bare root).
+        if ($page->slug !== '') {
             $url .= $page->slug . '/';
         }
         return $url;

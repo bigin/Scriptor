@@ -59,17 +59,21 @@ final readonly class PageRepository
     }
 
     /**
-     * Finds the home page — by convention the page with id = 1 in Scriptor.
-     * Falls back to the lowest-position page if id 1 is missing.
+     * Finds the home page — by convention the page whose slug is the
+     * empty string. The empty slug is the URL representation of the
+     * site root, so the page that owns that slug also owns the `/`
+     * URL. Returns `null` when no page has an empty slug, in which
+     * case `/` 404s instead of rendering something arbitrary — the
+     * right call for an API-only or docs-only install that has no
+     * conceptual "home".
+     *
+     * Uniqueness of the empty slug is enforced at the editor-save
+     * layer (see {@see \Scriptor\Boot\Editor\Pages\PagesModule}); a
+     * site with two empty-slug rows is malformed.
      */
     public function findHome(): ?Page
     {
-        $home = $this->find(1);
-        if ($home !== null) {
-            return $home;
-        }
-        $items = $this->items->findByCategory($this->categoryId, 0, 1);
-        return $items === [] ? null : new Page($items[0]);
+        return $this->findBySlug('');
     }
 
     /**

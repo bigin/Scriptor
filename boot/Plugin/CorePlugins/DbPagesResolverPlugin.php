@@ -87,16 +87,17 @@ final class DbPagesResolverPlugin implements Plugin
             return null;
         }
 
-        // Home (id 1) is reachable via both `/` and its own slug.
-        // Every other page must match its parent chain so a request
-        // like `/wrong-parent/articles/` does not silently render
-        // the matching child page elsewhere in the tree.
-        if ($page->id() !== 1) {
-            $expected = self::buildPageUrl($page, $pages);
-            $actual   = $segments->path(trailingSlash: true);
-            if ($actual !== $expected) {
-                return null;
-            }
+        // Every page must match its canonical parent-chain URL so
+        // a request like `/wrong-parent/articles/` does not silently
+        // render the matching child page elsewhere in the tree.
+        // The home page (empty slug) has its own URL `/` which is
+        // handled by the `$segments->isEmpty()` branch above; a
+        // slug-routed request can never reach it because no path
+        // segment ever equals the empty string.
+        $expected = self::buildPageUrl($page, $pages);
+        $actual   = $segments->path(trailingSlash: true);
+        if ($actual !== $expected) {
+            return null;
         }
 
         return $page;
@@ -120,7 +121,7 @@ final class DbPagesResolverPlugin implements Plugin
                 $url .= self::buildPageUrl($parent, $pages, $visited);
             }
         }
-        if ($id !== 1) {
+        if ($page->slug !== '') {
             $url .= $page->slug . '/';
         }
         return $url;

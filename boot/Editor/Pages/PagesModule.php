@@ -98,20 +98,36 @@ final class PagesModule implements Module
             return;
         }
 
-        $rawSlug = $this->editor->input->postString('slug');
-        $slugSource = $rawSlug !== '' ? $rawSlug : $name;
-        $slug = preg_replace('/(-)\1+/', '$1', $this->editor->sanitizer->slug($slugSource)) ?? '';
-        if ($slug === '') {
-            $this->saveError($isXhr, $this->t('error_page_name') ?: 'Page slug could not be derived.');
-            return;
-        }
-        if (\in_array($slug, $this->reservedSlugs, true)) {
-            $this->saveError($isXhr, $this->t('error_slug_reserved') ?: 'Slug is reserved.');
-            return;
-        }
-
         $editingId = $this->editor->input->getInt('page', 0);
         $existing  = $editingId > 0 ? $this->pages->find($editingId) : null;
+
+        $rawSlug = trim($this->editor->input->postString('slug'));
+        if ($rawSlug === '') {
+            // Empty slug = this page wants to own the site root URL.
+            // Enforce uniqueness: at most one page may have the empty
+            // slug, because the resolver maps `/` to whichever page
+            // owns it — a second empty-slug page would be unreachable.
+            $slug = '';
+            $existingHome = $this->pages->findBySlug('');
+            if ($existingHome !== null && $existingHome->id() !== $existing?->id()) {
+                $this->saveError(
+                    $isXhr,
+                    $this->t('error_empty_slug_taken')
+                        ?: 'Only one page may have an empty slug (the site root). Another page already owns it.',
+                );
+                return;
+            }
+        } else {
+            $slug = preg_replace('/(-)\1+/', '$1', $this->editor->sanitizer->slug($rawSlug)) ?? '';
+            if ($slug === '') {
+                $this->saveError($isXhr, $this->t('error_page_name') ?: 'Page slug could not be derived.');
+                return;
+            }
+            if (\in_array($slug, $this->reservedSlugs, true)) {
+                $this->saveError($isXhr, $this->t('error_slug_reserved') ?: 'Slug is reserved.');
+                return;
+            }
+        }
 
         $parentId = $this->editor->input->postInt('parent', 0);
         if ($existing !== null && $parentId === ($existing->id() ?? 0)) {
