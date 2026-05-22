@@ -345,7 +345,9 @@ final class InstallCommand
             position: 1,
             active: true,
             data: [
-                'slug'       => 'home',
+                // Empty slug = site root. The page with the empty
+                // slug owns the `/` URL; see PageRepository::findHome().
+                'slug'       => '',
                 'parent'     => '0',
                 'pagetype'   => '',
                 'menu_title' => 'Home',

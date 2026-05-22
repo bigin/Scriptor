@@ -53,6 +53,46 @@
   doc site. Now sites opt in explicitly. The cms-site picks the
   plugin back up via its own compose override.
 
+### Changed
+
+- **Empty slug is now the home-page convention.** Previously the
+  home page was identified by `id = 1`, with a fallback to the
+  lowest-position page when id 1 was missing. That was a
+  proxy for "which page lives at /" and it broke once
+  `bin/scriptor install` started seeding the admin user at
+  AUTOINCREMENT id 1 (Home then landed at id 2). It also forced
+  the resolver to special-case the home page so it was reachable
+  via both `/` and its slug, producing duplicate content for SEO.
+
+  New rule: the page with the empty slug **is** the site root.
+  - `PageRepository::findHome()` returns `findBySlug('')`. Returns
+    `null` when no page has an empty slug — `/` then 404s, which
+    is the right answer for an API-only or docs-only install.
+  - `Site::getPageUrl()` emits no URL segment for an empty-slug
+    page; the canonical URL collapses to `/`.
+  - The page-tree resolver no longer special-cases `id === 1`.
+    `/<old-home-slug>/` (e.g. `/home/`) now 404s on a fresh
+    install because no page owns that slug anymore. External
+    links to the old slug need to either pick a new slug for the
+    home page in the editor (its URL becomes `/<new-slug>/` and
+    the empty-slug page goes elsewhere) or accept the 404 and
+    redirect at the web-server layer.
+  - `bin/scriptor install` seeds the Home page with `slug = ''`.
+    The page's display name is still "Home"; only the slug
+    changes.
+  - The Pages editor module enforces uniqueness: at most one
+    page may have the empty slug. A second empty-slug save
+    surfaces the new `error_empty_slug_taken` i18n message
+    (`en_US` + `de_DE`).
+  - **Convenience trade-off:** the editor's "save with empty
+    slug field, derive from page name" autofill is gone. An
+    empty slug input now literally means "make this the site
+    root". The slug-field info-text spells this out so new users
+    discover the convention. Pages with non-empty names that
+    leave the slug blank no longer auto-get a slug — type the
+    slug you want, or leave empty and accept site-root semantics
+    (with the uniqueness check above guarding misuse).
+
 ### Added
 
 - **`Site::redirect()` + `Editor::redirect()` helpers.** Themes
