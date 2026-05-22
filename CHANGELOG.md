@@ -55,6 +55,19 @@
 
 ### Fixed
 
+- **`$site->render('messages')` actually renders queued messages.**
+  The frontend `Site` had two properties, `array $msgs` (filled by
+  `addMsg()`) and `string $messages` (never assigned anywhere); the
+  `messages` render hook read the empty string. Themes that ran
+  `addMsg('success', '...')` after a successful POST got nothing on
+  screen. New `Site::renderMsgs()` mirrors the editor's helper
+  (`<ul class="messages"><li class="msg msg-{type}">...</li></ul>`),
+  drains `$msgs[]` on render, and `render('messages')` dispatches
+  through it. The dead `public string $messages` property is
+  removed; the bundled `basic` theme's `_sidebar-right.php` is
+  updated from `<?= $site->messages ?>` to
+  `<?= $site->render('messages') ?>` to match. Themes that read
+  `$site->messages` directly must migrate to `render('messages')`.
 - **Profile save no longer rejects the install-default email.** The
   install CLI used to seed `admin@localhost`, which PHP's
   `FILTER_VALIDATE_EMAIL` rejects (no TLD). The profile editor's
