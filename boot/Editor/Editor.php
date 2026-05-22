@@ -22,7 +22,8 @@ use Scriptor\Boot\Frontend\Sanitizer;
  *   - Properties:  config, siteUrl, themeUrl, version, csrf, msgs[],
  *                  pageTitle, pageContent, breadcrumbs, jsConfig,
  *                  i18n, input, sanitizer, urlSegments, session, logger
- *   - Helpers:     getProperty(), getResources(), addMsg(), renderMsgs(),
+ *   - Helpers:     getProperty(), getResources(), addMsg(),
+ *                  flashMsg(), renderMsgs(), redirect(),
  *                  isLoggedIn(), currentUserId(), templateName()
  *
  * Modules (AuthModule today, more in 14c-2…14c-6) populate `pageTitle`
@@ -157,6 +158,24 @@ class Editor
         $bag = (array) $this->session->get('msgs', []);
         $bag[] = ['type' => $type, 'value' => $text];
         $this->session->set('msgs', $bag);
+    }
+
+    /**
+     * Send a Location header and stop the request. Pairs with
+     * {@see flashMsg()} for the POST-redirect-GET pattern.
+     *
+     * Status-code cheat sheet:
+     *   - 303 (See Other)     after a POST handler; tells the browser
+     *                         to switch to GET so a reload does not
+     *                         resubmit the form
+     *   - 302 (Found)         default; generic temporary redirect
+     *   - 301 (Moved Permanently) permanent rewrites; cached
+     *   - 307 (Temporary)     preserves the request method
+     */
+    public function redirect(string $url, int $status = 302): never
+    {
+        header('Location: ' . $url, true, $status);
+        exit;
     }
 
     public function getProperty(string $name): mixed

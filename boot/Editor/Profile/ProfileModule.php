@@ -38,12 +38,12 @@ final class ProfileModule implements Module
         if ($currentId === null) {
             // Auth gate guarantees this on `/editor/profile`, but defend
             // against direct callers anyway.
-            $this->redirect($this->editor->siteUrl . '/auth/');
+            $this->editor->redirect($this->editor->siteUrl . '/auth/');
         }
 
         $sub = $this->editor->urlSegments->get(1);
         if ($sub === null) {
-            $this->redirect($this->editor->siteUrl . '/profile/edit/?profile=' . $currentId);
+            $this->editor->redirect($this->editor->siteUrl . '/profile/edit/?profile=' . $currentId);
         }
 
         if ($sub !== 'edit') {
@@ -140,7 +140,7 @@ final class ProfileModule implements Module
         }
 
         $this->editor->flashMsg('success', $this->t('profile_successful_saved'));
-        $this->redirect($this->editor->siteUrl . '/profile/edit/?profile=' . $currentId);
+        $this->editor->redirect($this->editor->siteUrl . '/profile/edit/?profile=' . $currentId);
     }
 
     private function renderEdit(int $currentId): void
@@ -239,9 +239,4 @@ final class ProfileModule implements Module
         return $this->editor->i18n[$key] ?? '';
     }
 
-    private function redirect(string $url): never
-    {
-        header('Location: ' . $url, true, 302);
-        exit;
-    }
 }

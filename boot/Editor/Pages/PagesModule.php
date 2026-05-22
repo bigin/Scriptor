@@ -211,7 +211,7 @@ final class PagesModule implements Module
         }
 
         $this->editor->flashMsg('success', $this->t('successful_saved_page') ?: 'Page saved.');
-        $this->redirect($redirect);
+        $this->editor->redirect($redirect);
     }
 
     /**
@@ -288,24 +288,24 @@ final class PagesModule implements Module
         $id = $this->editor->input->getInt('page', 0);
         if (! $this->csrfPasses($this->editor->input->getString('tokenName'), $this->editor->input->getString('tokenValue'))) {
             $this->editor->flashMsg('error', $this->t('error_csrf_token_mismatch'));
-            $this->redirect($this->editor->siteUrl . '/pages/');
+            $this->editor->redirect($this->editor->siteUrl . '/pages/');
         }
         if ($id <= 1) {
             $this->editor->flashMsg('error', $this->t('error_deleting_first_page') ?: 'The home page cannot be deleted.');
-            $this->redirect($this->editor->siteUrl . '/pages/');
+            $this->editor->redirect($this->editor->siteUrl . '/pages/');
         }
         $page = $this->pages->find($id);
         if ($page === null) {
             $this->editor->flashMsg('error', $this->t('error_deleting_page') ?: 'Page not found.');
-            $this->redirect($this->editor->siteUrl . '/pages/');
+            $this->editor->redirect($this->editor->siteUrl . '/pages/');
         }
         if ($this->pages->findByParent($id) !== []) {
             $this->editor->flashMsg('error', $this->t('error_remove_parent_page') ?: 'Cannot delete a page with child pages.');
-            $this->redirect($this->editor->siteUrl . '/pages/');
+            $this->editor->redirect($this->editor->siteUrl . '/pages/');
         }
         $this->pages->delete($id);
         $this->editor->flashMsg('success', $this->t('page_successful_removed') ?: 'Page deleted.');
-        $this->redirect($this->editor->siteUrl . '/pages/');
+        $this->editor->redirect($this->editor->siteUrl . '/pages/');
     }
 
     private function renumberAction(): void
@@ -730,9 +730,4 @@ final class PagesModule implements Module
         exit;
     }
 
-    private function redirect(string $url): never
-    {
-        header('Location: ' . $url, true, 302);
-        exit;
-    }
 }
