@@ -55,6 +55,15 @@
 
 ### Added
 
+- **Basic theme: styles for the `messages` slot.** The bundled
+  `basic` theme's `styles.css` had no rules for the
+  `<ul class="messages"><li class="msg msg-{type}">…</li></ul>`
+  markup that `Site::renderMsgs()` emits, so flash messages
+  rendered as an unstyled bullet list. Adds a six-token status
+  palette (`--color-success-*`, `--color-danger-*`) on
+  `:root` plus matching `ul.messages` / `.messages .msg` /
+  `.msg-success` / `.msg-error` rules. Themes that want a
+  different look override the three tokens per state.
 - **`$site->flashMsg($type, $text, $header = '')`** for POST-redirect-GET
   on the frontend. Mirrors `Editor::flashMsg()`: writes the message
   into the session bag, the next request's `renderMsgs()` folds it

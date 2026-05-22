@@ -54,6 +54,16 @@
 	/* --border-black-color: #020202; */
 	--dark-color: #172138;
 	--dark-active-color: #293658;
+	/* Status palette for `$site->render('messages')`. Pastel tones
+	   pick up the editor's `<ul class="messages"><li class="msg
+	   msg-{type}">` shape; themes that want stronger colors can
+	   override the three tokens per state. */
+	--color-success-bg: #e8f5ec;
+	--color-success: #1f6b3a;
+	--color-success-border: #b7dcc0;
+	--color-danger-bg: #fbeaea;
+	--color-danger: #8c2222;
+	--color-danger-border: #e6b7b7;
 }
 
 html {
@@ -238,6 +248,34 @@ form button {
 
 form button:hover {
 	background-color: var(--dark-active-color);
+}
+
+/* Message slot rendered by `$site->render('messages')` —
+   matches the markup `<ul class="messages"><li class="msg
+   msg-{type}">…</li></ul>` that Site::renderMsgs() emits. */
+ul.messages {
+	list-style: none;
+	margin: 1em 0;
+	padding: 0;
+}
+.messages .msg {
+	padding: 12px 16px;
+	border-radius: 6px;
+	border: solid 1px transparent;
+	margin-bottom: 8px;
+}
+.messages .msg:last-child {
+	margin-bottom: 0;
+}
+.msg-success {
+	background-color: var(--color-success-bg);
+	color: var(--color-success);
+	border-color: var(--color-success-border);
+}
+.msg-error {
+	background-color: var(--color-danger-bg);
+	color: var(--color-danger);
+	border-color: var(--color-danger-border);
 }
 
 footer .uk-nav li>a>span {
