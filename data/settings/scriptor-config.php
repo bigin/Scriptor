@@ -116,10 +116,32 @@ $config = [
 
 	/**
 	 * Maximum number of configuration files to be saved as backup.
-	 * 
+	 *
 	 * @var integer
 	 */
 	'maxConfigBackupFiles' => 5,
+
+	/**
+	 * PSR-3 file logger settings, consumed by the default
+	 * `Scriptor\Boot\Logging\FileLogger` binding in `boot.php`.
+	 *
+	 *   path:  absolute path to the log file. Parent dir is
+	 *          created on first write.
+	 *   level: minimum PSR-3 level that gets written; records
+	 *          below are dropped. One of:
+	 *          debug | info | notice | warning | error |
+	 *          critical | alert | emergency
+	 *
+	 * Swap the LoggerInterface container binding in `boot.php` to
+	 * wire in Monolog or another PSR-3 implementation without
+	 * touching the call sites.
+	 *
+	 * @var array{path: string, level: string}
+	 */
+	'logging' => [
+		'path'  => __DIR__ . '/../logs/scriptor.log',
+		'level' => 'info',
+	],
 
 	/**
 	 * Array with reserved slugs.

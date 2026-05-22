@@ -15,6 +15,7 @@ use Imanager\Templating\TemplateRenderer;
 use Imanager\Validation\Sanitizer as ImanagerSanitizer;
 use League\Container\Container;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\Log\LoggerInterface;
 use Scriptor\Boot\Events\Frontend\ContentRendering;
 use Scriptor\Boot\Events\Frontend\PageResolved;
 use Scriptor\Boot\Events\Frontend\PageResolving;
@@ -26,8 +27,8 @@ use Scriptor\Boot\Events\Frontend\RouteNotFound;
  *
  * Holds the `$site` surface that bundled themes consume:
  *   - properties: `siteUrl`, `themeUrl`, `version`, `config`, `page`,
- *     `urlSegments`, `input`, `sanitizer`, `pages`,
- *     `templateParser`, `cache`
+ *     `urlSegments`, `input`, `sanitizer`, `session`, `logger`,
+ *     `pages`, `templateParser`, `cache`
  *   - rendering: `render($element)` with overridable hooks; theme
  *     subclasses override the `render*()` methods. The `messages`
  *     element renders the pending `$msgs[]` queue as HTML.
@@ -47,6 +48,7 @@ class Site
     public Request $input;
     public Sanitizer $sanitizer;
     public SessionStore $session;
+    public LoggerInterface $logger;
     public PageRepository $pages;
     public TemplateRenderer $templateParser;
     public FilesystemCache $cache;
@@ -112,6 +114,7 @@ class Site
         $this->config = $config;
         $this->sanitizer = new Sanitizer($container->get(ImanagerSanitizer::class));
         $this->session = $container->get(SessionStore::class);
+        $this->logger  = $container->get(LoggerInterface::class);
         // If a session cookie is already in the request, open the
         // session now so {@see renderMsgs()} can drain the flash bag
         // without trying to call session_start() mid-template (after

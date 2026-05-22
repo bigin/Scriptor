@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use Psr\Log\LoggerInterface;
 use Scriptor\Boot\App;
 use Scriptor\Boot\Editor\Menu\MenuRegistry;
 use Scriptor\Boot\Editor\ModuleRegistry;
 use Scriptor\Boot\Frontend\Nav\FrontendNavRegistry;
 use Scriptor\Boot\ImanagerBootstrap;
+use Scriptor\Boot\Logging\FileLogger;
 use Scriptor\Boot\Plugin\PluginManager;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -70,6 +72,26 @@ if (file_exists(__DIR__ . '/data/settings/custom.scriptor-config.php')) {
 // per-request services like Editor or Site exist.
 App::container()->add('scriptor.config', $config);
 App::container()->add('scriptor.root',   __DIR__);
+
+// Default PSR-3 logger. Themes, plugins, and Scriptor's own
+// modules pull `LoggerInterface` from the container; the binding
+// here picks Scriptor's tiny file logger and reads its config from
+// `$config['logging']`. Swap this binding to wire in Monolog or
+// any other PSR-3 implementation without touching call sites.
+//
+// We use `extend()` rather than `addShared()` because iManager's
+// Bootstrap pre-registers a NullLogger; `addShared()` would just
+// append a second definition that league/container would skip in
+// favour of the older one. `extend()` swaps the concrete on the
+// existing definition so consumers still resolve a single instance.
+App::container()
+    ->extend(LoggerInterface::class)
+    ->setConcrete(static function () use ($config): LoggerInterface {
+        $logging = (array) ($config['logging'] ?? []);
+        $path  = (string) ($logging['path']  ?? __DIR__ . '/data/logs/scriptor.log');
+        $level = (string) ($logging['level'] ?? 'info');
+        return new FileLogger($path, $level);
+    });
 
 $pluginManager = new PluginManager(
     container:   App::container(),
