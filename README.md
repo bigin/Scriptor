@@ -91,10 +91,9 @@ reset to factory state, and what the image is (and isn't) good for.
 https://your-website.com/editor/
 ```
 
-Default credentials (change them on first login):
-
-> User: `admin`  
-> Password: `gT5nLazzyBob`
+Sign in with the credentials you set during `bin/scriptor install`.
+For the bundled Docker demo the default is `admin / gT5nLazzyBob`
+(override via `SCRIPTOR_ADMIN_PASSWORD`).
 
 ## Performance
 
