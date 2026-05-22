@@ -53,6 +53,21 @@
   doc site. Now sites opt in explicitly. The cms-site picks the
   plugin back up via its own compose override.
 
+### Added
+
+- **`$site->flashMsg($type, $text, $header = '')`** for POST-redirect-GET
+  on the frontend. Mirrors `Editor::flashMsg()`: writes the message
+  into the session bag, the next request's `renderMsgs()` folds it
+  into the in-request queue and renders it. Lets a theme respond to
+  a POST with `flashMsg('success', '...')` + `header('Location: ...',
+  true, 303)` instead of having to rerender on the same request.
+  Session opens lazily (only when `flashMsg()` is called or a session
+  cookie is already in the request) so anonymous visitors stay
+  cookie-free. Cookie uses the same `IMSESSID` name + flags as the
+  editor (HttpOnly, Secure when behind TLS, SameSite=Lax); the flash
+  bag lives at a distinct `frontend_msgs` session key so editor and
+  frontend flashes don't drain each other.
+
 ### Fixed
 
 - **`$site->render('messages')` actually renders queued messages.**

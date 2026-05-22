@@ -8,6 +8,7 @@ use Imanager\Cache\FilesystemCache;
 use Imanager\Files\FileStorage;
 use Imanager\Files\ImageProcessor;
 use Imanager\Http\Request;
+use Imanager\Http\SessionStore;
 use Imanager\Http\UrlSegments;
 use Imanager\Storage\FileRepository;
 use Imanager\Templating\TemplateRenderer;
@@ -45,6 +46,7 @@ class Site
     public UrlSegments $urlSegments;
     public Request $input;
     public Sanitizer $sanitizer;
+    public SessionStore $session;
     public PageRepository $pages;
     public TemplateRenderer $templateParser;
     public FilesystemCache $cache;
@@ -84,6 +86,22 @@ class Site
     ];
 
     /**
+     * Session cookie name. Matches `editor/index.php` so a logged-in
+     * editor user shares one cookie across both surfaces; the bag
+     * key below keeps frontend flash messages out of the editor's
+     * own queue.
+     */
+    private const SESSION_NAME = 'IMSESSID';
+
+    /**
+     * SessionStore key the flash bag lives under. Distinct from the
+     * editor's `msgs` key so a flash queued on the frontend is not
+     * accidentally drained by the editor on the user's next admin
+     * page hit (and vice versa).
+     */
+    private const FLASH_KEY = 'frontend_msgs';
+
+    /**
      * @param array<string, mixed> $config Scriptor config array
      */
     public function __construct(
@@ -93,6 +111,17 @@ class Site
     ) {
         $this->config = $config;
         $this->sanitizer = new Sanitizer($container->get(ImanagerSanitizer::class));
+        $this->session = $container->get(SessionStore::class);
+        // If a session cookie is already in the request, open the
+        // session now so {@see renderMsgs()} can drain the flash bag
+        // without trying to call session_start() mid-template (after
+        // the theme's ob_start but before headers are guaranteed to
+        // still be open). Anonymous visitors with no cookie skip the
+        // session entirely; the public site stays stateless by
+        // default. flashMsg() opens its own session when called.
+        if (isset($_COOKIE[self::SESSION_NAME])) {
+            self::ensureSessionStarted();
+        }
         $this->pages = $container->get(PageRepository::class);
         $this->cache = $container->get(FilesystemCache::class);
         $this->files = $container->get(FileRepository::class);
@@ -229,17 +258,54 @@ class Site
     }
 
     /**
-     * Render the pending `$msgs[]` queue as a `<ul class="messages">`
-     * list and drain it. Empty queue returns an empty string so a
-     * template can call `<?= $site->render('messages') ?>` without
-     * conditionals. Markup mirrors {@see Editor::renderMsgs()} so the
-     * frontend and editor share the same CSS hooks. The `value` is
-     * emitted raw — addMsg() callers are trusted to either pass
+     * Push a flash message that survives a redirect via session
+     * storage. Use for the POST-redirect-GET pattern: after a
+     * successful action handler, queue the result with `flashMsg()`,
+     * `header('Location: ...', true, 303)`, exit; the next GET drains
+     * the bag through `renderMsgs()`. Opens the session lazily so a
+     * theme that never calls `flashMsg()` keeps the public site
+     * cookie-free.
+     */
+    public function flashMsg(string $type, string $text, string $header = ''): void
+    {
+        self::ensureSessionStarted();
+        $bag = (array) $this->session->get(self::FLASH_KEY, []);
+        $msg = ['type' => $type, 'value' => $text];
+        if ($header !== '') {
+            $msg['header'] = $header;
+        }
+        $bag[] = $msg;
+        $this->session->set(self::FLASH_KEY, $bag);
+    }
+
+    /**
+     * Render the pending message queue as a `<ul class="messages">`
+     * list and drain it. Folds in any flash messages queued via
+     * {@see flashMsg()} on a previous request before rendering, so
+     * both in-request and post-redirect messages render in one pass.
+     * Empty queue returns an empty string so a template can call
+     * `<?= $site->render('messages') ?>` without conditionals.
+     * Markup mirrors {@see Editor::renderMsgs()} so the frontend and
+     * editor share the same CSS hooks. The `value` is emitted raw —
+     * `addMsg()`/`flashMsg()` callers are trusted to either pass
      * static strings or escape themselves; the `type` and `header`
      * are HTML-escaped because they are intended to be plain text.
      */
     public function renderMsgs(): string
     {
+        $flash = (array) $this->session->get(self::FLASH_KEY, []);
+        if ($flash !== []) {
+            foreach ($flash as $msg) {
+                if (\is_array($msg) && isset($msg['type'], $msg['value'])) {
+                    $this->msgs[] = [
+                        'type'   => (string) $msg['type'],
+                        'value'  => (string) $msg['value'],
+                        'header' => isset($msg['header']) ? (string) $msg['header'] : '',
+                    ];
+                }
+            }
+            $this->session->remove(self::FLASH_KEY);
+        }
         if ($this->msgs === []) {
             return '';
         }
@@ -414,5 +480,37 @@ class Site
         $scheme = strtolower(trim(explode(',', $proto)[0])) === 'https' ? 'https' : 'http';
         $host   = $_SERVER['HTTP_HOST'] ?? 'localhost';
         return $scheme . '://' . $host;
+    }
+
+    /**
+     * Start the PHP session if it is not already active, with the
+     * same cookie params {@see editor/index.php} uses so the editor
+     * and frontend share one session. No-op on an already-active
+     * session and safe to call multiple times.
+     *
+     * Cookie flags mirror the security baseline:
+     *   - HttpOnly        — JS cannot read the session cookie
+     *   - SameSite=Lax    — survives top-level same-site POST→redirect
+     *                        but blocks third-party cross-site sends
+     *   - Secure          — only on HTTPS; auto-detected from
+     *                        X-Forwarded-Proto behind a TLS terminator
+     */
+    private static function ensureSessionStarted(): void
+    {
+        if (\session_status() === \PHP_SESSION_ACTIVE) {
+            return;
+        }
+        \session_name(self::SESSION_NAME);
+        $proto  = $_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null;
+        $secure = $proto === 'https'
+            || (! empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
+        \session_set_cookie_params([
+            'lifetime' => 0,
+            'path'     => '/',
+            'secure'   => $secure,
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ]);
+        \session_start();
     }
 }
