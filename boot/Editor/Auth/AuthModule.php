@@ -33,7 +33,7 @@ final class AuthModule implements Module
         $this->checkAction();
 
         if ($this->editor->isLoggedIn()) {
-            $this->redirect($this->editor->siteUrl . '/');
+            $this->editor->redirect($this->editor->siteUrl . '/');
         }
         $this->editor->pageTitle = 'Login - Scriptor';
         $this->editor->pageContent = $this->renderLoginForm();
@@ -104,7 +104,7 @@ final class AuthModule implements Module
         $this->editor->csrf->clear();
         $this->attempts->reset();
         $this->editor->flashMsg('success', $this->t('successful_login'));
-        $this->redirect($this->editor->siteUrl . '/');
+        $this->editor->redirect($this->editor->siteUrl . '/');
     }
 
     private function logoutAction(): void
@@ -120,7 +120,7 @@ final class AuthModule implements Module
         $this->editor->session->remove('userid');
         $this->editor->csrf->clear();
         $this->editor->flashMsg('success', $this->t('successful_logout'));
-        $this->redirect($this->editor->siteUrl . '/auth/');
+        $this->editor->redirect($this->editor->siteUrl . '/auth/');
     }
 
     private function renderLoginForm(): string
@@ -167,12 +167,6 @@ final class AuthModule implements Module
             $template = str_replace('[[' . $name . ']]', $value, $template);
         }
         return $template;
-    }
-
-    private function redirect(string $url): never
-    {
-        header('Location: ' . $url, true, 302);
-        exit;
     }
 
     /**

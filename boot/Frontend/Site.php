@@ -33,7 +33,8 @@ use Scriptor\Boot\Events\Frontend\RouteNotFound;
  *     subclasses override the `render*()` methods. The `messages`
  *     element renders the pending `$msgs[]` queue as HTML.
  *   - utilities: `getBasePath()`, `getPageUrl()`, `addMsg()`,
- *     `throw404()`, `getTCP()`, `templateName()`.
+ *     `flashMsg()`, `redirect()`, `throw404()`, `getTCP()`,
+ *     `templateName()`.
  *
  * Themes extend this class and override `render()`, individual
  * `render*()` methods, or `init()` to set theme-specific config.
@@ -244,6 +245,28 @@ class Site
     public function getTCP(string $key): mixed
     {
         return $this->themeConfig[$key] ?? self::TCP_DEFAULTS[$key] ?? null;
+    }
+
+    /**
+     * Send a Location header and stop the request. Pairs with the
+     * {@see flashMsg()} session bag for the POST-redirect-GET pattern.
+     *
+     * Status-code cheat sheet:
+     *   - 303 (See Other)     after a POST handler; tells the browser
+     *                         to switch to GET so a reload of the
+     *                         landing page does not resubmit the form
+     *   - 302 (Found)         default; generic "go here for now",
+     *                         method preservation is implementation-
+     *                         defined
+     *   - 301 (Moved Permanently) for permanent rewrites; cached by
+     *                         clients and proxies
+     *   - 307 (Temporary)     preserves the request method (rare for
+     *                         a CMS, useful for an API surface)
+     */
+    public function redirect(string $url, int $status = 302): never
+    {
+        header('Location: ' . $url, true, $status);
+        exit;
     }
 
     /**

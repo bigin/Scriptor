@@ -55,6 +55,16 @@
 
 ### Added
 
+- **`Site::redirect()` + `Editor::redirect()` helpers.** Themes
+  and editor modules can now call
+  `$site->redirect('/contact/', 303)` (or `$editor->redirect(...)`)
+  to send a Location header and stop the request. Default status
+  is 302; pass 303 for the POST-redirect-GET pattern alongside
+  `flashMsg()`, 301 for permanent rewrites, 307 to preserve the
+  request method. Cleanup deduplicates four
+  `private function redirect()` copies that lived in EditorRouter,
+  AuthModule, ProfileModule, and PagesModule — all now delegate
+  to the single `Editor::redirect()` implementation.
 - **PSR-3 logger surface.** Until now Scriptor had no first-class
   logger; tutorial and bundled handlers fell back to `error_log()`,
   which is hard to scope and hard to find. Adds

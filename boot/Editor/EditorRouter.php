@@ -51,7 +51,7 @@ final class EditorRouter
             if ($first === 'api') {
                 $this->jsonError(401, 'Authentication required');
             }
-            $this->redirect($this->editor->siteUrl . '/auth/');
+            $this->editor->redirect($this->editor->siteUrl . '/auth/');
         }
 
         if ($first === 'api') {
@@ -131,9 +131,4 @@ final class EditorRouter
             . '<p>Module <code>' . htmlspecialchars($module, \ENT_QUOTES) . '</code> is not available.</p>';
     }
 
-    private function redirect(string $url): never
-    {
-        header('Location: ' . $url, true, 302);
-        exit;
-    }
 }
