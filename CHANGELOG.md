@@ -58,6 +58,18 @@
   the file on disk is unchanged (cheap), 200 with the new
   content when it changed. Misleading "content-addressed" code
   comment fixed alongside.
+- **`/uploads/` no longer emits a duplicate `Cache-Control`
+  header.** Follow-up to the above: the previous version used
+  nginx's `expires 30d;` directive next to the explicit
+  `add_header Cache-Control "public, must-revalidate"`. The two
+  don't merge; nginx ended up emitting two separate
+  `Cache-Control` lines on every `/uploads/` response
+  (`max-age=2592000` from `expires`, then `public, must-revalidate`
+  from the `add_header`). Functionally correct per RFC 7234
+  (browsers combine combinable directives across header lines)
+  but ugly to debug. The `max-age=2592000` is now folded into the
+  single `add_header` line, `expires` is dropped, and the surrounding
+  comment explains why.
 
 ### Removed
 
