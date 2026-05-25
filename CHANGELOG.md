@@ -45,6 +45,20 @@
   for `bigins/*` plugins discoverable so the require works
   without further configuration.
 
+### Fixed
+
+- **Re-uploaded images no longer stick in the browser cache.**
+  `docker/nginx.conf` shipped `/uploads/` with `Cache-Control:
+  public, immutable` (plus 30-day `expires`). Upload URLs are
+  *not* content-addressed; re-uploading a file under the same
+  name leaves the URL stable while the bytes change, and
+  `immutable` told browsers to skip revalidation on reload. The
+  directive is now `must-revalidate`, so nginx's existing
+  `ETag` + `Last-Modified` headers do their job: 304 on hit when
+  the file on disk is unchanged (cheap), 200 with the new
+  content when it changed. Misleading "content-addressed" code
+  comment fixed alongside.
+
 ### Removed
 
 - `docker/seed-demo.sql`. The schema half is recreated by
