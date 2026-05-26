@@ -47,6 +47,41 @@
 
 ### Fixed
 
+- **Editor + Basic-theme Prism code highlighting: PHP blocks with
+  `<?xml ?>` literals now highlight correctly, and four new
+  languages.** `public/editor-assets/scripts/prism.js` was a 2018
+  Prism 1.15.0 build with five languages (markup, css, clike,
+  javascript, php). Two problems:
+
+  1. Code blocks fenced ` ```bash `, ` ```json `, ` ```yaml `, or
+     ` ```markdown ` had no tokenizer in the bundle and rendered
+     as plain text.
+  2. PHP blocks containing literal strings like `'<?xml
+     version="1.0"?>'` (e.g. sitemap or RSS generators in user
+     content) rendered entirely flat. PrismJS#1400, #2174: the PHP
+     component's `before-tokenize` hook treats *any* `<?` in the
+     source as a PHP open-tag, switching the rest of the block
+     into markup-templating mode. The XML processing instruction
+     inside a PHP string trips this; the real PHP code then gets
+     markup tokenization (no matches) and the xml literal gets
+     PHP tokenization.
+
+  Bundle rebuilt from Prism 1.29.0 components: core, markup, css,
+  clike, javascript, markup-templating, php, bash, json, yaml,
+  markdown. ~38 KB. A one-line local patch narrows the PHP
+  before-tokenize trigger from `/<\?/` to `/<\?(?:php|=)/` so
+  only real PHP open-tags activate the markup swap. The patch is
+  documented in the bundle header comment for future refresh
+  cycles (upstream isn't going to merge the narrower trigger —
+  they keep the broad form to support PHP files that start with
+  HTML before the first `<?php`).
+
+  The Basic theme inherits the fix automatically: its
+  `_sidebar-right.php` / `_head.php` / page templates load the
+  highlighter via `$site->editorAssetUrl('scripts/prism.js')`,
+  so the editor-assets copy is the single source of truth for
+  every bundled site.
+
 - **Re-uploaded images no longer stick in the browser cache.**
   `docker/nginx.conf` shipped `/uploads/` with `Cache-Control:
   public, immutable` (plus 30-day `expires`). Upload URLs are
