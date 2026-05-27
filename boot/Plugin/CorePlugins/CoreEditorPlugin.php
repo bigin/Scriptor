@@ -62,6 +62,7 @@ final class CoreEditorPlugin implements Plugin
                 $c->get(PageRepository::class),
                 $c->get(FieldRepository::class),
                 $c->get(FileRepository::class),
+                $c->get(\Psr\EventDispatcher\EventDispatcherInterface::class),
             ));
 
         $context->registerEditorModule('profile', static fn (Container $c, Editor $e): Module
