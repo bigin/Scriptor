@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Editor page-form extension events**. Two PSR-14 events let plugins
+  add fields to the existing PagesModule edit form without forking
+  PagesModule. `Scriptor\Boot\Events\Editor\PageFormRendering` fires
+  after the core fields and before the hidden action/csrf inputs;
+  listeners call `appendHtml(...)` to inject their own
+  `<div class="form-control">…</div>` markup. The companion
+  `Scriptor\Boot\Events\Editor\PageSaving` fires after the
+  about-to-be-saved `Item` is constructed and before persistence;
+  listeners call `mergeData([...])` to add extra keys from the POST
+  request to the page's `data` bag. Both keys merge cleanly so a
+  single `pages->save(...)` runs with the combined payload. No
+  behaviour change when no plugin subscribes.
 - **Docker entrypoint full-dump seed mode**. When the operator bind-mounts
   a SQL dump at `/var/www/scriptor/docker/seed-demo-full.sql`, the
   entrypoint skips `bin/scriptor install` + `seed-demo-content.sql`
