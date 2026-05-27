@@ -8,8 +8,11 @@ use Imanager\Domain\File;
 use Imanager\Domain\Item;
 use Imanager\Storage\FieldRepository;
 use Imanager\Storage\FileRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Scriptor\Boot\Editor\Editor;
 use Scriptor\Boot\Editor\Module;
+use Scriptor\Boot\Events\Editor\PageFormRendering;
+use Scriptor\Boot\Events\Editor\PageSaving;
 use Scriptor\Boot\Frontend\Page;
 use Scriptor\Boot\Frontend\PageRepository;
 
@@ -38,6 +41,7 @@ final class PagesModule implements Module
         private readonly PageRepository $pages,
         private readonly FieldRepository $fields,
         private readonly FileRepository $files,
+        private readonly EventDispatcherInterface $dispatcher,
     ) {
         $reserved = (array) ($this->editor->config['reservedSlugs'] ?? []);
         /** @var list<int> $reserved */
@@ -200,6 +204,25 @@ final class PagesModule implements Module
             created:    $existing?->item->created ?? $now,
             updated:    $now,
         );
+
+        // Plugin extension point: let listeners pull extra POST fields
+        // into the item's data bag before persistence. Same plugin that
+        // rendered fields via PageFormRendering picks them up here.
+        $saving = new PageSaving($item, $this->editor->input);
+        $this->dispatcher->dispatch($saving);
+        if ($saving->extraData() !== []) {
+            $item = new Item(
+                id:         $item->id,
+                categoryId: $item->categoryId,
+                name:       $item->name,
+                label:      $item->label,
+                position:   $item->position,
+                active:     $item->active,
+                data:       [...$data, ...$saving->extraData()],
+                created:    $item->created,
+                updated:    $item->updated,
+            );
+        }
 
         try {
             $saved = $this->pages->save($item);
@@ -459,6 +482,16 @@ final class PagesModule implements Module
         $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
         $html .= $this->fieldPosition($page);
         $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
+
+        // Plugin extension point: render extra form-controls (SEO meta,
+        // scheduling, OG tags, …) between the core fields and the
+        // save controls. Buffer is appended verbatim; listeners own
+        // their HTML escaping. Companion {@see PageSaving} event lets
+        // the same plugin persist the posted values.
+        $rendering = new PageFormRendering($page, $this->pages->categoryId);
+        $this->dispatcher->dispatch($rendering);
+        $html .= $rendering->html();
+
         $html .= '<input type="hidden" name="action" value="save-page">';
         $html .= sprintf('<input type="hidden" name="tokenName" value="%s">', htmlspecialchars('pages', \ENT_QUOTES));
         $html .= sprintf('<input type="hidden" name="tokenValue" value="%s">', htmlspecialchars($token, \ENT_QUOTES));
