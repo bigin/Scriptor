@@ -74,6 +74,17 @@ switch ($command) {
         $cmd        = new \Scriptor\Boot\Cli\PluginUninstallCommand($root, $console);
         exit($cmd->run($options, $positional));
 
+    case 'plugin:cleanup-orphan':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_cleanup_orphan_help();
+            exit(0);
+        }
+        $positional = parse_positional($args);
+        $console    = new \Scriptor\Boot\Cli\Console();
+        $cmd        = new \Scriptor\Boot\Cli\PluginCleanupOrphanCommand($root, $console);
+        exit($cmd->run($options, $positional));
+
     case '':
     case 'help':
     case '--help':
@@ -152,6 +163,7 @@ Commands:
   plugin:list        Show discovered Scriptor plugins and their lifecycle state.
   plugin:install     Run a lifecycle plugin's install() hook + mark it installed.
   plugin:uninstall   Run a lifecycle plugin's uninstall() hook + clear state.
+  plugin:cleanup-orphan  Drop the state entry for a composer-removed lifecycle plugin.
   help               Show this message.
 
 Run `bin/scriptor <command> --help` for command-specific options.
@@ -236,6 +248,27 @@ After this command succeeds, run `composer remove <package>` to remove
 the package from vendor/. The two-step sequence (CLI first, composer
 second) means the plugin's uninstall() runs while its class is still
 loadable.
+
+TXT;
+}
+
+function print_plugin_cleanup_orphan_help(): void
+{
+    echo <<<'TXT'
+Drop the state.json entry for a package the operator composer-removed
+without running plugin:uninstall first.
+
+Usage:
+  bin/scriptor plugin:cleanup-orphan                 List orphans, no mutation.
+  bin/scriptor plugin:cleanup-orphan <package>       Clear the named entry.
+
+Options:
+  --help, -h    Show this message.
+
+This is a recovery command, not a normal workflow step. The plugin's
+uninstall() hook does NOT run (the class is gone); schema entries
+the plugin registered stay in the DB. Reinstall + clean uninstall
+is the only way to remove those automatically.
 
 TXT;
 }

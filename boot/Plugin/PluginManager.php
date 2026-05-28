@@ -166,6 +166,39 @@ final class PluginManager
     }
 
     /**
+     * Names of lifecycle-plugin packages tracked in the state file
+     * that no longer have a matching discovered manifest. Operator
+     * typically arrives at this state by running `composer remove`
+     * without a `bin/scriptor plugin:uninstall` first; the package
+     * code is gone but the schema entries the plugin registered (if
+     * any) are still in the DB.
+     *
+     * Returns an empty list when the state file doesn't exist or
+     * holds nothing.
+     *
+     * Read-only — does not log, warn, or mutate state. Callers
+     * (`plugin:list`, the editor's Plugins module) decide how to
+     * surface the result.
+     *
+     * @return list<string>
+     */
+    public function orphans(PluginStateManager $state): array
+    {
+        $stateEntries = $state->all();
+        if ($stateEntries === []) {
+            return [];
+        }
+        $discovered = \array_map(static fn ($m) => $m->packageName, $this->discover());
+        $orphans = [];
+        foreach (\array_keys($stateEntries) as $name) {
+            if (! \in_array($name, $discovered, true)) {
+                $orphans[] = $name;
+            }
+        }
+        return $orphans;
+    }
+
+    /**
      * Clear the discovery cache. Composer post-install / post-update
      * scripts should call this so the next boot re-scans installed.json
      * and picks up plugin add/remove.
