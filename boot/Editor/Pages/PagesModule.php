@@ -481,23 +481,46 @@ final class PagesModule implements Module
 
         $html  = '<h1>' . htmlspecialchars($this->t($headerKey), \ENT_QUOTES) . '</h1>';
         $html .= '<form id="page-form" action="' . htmlspecialchars($action, \ENT_QUOTES) . '" method="post">';
-        $html .= $this->fieldText('pagename', 'name', $this->t('title_label'), $page?->name ?? '', required: true);
+        // Each core field is gated on PageFormRendering::isHidden() so a
+        // page-type plugin can omit fields irrelevant to its template
+        // (e.g. a `produkt` template hides menu_title because products
+        // aren't main-nav items). Save logic tolerates missing POST
+        // values — hidden fields keep their current data on update.
+        if (! $rendering->isHidden('name')) {
+            $html .= $this->fieldText('pagename', 'name', $this->t('title_label'), $page?->name ?? '', required: true);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_NAME);
-        $html .= $this->fieldText('menu-title', 'menu_title', $this->t('menu_title_label'), $page?->menu_title ?? '', infoText: $this->t('menu_title_field_infotext'));
+        if (! $rendering->isHidden('menu_title')) {
+            $html .= $this->fieldText('menu-title', 'menu_title', $this->t('menu_title_label'), $page?->menu_title ?? '', infoText: $this->t('menu_title_field_infotext'));
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_MENU_TITLE);
-        $html .= $this->fieldText('slug', 'slug', $this->t('name_label'), $page?->slug ?? '', infoText: $this->t('name_field_infotext'));
+        if (! $rendering->isHidden('slug')) {
+            $html .= $this->fieldText('slug', 'slug', $this->t('name_label'), $page?->slug ?? '', infoText: $this->t('name_field_infotext'));
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_SLUG);
-        $html .= $this->fieldTextarea('markdown', 'content', $this->t('content_label'), $page?->content ?? '', required: true);
+        if (! $rendering->isHidden('content')) {
+            $html .= $this->fieldTextarea('markdown', 'content', $this->t('content_label'), $page?->content ?? '', required: true);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_CONTENT);
-        $html .= $this->renderImagesSection($page);
+        if (! $rendering->isHidden('images')) {
+            $html .= $this->renderImagesSection($page);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_IMAGES);
-        $html .= $this->fieldSelect('parent', 'parent', $this->t('parent_label'), $parentOptions);
+        if (! $rendering->isHidden('parent')) {
+            $html .= $this->fieldSelect('parent', 'parent', $this->t('parent_label'), $parentOptions);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_PARENT);
-        $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
+        if (! $rendering->isHidden('template')) {
+            $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_TEMPLATE);
-        $html .= $this->fieldPosition($page);
+        if (! $rendering->isHidden('position')) {
+            $html .= $this->fieldPosition($page);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_POSITION);
-        $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
+        if (! $rendering->isHidden('published')) {
+            $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
+        }
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_PUBLISHED);
         $html .= $rendering->htmlFor(PageFormRendering::SLOT_END);
 
