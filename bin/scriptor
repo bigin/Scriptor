@@ -42,6 +42,49 @@ switch ($command) {
         $cmd     = new \Scriptor\Boot\Cli\InstallCommand($root, $console, $prompt);
         exit($cmd->run($options));
 
+    case 'plugin:list':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_list_help();
+            exit(0);
+        }
+        $console = new \Scriptor\Boot\Cli\Console();
+        $cmd     = new \Scriptor\Boot\Cli\PluginListCommand($root, $console);
+        exit($cmd->run());
+
+    case 'plugin:install':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_install_help();
+            exit(0);
+        }
+        $positional = parse_positional($args);
+        $console    = new \Scriptor\Boot\Cli\Console();
+        $cmd        = new \Scriptor\Boot\Cli\PluginInstallCommand($root, $console);
+        exit($cmd->run($options, $positional));
+
+    case 'plugin:uninstall':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_uninstall_help();
+            exit(0);
+        }
+        $positional = parse_positional($args);
+        $console    = new \Scriptor\Boot\Cli\Console();
+        $cmd        = new \Scriptor\Boot\Cli\PluginUninstallCommand($root, $console);
+        exit($cmd->run($options, $positional));
+
+    case 'plugin:cleanup-orphan':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_cleanup_orphan_help();
+            exit(0);
+        }
+        $positional = parse_positional($args);
+        $console    = new \Scriptor\Boot\Cli\Console();
+        $cmd        = new \Scriptor\Boot\Cli\PluginCleanupOrphanCommand($root, $console);
+        exit($cmd->run($options, $positional));
+
     case '':
     case 'help':
     case '--help':
@@ -84,10 +127,27 @@ function parse_options(array $args): array
             $opts[$name] = $value;
             continue;
         }
-        // Bare positional args have no meaning today; ignore silently
-        // rather than break future extensions.
+        // Bare positional args returned via parse_positional(); ignored here.
     }
     return $opts;
+}
+
+/**
+ * Return positional (non `--…`) arguments in order.
+ *
+ * @param list<string> $args
+ * @return list<string>
+ */
+function parse_positional(array $args): array
+{
+    $positional = [];
+    foreach ($args as $arg) {
+        if (\str_starts_with($arg, '-')) {
+            continue;
+        }
+        $positional[] = $arg;
+    }
+    return $positional;
 }
 
 function print_top_help(): void
@@ -99,10 +159,116 @@ Usage:
   bin/scriptor <command> [options]
 
 Commands:
-  install    Seed a fresh Scriptor database (Pages, Users, admin, Home).
-  help       Show this message.
+  install            Seed a fresh Scriptor database (Pages, Users, admin, Home).
+  plugin:list        Show discovered Scriptor plugins and their lifecycle state.
+  plugin:install     Run a lifecycle plugin's install() hook + mark it installed.
+  plugin:uninstall   Run a lifecycle plugin's uninstall() hook + clear state.
+  plugin:cleanup-orphan  Drop the state entry for a composer-removed lifecycle plugin.
+  help               Show this message.
 
 Run `bin/scriptor <command> --help` for command-specific options.
+
+TXT;
+}
+
+function print_plugin_list_help(): void
+{
+    echo <<<'TXT'
+Show installed and discovered Scriptor plugins.
+
+Usage:
+  bin/scriptor plugin:list [options]
+
+Options:
+  --help, -h    Show this message.
+
+Three kinds of rows appear:
+
+  - stateless / discovered      plain Plugin implementor, no lifecycle state
+  - lifecycle / pending install LifecyclePlugin not yet installed via this CLI
+  - lifecycle / installed       LifecyclePlugin tracked in data/plugin-states.json
+  - lifecycle / ORPHAN          state.json entry without a discovered package
+                                (the operator ran `composer remove` without a
+                                matching `plugin:uninstall` first)
+
+The command reads vendor/composer/installed.json and the plugin state
+file; it does not load or boot any plugin. Safe to run before
+`bin/scriptor install` on a fresh checkout.
+
+TXT;
+}
+
+function print_plugin_install_help(): void
+{
+    echo <<<'TXT'
+Invoke the install() hook of a lifecycle plugin.
+
+Usage:
+  bin/scriptor plugin:install <package>
+  bin/scriptor plugin:install --all
+
+Options:
+  --all         Install every discovered lifecycle plugin not yet installed.
+  --force       Re-run install() even if the package is already marked installed.
+  --help, -h    Show this message.
+
+Bootstraps the iManager container, instantiates the plugin's class,
+and calls `LifecyclePlugin::install()` exactly once. On success the
+package is recorded in `data/plugin-states.json`; on failure the
+state file is left unchanged so the operator can fix and retry.
+
+Refuses to run when:
+  - The package is not discovered (typo / not composer-required).
+  - The plugin class is a plain Plugin (no lifecycle hook to call —
+    stateless plugins are loaded automatically per request).
+  - The package is already installed (use --force to override).
+
+TXT;
+}
+
+function print_plugin_uninstall_help(): void
+{
+    echo <<<'TXT'
+Invoke the uninstall() hook of a lifecycle plugin and clear its state entry.
+
+Usage:
+  bin/scriptor plugin:uninstall <package> [options]
+
+Options:
+  --purge-data            Tell the plugin to also remove row values it
+                          owns from items.data. Default: data is preserved
+                          on the assumption that a future reinstall might
+                          pick it back up.
+  --force-state-clear     Drop the state entry without invoking
+                          uninstall(). Use when the plugin's uninstall()
+                          itself is broken or the class is gone.
+  --help, -h              Show this message.
+
+After this command succeeds, run `composer remove <package>` to remove
+the package from vendor/. The two-step sequence (CLI first, composer
+second) means the plugin's uninstall() runs while its class is still
+loadable.
+
+TXT;
+}
+
+function print_plugin_cleanup_orphan_help(): void
+{
+    echo <<<'TXT'
+Drop the state.json entry for a package the operator composer-removed
+without running plugin:uninstall first.
+
+Usage:
+  bin/scriptor plugin:cleanup-orphan                 List orphans, no mutation.
+  bin/scriptor plugin:cleanup-orphan <package>       Clear the named entry.
+
+Options:
+  --help, -h    Show this message.
+
+This is a recovery command, not a normal workflow step. The plugin's
+uninstall() hook does NOT run (the class is gone); schema entries
+the plugin registered stay in the DB. Reinstall + clean uninstall
+is the only way to remove those automatically.
 
 TXT;
 }

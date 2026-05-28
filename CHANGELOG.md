@@ -4,6 +4,57 @@
 
 ### Added
 
+- **Plugin lifecycle: `LifecyclePlugin` interface + four CLI commands.**
+  An opt-in extension of `Scriptor\Boot\Plugin\Plugin` that adds
+  `install(PluginContext)` and `uninstall(PluginContext)` hooks for
+  plugins that need to register iManager schema (category fields,
+  custom categories, seed rows) on install and reverse that on
+  removal. The framework never auto-invokes the hooks — the operator
+  drives them via the new commands:
+
+      bin/scriptor plugin:list                # inventory + state
+      bin/scriptor plugin:install <package>   # invoke install(), mark state
+      bin/scriptor plugin:install --all       # every pending lifecycle plugin
+      bin/scriptor plugin:uninstall <package> # invoke uninstall(), clear state
+      bin/scriptor plugin:cleanup-orphan      # recovery: state w/o code
+
+  `plugin:install` reads `vendor/composer/installed.json` to find the
+  package, instantiates the plugin class, calls `install()`, and writes
+  an entry to `data/plugin-states.json` on success (state file lives
+  under data/ so a fresh checkout starts empty). Errors in `install()`
+  do **not** mutate the state file — operator fixes and retries, no
+  stale "installed" marker.
+
+  `plugin:uninstall` runs the inverse: invokes `uninstall()` while the
+  plugin's class is still loadable, then drops the state entry. The
+  operator follows up with `composer remove <package>` to remove the
+  code itself. Default data-preservation: the plugin's `uninstall()`
+  body typically removes schema entries but leaves per-row values in
+  `items.data` alone; pass `--purge-data` to forward
+  `purgeDataRequested = true` on the `PluginContext` so the plugin
+  body chooses to also strip those values.
+
+  `plugin:cleanup-orphan` is the recovery path for the
+  "I forgot plugin:uninstall before composer remove" case. Without an
+  argument it lists every orphan (state entry without a discovered
+  package); with `<package>` it drops that single entry. Schema entries
+  the orphan plugin registered are **not** removed automatically — the
+  plugin's code is gone, so the only auto-cleanup path is reinstall +
+  clean uninstall. The CLI surfaces this trade-off explicitly.
+
+  Composer scripts and Composer plugins were considered for guarding
+  the workflow at `composer remove` time but deliberately not adopted:
+  `--no-scripts` would bypass them anyway, and the friction for the
+  95% case of operators who follow the documented workflow isn't worth
+  the 5% who'd skip it. The CLI plus `docs/plugin-lifecycle.md` are
+  the full contract.
+
+  `bin/smoke-plugin-lifecycle.sh` regression script (16 checks) walks
+  the full flow against a throwaway sandbox + dummy plugin: install
+  registers the field, uninstall removes it, the orphan path works.
+  Stateless plugins (plain `Plugin` implementors) are unaffected —
+  they're loaded automatically per request and never tracked in the
+  state file. Documented in [`docs/plugin-lifecycle.md`](docs/plugin-lifecycle.md).
 - **Editor page-form extension events**. Two PSR-14 events let plugins
   add fields to the existing PagesModule edit form without forking
   PagesModule. `Scriptor\Boot\Events\Editor\PageFormRendering` fires

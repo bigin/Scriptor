@@ -49,6 +49,19 @@ final class PluginContext
     public function __construct(
         private readonly Container $container,
         public readonly string $pluginName = '',
+        /**
+         * Set to true when the context is handed to a
+         * {@see LifecyclePlugin::uninstall()} invocation triggered by
+         * `bin/scriptor plugin:uninstall --purge-data`. Plugins read
+         * this to decide whether to also remove the row values they
+         * own from `items.data` (default: preserve, on the assumption
+         * that the operator may reinstall later).
+         *
+         * Always `false` during the normal `register()` boot path and
+         * during install() — the flag only carries meaning inside
+         * uninstall().
+         */
+        public readonly bool $purgeDataRequested = false,
     ) {}
 
     public function container(): Container
