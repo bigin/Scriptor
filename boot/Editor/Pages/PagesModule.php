@@ -471,26 +471,35 @@ final class PagesModule implements Module
         $action = $isEdit ? './?page=' . (int) $page->id() : './';
         $parentOptions = $this->renderParentOptions($page);
 
-        $html  = '<h1>' . htmlspecialchars($this->t($headerKey), \ENT_QUOTES) . '</h1>';
-        $html .= '<form id="page-form" action="' . htmlspecialchars($action, \ENT_QUOTES) . '" method="post">';
-        $html .= $this->fieldText('pagename', 'name', $this->t('title_label'), $page?->name ?? '', required: true);
-        $html .= $this->fieldText('menu-title', 'menu_title', $this->t('menu_title_label'), $page?->menu_title ?? '', infoText: $this->t('menu_title_field_infotext'));
-        $html .= $this->fieldText('slug', 'slug', $this->t('name_label'), $page?->slug ?? '', infoText: $this->t('name_field_infotext'));
-        $html .= $this->fieldTextarea('markdown', 'content', $this->t('content_label'), $page?->content ?? '', required: true);
-        $html .= $this->renderImagesSection($page);
-        $html .= $this->fieldSelect('parent', 'parent', $this->t('parent_label'), $parentOptions);
-        $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
-        $html .= $this->fieldPosition($page);
-        $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
-
-        // Plugin extension point: render extra form-controls (SEO meta,
-        // scheduling, OG tags, …) between the core fields and the
-        // save controls. Buffer is appended verbatim; listeners own
+        // Plugin extension point: dispatched once up-front so listeners
+        // can fill named slots; each slot's buffer is then printed
+        // verbatim right after its matching core field. Listeners own
         // their HTML escaping. Companion {@see PageSaving} event lets
         // the same plugin persist the posted values.
         $rendering = new PageFormRendering($page, $this->pages->categoryId);
         $this->dispatcher->dispatch($rendering);
-        $html .= $rendering->html();
+
+        $html  = '<h1>' . htmlspecialchars($this->t($headerKey), \ENT_QUOTES) . '</h1>';
+        $html .= '<form id="page-form" action="' . htmlspecialchars($action, \ENT_QUOTES) . '" method="post">';
+        $html .= $this->fieldText('pagename', 'name', $this->t('title_label'), $page?->name ?? '', required: true);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_NAME);
+        $html .= $this->fieldText('menu-title', 'menu_title', $this->t('menu_title_label'), $page?->menu_title ?? '', infoText: $this->t('menu_title_field_infotext'));
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_MENU_TITLE);
+        $html .= $this->fieldText('slug', 'slug', $this->t('name_label'), $page?->slug ?? '', infoText: $this->t('name_field_infotext'));
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_SLUG);
+        $html .= $this->fieldTextarea('markdown', 'content', $this->t('content_label'), $page?->content ?? '', required: true);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_CONTENT);
+        $html .= $this->renderImagesSection($page);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_IMAGES);
+        $html .= $this->fieldSelect('parent', 'parent', $this->t('parent_label'), $parentOptions);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_PARENT);
+        $html .= $this->fieldText('template', 'template', $this->t('template_label'), $page?->template ?? '', infoText: $this->t('template_field_infotext'));
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_TEMPLATE);
+        $html .= $this->fieldPosition($page);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_POSITION);
+        $html .= $this->fieldCheckbox('publish', 'published', $this->t('published_label'), $page?->active() ?? true);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_AFTER_PUBLISHED);
+        $html .= $rendering->htmlFor(PageFormRendering::SLOT_END);
 
         $html .= '<input type="hidden" name="action" value="save-page">';
         $html .= sprintf('<input type="hidden" name="tokenName" value="%s">', htmlspecialchars('pages', \ENT_QUOTES));
