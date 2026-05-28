@@ -7,11 +7,17 @@
 - **Editor page-form extension events**. Two PSR-14 events let plugins
   add fields to the existing PagesModule edit form without forking
   PagesModule. `Scriptor\Boot\Events\Editor\PageFormRendering` fires
-  after the core fields and before the hidden action/csrf inputs;
-  listeners call `appendHtml(...)` to inject their own
-  `<div class="form-control">…</div>` markup. The companion
-  `Scriptor\Boot\Events\Editor\PageSaving` fires after the
-  about-to-be-saved `Item` is constructed and before persistence;
+  once at the top of the form render; listeners call
+  `appendHtml($html, $slot)` to inject their own
+  `<div class="form-control">…</div>` markup into one of ten named
+  slots (`SLOT_AFTER_NAME`, `_MENU_TITLE`, `_SLUG`, `_CONTENT`,
+  `_IMAGES`, `_PARENT`, `_TEMPLATE`, `_POSITION`, `_PUBLISHED`,
+  `END`). PagesModule prints each slot's buffer right after the
+  matching core field so SEO meta inputs can land under Content,
+  publish-scheduling under Published, etc. `appendHtml($html)`
+  without a slot defaults to `SLOT_END` for backwards compatibility.
+  The companion `Scriptor\Boot\Events\Editor\PageSaving` fires after
+  the about-to-be-saved `Item` is constructed and before persistence;
   listeners call `mergeData([...])` to add extra keys from the POST
   request to the page's `data` bag. Both keys merge cleanly so a
   single `pages->save(...)` runs with the combined payload. No
