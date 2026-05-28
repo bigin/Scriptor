@@ -737,13 +737,17 @@ final class PagesModule implements Module
      */
     private function existingDataMap(Page $page): array
     {
-        $out = [];
-        foreach (['slug', 'parent', 'pagetype', 'menu_title', 'content', 'template'] as $key) {
-            if ($page->item->data->has($key)) {
-                $out[$key] = $page->item->data->get($key);
-            }
-        }
-        return $out;
+        // Carry ALL existing keys forward, not just the six the
+        // form knows about. Hidden core fields (via
+        // PageFormRendering::hide) carry no POST value but should
+        // keep their stored data; legacy `images` JSON from 1.x
+        // imports lives here too; plugin-contributed keys whose
+        // PageSaving listener didn't fire (listener deactivated,
+        // event handler short-circuited on template) shouldn't get
+        // nuked on every save. The five POST-driven core keys are
+        // overwritten right after this call in saveAction(), so
+        // preserving them here is harmless.
+        return $page->item->data->toArray();
     }
 
     private function csrfPasses(string $name, string $value): bool

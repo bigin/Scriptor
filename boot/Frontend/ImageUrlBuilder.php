@@ -57,7 +57,11 @@ final readonly class ImageUrlBuilder
         }
 
         $thumbName = self::thumbnailFilename($name, $width, $height);
-        $absDir    = $this->scriptorRoot . '/' . trim($publicDir, '/');
+        // `$publicDir` (e.g. "uploads/1.2.6/") is a URL-side path; on
+        // disk it lives under the public webroot. Prepend `public/`
+        // here so the source-exists check + the thumbnail write target
+        // both land where nginx / php-fpm actually serve from.
+        $absDir    = $this->scriptorRoot . '/public/' . trim($publicDir, '/');
         $absThumb  = $absDir . '/thumbnail/' . $thumbName;
         $absSource = $absDir . '/' . $name;
 
