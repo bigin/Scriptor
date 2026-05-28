@@ -42,6 +42,16 @@ switch ($command) {
         $cmd     = new \Scriptor\Boot\Cli\InstallCommand($root, $console, $prompt);
         exit($cmd->run($options));
 
+    case 'plugin:list':
+        $options = parse_options($args);
+        if (isset($options['help'])) {
+            print_plugin_list_help();
+            exit(0);
+        }
+        $console = new \Scriptor\Boot\Cli\Console();
+        $cmd     = new \Scriptor\Boot\Cli\PluginListCommand($root, $console);
+        exit($cmd->run());
+
     case '':
     case 'help':
     case '--help':
@@ -99,10 +109,38 @@ Usage:
   bin/scriptor <command> [options]
 
 Commands:
-  install    Seed a fresh Scriptor database (Pages, Users, admin, Home).
-  help       Show this message.
+  install        Seed a fresh Scriptor database (Pages, Users, admin, Home).
+  plugin:list    Show installed/discovered Scriptor plugins and their lifecycle state.
+  help           Show this message.
 
 Run `bin/scriptor <command> --help` for command-specific options.
+
+TXT;
+}
+
+function print_plugin_list_help(): void
+{
+    echo <<<'TXT'
+Show installed and discovered Scriptor plugins.
+
+Usage:
+  bin/scriptor plugin:list [options]
+
+Options:
+  --help, -h    Show this message.
+
+Three kinds of rows appear:
+
+  - stateless / discovered      plain Plugin implementor, no lifecycle state
+  - lifecycle / pending install LifecyclePlugin not yet installed via this CLI
+  - lifecycle / installed       LifecyclePlugin tracked in data/plugin-states.json
+  - lifecycle / ORPHAN          state.json entry without a discovered package
+                                (the operator ran `composer remove` without a
+                                matching `plugin:uninstall` first)
+
+The command reads vendor/composer/installed.json and the plugin state
+file; it does not load or boot any plugin. Safe to run before
+`bin/scriptor install` on a fresh checkout.
 
 TXT;
 }
