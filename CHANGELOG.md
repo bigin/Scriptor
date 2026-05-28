@@ -16,8 +16,15 @@
   matching core field so SEO meta inputs can land under Content,
   publish-scheduling under Published, etc. `appendHtml($html)`
   without a slot defaults to `SLOT_END` for backwards compatibility.
-  The companion `Scriptor\Boot\Events\Editor\PageSaving` fires after
-  the about-to-be-saved `Item` is constructed and before persistence;
+  The same event carries `hide($fieldName)` so a listener can
+  suppress core form fields that don't apply to its page-type;
+  PagesModule consults `isHidden(...)` before rendering each
+  built-in field (`name`, `menu_title`, `slug`, `content`, `images`,
+  `parent`, `template`, `position`, `published`). Save behaviour is
+  unaffected — hidden fields keep their current data via the
+  existing "missing POST = no change" path. The companion
+  `Scriptor\Boot\Events\Editor\PageSaving` fires after the
+  about-to-be-saved `Item` is constructed and before persistence;
   listeners call `mergeData([...])` to add extra keys from the POST
   request to the page's `data` bag. Both keys merge cleanly so a
   single `pages->save(...)` runs with the combined payload. No
