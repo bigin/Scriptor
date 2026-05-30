@@ -56,12 +56,46 @@ final class PageFormRendering
     /** @var array<string, string> */
     private array $slots = [];
 
+    /** @var array<string, true> */
+    private array $hidden = [];
+
     public function __construct(
         /** Page being edited; null for the new-page flow. */
         public readonly ?Page $page,
         /** id of the iManager category the form is editing. */
         public readonly int $categoryId,
     ) {}
+
+    /**
+     * Skip a core form field. PagesModule consults this set before
+     * rendering each built-in field and omits the ones a listener
+     * has marked hidden. Save behaviour is unaffected — missing
+     * POST values fall through to the existing "keep current /
+     * default to empty" paths.
+     *
+     * Field names match the POST input names: `name`, `menu_title`,
+     * `slug`, `content`, `images`, `parent`, `template`, `position`,
+     * `published`.
+     *
+     * Typical use: a page-type plugin checks `$event->page->template`
+     * and hides irrelevant fields so the editor only sees what the
+     * page-type actually needs:
+     *
+     *     if ($event->page?->template === 'produkt') {
+     *         $event->hide('parent');     // always catalog parent
+     *         $event->hide('position');   // sorted by catalog order
+     *         $event->hide('template');   // stays 'produkt'
+     *     }
+     */
+    public function hide(string $field): void
+    {
+        $this->hidden[$field] = true;
+    }
+
+    public function isHidden(string $field): bool
+    {
+        return isset($this->hidden[$field]);
+    }
 
     /**
      * Append markup into a named slot. The buffer for that slot is
