@@ -2,7 +2,7 @@
 ![Scriptor 2.0](docs/images/scriptor-banner-2.0.png)
 
 
-# Scriptor 2.0
+# Scriptor 2
 
 Scriptor is a lightweight and versatile CMS for creating microsites, blogs, or
 wikis. Version 2 is a ground-up rewrite on top of [iManager 2][imanager],
@@ -15,7 +15,13 @@ Demo:    [https://demos.scriptor-cms.dev](https://demos.scriptor-cms.dev)
 
 - **SQLite storage** with JSON columns and FTS5 full-text search.
 - **Composer-based** install on top of `bigins/imanager:^2.0`.
-- **PSR-14 domain events** drive cache invalidation and file cleanup.
+- **PSR-14 events** drive cache invalidation and file cleanup, and are
+  the extension backbone for plugins (frontend + editor hooks).
+- **Plugin system** with Composer-based discovery and an opt-in
+  install/uninstall lifecycle (`bin/scriptor plugin:*`) for plugins that
+  register their own iManager schema.
+- **Editor extension events**: plugins add fields to the page edit form
+  (or hide built-in ones) without forking the editor.
 - **FilePond** uploads with on-demand thumbnail generation through
   `intervention/image`.
 - **Per-image titles** as a typed `files.title` column with markdown
@@ -75,7 +81,7 @@ see [`docs/install-shared-hosting.md`](docs/install-shared-hosting.md).
 
 ### Try it in Docker
 
-A bundled demo stack starts Scriptor 2.0 on `http://localhost:8080`
+A bundled demo stack starts Scriptor on `http://localhost:8080`
 with one admin user (`admin / gT5nLazzyBob`) and one example page:
 
 ```bash
@@ -171,7 +177,7 @@ data/                        runtime state, NEVER web-served
   cache/sections/            FilesystemCache (page-level HTML)
   logs/, backups/
 
-bin/                         CLI helpers (currently: perf-smoke.php)
+bin/                         CLI: scriptor (install, plugin:*) + perf-smoke.php
 docs/                        themes.md, install-shared-hosting.md, …
 ```
 
@@ -208,8 +214,9 @@ themes consume.
 ## Links
 
 - iManager 2 framework: <https://github.com/bigin/imanager>
-- Documentation: <https://scriptor-cms.dev/documentation/>
-- Modules / extensions: <https://scriptor-cms.dev/extensions/extensions-modules/>
+- Developer Guide: <https://scriptor-cms.dev/developer-guide/>
+- User Guide: <https://scriptor-cms.dev/user-guide/>
+- Extensions: <https://scriptor-cms.dev/extensions/>
 - Demo: <https://demos.scriptor-cms.dev>
 
 [imanager]: https://github.com/bigin/imanager
