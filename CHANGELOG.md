@@ -1,6 +1,11 @@
 # Changelog
 
-## Unreleased
+## 2.1.0 (2026-05-29)
+
+Plugin lifecycle, editor page-form extension events (incl.
+`hide()`/`isHidden()`), and editor image thumbnails — the engine work
+that grew out of the studenten-frankfurt.de migration. All additive;
+no breaking changes since 2.0.1.
 
 ### Added
 
