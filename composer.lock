@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c7d1d06235f6a14b9e80e0fcc35b1af8",
+    "content-hash": "a6ded29a37e1197e411047273dbd5fcf",
     "packages": [
         {
             "name": "bigins/imanager",
@@ -1393,5 +1393,5 @@
     "platform-overrides": {
         "php": "8.2.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

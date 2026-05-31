@@ -22,12 +22,6 @@
         "ext-pdo_sqlite": "*",
         "bigins/imanager": "^2.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/bigin/scriptor-markdown-pages"
-        }
-    ],
     "autoload": {
         "psr-4": {
             "Scriptor\\Boot\\": "boot/"
