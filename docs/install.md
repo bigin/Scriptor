@@ -161,26 +161,39 @@ extra setup is needed.
 ### Docker
 
 Container filesystems are immutable below the volumes, so the
-Docker workflow is to **bake the plugin into the image** via a
-build arg in your compose override:
+Docker workflow is to **bake the plugin into the image** via two
+build args in your compose override (both space-separated lists,
+both empty by default):
+
+- `SCRIPTOR_PLUGIN_REPOS` — **where** to find packages not on
+  Packagist: a list of VCS (git) URLs, each registered with
+  `composer config repositories` before the require. Omit for
+  Packagist-only plugins.
+- `SCRIPTOR_PLUGINS` — **which** packages to install: composer
+  package specs (`name:constraint`).
 
 ```yaml
 services:
   scriptor:
     build:
       args:
+        SCRIPTOR_PLUGIN_REPOS: "https://github.com/bigin/scriptor-markdown-pages"
         SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1"
 ```
 
-Then `docker compose up -d --build`. Scriptor's Dockerfile runs
-`composer require $SCRIPTOR_PLUGINS` during image build, so the
-plugin lands in `vendor/` and survives every restart, recreation,
-or deploy.
+Then `docker compose up -d --build`. Scriptor's Dockerfile
+registers each repo URL, then runs `composer require
+$SCRIPTOR_PLUGINS` during image build, so the plugin lands in
+`vendor/` and survives every restart, recreation, or deploy.
+Scriptor's own `composer.json` declares no plugin repositories, so
+the downstream image supplies both the URLs and the package specs.
 
-Multiple plugins go in the same arg as a space-separated list:
+Multiple plugins go in the same args as space-separated lists — one
+repo URL and one spec per plugin:
 
 ```yaml
-SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1 vendor/other-plugin:^2"
+SCRIPTOR_PLUGIN_REPOS: "https://github.com/bigin/scriptor-markdown-pages https://github.com/bigin/scriptor-simple-router"
+SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1 bigins/scriptor-simple-router:^0.1"
 ```
 
 > **Trap: `docker exec scriptor composer require ...`** Works
