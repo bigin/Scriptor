@@ -54,22 +54,40 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 # across edits to PHP source / themes / etc.
 COPY . .
 
-# Optional per-site plugin list. Default install ships plugin-free;
-# sites that need plugins pass a space-separated list of composer
-# package specs via build args, e.g. in a compose override:
+# Optional per-site plugins. Default install ships plugin-free. Two
+# orthogonal build-args, both space-separated, both empty by default:
+#
+#   SCRIPTOR_PLUGIN_REPOS  WHERE to find packages not on Packagist: a
+#                          list of VCS (git) URLs, each registered with
+#                          `composer config repositories` before the
+#                          require. Omit for Packagist-only plugins.
+#   SCRIPTOR_PLUGINS       WHICH packages to install: composer specs
+#                          (name:constraint).
+#
+# Scriptor's own composer.json names NO plugin repositories on purpose
+# (it ships as a clean, generic CMS). A downstream image that installs
+# non-Packagist bigins/* plugins supplies both the repo URLs and the
+# package specs itself, e.g. in a compose override:
 #
 #   services:
 #     scriptor:
 #       build:
 #         args:
-#           SCRIPTOR_PLUGINS: "bigins/scriptor-markdown-pages:^0.1"
+#           SCRIPTOR_PLUGIN_REPOS: "https://github.com/bigin/scriptor-markdown-pages https://github.com/bigin/scriptor-markdown-feed"
+#           SCRIPTOR_PLUGINS:      "bigins/scriptor-markdown-pages:^0.1 bigins/scriptor-markdown-feed:^0.1"
 #
-# `composer require` runs after `COPY . .` so the modified
-# composer.json + composer.lock + vendor/ end up consistent in the
-# final image (otherwise COPY would clobber the require's edits to
-# composer.json). The `repositories` block in composer.json already
-# names the VCS source for bigins/* plugins, so `composer require`
-# finds them without further configuration.
+# Both run after `COPY . .` so the modified composer.json + composer.lock
+# + vendor/ end up consistent in the final image (otherwise COPY would
+# clobber the edits).
+ARG SCRIPTOR_PLUGIN_REPOS=""
+RUN if [ -n "$SCRIPTOR_PLUGIN_REPOS" ]; then \
+        i=0; \
+        for url in $SCRIPTOR_PLUGIN_REPOS; do \
+            composer config "repositories.plugin$i" vcs "$url"; \
+            i=$((i+1)); \
+        done; \
+    fi
+
 ARG SCRIPTOR_PLUGINS=""
 RUN if [ -n "$SCRIPTOR_PLUGINS" ]; then \
         composer require $SCRIPTOR_PLUGINS \
