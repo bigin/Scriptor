@@ -148,15 +148,20 @@ picks the plugin up after the `composer require` completes.
 
 ### Host install (local PHP, shared hosting)
 
-From the Scriptor root:
+Plugins are not on Packagist, and Scriptor's `composer.json` ships
+clean (it names no plugin repositories). From the Scriptor root,
+point Composer at the plugin's VCS repository first, then require it:
 
 ```bash
+composer config repositories.scriptor-markdown-pages \
+  vcs https://github.com/bigin/scriptor-markdown-pages
 composer require bigins/scriptor-markdown-pages
 ```
 
-The `repositories` block in Scriptor's `composer.json` already
-points Composer at the VCS sources for `bigins/*` plugins, so no
-extra setup is needed.
+The first command adds a `repositories` entry to your project's
+`composer.json`; without it `composer require` reports "Could not
+find a version of package …". A plugin published on Packagist needs
+only the `composer require`.
 
 ### Docker
 
