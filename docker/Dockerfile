@@ -79,11 +79,19 @@ COPY . .
 # Both run after `COPY . .` so the modified composer.json + composer.lock
 # + vendor/ end up consistent in the final image (otherwise COPY would
 # clobber the edits).
+# Each repo is registered with "no-api": true. For github.com URLs
+# Composer otherwise resolves metadata through the GitHub API, which is
+# rate-limited to 60 requests/hour unauthenticated; once exhausted (or
+# for a host with no token) Composer falls back to an SSH git clone that
+# the build container has no key for, and the build fails. "no-api" makes
+# Composer clone the given HTTPS URL anonymously, so public-repo builds
+# are reproducible with no token and no SSH key.
 ARG SCRIPTOR_PLUGIN_REPOS=""
 RUN if [ -n "$SCRIPTOR_PLUGIN_REPOS" ]; then \
         i=0; \
         for url in $SCRIPTOR_PLUGIN_REPOS; do \
-            composer config "repositories.plugin$i" vcs "$url"; \
+            composer config "repositories.plugin$i" \
+                "{\"type\":\"vcs\",\"url\":\"$url\",\"no-api\":true}"; \
             i=$((i+1)); \
         done; \
     fi
