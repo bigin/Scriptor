@@ -43,7 +43,7 @@
 	<?php include 'resources/chunks/_offcanvas.php'; ?>
 	<!-- /OFFCANVAS -->
 </main>
-<script async src="https://cdn.jsdelivr.net/npm/uikit@3.9.4/dist/js/uikit.min.js"></script>
+<script async src="<?php echo $site->themeAssetUrl('scripts/uikit.min.js'); ?>"></script>
 <script async src="<?php echo $site->themeAssetUrl('scripts/main.js'); ?>"></script>
 <script async src="<?php echo $site->editorAssetUrl('scripts/prism.js'); ?>"></script>
 </body>
