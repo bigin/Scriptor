@@ -37,7 +37,7 @@ class Editor
     public string $siteUrl;
     /** Public URL of the editor's static-asset directory. */
     public string $themeUrl;
-    public string $version = '2.0.0-dev';
+    public string $version = '2.2.0';
     public string $pageTitle = 'Scriptor';
     public string $pageContent = '';
     public string $breadcrumbs = '';
