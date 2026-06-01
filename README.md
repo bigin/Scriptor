@@ -91,6 +91,13 @@ docker compose up -d --build
 See [`docs/demo.md`](docs/demo.md) for what the seed creates, how to
 reset to factory state, and what the image is (and isn't) good for.
 
+### Building your own site
+
+To build and run a real site on top of Scriptor — your own theme,
+content, plugins and Docker setup, while still pulling Scriptor
+updates with a `git merge` — fork Scriptor and overlay your site as
+additive files. See [`docs/deploy-as-fork.md`](docs/deploy-as-fork.md).
+
 ## Admin panel
 
 ```
