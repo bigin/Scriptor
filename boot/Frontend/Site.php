@@ -43,7 +43,7 @@ class Site
 {
     public string $siteUrl;
     public string $themeUrl;
-    public string $version = '2.0.0-dev';
+    public string $version = '2.2.0';
     public ?Page $page = null;
     public UrlSegments $urlSegments;
     public Request $input;

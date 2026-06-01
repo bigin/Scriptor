@@ -1,5 +1,63 @@
 # Changelog
 
+## 2.2.0 (2026-06-01) — Docker plugin installs + privacy hardening
+
+Install non-Packagist plugins into the Docker image, stop leaking
+visitor IPs to a third-party CDN, and a generic "deploy a site as a
+Scriptor fork" guide. All additive; no breaking changes since 2.1.0.
+
+### Added
+
+- **`SCRIPTOR_PLUGIN_REPOS` Docker build-arg.** Scriptor's own
+  `composer.json` ships clean (no plugin VCS sources), so the image
+  needs a generic way to learn *where* to fetch non-Packagist plugins.
+  The new build-arg takes a space-separated list of VCS URLs and
+  registers each via `composer config repositories.*` ahead of the
+  existing `SCRIPTOR_PLUGINS` require. Orthogonal args: `REPOS` = where,
+  `PLUGINS` = which. No plugin URL ever lives in Scriptor's manifest;
+  the downstream image supplies the list at build time.
+  (`docs/install.md`, `docs/demo.md`.)
+- **"Deploy a site as a Scriptor fork" guide** (`docs/`). The generic
+  upstream/downstream fork workflow: two remotes
+  (`origin` = site, `upstream` = Scriptor), the additive "never edit
+  Scriptor's files" rule, 3-way-merge behaviour, tag-based updates, and
+  the `docker-compose.override.yml` overlay (own image names, plugin
+  build-args, config-mount over the data volume) plus the prod overlay.
+  Linked from the README.
+
+### Fixed
+
+- **The basic theme bundles UIkit locally instead of the jsDelivr CDN.**
+  It loaded `uikit.min.css/js` from `cdn.jsdelivr.net`, sending every
+  visitor's IP to a third-party CDN on page load — a privacy/GDPR
+  concern and an external runtime dependency. UIkit 3.9.4 (the exact
+  version the CDN served, so rendering is unchanged) is now vendored
+  under the theme's public assets and referenced via `themeAssetUrl()`,
+  the same as `styles.css`/`main.js`. No `cdn.jsdelivr` references
+  remain.
+- **Plugin VCS repos register with `no-api` for reproducible builds.**
+  The `SCRIPTOR_PLUGIN_REPOS` loop registered each repo as a plain
+  `vcs` repo, so for `github.com` URLs Composer resolved metadata
+  through the GitHub API (60 req/h unauthenticated) and, once spent,
+  fell back to an SSH clone the build container has no key for —
+  failing `composer require` on a true `--no-cache` rebuild. Each repo
+  is now `{"type":"vcs","url":…,"no-api":true}`, so Composer clones the
+  HTTPS URL anonymously: public repos build with no token and no SSH
+  key, and rate limits no longer gate deploys.
+- **`Site::$version` / `Editor::$version` report the real version.**
+  Both were stuck at `2.0.0-dev` since 2.0.0 and never tracked the
+  release; they now read `2.2.0`.
+
+### Changed
+
+- **`composer.json` drops the `bigins/*` plugin VCS repositories.**
+  Scriptor ships as a clean, generic CMS and should not carry the
+  source URLs of specific plugins in its manifest — those are consumer
+  concerns, supplied by whatever site installs the plugins (e.g.
+  `scriptor-cms-site` at Docker build time, via the new build-arg).
+
+---
+
 ## 2.1.0 (2026-05-29)
 
 Plugin lifecycle, editor page-form extension events (incl.
